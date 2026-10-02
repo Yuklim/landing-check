@@ -279,6 +279,9 @@ page = f'''<!doctype html>
   #island .bd{{font-size:12.5px;line-height:1.3;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
   body.mobile #island{{top:max(11px, calc(env(safe-area-inset-top,0px) - 48px))}}
   #island.now{{transition:none}}
+  #island.slide{{top:8px;transform:translate(-50%,-130%);transition:transform .45s cubic-bezier(.2,.9,.3,1.1),opacity .2s}}
+  #island.slide.show{{transform:translate(-50%,0)}}
+  #island.slide .card{{transition:opacity .2s}}
   #menu{{position:fixed;top:12px;right:12px;z-index:100}}
   #menu>button{{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:8px 12px;font:600 12px Inter,sans-serif;cursor:pointer}}
   #list{{position:fixed;top:48px;right:12px;background:#fff;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:4px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:100;max-height:80vh;overflow:auto}}
@@ -368,9 +371,10 @@ document.addEventListener('click', e => {{
 }});
 function island(){{
   const b = $('#island');
-  b.classList.remove('open', 'show'); void b.offsetWidth;
-  b.classList.add('show');
-  setTimeout(() => b.classList.add('open'), 350);
+  const fromIsland = document.body.classList.contains('standalone') || !document.body.classList.contains('mobile');
+  b.classList.remove('open', 'show', 'slide'); void b.offsetWidth;
+  if (fromIsland) {{ b.classList.add('show'); setTimeout(() => b.classList.add('open'), 350); }}
+  else {{ b.classList.add('slide', 'open'); requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add('show'))); }}
   clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove('open', 'show'), 9000);
 }}
 $('#island').onclick = () => {{ const b = $('#island'); b.classList.remove('open', 'show'); show('trips'); }};
