@@ -38,8 +38,8 @@ BIND = [
     ('home', 'name:Search', 'toast:Demo：搜索'),
     # My Trips
     ('trips', 'name:Chip Landing Check', 'go:preflight'),
-    ('trips', 'name:LC Button', 'go:step1'),
-    ('trips', 'name:Landing Check Card', 'go:step1'),
+    ('trips', 'name:LC Button', 'api:landing'),
+    ('trips', 'name:Landing Check Card', 'api:landing'),
     ('trips', 'name:Tab Home', 'go:home'),
     # 行前检查
     ('preflight', 'name:Back', 'back'),
@@ -270,6 +270,7 @@ page = f'''<!doctype html>
   .screen, .screen *{{box-sizing:border-box !important}}
   .screen [style*="flex: 1 1 0"]{{min-width:0}}
   .screen [style*="width: 100%"]{{max-width:100%}}
+  .screen [data-pencil-name="Task Desc"]{{white-space:pre-line}}
   .screen > .sb{{flex-shrink:0;width:100%}}
   .screen > .scroll{{flex:1 1 0;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}}
   .screen > .scroll > *{{flex-shrink:0}}

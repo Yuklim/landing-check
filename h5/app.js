@@ -54,9 +54,26 @@
       if (r.status === 'verified') {
         txt($$('payment', 'Result Sub'), `¥1.00 charged via Alipay at ${r.verified_at.slice(11, 16)} · ${r.card}\nRefund issued · back on your card in 1–3 days`);
         txt($$('payment', 'Chip Label'), 'VERIFIED · ' + r.verified_at.slice(5, 10).replace('-', '/'));
-        show('payment'); renderPreflight();
-      } else { toast(`Payment test failed: ${r.error_code}. ${r.hint}`); S.entry = r.entry_id; }
+        renderPayOk(); show('payment'); renderPreflight();
+      } else { renderPayFail(r); show('payment'); }
     } catch (e) { toast('后端不可达'); show('payment'); }
+  }
+  const PAY_OK = {};
+  function snapPay() { if (PAY_OK.done) return; ['Result Title', 'Result Sub', 'Chip Label', 'How Title', 'Done Label'].forEach(n => { const el = $$('payment', n); PAY_OK[n] = el ? el.textContent : ''; }); const card = $$('payment', 'Result Card'); PAY_OK.stroke = card ? card.style.borderColor : ''; const ok = $$('payment', 'OK Circle'); PAY_OK.circle = ok ? ok.style.backgroundColor : ''; PAY_OK.done = true; }
+  function renderPayOk() { snapPay(); const card = $$('payment', 'Result Card'); if (card) card.style.borderColor = PAY_OK.stroke; const ok = $$('payment', 'OK Circle'); if (ok) ok.style.backgroundColor = PAY_OK.circle; txt($$('payment', 'Result Title'), PAY_OK['Result Title']); txt($$('payment', 'How Title'), PAY_OK['How Title']); txt($$('payment', 'Done Label'), PAY_OK['Done Label']); const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'go:preflight'; }
+  function renderPayFail(r) {
+    snapPay(); S.entry = r.entry_id;
+    const card = $$('payment', 'Result Card'); if (card) card.style.borderColor = '#E8890C';
+    const ok = $$('payment', 'OK Circle'); if (ok) ok.style.backgroundColor = '#FFF4E5';
+    txt($$('payment', 'Result Title'), 'Payment test failed');
+    txt($$('payment', 'Result Sub'), `Alipay returned ${r.error_code}.\n${r.hint}`);
+    txt($$('payment', 'Chip Label'), 'NOT VERIFIED · ' + r.error_code);
+    txt($$('payment', 'How Title'), 'What this error means');
+    const meaning = { CARD_NOT_SUPPORTED: ['Your card network is not accepted', 'Alipay accepts Visa, Mastercard, JCB, Discover, Diners Club and UnionPay. Amex and most prepaid or virtual cards fail.', 'Try another card', 'A credit card from a major bank on a different network fixes most cases.', 'Still failing', 'Open TourCard inside Alipay as a prepaid wallet, or pay cash from a Bank of China ATM.'],
+                      RISK_REJECT: ['Your bank blocked the charge', 'Banks often block an unfamiliar Chinese merchant on the first attempt.', 'Retry in 10 minutes', 'Turn off any VPN-like network tool first; verification calls go to your bank and time out through them.', 'Call your bank', 'Ask them to allow international online transactions and confirm 3-D Secure is on.'],
+                      LIMIT_EXCEEDED: ['You hit the unverified allowance', 'Alipay lets you spend a small total before it needs your passport.', 'Complete Identity Verification', 'Me > Settings > Account & Security > Identity Verification. Usually done within the hour.', 'Then retry', 'Run the ¥1 test again from the pre-flight check.'] }[r.error_code] || [];
+    $all('payment', 'How Item Title').forEach((el, i) => txt(el, meaning[i * 2])); $all('payment', 'How Item Desc').forEach((el, i) => txt(el, meaning[i * 2 + 1]));
+    txt($$('payment', 'Done Label'), 'Try again'); const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'api:pay';
   }
 
   // ---------- 航班落地 ----------
@@ -116,6 +133,9 @@
     const rows = [$$('step3', 'Option Metro Line 2'), $$('step3', 'Option Trip.com transfer')];
     rows.forEach((row, i) => { const a = d.alternatives[i]; if (!row) return; row.style.display = a ? '' : 'none'; if (!a) return; txt(row.querySelector('[data-pencil-name="Opt Title"]'), a.title); txt(row.querySelector('[data-pencil-name="Opt Meta"]'), `${a.price} · ${a.min} min · ${a.where}`); txt(row.querySelector('[data-pencil-name="Opt Button Label"]'), a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'); row.querySelector('[data-pencil-name="Opt Button"]').dataset.act = a.action === 'transit' ? 'go:transit' : a.action === 'transfer' ? 'go:transfers' : 'toast:Demo：打开支付宝里的滴滴小程序'; });
     txt($$('step3', 'Subtitle'), (d.night ? 'Landed 23:40 · night mode · ' : 'Online since 14:41 · ') + 'payment verified · last step');
+    const g = r.go_to || {}; txt($$('step3', 'Task Desc'), `Where to go: ${g.where || r.where}\nWhy: ${r.why}`);
+    txt($$('step3', 'Primary Label'), r.id === 'transfer' ? 'Show my booking to the driver' : r.id === 'metro' || r.id === 'maglev' ? 'Open the route' : 'Show address to driver');
+    const pb = $$('step3', 'Primary Button'); if (pb) pb.dataset.act = r.id === 'metro' || r.id === 'maglev' ? 'go:transit' : 'go:driver';
   }
   async function incar() { try { await post('/mock/event', { event: 'in_car' }); } catch (e) {} show('done'); }
 
@@ -137,6 +157,7 @@
   // ---------- 动作分发 ----------
   window.lcHandle = (act, el) => {
     if (act === 'pay') pay();
+    else if (act === 'landing') landingEntry();
     else if (act === 'land') land();
     else if (act === 'stuck') stuckPick();
     else if (act === 'solved') solved();
@@ -145,6 +166,11 @@
     else if (act === 'transfer') post('/rules/preflight/done', { item: 'transfer' }).then(() => { toast('Transfer booked · driver will wait at arrivals'); setTimeout(() => show('preflight'), 800); }).catch(() => show('preflight'));
     else if (act.startsWith('fb:')) feedback(act.slice(3));
   };
+  // 落地卡入口：有 eSIM 走已联网分支，否则走 Wi-Fi 分支
+  async function landingEntry() {
+    try { const d = await get('/rules/preflight'); const data = d.items.find(i => i.id === 'data'); show(data && data.status === 'done' ? 'online' : 'step1'); }
+    catch (e) { show('step1'); }
+  }
   window.lcOnShow = route => {
     if (route === 'preflight') renderPreflight();
     if (route === 'step3') renderTransport();
@@ -160,7 +186,7 @@
     const mk = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; list.appendChild(b); return b; };
     mk('🔄 重置演示数据', async () => { try { await post('/mock/reset'); S.night = false; toast('已重置'); renderPreflight(); } catch (e) { toast('后端不可达'); } });
     const nb = mk('🌙 深夜落地模式：关', () => { S.night = !S.night; nb.textContent = '🌙 深夜落地模式：' + (S.night ? '开' : '关'); renderTransport(); toast(S.night ? '交通推荐按 23:40 落地计算' : '恢复 14:20 落地'); });
-    mk('💳 模拟支付失败', async () => { try { const r = await post('/mock/pay-test?fail=1'); toast(`${r.error_code}: ${r.hint}`); } catch (e) { toast('后端不可达'); } });
+    mk('💳 模拟支付失败', async () => { try { const r = await post('/mock/pay-test?fail=1'); renderPayFail(r); show('payment'); } catch (e) { toast('后端不可达'); } });
   }
   renderPreflight();
 })();

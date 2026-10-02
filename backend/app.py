@@ -172,6 +172,8 @@ def rules_preflight_done(d: DoneItem):
 def rules_transport(landed_at: Optional[str] = None, bags: Optional[int] = None, adults: Optional[int] = None,
                     airport: str = 'PVG', weather: str = 'clear'):
     t = trip.get_trip()
+    if 'transfer' in trip.done_items:
+        t['transfer_booked'] = True
     if bags is not None:
         t['flight']['checked_bags'] = bags
     if adults is not None:

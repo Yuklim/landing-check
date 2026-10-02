@@ -1,9 +1,85 @@
 {
   "PVG": {
-    "taxi":     {"id": "taxi",     "title": "Taxi",                    "min": 50, "price_cny": [160, 200], "where": "Official queue at Exit 9, ground floor", "action": "driver_card"},
-    "transfer": {"id": "transfer", "title": "Trip.com transfer",       "min": 50, "price_cny": [220, 220], "where": "Driver waits at arrivals with your name", "action": "transfer"},
-    "metro":    {"id": "metro",    "title": "Metro Line 2",            "min": 70, "price_cny": [7, 7],     "where": "Follow Metro signs from Arrivals", "action": "transit", "transfers": 1},
-    "didi":     {"id": "didi",     "title": "Ride-hailing · DiDi via Alipay", "min": 50, "price_cny": [140, 180], "where": "Pickup point P2, follow DiDi signs", "action": "didi"},
-    "maglev":   {"id": "maglev",   "title": "Maglev + Metro",          "min": 45, "price_cny": [57, 57],   "where": "Maglev station, T2 level 2", "action": "transit"}
+    "taxi": {
+      "id": "taxi",
+      "title": "Taxi",
+      "min": 50,
+      "price_cny": [
+        160,
+        200
+      ],
+      "where": "Official queue at Exit 9, ground floor",
+      "action": "driver_card",
+      "go_to": {
+        "title": "Official taxi queue",
+        "where": "Follow the Taxi signs to the ground floor, Exit 9 of T2. Ignore anyone offering a ride inside the terminal.",
+        "verified": false
+      }
+    },
+    "transfer": {
+      "id": "transfer",
+      "title": "Trip.com transfer",
+      "min": 50,
+      "price_cny": [
+        220,
+        220
+      ],
+      "where": "Driver waits at arrivals with your name",
+      "action": "transfer",
+      "go_to": {
+        "title": "Meet your driver",
+        "where": "Arrivals hall, Exit 8 of T2. Look for a sign with your name; the driver waits up to 60 min after landing.",
+        "verified": false
+      }
+    },
+    "metro": {
+      "id": "metro",
+      "title": "Metro Line 2",
+      "min": 70,
+      "price_cny": [
+        7,
+        7
+      ],
+      "where": "Follow Metro signs from Arrivals",
+      "action": "transit",
+      "transfers": 1,
+      "go_to": {
+        "title": "Metro Line 2 station",
+        "where": "Follow the Metro / 地铁 signs from Arrivals. Buy a ticket at the machine with Alipay or cash.",
+        "verified": false
+      }
+    },
+    "didi": {
+      "id": "didi",
+      "title": "Ride-hailing · DiDi via Alipay",
+      "min": 50,
+      "price_cny": [
+        140,
+        180
+      ],
+      "where": "Pickup point P2, follow DiDi signs",
+      "action": "didi",
+      "go_to": {
+        "title": "Ride-hailing pickup point",
+        "where": "Follow the Online Ride-hailing signs to pickup point P2 (ground floor). Enter the point number in DiDi.",
+        "verified": false
+      }
+    },
+    "maglev": {
+      "id": "maglev",
+      "title": "Maglev + Metro",
+      "min": 45,
+      "price_cny": [
+        57,
+        57
+      ],
+      "where": "Maglev station, T2 level 2",
+      "action": "transit",
+      "go_to": {
+        "title": "Maglev station",
+        "where": "Level 2 of T2, follow the Maglev signs.",
+        "verified": false
+      }
+    }
   }
 }

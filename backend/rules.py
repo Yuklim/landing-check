@@ -108,6 +108,7 @@ def transport(trip: dict, landed_at: str = None, airport: str = 'PVG', weather: 
 
     def pack(oid, is_rec=False):
         o = dict(opts[oid]); o['recommended'] = is_rec
+        o.setdefault('go_to', {'title': o['title'], 'where': o.get('where', ''), 'verified': False})
         lo, hi = o['price_cny']; o['price'] = '¥%d' % lo if lo == hi else '¥%d–%d' % (lo, hi)
         return o
 
