@@ -1,8 +1,8 @@
 # 支付宝 / Alipay · 知识库条目预览
 
-识别关键词（中）：支付宝、绑定银行卡、添加银行卡、验证失败、身份验证、实名认证、付款码、扫一扫、支付密码、TourCard、交易限额、银行卡不支持
+识别关键词（中）：支付宝、绑定银行卡、添加银行卡、验证失败、身份验证、实名认证、付款码、扫一扫、支付密码、TourCard、交易限额、银行卡不支持、滴滴、打车
 
-识别关键词（英）：Alipay, Add bank card, Bank Cards, Verification failed, Identity Verification, Card not supported, Issuer declined, Payment limit, TourCard, Pay/Receive, payment password
+识别关键词（英）：Alipay, Add bank card, Bank Cards, Verification failed, Identity Verification, Card not supported, Issuer declined, Payment limit, TourCard, Pay/Receive, payment password, DiDi, taxi, ride
 
 界面特征：Blue Alipay app chrome. Screens with a bank-card form (card number, expiry, CVV), a red or grey failure banner, a passport-upload prompt, a QR payment code page, or a mini-program named TourCard.
 

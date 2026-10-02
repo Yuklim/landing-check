@@ -48,7 +48,7 @@ def scenarios_block(kb) -> str:
     return '\n'.join(lines)
 
 
-def call_model(messages: List[dict], json_mode: bool = True, model: str = None, max_tokens: int = 600) -> str:
+def call_model(messages: List[dict], json_mode: bool = True, model: str = None, max_tokens: int = 1200) -> str:
     if not KEY:
         raise RuntimeError('DEEPSEEK_API_KEY not set')
     body = {'model': model or MODEL, 'messages': messages, 'temperature': 0, 'max_tokens': max_tokens}

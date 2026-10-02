@@ -9,10 +9,10 @@ from app import app, kb
 c = TestClient(app)
 
 
-def fake_model(conf, eid='alipay_card_bind_failed', cands=None):
+def fake_model(conf, eid='alipay_card_bind_failed', cands=None, ocr='Bank card verification failed 验证失败'):
     def fn(kb_, image, text):
         return {'scenario': 'alipay' if eid else 'unknown', 'entry_id': eid, 'confidence': conf,
-                'ocr_text': 'Bank card verification failed 验证失败', 'candidates': cands or [{'entry_id': eid, 'confidence': conf}]}
+                'ocr_text': ocr, 'candidates': cands or ([{'entry_id': eid, 'confidence': conf}] if eid else [])}
     return fn
 
 
@@ -31,8 +31,13 @@ def test_mid_confidence_asks_with_candidates():
 
 
 def test_low_confidence_is_unknown_without_advice_call():
-    r = stuck.classify(kb, b'img', '', advice=False, model_fn=fake_model(0.2, eid=None, cands=[]))
+    r = stuck.classify(kb, b'img', '', advice=False, model_fn=fake_model(0.2, eid=None, cands=[], ocr='a photo of a car'))
     assert r['decision'] == 'unknown' and r['entry_id'] is None and r['advice'] is None
+
+
+def test_model_unknown_but_readable_text_is_rescued_by_rules():
+    r = stuck.classify(kb, b'img', '', advice=False, model_fn=fake_model(0.1, eid=None, cands=[], ocr='支付宝 银行卡 验证失败'))
+    assert r['mode'] == 'rules' and r['scenario'] == 'alipay' and r['decision'] == 'ask'
 
 
 def test_model_failure_falls_back_to_rules():
