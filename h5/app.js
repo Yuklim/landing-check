@@ -60,11 +60,17 @@
   }
   const PAY_OK = {};
   function snapPay() { if (PAY_OK.done) return; ['Result Title', 'Result Sub', 'Chip Label', 'How Title', 'Done Label'].forEach(n => { const el = $$('payment', n); PAY_OK[n] = el ? el.textContent : ''; }); const card = $$('payment', 'Result Card'); PAY_OK.stroke = card ? card.style.borderColor : ''; const ok = $$('payment', 'OK Circle'); PAY_OK.circle = ok ? ok.style.backgroundColor : ''; PAY_OK.done = true; }
-  function renderPayOk() { snapPay(); const card = $$('payment', 'Result Card'); if (card) card.style.borderColor = PAY_OK.stroke; const ok = $$('payment', 'OK Circle'); if (ok) ok.style.backgroundColor = PAY_OK.circle; txt($$('payment', 'Result Title'), PAY_OK['Result Title']); txt($$('payment', 'How Title'), PAY_OK['How Title']); txt($$('payment', 'Done Label'), PAY_OK['Done Label']); const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'go:preflight'; }
+  function renderPayOk() { snapPay(); setPayTone(false); txt($$('payment', 'Result Title'), PAY_OK['Result Title']); txt($$('payment', 'How Title'), PAY_OK['How Title']); txt($$('payment', 'Done Label'), PAY_OK['Done Label']); const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'go:preflight'; }
+  const X_SVG = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#E8890C" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  function setPayTone(fail) {
+    const card = $$('payment', 'Result Card'); if (card) card.style.borderColor = fail ? '#E8890C' : PAY_OK.stroke;
+    const ok = $$('payment', 'OK Circle'); if (ok) { ok.style.backgroundColor = fail ? '#FFF4E5' : PAY_OK.circle; const icon = ok.querySelector('[data-pencil-name="OK Icon"]'); if (icon) { if (!PAY_OK.iconHTML) PAY_OK.iconHTML = icon.outerHTML; const t = document.createElement('div'); t.innerHTML = fail ? X_SVG : PAY_OK.iconHTML; const n = t.firstElementChild; n.setAttribute('data-pencil-name', 'OK Icon'); icon.replaceWith(n); } }
+    const chip = $$('payment', 'Verified Chip'); if (chip) chip.style.backgroundColor = fail ? '#FFF4E5' : '#E6F7F0';
+    const ci = $$('payment', 'Chip Icon'); if (ci) ci.style.display = fail ? 'none' : '';
+    const cl = $$('payment', 'Chip Label'); if (cl) cl.style.color = fail ? '#E8890C' : '#1BA672';
+  }
   function renderPayFail(r) {
-    snapPay(); S.entry = r.entry_id;
-    const card = $$('payment', 'Result Card'); if (card) card.style.borderColor = '#E8890C';
-    const ok = $$('payment', 'OK Circle'); if (ok) ok.style.backgroundColor = '#FFF4E5';
+    snapPay(); S.entry = r.entry_id; setPayTone(true);
     txt($$('payment', 'Result Title'), 'Payment test failed');
     txt($$('payment', 'Result Sub'), `Alipay returned ${r.error_code}.\n${r.hint}`);
     txt($$('payment', 'Chip Label'), 'NOT VERIFIED · ' + r.error_code);
@@ -133,7 +139,24 @@
     const rows = [$$('step3', 'Option Metro Line 2'), $$('step3', 'Option Trip.com transfer')];
     rows.forEach((row, i) => { const a = d.alternatives[i]; if (!row) return; row.style.display = a ? '' : 'none'; if (!a) return; txt(row.querySelector('[data-pencil-name="Opt Title"]'), a.title); txt(row.querySelector('[data-pencil-name="Opt Meta"]'), `${a.price} · ${a.min} min · ${a.where}`); txt(row.querySelector('[data-pencil-name="Opt Button Label"]'), a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'); row.querySelector('[data-pencil-name="Opt Button"]').dataset.act = a.action === 'transit' ? 'go:transit' : a.action === 'transfer' ? 'go:transfers' : 'toast:Demo：打开支付宝里的滴滴小程序'; });
     txt($$('step3', 'Subtitle'), (d.night ? 'Landed 23:40 · night mode · ' : 'Online since 14:41 · ') + 'payment verified · last step');
-    const g = r.go_to || {}; txt($$('step3', 'Task Desc'), `Where to go: ${g.where || r.where}\nWhy: ${r.why}`);
+    const g = r.go_to || {};
+    txt($$('step3', 'Task Desc'), 'Why: ' + r.why);
+    const cur = $$('step3', 'Current Task');
+    let go = cur && cur.querySelector('.lc-goto');
+    if (cur && !go) { go = document.createElement('div'); go.className = 'lc-goto'; go.style.cssText = 'width:100%;background:#EAF0FF;border-radius:10px;padding:14px 16px;box-sizing:border-box;font-family:Inter,system-ui,sans-serif'; cur.insertBefore(go, $$('step3', 'Primary Button')); }
+    if (go) go.innerHTML = `<div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:#2C61FE">WHERE TO GO</div><div style="font-size:18px;font-weight:700;color:#121826;margin:4px 0 6px">${g.title || r.title}</div><div style="font-size:14px;line-height:1.4;color:#121826">${g.where || r.where}</div>${g.verified === false ? '<div style="font-size:11px;color:#8592A6;margin-top:6px">Location to be verified on site</div>' : ''}`;
+    const alt = $$('step3', 'Alt Options'); if (alt) alt.style.display = 'none';
+    const sl = $$('step3', 'Step List');
+    if (sl) {
+      sl.innerHTML = '';
+      const head = document.createElement('div'); head.style.cssText = 'padding:12px 14px 4px;font:700 13px Inter,system-ui,sans-serif;color:#6F7685'; head.textContent = 'Other ways'; sl.appendChild(head);
+      d.alternatives.forEach((a, i) => {
+        const row = document.createElement('div'); row.className = 'tap'; row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid #DADFE6;font-family:Inter,system-ui,sans-serif;cursor:pointer';
+        row.dataset.act = a.action === 'transit' ? 'go:transit' : a.action === 'transfer' ? 'go:transfers' : 'toast:Demo：打开支付宝里的滴滴小程序';
+        row.innerHTML = `<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700;color:#121826">${a.title}</div><div style="font-size:13px;color:#6F7685;margin-top:2px">${a.price} · ${a.min} min</div><div style="font-size:13px;color:#121826;margin-top:4px;line-height:1.35">${(a.go_to && a.go_to.where) || a.where}</div></div><div style="flex-shrink:0;border:1px solid #2C61FE;color:#2C61FE;border-radius:4px;padding:7px 12px;font-size:12px;font-weight:700">${a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'}</div>`;
+        sl.appendChild(row);
+      });
+    }
     txt($$('step3', 'Primary Label'), r.id === 'transfer' ? 'Show my booking to the driver' : r.id === 'metro' || r.id === 'maglev' ? 'Open the route' : 'Show address to driver');
     const pb = $$('step3', 'Primary Button'); if (pb) pb.dataset.act = r.id === 'metro' || r.id === 'maglev' ? 'go:transit' : 'go:driver';
   }
