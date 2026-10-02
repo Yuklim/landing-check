@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from kb import KnowledgeBase
 from mock import MockTrip
 import stuck
+import rules
 
 app = FastAPI(title='Landing Check API', version='0.1')
 app.add_middleware(CORSMiddleware,
@@ -143,3 +144,34 @@ async def stuck_classify(image: UploadFile | None = File(None), text: str = Form
     if not img and not text.strip():
         raise HTTPException(400, 'send an image or a text description')
     return stuck.classify(kb, img, text.strip(), lang=lang, airport=airport, advice=advice.lower() != 'false')
+
+
+# ---------------- D 规则引擎 ----------------
+@app.get('/rules/preflight')
+def rules_preflight():
+    return rules.preflight(trip.get_trip(), trip.done_items)
+
+
+class DoneItem(BaseModel):
+    item: str
+
+
+@app.post('/rules/preflight/done')
+def rules_preflight_done(d: DoneItem):
+    if d.item not in ('esim', 'alipay', 'transfer', 'car', 'permissions', 'pack', 'passport'):
+        raise HTTPException(400, 'unknown item %s' % d.item)
+    trip.done_items.add(d.item)
+    return rules.preflight(trip.get_trip(), trip.done_items)
+
+
+@app.get('/rules/transport')
+def rules_transport(landed_at: Optional[str] = None, bags: Optional[int] = None, adults: Optional[int] = None,
+                    airport: str = 'PVG', weather: str = 'clear'):
+    t = trip.get_trip()
+    if bags is not None:
+        t['flight']['checked_bags'] = bags
+    if adults is not None:
+        t['flight']['adults'] = adults
+    if landed_at is None and trip.landed_at:
+        landed_at = trip.landed_at[11:16]
+    return rules.transport(t, landed_at=landed_at, airport=airport, weather=weather)
