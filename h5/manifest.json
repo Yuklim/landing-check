@@ -1,0 +1,20 @@
+{
+  "name": "Trip.com Landing Check",
+  "short_name": "Landing Check",
+  "start_url": "./index.html#home",
+  "display": "standalone",
+  "background_color": "#0F1A3A",
+  "theme_color": "#2C61FE",
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

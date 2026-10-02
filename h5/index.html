@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Landing Check">
+<meta name="theme-color" content="#2C61FE">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
 <title>Trip.com Landing Check · H5 Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -26,10 +32,14 @@
   #list button:hover{background:#EAF0FF;color:#2C61FE}
   #hint{position:fixed;left:16px;bottom:12px;color:rgba(255,255,255,.55);font-size:12px}
   @media (max-width:430px){
-    html,body{background:#fff}
+    html,body{background:#0F1A3A}
+    #stage{height:100dvh}
     #phone{border-radius:0;box-shadow:none}
-    #hint,#menu>button{display:none}
+    #hint{display:none}
+    #menu>button{opacity:.6}
   }
+  body.standalone [data-pencil-name="Status Bar"]{height:env(safe-area-inset-top,44px) !important;min-height:env(safe-area-inset-top,44px) !important;padding:0 !important}
+  body.standalone [data-pencil-name="Status Bar"] > *{visibility:hidden}
 </style>
 </head>
 <body>
@@ -3650,9 +3660,10 @@ const hist = [];
 const $ = s => document.querySelector(s);
 function fit(){
   const ph = $('#phone');
-  const w = window.innerWidth, h = window.innerHeight;
-  if (w <= 430) { ph.style.transform = 'scale(' + (w/393) + ')'; return; }
-  const s = Math.min((h-40)/852, (w-40)/393, 1.05);
+  const vv = window.visualViewport;
+  const w = vv ? vv.width : window.innerWidth, h = vv ? vv.height : window.innerHeight;
+  const pad = w <= 430 ? 0 : 40;
+  const s = Math.min((h-pad)/852, (w-pad)/393, w <= 430 ? 10 : 1.05);
   ph.style.transform = 'scale(' + s + ')';
 }
 function show(route, push=true){
@@ -3696,6 +3707,8 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') back();
 });
 window.addEventListener('resize', fit);
+if (window.visualViewport) window.visualViewport.addEventListener('resize', fit);
+if (window.navigator.standalone || matchMedia('(display-mode: standalone)').matches) document.body.classList.add('standalone');
 fit();
 show((location.hash || '#home').slice(1), false);
 </script>
