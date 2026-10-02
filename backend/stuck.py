@@ -64,7 +64,8 @@ def classify_with_model(kb, image_bytes: Optional[bytes], text: str) -> dict:
     if image_bytes:
         data, mime = _shrink(image_bytes)
         content.append({'type': 'image_url', 'image_url': {'url': 'data:%s;base64,%s' % (mime, base64.b64encode(data).decode())}})
-    content.append({'type': 'text', 'text': (('User says: ' + text + '\n') if text else '') + 'Classify this screenshot.'})
+    ask = 'Classify this screenshot.' if image_bytes else 'There is no screenshot. Classify from the user description alone.'
+    content.append({'type': 'text', 'text': (('User says: ' + text + '\n') if text else '') + ask})
     messages = [{'role': 'system', 'content': PROMPT.replace('{SCENARIOS}', scenarios_block(kb))},
                 {'role': 'user', 'content': content}]
     raw = call_model(messages)
@@ -130,6 +131,10 @@ def classify(kb, image_bytes: Optional[bytes], text: str = '', lang: str = 'en',
         log.warning('model classify failed, falling back to rules: %s', e)
         mode = 'rules'
         res = classify_with_rules(kb, text)
+    if mode == 'model' and res['entry_id'] is None and (text or res.get('ocr_text')):
+        rules = classify_with_rules(kb, (text + ' ' + (res.get('ocr_text') or '')).strip())
+        if rules['entry_id']:
+            res, mode = rules, 'rules'
     conf = res['confidence']
     out = {'scenario': res['scenario'], 'entry_id': res['entry_id'], 'confidence': round(conf, 2),
            'ocr_text': res.get('ocr_text', ''), 'mode': mode, 'lang': lang, 'airport': airport,
