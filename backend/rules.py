@@ -27,7 +27,7 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
     add('permissions', 'Location & notifications', 'done' if perm_ok else 'todo',
         'Allowed · triggers the landing check offline' if perm_ok else 'Needed to trigger the landing check when you land', None if perm_ok else 'request_permissions')
 
-    data_ok = esim.get('bought') or 'esim' in done
+    data_ok = bool(esim.get('bought'))
     add('data', 'Mobile data in China', 'done' if data_ok else 'todo',
         'eSIM ready · activates when you land' if data_ok else 'No eSIM or roaming plan found', None if data_ok else 'buy_esim')
 
@@ -36,10 +36,10 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
         ('Verified · ¥1 test on %s, refunded' % (pay.get('verified_at') or '')[:10]) if pay_ok else 'Installed · not verified yet · ¥1 test, refunded in 24 h',
         None if pay_ok else 'verify_payment', 'alipay_setup_before_flight')
 
-    add('transfer', 'Ride from the airport · optional', 'done' if (trip.get('transfer_booked') or 'transfer' in done) else 'optional',
+    add('transfer', 'Ride from the airport · optional', 'done' if trip.get('transfer_booked') else 'optional',
         'Driver will wait at arrivals' if trip.get('transfer_booked') else _transfer_hint(trip), None if trip.get('transfer_booked') else 'book_transfer')
 
-    add('car', 'Car rental · optional', 'done' if (trip.get('car_rental_booked') or 'car' in done) else 'optional',
+    add('car', 'Car rental · optional', 'done' if trip.get('car_rental_booked') else 'optional',
         'Booked' if trip.get('car_rental_booked') else 'Pick up at the airport · foreign licences need a temporary Chinese permit', None if trip.get('car_rental_booked') else 'book_car')
 
     realname = [t for t in tickets if t.get('realname')]
@@ -52,9 +52,8 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
     valid = passport.get('valid_until')
     months_left = None
     if valid:
-        vd = date.fromisoformat(valid)
-        months_left = (vd.year - today.year) * 12 + vd.month - today.month
-    pp_ok = months_left is not None and months_left >= 6
+        months_left = (date.fromisoformat(valid) - today).days
+    pp_ok = months_left is not None and months_left >= 183
     add('passport', 'Passport', 'done' if pp_ok else 'todo',
         ('Valid until %s · matches your bookings' % valid[:4]) if pp_ok else 'Less than 6 months validity, check entry rules', None if pp_ok else 'check_passport')
 
@@ -76,22 +75,31 @@ def _transfer_hint(trip):
 
 
 # ---------------- 交通推荐 ----------------
-def _is_night(hhmm: str) -> bool:
+def _mins(hhmm: str) -> int:
     h, m = [int(x) for x in hhmm.split(':')]
-    t = h * 60 + m
-    return t >= 22 * 60 + 30 or t < 5 * 60 + 30
+    return h * 60 + m
+
+
+def _is_night(hhmm: str, metro: dict = None) -> bool:
+    """地铁已停运（末班前 15 分钟起）或首班前即视为深夜。"""
+    t = _mins(hhmm)
+    last = _mins((metro or {}).get('last', '22:30')) - 15
+    first = _mins((metro or {}).get('first', '05:30'))
+    return t >= last or t < first
 
 
 def transport(trip: dict, landed_at: str = None, airport: str = 'PVG', weather: str = 'clear') -> dict:
     """返回 recommended + alternatives，每个带 reason。landed_at 'HH:MM' 覆盖航班时间，便于演示。"""
     f, h = trip.get('flight', {}), trip.get('hotel', {})
-    opts = TRANSPORT.get(airport, TRANSPORT['PVG'])
+    if airport not in TRANSPORT:
+        airport = 'PVG'
+    opts = TRANSPORT[airport]
     ap = AIRPORTS.get(airport, AIRPORTS['PVG'])
     when = landed_at or (f.get('scheduled_arrival', '14:20')[-5:])
     bags, adults = f.get('checked_bags', 0), f.get('adults', 1)
     dist, metro_walk = h.get('distance_from_airport_km', 0), h.get('nearest_metro', {}).get('walk_m', 9999)
     facts = ['Landed %s' % when, '%d checked bag%s' % (bags, '' if bags == 1 else 's'), '%d adult%s' % (adults, '' if adults == 1 else 's'), 'Hotel %d km' % dist]
-    night = _is_night(when)
+    night = _is_night(when, ap.get('metro'))
 
     if trip.get('transfer_booked'):
         rec, why, alts = 'transfer', 'You pre-booked a transfer. The driver is waiting at arrivals with your name.', ['taxi']

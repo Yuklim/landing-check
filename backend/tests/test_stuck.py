@@ -86,3 +86,27 @@ def test_live_model_on_synthetic_alipay_error():
     r = stuck.classify(kb, buf.getvalue(), '', advice=False)
     print(r['mode'], r['decision'], r['entry_id'], r['confidence'], r['ocr_text'][:80])
     assert r['mode'] == 'model' and r['scenario'] == 'alipay'
+
+
+def test_rules_pick_landing_substep_for_chinese_text():
+    r = stuck.classify(kb, None, '支付宝 银行卡 验证失败', model_fn=lambda *a: (_ for _ in ()).throw(RuntimeError()))
+    assert r['scenario'] == 'alipay' and r['entry_id'] == 'alipay_card_bind_failed'
+    assert r['confidence'] < stuck.CONF_HIGH
+
+
+def test_rules_never_reach_high_confidence(monkeypatch):
+    monkeypatch.setattr(stuck, 'CONF_HIGH', 0.5)
+    r = stuck.classify(kb, None, 'Alipay 支付宝 验证码 sms code 滴滴 taxi 付款码', model_fn=lambda *a: (_ for _ in ()).throw(RuntimeError()))
+    assert r['mode'] == 'rules' and r['confidence'] < 0.5 and r['decision'] != 'answer'
+
+
+def test_clean_handles_bad_confidence_types():
+    out = stuck.clean_model_output(kb, {'entry_id': 'alipay_how_to_pay', 'confidence': 'high', 'candidates': [{'entry_id': 'alipay_how_to_pay', 'confidence': None}]})
+    assert out['entry_id'] == 'alipay_how_to_pay' and out['confidence'] == 0.0
+
+
+def test_http_rejects_oversized_and_non_image():
+    big = {'image': ('big.png', b'0' * (5 * 1024 * 1024 + 1), 'image/png')}
+    assert c.post('/stuck/classify', files=big, data={'advice': 'false'}).status_code == 413
+    bad = {'image': ('x.txt', b'hello', 'text/plain')}
+    assert c.post('/stuck/classify', files=bad, data={'advice': 'false'}).status_code == 415

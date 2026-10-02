@@ -145,7 +145,7 @@ for div in root.find_all('div', recursive=False):
         continue
     route = SCREENS[pid]
     st = div.get('style', '')
-    st = re.sub(r'(position|left|top)\s*:[^;]+;?', '', st)
+    st = re.sub(r'(?<![\w-])(position|left|top)\s*:[^;]+;?', '', st)
     div['style'] = st + '; position: relative; left: 0; top: 0; margin: 0 auto;'
     div['class'] = 'screen'
     div['data-route'] = route
@@ -162,7 +162,10 @@ for div in root.find_all('div', recursive=False):
             continue
         kind, val = sel.split(':', 1)
         attr = 'data-pencil-id' if kind == 'id' else 'data-pencil-name'
-        for el in div.find_all(attrs={attr: val}):
+        hits = div.find_all(attrs={attr: val})
+        if not hits:
+            print('WARNING: 绑定未命中 %s %s' % (route, sel))
+        for el in hits:
             el['data-act'] = act
             el['class'] = (el.get('class') or []) + ['tap']
 
@@ -217,7 +220,7 @@ for div in root.find_all('div', recursive=False):
         for k in (footer, tab):
             if k is not None:
                 est = k.get('style', '')
-                est = re.sub(r'(position|left|top)\s*:[^;]+;?', '', est)
+                est = re.sub(r'(?<![\w-])(position|left|top)\s*:[^;]+;?', '', est)
                 k['style'] = est + '; position: relative; width: 100%;'
                 pin.append(k)
         div.append(pin)
@@ -347,6 +350,7 @@ function fit(){{
   ph.style.transform = 'scale(' + s + ')';
 }}
 function show(route, push=true){{
+  if (!order.includes(route)) route = 'home';
   const cur = document.querySelector('.screen.on');
   if (cur && push && cur.dataset.route !== route) hist.push(cur.dataset.route);
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.dataset.route === route));

@@ -46,7 +46,27 @@ def test_preflight_passport_expiring_soon():
 
 def test_preflight_booked_transfer_is_done():
     by = {i['id']: i for i in rules.preflight(t(transfer_booked=True))['items']}
-    assert by['transfer']['status'] == 'done'
+    assert by['transfer']['status'] == 'done' and by['transfer']['action'] is None and 'wait' in by['transfer']['desc']
+
+
+def test_preflight_passport_boundary_uses_days():
+    by = {i['id']: i for i in rules.preflight(t(passport={'valid_until': '2027-04-01'}), today=date(2026, 10, 15))['items']}
+    assert by['passport']['status'] == 'todo'          # 168 天，不足半年
+
+
+def test_night_uses_metro_last_train():
+    assert rules._is_night('22:10', {'last': '22:00', 'first': '06:00'}) is True
+    assert rules._is_night('21:30', {'last': '22:00', 'first': '06:00'}) is False
+    assert rules._is_night('05:30', {'last': '22:00', 'first': '06:00'}) is True
+
+
+def test_http_done_marks_affect_desc_and_unknown_airport_falls_back():
+    c.post('/rules/preflight/done', json={'item': 'transfer'})
+    by = {i['id']: i for i in c.get('/rules/preflight').json()['items']}
+    assert by['transfer']['status'] == 'done' and by['transfer']['action'] is None
+    r = c.get('/rules/transport?airport=XXX&landed_at=14:20').json()
+    assert r['airport'] == 'PVG'
+    assert c.get('/rules/transport?landed_at=abc').status_code == 400
 
 
 # ---- 交通推荐 ----
@@ -98,7 +118,7 @@ def test_http_preflight_and_done_flow():
 def test_http_transport_override():
     r = c.get('/rules/transport?landed_at=23:40').json()
     assert r['recommended']['id'] == 'taxi' and r['night'] is True
-    r2 = c.get('/rules/transport?bags=1&adults=1').json()
+    r2 = c.get('/rules/transport?bags=1&adults=1&landed_at=14:20').json()
     assert r2['recommended']['id'] == 'metro'
 
 

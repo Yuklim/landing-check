@@ -68,6 +68,10 @@ class MockTrip:
             self.events.append({'event': 'payment', 'at': self.payment['verified_at']})
         return self.payment
 
+    def mark_done(self, item: str):
+        with self._lock:
+            self.done_items.add(item)
+
     # ---------- 事件时间线 ----------
     def mark(self, event: str):
         with self._lock:

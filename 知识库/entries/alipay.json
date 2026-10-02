@@ -47,7 +47,69 @@
       "alipay_tourcard",
       "alipay_how_to_pay",
       "alipay_didi_miniprogram"
-    ]
+    ],
+    "entry_keywords": {
+      "alipay_card_bind_failed": [
+        "验证失败",
+        "绑定失败",
+        "declined",
+        "card failed",
+        "verification failed",
+        "not supported",
+        "bind",
+        "link"
+      ],
+      "alipay_sms_code_not_received": [
+        "验证码",
+        "sms",
+        "code",
+        "short message"
+      ],
+      "alipay_payment_declined": [
+        "支付失败",
+        "付款失败",
+        "payment failed",
+        "declined",
+        "limit",
+        "额度",
+        "限额"
+      ],
+      "alipay_identity_verification": [
+        "实名",
+        "身份",
+        "护照",
+        "passport",
+        "identity",
+        "verify your identity"
+      ],
+      "alipay_tourcard": [
+        "tourcard",
+        "tour card",
+        "预付"
+      ],
+      "alipay_how_to_pay": [
+        "付款码",
+        "扫一扫",
+        "pay/receive",
+        "scan",
+        "how to pay",
+        "付款"
+      ],
+      "alipay_didi_miniprogram": [
+        "滴滴",
+        "didi",
+        "打车",
+        "taxi",
+        "ride"
+      ],
+      "alipay_setup_before_flight": [
+        "install",
+        "download",
+        "sign up",
+        "注册",
+        "安装"
+      ]
+    }
   },
   "entries": [
     {

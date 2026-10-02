@@ -3,12 +3,13 @@
 
     uvicorn app:app --reload --port 8000
 """
-import os
+import os, re
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel
 
 from kb import KnowledgeBase
@@ -90,6 +91,21 @@ def kb_stats():
     return kb.stats()
 
 
+class Hardest(BaseModel):
+    step: str
+
+
+_hardest = {}
+
+
+@app.post('/feedback/hardest')
+def feedback_hardest(h: Hardest):
+    if h.step not in ('wifi', 'payment', 'transport'):
+        raise HTTPException(400, 'step must be wifi | payment | transport')
+    _hardest[h.step] = _hardest.get(h.step, 0) + 1
+    return {'ok': True, 'counts': _hardest}
+
+
 @app.post('/kb/reload')
 def kb_reload():
     kb.load()
@@ -141,19 +157,42 @@ def mock_timeline():
 
 
 # ---------------- B 识别 ----------------
+MAX_UPLOAD = 5 * 1024 * 1024
+
+
 @app.post('/stuck/classify')
 async def stuck_classify(image: UploadFile | None = File(None), text: str = Form(''), lang: str = Form('en'),
                          airport: str = Form(''), advice: str = Form('true')):
-    img = await image.read() if image else None
-    if not img and not text.strip():
+    img = None
+    if image is not None:
+        if image.content_type and not image.content_type.startswith('image/'):
+            raise HTTPException(415, 'image must be image/*')
+        img = await image.read()
+        if len(img) > MAX_UPLOAD:
+            raise HTTPException(413, 'image larger than 5 MB')
+        if not img:
+            img = None
+    text = text.strip()[:500]
+    if not img and not text:
         raise HTTPException(400, 'send an image or a text description')
-    return stuck.classify(kb, img, text.strip(), lang=lang, airport=airport, advice=advice.lower() != 'false')
+    return await run_in_threadpool(stuck.classify, kb, img, text, lang=lang[:12], airport=airport[:8], advice=advice.lower() != 'false')
 
 
 # ---------------- D 规则引擎 ----------------
+def _trip_with_done():
+    t = trip.get_trip()
+    d = trip.done_items
+    if 'transfer' in d: t['transfer_booked'] = True
+    if 'car' in d: t['car_rental_booked'] = True
+    if 'esim' in d: t['esim'] = {**t.get('esim', {}), 'bought': True}
+    if 'pack' in d: t['offline_pack'] = {**t.get('offline_pack', {}), 'downloaded': True}
+    if 'permissions' in d: t['permissions'] = {'location': 'always', 'notifications': True}
+    return t
+
+
 @app.get('/rules/preflight')
 def rules_preflight():
-    return rules.preflight(trip.get_trip(), trip.done_items)
+    return rules.preflight(_trip_with_done(), trip.done_items)
 
 
 class DoneItem(BaseModel):
@@ -162,18 +201,18 @@ class DoneItem(BaseModel):
 
 @app.post('/rules/preflight/done')
 def rules_preflight_done(d: DoneItem):
-    if d.item not in ('esim', 'alipay', 'transfer', 'car', 'permissions', 'pack', 'passport'):
+    if d.item not in ('esim', 'alipay', 'transfer', 'car', 'permissions', 'pack'):
         raise HTTPException(400, 'unknown item %s' % d.item)
-    trip.done_items.add(d.item)
-    return rules.preflight(trip.get_trip(), trip.done_items)
+    trip.mark_done(d.item)
+    return rules.preflight(_trip_with_done(), trip.done_items)
 
 
 @app.get('/rules/transport')
 def rules_transport(landed_at: Optional[str] = None, bags: Optional[int] = None, adults: Optional[int] = None,
                     airport: str = 'PVG', weather: str = 'clear'):
-    t = trip.get_trip()
-    if 'transfer' in trip.done_items:
-        t['transfer_booked'] = True
+    if landed_at is not None and not re.fullmatch(r'([01]\d|2[0-3]):[0-5]\d', landed_at):
+        raise HTTPException(400, 'landed_at must be HH:MM')
+    t = _trip_with_done()
     if bags is not None:
         t['flight']['checked_bags'] = bags
     if adults is not None:

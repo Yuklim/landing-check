@@ -38,7 +38,8 @@ def check(path):
         for r in e.get('reader_links', []) or []:
             if not any(h in r.get('url', '') for h in READER_OK):
                 errs.append('%s: reader_links 只能放 Trip.com 或官方来源：%s' % (e.get('id'), r.get('url')))
-        bad = [w for w in ('VPN', 'WildChina', 'promo code') if w.lower() in json.dumps(e, ensure_ascii=False).lower() and w != 'WildChina']
+        body = ' '.join([e.get('title', ''), e.get('why', ''), ' '.join(e.get('steps', [])), e.get('fallback', '')]).lower()
+        bad = [w for w in ('vpn', 'wildchina', 'promo code') if w in body]
         if bad:
             errs.append('%s: 正文含禁用词 %s' % (e.get('id'), bad))
         try:

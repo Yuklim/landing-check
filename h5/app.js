@@ -4,10 +4,17 @@
  */
 (function () {
   const qs = new URLSearchParams(location.search);
-  let API = qs.get('api') || localStorage.getItem('lc_api') || (location.hostname.endsWith('github.io') ? '' : 'http://127.0.0.1:8000');
-  if (qs.get('api')) localStorage.setItem('lc_api', qs.get('api'));
+  const ALLOWED = /^https?:\/\/(127\.0\.0\.1|localhost|10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|[\w-]+\.onrender\.com)(:\d+)?$/;
+  const want = qs.get('api');
+  let API = (want && ALLOWED.test(want)) ? want
+          : location.pathname.startsWith('/app') ? location.origin
+          : location.hostname.endsWith('github.io') ? (window.LC_API || '')
+          : 'http://127.0.0.1:8000';
   API = API.replace(/\/$/, '');
-  const S = { entry: null, lastShot: null, night: false, pending: null };
+  const S0 = () => ({ entry: null, lastShot: null, night: false, payReturn: null });
+  const S = S0();
+  const el = (tag, style, text) => { const n = document.createElement(tag); if (style) n.style.cssText = style; if (text != null) n.textContent = text; return n; };
+  const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
   const $$ = (route, name) => document.querySelector(`.screen[data-route="${route}"] [data-pencil-name="${name}"]`);
   const $all = (route, name) => [...document.querySelectorAll(`.screen[data-route="${route}"] [data-pencil-name="${name}"]`)];
   const txt = (el, v) => { if (el && v != null) el.textContent = v; };
@@ -20,7 +27,15 @@
   dot.id = 'lcdot'; dot.style.cssText = 'position:fixed;left:10px;bottom:10px;z-index:200;font:600 11px Inter,sans-serif;color:#fff;background:rgba(0,0,0,.45);padding:4px 8px;border-radius:10px;pointer-events:none;transition:opacity .6s';
   document.body.appendChild(dot);
   function status(t, color) { dot.textContent = t; dot.style.background = color || 'rgba(0,0,0,.45)'; dot.style.opacity = 1; clearTimeout(dot._t); dot._t = setTimeout(() => dot.style.opacity = 0, 4000); }
-  if (!API) { status('静态模式'); return; }
+  const STATIC = { landing: 'go:step1', pay: 'go:payment', pay2: 'go:payment', stuck: 'go:stuck', solved: 'back', incar: 'go:done', land: 'island', esim: 'then:eSIM added (demo)|go:preflight', transfer: 'then:Transfer booked (demo)|go:preflight' };
+  function staticHandle(act) {
+    const a = STATIC[act.split(':')[0]] || (act.startsWith('fb:') ? 'toast:Thanks, recorded (demo)' : null);
+    if (!a) { toast('Demo'); return; }
+    if (a.startsWith('go:')) show(a.slice(3)); else if (a === 'back') back(); else if (a === 'island') island();
+    else if (a.startsWith('then:')) { const [t, g] = a.slice(5).split('|'); toast(t); setTimeout(() => show(g.slice(3)), 800); }
+    else if (a.startsWith('toast:')) toast(a.slice(6));
+  }
+  if (!API) { status('静态模式'); window.lcHandle = (act) => staticHandle(act); window.lcOnShow = () => {}; return; }
   get('/health').then(() => status('后端已连接 · ' + API.replace(/^https?:\/\//, ''), 'rgba(27,166,114,.85)')).catch(() => status('后端不可达，静态模式', 'rgba(232,137,12,.9)'));
 
   // ---------- 行前检查 ----------
@@ -50,7 +65,7 @@
   async function pay() {
     toast('Charging ¥1 via Alipay…');
     try {
-      const r = await post('/mock/pay-test' + (S.night ? '' : ''));
+      const r = await post('/mock/pay-test');
       if (r.status === 'verified') {
         txt($$('payment', 'Result Sub'), `¥1.00 charged via Alipay at ${r.verified_at.slice(11, 16)} · ${r.card}\nRefund issued · back on your card in 1–3 days`);
         txt($$('payment', 'Chip Label'), 'VERIFIED · ' + r.verified_at.slice(5, 10).replace('-', '/'));
@@ -97,9 +112,15 @@
     const f = picker.files[0]; if (!f) return;
     S.lastShot = f; show('stuck'); renderStuckLoading();
     const fd = new FormData(); fd.append('image', f); fd.append('lang', 'en');
-    try { renderStuck(await post('/stuck/classify', fd, true)); } catch (e) { toast('识别失败，显示离线条目'); }
+    try { renderStuck(await withTimeout(post('/stuck/classify', fd, true), 15000)); }
+    catch (e) { toast('Recognition unavailable, showing offline guidance'); renderStuck({ decision: 'unknown', mode: 'offline', scenario: 'unknown', advice: null, confidence: 0 }); }
   };
-  function stepRows() { return $all('stuck', 'Step 1').concat($all('stuck', 'Step 2'), $all('stuck', 'Step 3')); }
+  function stepRows() {
+    let rows = $all('stuck', 'Step 1').concat($all('stuck', 'Step 2'), $all('stuck', 'Step 3'));
+    if (rows.length === 3 && !$$('stuck', 'Step 4')) { const r4 = rows[2].cloneNode(true); r4.setAttribute('data-pencil-name', 'Step 4'); const n = r4.querySelector('[data-pencil-name="Num Text"]'); if (n) n.textContent = '4'; rows[2].after(r4); }
+    const r4 = $$('stuck', 'Step 4'); if (r4) rows.push(r4);
+    return rows;
+  }
   function renderStuckLoading() {
     txt($$('stuck', 'Rec Label'), 'ANALYSING…'); txt($$('stuck', 'Shot Title'), 'Reading your screenshot'); txt($$('stuck', 'Shot Why'), 'Usually takes 1–2 seconds.');
     const img = $$('stuck', 'Thumb'); if (img && S.lastShot) { img.style.backgroundImage = `url(${URL.createObjectURL(S.lastShot)})`; img.style.backgroundSize = 'cover'; [...img.children].forEach(c => c.style.visibility = 'hidden'); }
@@ -128,7 +149,7 @@
     stepRows().forEach((row, i) => { row.style.display = lines[i] ? '' : 'none'; txt(row.querySelector('[data-pencil-name="Step Title"]'), lines[i] ? lines[i].split(/[.:]/)[0] : ''); txt(row.querySelector('[data-pencil-name="Step Desc"]'), lines[i] || ''); row.onclick = null; });
     txt($$('stuck', 'Src Text'), 'Not from the knowledge base · ' + d.mode);
   }
-  async function solved() { if (S.entry) { try { await post('/kb/feedback', { entry_id: S.entry, solved: true }); } catch (e) {} } toast('Thanks, recorded'); back(); }
+  async function solved() { if (S.entry) { try { await post('/kb/feedback', { entry_id: S.entry, solved: true }); } catch (e) {} } S.entry = null; toast('Thanks, recorded'); back(); }
 
   // ---------- 第三步交通 ----------
   async function renderTransport() {
@@ -143,22 +164,25 @@
     txt($$('step3', 'Task Desc'), 'Why: ' + r.why);
     const cur = $$('step3', 'Current Task');
     let go = cur && cur.querySelector('.lc-goto');
-    if (cur && !go) { go = document.createElement('div'); go.className = 'lc-goto'; go.style.cssText = 'width:100%;background:#EAF0FF;border-radius:10px;padding:14px 16px;box-sizing:border-box;font-family:Inter,system-ui,sans-serif'; cur.insertBefore(go, $$('step3', 'Primary Button')); }
-    if (go) go.innerHTML = `<div style="font-size:11px;font-weight:700;letter-spacing:.06em;color:#2C61FE">WHERE TO GO</div><div style="font-size:18px;font-weight:700;color:#121826;margin:4px 0 6px">${g.title || r.title}</div><div style="font-size:14px;line-height:1.4;color:#121826">${g.where || r.where}</div>${g.verified === false ? '<div style="font-size:11px;color:#8592A6;margin-top:6px">Location to be verified on site</div>' : ''}`;
+    if (cur && !go) { go = el('div', 'width:100%;background:#EAF0FF;border-radius:10px;padding:14px 16px;box-sizing:border-box;font-family:Inter,system-ui,sans-serif'); go.className = 'lc-goto'; cur.insertBefore(go, $$('step3', 'Primary Button')); }
+    if (go) { go.replaceChildren(el('div', 'font-size:11px;font-weight:700;letter-spacing:.06em;color:#2C61FE', 'WHERE TO GO'), el('div', 'font-size:18px;font-weight:700;color:#121826;margin:4px 0 6px', g.title || r.title), el('div', 'font-size:14px;line-height:1.4;color:#121826', g.where || r.where)); if (g.verified === false) go.appendChild(el('div', 'font-size:11px;color:#8592A6;margin-top:6px', 'Location to be verified on site')); }
     const alt = $$('step3', 'Alt Options'); if (alt) alt.style.display = 'none';
     const sl = $$('step3', 'Step List');
     if (sl) {
-      sl.innerHTML = '';
-      const head = document.createElement('div'); head.style.cssText = 'padding:12px 14px 4px;font:700 13px Inter,system-ui,sans-serif;color:#6F7685'; head.textContent = 'Other ways'; sl.appendChild(head);
-      d.alternatives.forEach((a, i) => {
-        const row = document.createElement('div'); row.className = 'tap'; row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid #DADFE6;font-family:Inter,system-ui,sans-serif;cursor:pointer';
+      let ow = sl.parentElement.querySelector('.lc-otherways');
+      if (!ow) { ow = el('div', 'width:100%;background:#fff;border-radius:8px;overflow:hidden;margin-top:10px'); ow.className = 'lc-otherways'; sl.after(ow); }
+      ow.replaceChildren(el('div', 'padding:12px 14px 4px;font:700 13px Inter,system-ui,sans-serif;color:#6F7685', 'Other ways'));
+      d.alternatives.forEach(a => {
+        const row = el('div', 'display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid #DADFE6;font-family:Inter,system-ui,sans-serif;cursor:pointer'); row.className = 'tap';
         row.dataset.act = a.action === 'transit' ? 'go:transit' : a.action === 'transfer' ? 'go:transfers' : 'toast:Demo：打开支付宝里的滴滴小程序';
-        row.innerHTML = `<div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:700;color:#121826">${a.title}</div><div style="font-size:13px;color:#6F7685;margin-top:2px">${a.price} · ${a.min} min</div><div style="font-size:13px;color:#121826;margin-top:4px;line-height:1.35">${(a.go_to && a.go_to.where) || a.where}</div></div><div style="flex-shrink:0;border:1px solid #2C61FE;color:#2C61FE;border-radius:4px;padding:7px 12px;font-size:12px;font-weight:700">${a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'}</div>`;
-        sl.appendChild(row);
+        const left = el('div', 'flex:1;min-width:0');
+        left.append(el('div', 'font-size:15px;font-weight:700;color:#121826', a.title), el('div', 'font-size:13px;color:#6F7685;margin-top:2px', `${a.price} · ${a.min} min`), el('div', 'font-size:13px;color:#121826;margin-top:4px;line-height:1.35', (a.go_to && a.go_to.where) || a.where));
+        row.append(left, el('div', 'flex-shrink:0;border:1px solid #2C61FE;color:#2C61FE;border-radius:4px;padding:7px 12px;font-size:12px;font-weight:700', a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'));
+        ow.appendChild(row);
       });
     }
-    txt($$('step3', 'Primary Label'), r.id === 'transfer' ? 'Show my booking to the driver' : r.id === 'metro' || r.id === 'maglev' ? 'Open the route' : 'Show address to driver');
     const pb = $$('step3', 'Primary Button'); if (pb) pb.dataset.act = r.id === 'metro' || r.id === 'maglev' ? 'go:transit' : 'go:driver';
+    txt($$('step3', 'Primary Label'), r.id === 'transfer' ? 'Show my booking to the driver' : r.id === 'metro' || r.id === 'maglev' ? 'Open the route' : 'Show address to driver');
     try { const pf = await get('/rules/preflight'); const pay = pf.items.find(i => i.id === 'alipay'); if (pay && pay.status !== 'done' && pb) { pb.dataset.act = 'api:pay2'; txt($$('step3', 'Primary Label'), 'Verify payment first · ¥1 test'); } } catch (e) {}
   }
   async function incar() { try { await post('/mock/event', { event: 'in_car' }); } catch (e) {} show('done'); }
@@ -183,7 +207,7 @@
     if (!FB_STYLE.on) { const on = $$('done', 'FB Wi-Fi'), off = $$('done', 'FB Payment'); if (on && off) { const pick = el => ({ bg: el.style.backgroundColor, border: el.style.outline, label: el.querySelector('[data-pencil-name="FB Label"]').style.color, icon: el.querySelector('svg') && el.querySelector('svg').style.color }); FB_STYLE.on = pick(on); FB_STYLE.off = pick(off); } }
     Object.entries(FB).forEach(([k, name]) => { const el = $$('done', name); if (!el) return; const st = k === which ? FB_STYLE.on : FB_STYLE.off; el.style.backgroundColor = st.bg; el.style.outline = st.border; const lb = el.querySelector('[data-pencil-name="FB Label"]'); if (lb) lb.style.color = st.label; const ic = el.querySelector('svg'); if (ic) ic.style.color = ic.style.fill = (k === which ? '#2C61FE' : '#6F7685'); });
     toast({ wifi: 'Thanks, recorded: Wi-Fi was hardest', payment: 'Thanks, recorded: payment was hardest', transport: 'Thanks, recorded: transport was hardest' }[which]);
-    try { await post('/kb/feedback', { entry_id: 'alipay_setup_before_flight', solved: true, note: 'hardest:' + which }); } catch (e) {}
+    try { await post('/feedback/hardest', { step: which }); } catch (e) {}
   }
 
   // ---------- 动作分发 ----------
@@ -290,10 +314,11 @@
     const sep = document.createElement('div'); sep.style.cssText = 'border-top:1px solid #DADFE6;margin:4px 0';
     list.appendChild(sep);
     const mk = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; list.appendChild(b); return b; };
-    mk('🔄 重置演示数据', async () => { try { await post('/mock/reset'); S.night = false; toast('已重置'); renderPreflight(); } catch (e) { toast('后端不可达'); } });
+    mk('🔄 重置演示数据', async () => { try { await post('/mock/reset'); Object.assign(S, S0()); toast('已重置'); setTimeout(() => location.reload(), 400); } catch (e) { toast('后端不可达'); } });
     const nb = mk('🌙 深夜落地模式：关', () => { S.night = !S.night; nb.textContent = '🌙 深夜落地模式：' + (S.night ? '开' : '关'); renderTransport(); toast(S.night ? '交通推荐按 23:40 落地计算' : '恢复 14:20 落地'); });
     mk('💳 模拟支付失败', async () => { try { const r = await post('/mock/pay-test?fail=1'); renderPayFail(r); show('payment'); } catch (e) { toast('后端不可达'); } });
   }
+  snapStepStyles('step3'); captureIcons(); snapPay();
   renderPreflight();
   const cur = document.querySelector('.screen.on'); if (cur) window.lcOnShow(cur.dataset.route);
 })();

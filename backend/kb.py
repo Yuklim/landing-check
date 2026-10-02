@@ -4,8 +4,13 @@
 条目文件格式见 知识库/entries/schema.md。启动时做一遍校验，不合法直接抛错。
 多语言：知识库/entries/i18n/<lang>/<scenario>.json 里同 id 的 title/why/steps/fallback 覆盖英文。
 """
-import os, glob, json, re, threading
+import os, sys, glob, json, re, threading
 from typing import Dict, List, Optional
+sys.path.insert(0, os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '知识库', 'tools')))
+try:
+    from validate_entries import check as _validate
+except Exception:            # 工具目录不存在时退回轻量校验
+    _validate = None
 
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '知识库', 'entries'))
 REQ = ['id', 'stage', 'title', 'why', 'steps', 'fallback', 'applies_to', 'scope', 'sources', 'verified_at', 'volatility']
@@ -26,7 +31,12 @@ class KnowledgeBase:
     def load(self):
         scenarios, entries, i18n = {}, {}, {}
         for path in sorted(glob.glob(os.path.join(self.root, '*.json'))):
-            d = json.load(open(path, encoding='utf-8'))
+            if _validate:
+                d, errs = _validate(path)
+                if errs:
+                    raise ValueError('%s: %s' % (os.path.basename(path), '; '.join(errs[:5])))
+            else:
+                d = json.load(open(path, encoding='utf-8'))
             sid = d['scenario']
             for e in d.get('entries', []):
                 missing = [k for k in REQ if k not in e]

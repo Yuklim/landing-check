@@ -4495,6 +4495,7 @@ function fit(){
   ph.style.transform = 'scale(' + s + ')';
 }
 function show(route, push=true){
+  if (!order.includes(route)) route = 'home';
   const cur = document.querySelector('.screen.on');
   if (cur && push && cur.dataset.route !== route) hist.push(cur.dataset.route);
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.dataset.route === route));

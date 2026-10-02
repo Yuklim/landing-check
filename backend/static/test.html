@@ -62,10 +62,11 @@ function render(d){
   const out=$('#out'); const dec={answer:'直接给答案',ask:'让用户确认',unknown:'未知'}[d.decision];
   $('#meta').textContent=`${d.latency_ms} ms · 场景 ${d.scenario} · 置信度 ${d.confidence}`;
   let h=`<span class="badge ${d.decision}">${dec}</span><span class="badge ${d.mode}">${d.mode==='model'?'模型':'规则兜底'}</span>`;
-  if(d.ocr_text) h+=`<p class="src">识别到的文字：${d.ocr_text}</p>`;
-  if(d.entry){const e=d.entry;h+=`<div class="entry"><h2>${e.title}</h2><p class="why">${e.why}</p><ol>${e.steps.map(s=>`<li>${s}</li>`).join('')}</ol><div class="fb"><b>Still stuck:</b> ${e.fallback}</div><p class="src">${e.id} · verified ${e.verified_at} · ${e.sources.map(s=>`<a href="${s.url}" target="_blank">${s.name}</a>`).join(' · ')}</p></div>`}
-  if(d.candidates&&d.candidates.length){h+=`<p>你卡在哪一步？</p>`+d.candidates.map(c=>`<button class="cand" data-id="${c.entry_id}">${c.title} <span class="src">(${c.confidence})</span></button>`).join('')}
-  if(d.advice){h+=`<div class="fb"><b>AI 建议（未经核验）：</b> ${d.advice}</div>`}
+  const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  if(d.ocr_text) h+=`<p class="src">识别到的文字：${esc(d.ocr_text)}</p>`;
+  if(d.entry){const e=d.entry;h+=`<div class="entry"><h2>${esc(e.title)}</h2><p class="why">${esc(e.why)}</p><ol>${e.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><div class="fb"><b>Still stuck:</b> ${esc(e.fallback)}</div><p class="src">${esc(e.id)} · verified ${esc(e.verified_at)} · ${e.sources.map(s=>`<a href="${esc(s.url)}" target="_blank">${esc(s.name)}</a>`).join(' · ')}</p></div>`}
+  if(d.candidates&&d.candidates.length){h+=`<p>你卡在哪一步？</p>`+d.candidates.map(c=>`<button class="cand" data-id="${esc(c.entry_id)}">${esc(c.title)} <span class="src">(${esc(c.confidence)})</span></button>`).join('')}
+  if(d.advice){h+=`<div class="fb"><b>AI 建议（未经核验）：</b> ${esc(d.advice)}</div>`}
   if(d.decision==='unknown'&&!d.advice){h+=`<p class="why">知识库没有覆盖这个场景。</p>`}
   out.innerHTML=h; $('#raw').textContent=JSON.stringify(d,null,2);
   out.querySelectorAll('.cand').forEach(b=>b.onclick=async()=>{const r=await fetch(`/kb/entry/${b.dataset.id}?lang=${$('#lang').value}`);render({...d,decision:'answer',entry:await r.json(),candidates:[],advice:null})});
