@@ -47,14 +47,14 @@ BIND = [
     ('preflight', 'id:R0m1Rg', 'go:transfers'),
     ('preflight', 'id:H7HhcV', 'go:esim'),
     # 接机落地页
-    ('transfers', 'name:Back', 'go:preflight'),
+    ('transfers', 'name:Back', 'back'),
     ('transfers', 'name:Search Button', 'go:transfer'),
     ('transfers', 'name:Tab Airport drop-off', 'toast:Demo：切换到送机'),
     ('transfers', 'name:Row My bookings', 'toast:Demo：我的接机订单'),
     ('transfers', 'name:New User Card', 'toast:Demo：新客权益 12% off'),
     ('transfers', 'name:Train Card', 'toast:Demo：火车接站'),
     # eSIM 页
-    ('esim', 'name:Back', 'go:preflight'),
+    ('esim', 'name:Back', 'back'),
     ('esim', 'name:Dest Chinese mainland', 'toast:Demo：中国大陆 eSIM · 5 天 1GB/天 · US$4.9'),
     ('esim', 'name:Dest Search', 'toast:Demo：搜索目的地'),
     ('esim', 'name:Claim Button', 'toast:已领取新客 5% 优惠'),
@@ -62,7 +62,7 @@ BIND = [
     ('preflight', 'name:Run Check Button', 'then:检测通过 · 模拟时间来到落地那一刻|island'),
     ('preflight', 'id:arHv3', 'go:car'),
     # 租车页
-    ('car', 'name:Back', 'go:preflight'),
+    ('car', 'name:Back', 'back'),
     ('car', 'name:Search Button', 'toast:Demo：搜索可租车辆'),
     ('car', 'name:Tab Airport Transfers', 'go:transfers'),
     ('car', 'name:My Bookings', 'toast:Demo：我的租车订单'),
@@ -70,11 +70,11 @@ BIND = [
     ('preflight', 'name:Tab Home', 'go:home'),
     ('preflight', 'name:Tab My Trips', 'go:trips'),
     # 支付验证
-    ('payment', 'name:Back', 'go:preflight'),
+    ('payment', 'name:Back', 'back'),
     ('payment', 'name:Done Button', 'go:preflight'),
     ('payment', 'name:Stuck FAB', 'go:stuck'),
     # 接机预订
-    ('transfer', 'name:Back', 'go:transfers'),
+    ('transfer', 'name:Back', 'back'),
     ('transfer', 'name:Book Button', 'then:已预订接机，司机将在落地后举牌等候|go:preflight'),
     ('transfer', 'name:Vehicle Business', 'toast:Demo：选择 Business'),
     ('transfer', 'name:Vehicle Van', 'toast:Demo：选择 Van'),
@@ -95,7 +95,6 @@ BIND = [
     # Wi-Fi 引导
     ('wifi', 'name:Back', 'go:online'),
     ('wifi', 'name:Open Settings', 'toast:Demo：打开系统 Wi-Fi 设置'),
-    ('wifi', 'name:Copy', 'toast:已复制 AIRPORT-FREE-WIFI'),
     ('wifi', 'name:eSIM Row', 'go:esim'),
     ('wifi', 'name:Backup Passport kiosk', 'toast:Demo：显示自助机位置'),
     ('wifi', 'name:Backup Service desk', 'toast:Demo：显示服务台位置'),
@@ -114,12 +113,12 @@ BIND = [
     ('step3', 'name:Stuck FAB', 'go:stuck'),
     ('step3', 'name:Tab Home', 'go:home'),
     # 地铁导航
-    ('transit', 'name:Back', 'go:step3'),
+    ('transit', 'name:Back', 'back'),
     ('transit', 'name:Start Button', 'toast:Demo：跳转地图 App 开始导航'),
     ('transit', 'name:Ticket Button', 'toast:Demo：购买地铁票'),
     ('transit', 'name:Stuck FAB', 'go:stuck'),
     # 司机地址
-    ('driver', 'name:Close', 'go:step3'),
+    ('driver', 'name:Close', 'back'),
     ('driver', 'name:Didi Button', 'toast:Demo：打开支付宝里的滴滴小程序'),
     ('driver', 'name:Call Button', 'toast:Demo：拨打酒店电话'),
     ('driver', 'name:Stuck FAB', 'go:stuck'),
@@ -130,7 +129,7 @@ BIND = [
     ('done', 'name:FB Payment', 'toast:谢谢，已记录：支付最难'),
     ('done', 'name:FB Transport', 'toast:谢谢，已记录：交通最难'),
     # 分享卡
-    ('share', 'name:Close', 'go:done'),
+    ('share', 'name:Close', 'back'),
     ('share', 'name:Share Button', 'then:Demo：调起系统分享|go:home'),
     ('share', 'name:Privacy Toggle Row', 'toggle-privacy'),
     ('share', 'name:Share Save image', 'toast:Demo：已保存到相册'),
@@ -322,8 +321,6 @@ page = f'''<!doctype html>
 <div id="toast"></div>
 <div id="notif">
   <div class="ncard top" data-n="1"><div class="ic">T</div><div class="tx"><div class="hd"><b>Trip.com</b><span>now</span></div><div class="ti">Welcome to Shanghai</div><div class="bd">You've landed at PVG T2. Wi-Fi, payment and your ride to The PuLi — tap to open your landing check. Works offline.</div></div></div>
-  <div class="ncard peek" data-n="2"><div class="ic">T</div><div class="tx"><div class="hd"><b>Trip.com</b><span>3h ago</span></div><div class="ti">CX 362 departed on time</div><div class="bd">Landing at PVG 14:20. Your landing check is ready offline.</div></div></div>
-  <div class="nmore">2 notifications · Trip.com</div>
 </div>
 </div></div>
 <div id="menu"><button id="menuBtn">页面 ≡</button><div id="list">{nav_items}</div></div>
