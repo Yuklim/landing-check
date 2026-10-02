@@ -18,12 +18,14 @@ SCREENS = {
     'p6jXS': 'lock',       't7mCs': 'trips',     'E91Ggd': 'step1',   'cQhO3': 'online',
     'kKY1n': 'wifi',       'rK2om': 'stuck',     'Sxxn5': 'step3',    'SByuS': 'transit',
     'ZV1Kk': 'driver',     'tmk1G': 'done',      'Bn5F2': 'share',    'd8xLl': 'car',
+    'AN3x1': 'transfers',  'TDAfD': 'esim',
 }
 TITLES = {
-    'home': '首页入口', 'preflight': '行前检查', 'payment': '支付验证', 'transfer': '接机预订',
+    'home': '首页入口', 'preflight': '行前检查', 'payment': '支付验证', 'transfer': '接机车型',
     'lock': '锁屏推送', 'trips': 'My Trips', 'step1': '落地卡·第一步', 'online': '已联网分支',
     'wifi': 'Wi-Fi 引导', 'stuck': '我卡住了', 'step3': '第三步交通', 'transit': '地铁导航',
     'driver': '司机地址', 'done': '完成页', 'share': '分享卡', 'car': '租车页',
+    'transfers': '接机落地页', 'esim': 'eSIM 页',
 }
 
 # 点击绑定：(路由, 选择器) -> 动作。选择器用 data-pencil-id 或 data-pencil-name（在该屏范围内）。
@@ -42,14 +44,27 @@ BIND = [
     # 行前检查
     ('preflight', 'name:Back', 'back'),
     ('preflight', 'id:jVYml', 'go:payment'),
-    ('preflight', 'id:R0m1Rg', 'go:transfer'),
-    ('preflight', 'id:H7HhcV', 'toast:Demo：跳转 Trip.com eSIM 购买页'),
+    ('preflight', 'id:R0m1Rg', 'go:transfers'),
+    ('preflight', 'id:H7HhcV', 'go:esim'),
+    # 接机落地页
+    ('transfers', 'name:Back', 'go:preflight'),
+    ('transfers', 'name:Search Button', 'go:transfer'),
+    ('transfers', 'name:Tab Airport drop-off', 'toast:Demo：切换到送机'),
+    ('transfers', 'name:Row My bookings', 'toast:Demo：我的接机订单'),
+    ('transfers', 'name:New User Card', 'toast:Demo：新客权益 12% off'),
+    ('transfers', 'name:Train Card', 'toast:Demo：火车接站'),
+    # eSIM 页
+    ('esim', 'name:Back', 'go:preflight'),
+    ('esim', 'name:Dest Chinese mainland', 'toast:Demo：中国大陆 eSIM · 5 天 1GB/天 · US$4.9'),
+    ('esim', 'name:Dest Search', 'toast:Demo：搜索目的地'),
+    ('esim', 'name:Claim Button', 'toast:已领取新客 5% 优惠'),
+    ('esim', 'name:View All', 'toast:Demo：全部目的地'),
     ('preflight', 'name:Run Check Button', 'then:检测通过 · 模拟时间来到落地那一刻|island'),
     ('preflight', 'id:arHv3', 'go:car'),
     # 租车页
     ('car', 'name:Back', 'go:preflight'),
     ('car', 'name:Search Button', 'toast:Demo：搜索可租车辆'),
-    ('car', 'name:Tab Airport Transfers', 'go:transfer'),
+    ('car', 'name:Tab Airport Transfers', 'go:transfers'),
     ('car', 'name:My Bookings', 'toast:Demo：我的租车订单'),
     ('preflight', 'name:Stuck FAB', 'go:stuck'),
     ('preflight', 'name:Tab Home', 'go:home'),
@@ -59,7 +74,7 @@ BIND = [
     ('payment', 'name:Done Button', 'go:preflight'),
     ('payment', 'name:Stuck FAB', 'go:stuck'),
     # 接机预订
-    ('transfer', 'name:Back', 'go:preflight'),
+    ('transfer', 'name:Back', 'go:transfers'),
     ('transfer', 'name:Book Button', 'then:已预订接机，司机将在落地后举牌等候|go:preflight'),
     ('transfer', 'name:Vehicle Business', 'toast:Demo：选择 Business'),
     ('transfer', 'name:Vehicle Van', 'toast:Demo：选择 Van'),
@@ -81,7 +96,7 @@ BIND = [
     ('wifi', 'name:Back', 'go:online'),
     ('wifi', 'name:Open Settings', 'toast:Demo：打开系统 Wi-Fi 设置'),
     ('wifi', 'name:Copy', 'toast:已复制 AIRPORT-FREE-WIFI'),
-    ('wifi', 'name:eSIM Row', 'toast:Demo：跳转 Trip.com eSIM 购买页'),
+    ('wifi', 'name:eSIM Row', 'go:esim'),
     ('wifi', 'name:Backup Passport kiosk', 'toast:Demo：显示自助机位置'),
     ('wifi', 'name:Backup Service desk', 'toast:Demo：显示服务台位置'),
     ('wifi', 'name:Stuck FAB', 'go:stuck'),
@@ -266,22 +281,20 @@ page = f'''<!doctype html>
   .tap:active{{transform:scale(.98);filter:brightness(.95)}}
   #toast{{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:rgba(18,24,38,.92);color:#fff;font-size:13px;font-weight:600;padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:320px;text-align:center;z-index:50}}
   #toast.show{{opacity:1}}
-  #island{{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:126px;height:37px;border-radius:24px;background:#0B0B0F;z-index:60;overflow:hidden;opacity:0;pointer-events:none;transition:width .45s cubic-bezier(.2,.9,.3,1.2),height .45s cubic-bezier(.2,.9,.3,1.2),opacity .2s;box-shadow:0 10px 30px rgba(0,0,0,.35)}}
-  #island.show{{opacity:1;pointer-events:auto}}
-  #island.open{{width:369px;height:96px;border-radius:26px}}
-  #island .card{{position:absolute;inset:0;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;opacity:0;transition:opacity .25s .25s}}
-  #island.open .card{{opacity:1}}
-  #island .ic{{width:40px;height:40px;border-radius:10px;background:#2C61FE;color:#fff;font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}}
-  #island .tx{{min-width:0;color:#fff;font-family:Inter,-apple-system,sans-serif}}
-  #island .hd{{display:flex;justify-content:space-between;font-size:12px}}
-  #island .hd b{{font-weight:600}} #island .hd span{{color:rgba(255,255,255,.6)}}
-  #island .ti{{font-size:14px;font-weight:600;margin-top:1px}}
-  #island .bd{{font-size:12.5px;line-height:1.3;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
-  body.mobile #island{{top:max(11px, calc(env(safe-area-inset-top,0px) - 48px))}}
-  #island.now{{transition:none}}
-  #island.slide{{top:8px;transform:translate(-50%,-130%);transition:transform .45s cubic-bezier(.2,.9,.3,1.1),opacity .2s}}
-  #island.slide.show{{transform:translate(-50%,0)}}
-  #island.slide .card{{transition:opacity .2s}}
+  #notif{{position:absolute;left:16px;right:16px;top:max(8px, calc(env(safe-area-inset-top,0px) + 4px));z-index:60;display:none;flex-direction:column;transform:translateY(-140%);transition:transform .5s cubic-bezier(.2,.9,.3,1.05)}}
+  #notif.show{{display:flex}} #notif.in{{transform:translateY(0)}}
+  .ncard{{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:22px;background:rgba(250,250,252,.78);-webkit-backdrop-filter:blur(30px) saturate(1.6);backdrop-filter:blur(30px) saturate(1.6);box-shadow:0 8px 28px rgba(0,0,0,.18),inset 0 0 0 .5px rgba(255,255,255,.6);color:#111;font-family:Inter,-apple-system,sans-serif;cursor:pointer;transition:transform .35s cubic-bezier(.2,.9,.3,1.05),opacity .3s,margin .35s}}
+  .ncard .ic{{width:38px;height:38px;border-radius:9px;background:#2C61FE;color:#fff;font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}}
+  .ncard .tx{{min-width:0;flex:1}}
+  .ncard .hd{{display:flex;justify-content:space-between;font-size:12px}} .ncard .hd b{{font-weight:600}} .ncard .hd span{{color:rgba(0,0,0,.45)}}
+  .ncard .ti{{font-size:15px;font-weight:600;margin-top:1px}}
+  .ncard .bd{{font-size:14px;line-height:1.3;color:rgba(0,0,0,.8);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}}
+  #notif .peek{{margin:-54px 10px 0 10px;transform:scale(.96);opacity:.9;z-index:-1;position:relative}}
+  #notif .peek .tx,#notif .peek .ic{{visibility:hidden}}
+  #notif .nmore{{display:none}}
+  #notif.expanded .peek{{margin:8px 0 0 0;transform:none;opacity:1;z-index:auto}}
+  #notif.expanded .peek .tx,#notif.expanded .peek .ic{{visibility:visible}}
+  .screen[data-route="lock"] [data-pencil-name^="Notification"]{{background:rgba(255,255,255,.28) !important;-webkit-backdrop-filter:blur(30px) saturate(1.5);backdrop-filter:blur(30px) saturate(1.5);box-shadow:inset 0 0 0 .5px rgba(255,255,255,.35)}}
   #menu{{position:fixed;top:12px;right:12px;z-index:100}}
   #menu>button{{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:8px 12px;font:600 12px Inter,sans-serif;cursor:pointer}}
   #list{{position:fixed;top:48px;right:12px;background:#fff;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:4px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:100;max-height:80vh;overflow:auto}}
@@ -307,7 +320,11 @@ page = f'''<!doctype html>
 <div id="stage"><div id="phone">
 {screens_block}
 <div id="toast"></div>
-<div id="island"><div class="pill"></div><div class="card"><div class="ic">T</div><div class="tx"><div class="hd"><b>Trip.com</b><span>now</span></div><div class="ti">Welcome to Shanghai</div><div class="bd">You've landed at PVG T2. Wi-Fi, payment and your ride to The PuLi — tap to open your landing check.</div></div></div></div>
+<div id="notif">
+  <div class="ncard top" data-n="1"><div class="ic">T</div><div class="tx"><div class="hd"><b>Trip.com</b><span>now</span></div><div class="ti">Welcome to Shanghai</div><div class="bd">You've landed at PVG T2. Wi-Fi, payment and your ride to The PuLi — tap to open your landing check. Works offline.</div></div></div>
+  <div class="ncard peek" data-n="2"><div class="ic">T</div><div class="tx"><div class="hd"><b>Trip.com</b><span>3h ago</span></div><div class="ti">CX 362 departed on time</div><div class="bd">Landing at PVG 14:20. Your landing check is ready offline.</div></div></div>
+  <div class="nmore">2 notifications · Trip.com</div>
+</div>
 </div></div>
 <div id="menu"><button id="menuBtn">页面 ≡</button><div id="list">{nav_items}</div></div>
 <div id="hint">← → 上一页/下一页 · 点屏幕内的按钮跳转 · 右上角可直接跳到任意页</div>
@@ -370,14 +387,23 @@ document.addEventListener('click', e => {{
   else if (act === 'island') island();
 }});
 function island(){{
-  const b = $('#island');
-  const fromIsland = document.body.classList.contains('standalone') || !document.body.classList.contains('mobile');
-  b.classList.remove('open', 'show', 'slide'); void b.offsetWidth;
-  if (fromIsland) {{ b.classList.add('show'); setTimeout(() => b.classList.add('open'), 350); }}
-  else {{ b.classList.add('slide', 'open'); requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add('show'))); }}
-  clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove('open', 'show'), 9000);
+  const n = $('#notif');
+  n.classList.remove('in', 'expanded'); n.classList.add('show'); void n.offsetWidth;
+  requestAnimationFrame(() => requestAnimationFrame(() => n.classList.add('in')));
+  clearTimeout(n._t); n._t = setTimeout(() => {{ if (!n.classList.contains('expanded')) hideNotif(); }}, 10000);
 }}
-$('#island').onclick = () => {{ const b = $('#island'); b.classList.remove('open', 'show'); show('trips'); }};
+function hideNotif(){{ const n = $('#notif'); n.classList.remove('in'); setTimeout(() => n.classList.remove('show', 'expanded'), 500); }}
+$('#notif').addEventListener('click', e => {{
+  const n = $('#notif'), c = e.target.closest('.ncard');
+  if (!c) return;
+  if (c.classList.contains('peek') && !n.classList.contains('expanded')) {{ n.classList.add('expanded'); clearTimeout(n._t); return; }}
+  if (c.dataset.n === '1') {{ hideNotif(); show('trips'); }}
+  else toast('Demo：航班起飞通知');
+}});
+(() => {{ let y0 = 0; const n = $('#notif');
+  n.addEventListener('touchstart', e => {{ y0 = e.touches[0].clientY; }}, {{passive:true}});
+  n.addEventListener('touchend', e => {{ if (y0 - e.changedTouches[0].clientY > 40) hideNotif(); }});
+}})();
 $('#menuBtn').onclick = () => $('#list').classList.toggle('open');
 let lp, tx0, ty0;
 document.addEventListener('touchstart', e => {{ tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; lp = setTimeout(() => $('#list').classList.toggle('open'), 700); }}, {{passive:true}});
@@ -404,7 +430,8 @@ if (window.navigator.standalone || matchMedia('(display-mode: standalone)').matc
 fit();
 show((location.hash || '#home').slice(1), false);
 if (/island=1/.test(location.search)) setTimeout(island, 300);
-if (/island=2/.test(location.search)) {{ const b = $('#island'); b.classList.add('now', 'show', 'open'); }}
+if (/island=2/.test(location.search)) {{ const n = $('#notif'); n.style.transition = 'none'; n.classList.add('show', 'in'); }}
+if (/island=3/.test(location.search)) {{ const n = $('#notif'); n.style.transition = 'none'; n.classList.add('show', 'in', 'expanded'); }}
 </script>
 </body>
 </html>'''
