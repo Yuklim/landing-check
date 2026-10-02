@@ -36,9 +36,9 @@
   #list button:hover{background:#EAF0FF;color:#2C61FE}
   #hint{position:fixed;left:16px;bottom:12px;color:rgba(255,255,255,.55);font-size:12px}
   @media (max-width:430px){
-    html,body{background:#0F1A3A}
-    #stage{height:100dvh}
-    #phone{border-radius:0;box-shadow:none}
+    html,body{background:#0F1A3A;overflow:auto;height:auto}
+    #stage{position:static;display:block;height:auto}
+    #phone{border-radius:0;box-shadow:none;transform-origin:top left;margin:0}
     #hint,#menu>button{display:none}
     #list{top:auto;bottom:16px;right:16px;left:16px;flex-direction:row;flex-wrap:wrap}
   }
@@ -625,7 +625,7 @@
 </div>
 </div>
 <div data-pencil-id="QHqXS" data-pencil-name="Footer" style="align-items: flex-start; background-color: #FFFFFF; border-color: #DADFE6; border-style: solid; border-width: 1px 0px 0px 0px; box-sizing: content-box; display: flex; flex-direction: column; flex-shrink: 0; gap: 6px; min-height: 82.5px; justify-content: flex-start; margin: -0.5px 0px 0px 0px; padding: 10px 16px 6px 16px; position: relative; width: 393px; z-index: 3">
-<div class="tap" data-act="toast:正在重新检测… 20 秒后更新" data-pencil-id="p9aLM" data-pencil-name="Run Check Button" style="align-items: center; background-color: #2C61FE; border-radius: 6px; box-sizing: border-box; display: flex; flex-direction: row; flex-shrink: 0; gap: 8px; height: 46px; justify-content: center; width: 100%">
+<div class="tap" data-act="then:检测通过 · 模拟时间来到落地那一刻|go:lock" data-pencil-id="p9aLM" data-pencil-name="Run Check Button" style="align-items: center; background-color: #2C61FE; border-radius: 6px; box-sizing: border-box; display: flex; flex-direction: row; flex-shrink: 0; gap: 8px; height: 46px; justify-content: center; width: 100%">
 <svg data-icon-name="refresh-cw" data-icon-set="lucide" data-pencil-id="ck7zT" data-pencil-name="Run Icon" preserveaspectratio="xMidYMid meet" style="box-sizing: border-box; flex-shrink: 0; height: 16px; width: 16px" viewbox="0 0 13.99993896484375 14" xmlns="http://www.w3.org/2000/svg">
 <path d="M6.56592 1.18945q-1.12109 0.08545-2.1294 0.57422-0.9502 0.46143-1.66455 1.22022-0.71436 0.75537-1.13476 1.71924-0.22217 0.54688-0.34864 1.13476-0.12646 0.58789-0.11279 1.10742 0 0.19482 0.03418 0.28028 0.0376 0.08203 0.1333 0.18115 0.09912 0.0957 0.18115 0.1333 0.08545 0.03418 0.22559 0.03418 0.14014 0 0.22217-0.03418 0.08545-0.0376 0.1914-0.1333 0.10596-0.09912 0.14014-0.23926 0.03418-0.14014 0.03418-0.39307 0.01367-0.30762 0.0957-0.71777 0.08545-0.41357 0.22559-0.75195 0.42041-1.09033 1.31592-1.85254 0.89551-0.76563 2.04394-1.01514 0.30762-0.07178 0.72803-0.09228 0.42041-0.02051 0.75537 0.0205 1.76709 0.18115 3.11035 1.4834l0.22217 0.22559-0.7417 0q-0.7417 0-0.85449 0.02734-0.24951 0.02734-0.38281 0.23242-0.1333 0.20166-0.09912 0.43409 0.03418 0.229 0.24609 0.36914l0.01367 0.01367q0.08203 0.05811 0.15381 0.07178 0.11279 0.01367 0.43408 0.02734l2.79932-0.01367 0.09912-0.04102q0.18115-0.08545 0.28027-0.28027l0.04102-0.07178 0-3.26074-0.04102-0.08545q-0.09912-0.16748-0.28027-0.2666-0.05811-0.02734-0.09912-0.04102-0.04102-0.01367-0.15381-0.01367-0.11279 0-0.15381 0.01367-0.04101 0.01367-0.09912 0.04102-0.18115 0.09912-0.28027 0.2666l-0.04102 0.08545 0 1.67822-0.28027-0.26318q-0.3623-0.36572-0.72119-0.62207-0.35547-0.25977-0.78955-0.48535-1.10742-0.58789-2.38233-0.70069-0.15381-0.01367-0.4751-0.01367-0.32129 0-0.46142 0.01367z m5.53027 5.25q-0.11279 0.04102-0.21875 0.12647-0.10254 0.08545-0.14697 0.18115-0.04102 0.05811-0.04102 0.15381l-0.05468 0.54687q-0.04443 0.65967-0.30762 1.28858-0.47851 1.18945-1.47998 1.96191-0.99805 0.76904-2.24561 0.93653-0.7417 0.08203-1.5039-0.05811-0.76221-0.14014-1.43555-0.48877-0.72803-0.39307-1.3877-1.03564l-0.10937-0.12647 0.75537 0q0.50244 0 0.66992-0.01367 0.22559-0.01367 0.30762-0.04102 0.08545-0.03076 0.1709-0.12646 0.22217-0.22559 0.16748-0.51953-0.05469-0.29395-0.34863-0.43408l-0.08545-0.02735-3.20606 0-0.08545 0.04102q-0.19482 0.08545-0.29394 0.28027l-0.04102 0.07178 0 3.26074 0.04102 0.08545q0.04443 0.06836 0.12646 0.15381 0.08545 0.08203 0.16065 0.12646 0.07861 0.04102 0.24609 0.04102 0.16748 0 0.24268-0.04102 0.07861-0.04443 0.16064-0.12646 0.08545-0.08545 0.12988-0.15381l0.04102-0.08545 0-1.67822 0.25293 0.24951q0.24951 0.23926 0.43408 0.39307 1.37061 1.14844 3.20606 1.40136 0.2085 0.02734 0.63574 0.03418 0.42725 0.00684 0.64941-0.00683 1.3877-0.12646 2.57715-0.8545 1.14844-0.72803 1.87646-1.87646 0.72803-1.17578 0.8545-2.57715 0.02734-0.22217 0.01367-0.44775 0-0.19482-0.0376-0.27686-0.03418-0.08545-0.11621-0.18457-0.16748-0.15381-0.39307-0.16748-0.14014 0-0.18115 0.01367z" fill="#FFFFFF"></path>
 </svg>
@@ -1088,7 +1088,7 @@
               ¥220
             </div>
 </div>
-<div class="tap" data-act="toast:Demo：已预订接机，司机将在落地后举牌等候" data-pencil-id="PJKQM" data-pencil-name="Book Button" style="align-items: center; background-color: #2C61FE; border-radius: 6px; box-sizing: border-box; display: flex; flex-direction: row; flex: 1 1 0; gap: 0px; height: 46px; justify-content: center">
+<div class="tap" data-act="then:已预订接机，司机将在落地后举牌等候|go:preflight" data-pencil-id="PJKQM" data-pencil-name="Book Button" style="align-items: center; background-color: #2C61FE; border-radius: 6px; box-sizing: border-box; display: flex; flex-direction: row; flex: 1 1 0; gap: 0px; height: 46px; justify-content: center">
 <div data-pencil-id="r3wSgP" data-pencil-name="Book Label" style="box-sizing: border-box; color: #FFFFFF; font-family: Inter, system-ui, sans-serif; font-size: 15px; font-style: normal; font-weight: 700; letter-spacing: 0px; line-height: normal; text-align: left; white-space: nowrap">
               Book now
             </div>
@@ -3591,7 +3591,7 @@
 </div>
 </div>
 <div data-pencil-id="ly4sK" data-pencil-name="Footer" style="align-items: flex-start; background-color: #FFFFFF; border-color: #DADFE6; border-style: solid; border-width: 1px 0px 0px 0px; box-sizing: content-box; display: flex; flex-direction: row; flex-shrink: 0; gap: 0px; min-height: 65.5px; justify-content: flex-start; margin: -0.5px 0px 0px 0px; padding: 12px 16px 8px 16px; width: 393px">
-<div class="tap" data-act="toast:Demo：调起系统分享" data-pencil-id="S0Gmu" data-pencil-name="Share Button" style="align-items: center; background-color: #2C61FE; border-radius: 6px; box-sizing: border-box; display: flex; flex-direction: row; flex: 1 1 0; gap: 8px; height: 46px; justify-content: center">
+<div class="tap" data-act="then:Demo：调起系统分享|go:home" data-pencil-id="S0Gmu" data-pencil-name="Share Button" style="align-items: center; background-color: #2C61FE; border-radius: 6px; box-sizing: border-box; display: flex; flex-direction: row; flex: 1 1 0; gap: 8px; height: 46px; justify-content: center">
 <svg data-icon-name="share-2" data-icon-set="lucide" data-pencil-id="TdPup" data-pencil-name="Share Btn Icon" preserveaspectratio="xMidYMid meet" style="box-sizing: border-box; flex-shrink: 0; height: 18px; width: 18px" viewbox="0 0 13.99993896484375 14" xmlns="http://www.w3.org/2000/svg">
 <path d="M10.40088 0.58789q-0.64258 0.02734-1.18262 0.38623-0.53662 0.35547-0.80322 0.92969-0.12646 0.25293-0.17774 0.44775-0.04785 0.19482-0.06152 0.4751-0.01367 0.36572 0.05469 0.63232l0.03076 0.09571-3.09668 1.8081-0.14014-0.12646q-0.46143-0.39307-1.06298-0.51953-0.16748-0.04102-0.46143-0.04102-0.29395 0-0.46143 0.04102-0.60156 0.12646-1.05957 0.51953-0.45459 0.39307-0.66308 0.95019-0.08545 0.22559-0.1128 0.3794-0.02734 0.15381-0.02734 0.43408 0 0.28027 0.02734 0.43408 0.02734 0.15381 0.1128 0.3794 0.16748 0.4751 0.52978 0.84082 0.36572 0.3623 0.84082 0.52978 0.22559 0.08545 0.3794 0.11279 0.15381 0.02734 0.43408 0.02735 0.22559 0 0.30762-0.00684 0.08545-0.00684 0.19482-0.03418 0.58789-0.15381 1.02197-0.51953l0.14014-0.12646 3.09668 1.8081-0.01367 0.05469q-0.05811 0.18115-0.07178 0.46143-0.01367 0.28027 0.02734 0.50586 0.05811 0.33496 0.21875 0.66308 0.16064 0.32813 0.41358 0.58106 0.44775 0.46143 1.06299 0.62548 0.61523 0.16065 1.22363-0.00683 0.6084-0.1709 1.05957-0.63233 0.50244-0.5332 0.62891-1.24414 0.01367-0.1709 0.01367-0.43408 0-0.2666-0.04102-0.40674-0.1709-0.77246-0.7417-1.2749-0.46484-0.40674-1.08007-0.5332-0.18115-0.04102-0.46143-0.04102-0.28027 0-0.46143 0.04102-0.61523 0.12646-1.06298 0.51953-0.12646 0.11279-0.15723 0.09912l-3.07959-1.79443 0.04443-0.14014q0.02734-0.12646 0.02735-0.48877 0-0.3623-0.02735-0.48877l-0.04443-0.14014 0.21191-0.12646q2.79932-1.63721 2.86768-1.66797 0.03076-0.01367 0.15723 0.09912 0.4751 0.42041 1.11084 0.5332 0.63916 0.10938 1.22705-0.11279 0.68359-0.25293 1.09716-0.84765 0.41357-0.59473 0.41358-1.32276 0-0.39307-0.11279-0.72803-0.23584-0.70068-0.80323-1.13476-0.56738-0.43408-1.30908-0.4751l-0.19824 0z m0.33838 1.18945q0.22217 0.04102 0.41015 0.17432 0.19141 0.1333 0.31787 0.33154 0.22217 0.33496 0.18116 0.76905-0.01367 0.2085-0.09912 0.37255-0.08203 0.16064-0.25293 0.32813-0.16748 0.16748-0.35547 0.24609-0.18799 0.0752-0.44092 0.0752-0.25293 0-0.44092-0.0752-0.18799-0.07861-0.35888-0.24609-0.16748-0.16748-0.25293-0.32813-0.08203-0.16406-0.09571-0.37255-0.05469-0.44775 0.18115-0.78272 0.19824-0.29395 0.52637-0.42724 0.32813-0.1333 0.68018-0.06495z m-6.94531 4.08789q0.15381 0.04443 0.32128 0.1504 0.16748 0.10254 0.25977 0.21533 0.09229 0.10938 0.16064 0.24267 0.07178 0.1333 0.09913 0.2461 0.02734 0.11279 0.02734 0.28027 0 0.16748-0.02734 0.29395-0.07178 0.28027-0.3042 0.51953-0.229 0.23584-0.53662 0.32129-0.11279 0.02734-0.29395 0.02734-0.18115 0-0.29395-0.02734-0.30762-0.08545-0.54003-0.32129-0.229-0.23926-0.30079-0.53321-0.02734-0.11279-0.02734-0.28027 0-0.16748 0.02734-0.29395 0.05811-0.22559 0.22559-0.43408 0.16748-0.2085 0.40674-0.32129 0.34863-0.18115 0.79639-0.08545z m6.97265 4.0879q0.29394 0.0581 0.54688 0.30761 0.18115 0.18457 0.26318 0.37256 0.08545 0.18799 0.08545 0.44092 0 0.29395-0.11279 0.51611-0.22217 0.43408-0.68018 0.59815-0.45459 0.16064-0.88867-0.06494-0.19482-0.08203-0.34863-0.26319-0.15381-0.18457-0.22559-0.36572-0.06836-0.18115-0.06836-0.40674 0-0.22559 0.05469-0.39307 0.09912-0.26318 0.33496-0.47167 0.23926-0.21192 0.49219-0.27002 0.11279-0.02734 0.27343-0.02735 0.16065 0 0.27344 0.02735z" fill="#FFFFFF"></path>
 </svg>
@@ -3666,8 +3666,15 @@ function fit(){
   const ph = $('#phone');
   const vv = window.visualViewport;
   const w = vv ? vv.width : window.innerWidth, h = vv ? vv.height : window.innerHeight;
-  const pad = w <= 430 ? 0 : 40;
-  const s = Math.min((h-pad)/852, (w-pad)/393, w <= 430 ? 10 : 1.05);
+  if (w <= 430) {
+    const s = w / 393;
+    ph.style.transform = 'scale(' + s + ')';
+    ph.style.height = Math.max(852, Math.round(h / s)) + 'px';
+    document.body.style.height = Math.round(Math.max(852, h / s) * s) + 'px';
+    return;
+  }
+  ph.style.height = '852px';
+  const s = Math.min((h-40)/852, (w-40)/393, 1.05);
   ph.style.transform = 'scale(' + s + ')';
 }
 function show(route, push=true){
@@ -3700,11 +3707,19 @@ document.addEventListener('click', e => {
   else if (act === 'back') back();
   else if (act === 'toggle-privacy') togglePrivacy();
   else if (act.startsWith('toast:')) toast(act.slice(6));
+  else if (act.startsWith('then:')) { const [t, g] = act.slice(5).split('|'); toast(t); setTimeout(() => show(g.slice(3)), 900); }
 });
 $('#menuBtn').onclick = () => $('#list').classList.toggle('open');
-let lp;
-document.addEventListener('touchstart', e => { lp = setTimeout(() => $('#list').classList.toggle('open'), 700); }, {passive:true});
-document.addEventListener('touchend', () => clearTimeout(lp));
+let lp, tx0, ty0;
+document.addEventListener('touchstart', e => { tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; lp = setTimeout(() => $('#list').classList.toggle('open'), 700); }, {passive:true});
+document.addEventListener('touchend', e => {
+  clearTimeout(lp);
+  const dx = e.changedTouches[0].clientX - tx0, dy = e.changedTouches[0].clientY - ty0;
+  if (Math.abs(dx) > 90 && Math.abs(dy) < 50) {
+    const cur = document.querySelector('.screen.on').dataset.route, i = order.indexOf(cur);
+    show(dx < 0 ? order[(i+1) % order.length] : order[(i-1+order.length) % order.length]);
+  }
+});
 document.addEventListener('touchmove', () => clearTimeout(lp), {passive:true});
 document.querySelectorAll('#list button').forEach(b => b.onclick = () => show(b.dataset.go));
 document.addEventListener('keydown', e => {

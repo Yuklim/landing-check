@@ -44,7 +44,7 @@ BIND = [
     ('preflight', 'id:jVYml', 'go:payment'),
     ('preflight', 'id:R0m1Rg', 'go:transfer'),
     ('preflight', 'id:H7HhcV', 'toast:Demo：跳转 Trip.com eSIM 购买页'),
-    ('preflight', 'name:Run Check Button', 'toast:正在重新检测… 20 秒后更新'),
+    ('preflight', 'name:Run Check Button', 'then:检测通过 · 模拟时间来到落地那一刻|go:lock'),
     ('preflight', 'name:Stuck FAB', 'go:stuck'),
     ('preflight', 'name:Tab Home', 'go:home'),
     ('preflight', 'name:Tab My Trips', 'go:trips'),
@@ -54,7 +54,7 @@ BIND = [
     ('payment', 'name:Stuck FAB', 'go:stuck'),
     # 接机预订
     ('transfer', 'name:Back', 'go:preflight'),
-    ('transfer', 'name:Book Button', 'toast:Demo：已预订接机，司机将在落地后举牌等候'),
+    ('transfer', 'name:Book Button', 'then:已预订接机，司机将在落地后举牌等候|go:preflight'),
     ('transfer', 'name:Vehicle Business', 'toast:Demo：选择 Business'),
     ('transfer', 'name:Vehicle Van', 'toast:Demo：选择 Van'),
     # 锁屏
@@ -110,7 +110,7 @@ BIND = [
     ('done', 'name:FB Transport', 'toast:谢谢，已记录：交通最难'),
     # 分享卡
     ('share', 'name:Close', 'go:done'),
-    ('share', 'name:Share Button', 'toast:Demo：调起系统分享'),
+    ('share', 'name:Share Button', 'then:Demo：调起系统分享|go:home'),
     ('share', 'name:Privacy Toggle Row', 'toggle-privacy'),
     ('share', 'name:Share Save image', 'toast:Demo：已保存到相册'),
     ('share', 'name:Share Copy link', 'toast:已复制 trip.com/landing'),
@@ -188,9 +188,9 @@ page = f'''<!doctype html>
   #list button:hover{{background:#EAF0FF;color:#2C61FE}}
   #hint{{position:fixed;left:16px;bottom:12px;color:rgba(255,255,255,.55);font-size:12px}}
   @media (max-width:430px){{
-    html,body{{background:#0F1A3A}}
-    #stage{{height:100dvh}}
-    #phone{{border-radius:0;box-shadow:none}}
+    html,body{{background:#0F1A3A;overflow:auto;height:auto}}
+    #stage{{position:static;display:block;height:auto}}
+    #phone{{border-radius:0;box-shadow:none;transform-origin:top left;margin:0}}
     #hint,#menu>button{{display:none}}
     #list{{top:auto;bottom:16px;right:16px;left:16px;flex-direction:row;flex-wrap:wrap}}
   }}
@@ -213,8 +213,15 @@ function fit(){{
   const ph = $('#phone');
   const vv = window.visualViewport;
   const w = vv ? vv.width : window.innerWidth, h = vv ? vv.height : window.innerHeight;
-  const pad = w <= 430 ? 0 : 40;
-  const s = Math.min((h-pad)/852, (w-pad)/393, w <= 430 ? 10 : 1.05);
+  if (w <= 430) {{
+    const s = w / 393;
+    ph.style.transform = 'scale(' + s + ')';
+    ph.style.height = Math.max(852, Math.round(h / s)) + 'px';
+    document.body.style.height = Math.round(Math.max(852, h / s) * s) + 'px';
+    return;
+  }}
+  ph.style.height = '852px';
+  const s = Math.min((h-40)/852, (w-40)/393, 1.05);
   ph.style.transform = 'scale(' + s + ')';
 }}
 function show(route, push=true){{
@@ -247,11 +254,19 @@ document.addEventListener('click', e => {{
   else if (act === 'back') back();
   else if (act === 'toggle-privacy') togglePrivacy();
   else if (act.startsWith('toast:')) toast(act.slice(6));
+  else if (act.startsWith('then:')) {{ const [t, g] = act.slice(5).split('|'); toast(t); setTimeout(() => show(g.slice(3)), 900); }}
 }});
 $('#menuBtn').onclick = () => $('#list').classList.toggle('open');
-let lp;
-document.addEventListener('touchstart', e => {{ lp = setTimeout(() => $('#list').classList.toggle('open'), 700); }}, {{passive:true}});
-document.addEventListener('touchend', () => clearTimeout(lp));
+let lp, tx0, ty0;
+document.addEventListener('touchstart', e => {{ tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; lp = setTimeout(() => $('#list').classList.toggle('open'), 700); }}, {{passive:true}});
+document.addEventListener('touchend', e => {{
+  clearTimeout(lp);
+  const dx = e.changedTouches[0].clientX - tx0, dy = e.changedTouches[0].clientY - ty0;
+  if (Math.abs(dx) > 90 && Math.abs(dy) < 50) {{
+    const cur = document.querySelector('.screen.on').dataset.route, i = order.indexOf(cur);
+    show(dx < 0 ? order[(i+1) % order.length] : order[(i-1+order.length) % order.length]);
+  }}
+}});
 document.addEventListener('touchmove', () => clearTimeout(lp), {{passive:true}});
 document.querySelectorAll('#list button').forEach(b => b.onclick = () => show(b.dataset.go));
 document.addEventListener('keydown', e => {{
