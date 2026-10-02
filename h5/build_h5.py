@@ -404,14 +404,7 @@ $('#notif').addEventListener('click', e => {{
 $('#menuBtn').onclick = () => $('#list').classList.toggle('open');
 let lp, tx0, ty0;
 document.addEventListener('touchstart', e => {{ tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; lp = setTimeout(() => $('#list').classList.toggle('open'), 700); }}, {{passive:true}});
-document.addEventListener('touchend', e => {{
-  clearTimeout(lp);
-  const dx = e.changedTouches[0].clientX - tx0, dy = e.changedTouches[0].clientY - ty0;
-  if (Math.abs(dx) > 90 && Math.abs(dy) < 50) {{
-    const cur = document.querySelector('.screen.on').dataset.route, i = order.indexOf(cur);
-    show(dx < 0 ? order[(i+1) % order.length] : order[(i-1+order.length) % order.length]);
-  }}
-}});
+document.addEventListener('touchend', () => clearTimeout(lp));
 document.addEventListener('touchmove', () => clearTimeout(lp), {{passive:true}});
 document.querySelectorAll('#list button').forEach(b => b.onclick = () => show(b.dataset.go));
 document.addEventListener('keydown', e => {{
