@@ -5,12 +5,13 @@
 """
 import os
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Query, Body
+from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from kb import KnowledgeBase
 from mock import MockTrip
+import stuck
 
 app = FastAPI(title='Landing Check API', version='0.1')
 app.add_middleware(CORSMiddleware,
@@ -126,3 +127,13 @@ def mock_event(event: str = Body(..., embed=True)):
 @app.get('/mock/timeline')
 def mock_timeline():
     return trip.timeline()
+
+
+# ---------------- B 识别 ----------------
+@app.post('/stuck/classify')
+async def stuck_classify(image: UploadFile | None = File(None), text: str = Form(''), lang: str = Form('en'),
+                         airport: str = Form(''), advice: str = Form('true')):
+    img = await image.read() if image else None
+    if not img and not text.strip():
+        raise HTTPException(400, 'send an image or a text description')
+    return stuck.classify(kb, img, text.strip(), lang=lang, airport=airport, advice=advice.lower() != 'false')
