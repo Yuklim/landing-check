@@ -1,0 +1,9 @@
+{
+  "PVG": {
+    "taxi":     {"id": "taxi",     "title": "Taxi",                    "min": 50, "price_cny": [160, 200], "where": "Official queue at Exit 9, ground floor", "action": "driver_card"},
+    "transfer": {"id": "transfer", "title": "Trip.com transfer",       "min": 50, "price_cny": [220, 220], "where": "Driver waits at arrivals with your name", "action": "transfer"},
+    "metro":    {"id": "metro",    "title": "Metro Line 2",            "min": 70, "price_cny": [7, 7],     "where": "Follow Metro signs from Arrivals", "action": "transit", "transfers": 1},
+    "didi":     {"id": "didi",     "title": "Ride-hailing · DiDi via Alipay", "min": 50, "price_cny": [140, 180], "where": "Pickup point P2, follow DiDi signs", "action": "didi"},
+    "maglev":   {"id": "maglev",   "title": "Maglev + Metro",          "min": 45, "price_cny": [57, 57],   "where": "Maglev station, T2 level 2", "action": "transit"}
+  }
+}
