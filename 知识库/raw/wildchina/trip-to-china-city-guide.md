@@ -20,7 +20,6 @@ site: WildChina
     - [First-Time Traveler](https://wildchina.com/first-time-trips-to-china)
 
   - By Destination
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Mainland China](https://wildchina.com/search-tours/)
     - [Hong Kong](https://wildchina.com/travel-to-hong-kong/)
@@ -29,7 +28,6 @@ site: WildChina
     - [Rest of World (Outbound)](https://www.beshan.com/)
 
   - By Length
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Day Experiences](https://wildchina.com/day-experiences/)
     - [Multi-day Journeys](https://wildchina.com/search-tours/)
@@ -181,7 +179,6 @@ site: WildChina
     - [First-Time Traveler](https://wildchina.com/first-time-trips-to-china)
 
   - By Destination
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Mainland China](https://wildchina.com/search-tours/)
     - [Hong Kong](https://wildchina.com/travel-to-hong-kong/)
@@ -190,7 +187,6 @@ site: WildChina
     - [Rest of World (Outbound)](https://www.beshan.com/)
 
   - By Length
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Day Experiences](https://wildchina.com/day-experiences/)
     - [Multi-day Journeys](https://wildchina.com/search-tours/)
@@ -329,49 +325,41 @@ site: WildChina
 
 - [Plan YOUR JOURNEY](https://wildchina.com/get-started/)
 
-# Your City Guides
-
 ## Your City Guides
 
 Discover a different side of China's cities through our curated guides, crafted for independent travelers. Go beyond the iconic landmarks to explore lesser-known wonders and experience local favorites.
 
 ![](https://wildchina.com/wp-content/uploads/2024/11/Untitled-design-43.png)
 
-## Beijing  ![](https://wildchina.com/wp-content/uploads/2024/10/Beijing.svg)
+## Beijing
+ 
 
 ![](https://wildchina.com/wp-content/uploads/2024/11/Untitled-design-46.png)
 
-## Chengdu  ![](https://wildchina.com/wp-content/uploads/2024/10/Chengdu.svg)
+## Chengdu
+ 
 
 ![](https://wildchina.com/wp-content/uploads/2024/10/hongkong-city-guide.jpg)
 
-## Hong Kong  ![](https://wildchina.com/wp-content/uploads/2024/10/Hong-Kong.svg)
+## Hong Kong
+ 
 
 ![](https://wildchina.com/wp-content/uploads/2024/10/shanghai-city-guide.jpg)
 
-## Shanghai  ![](https://wildchina.com/wp-content/uploads/2024/10/Shanghai.svg)
+## Shanghai
+ 
 
 ![](https://wildchina.com/wp-content/uploads/2024/11/Untitled-design-45.png)
 
-## Xi’an  ![](https://wildchina.com/wp-content/uploads/2024/10/Xian.svg)
+## Xi’an
+ 
 
 ![](https://wildchina.com/wp-content/uploads/2026/06/Chongqing-City-Guide.jpeg)
 
-## Chongqing  ![](https://wildchina.com/wp-content/uploads/2026/06/Chongqing-City-Guide.svg)
+## Chongqing
+ 
 
 #### Your City Guides
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Beijing.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Chengdu.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Hong-Kong.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Shanghai.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Xian.svg)
-
-![](https://wildchina.com/wp-content/uploads/2026/06/Chongqing-City-Guide.svg)
 
 ## Beijing City Guide
 
@@ -386,18 +374,6 @@ Visiting this year? Be sure to read our guide on [how to visit China](https://wi
 ![](https://wildchina.com/wp-content/uploads/2024/07/shutterstock_370694174.png)
 
 ### Any questions?
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Beijing.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Chengdu.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Hong-Kong.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Shanghai.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/10/Xian.svg)
-
-![](https://wildchina.com/wp-content/uploads/2026/06/Chongqing-City-Guide.svg)
 
 Got questions about traveling in China? We’ve got answers—and real people to give them! Our travel designers are on hand to help you out whenever you need.
 

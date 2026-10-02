@@ -20,7 +20,6 @@ site: WildChina
     - [First-Time Traveler](https://wildchina.com/first-time-trips-to-china)
 
   - By Destination
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Mainland China](https://wildchina.com/search-tours/)
     - [Hong Kong](https://wildchina.com/travel-to-hong-kong/)
@@ -29,7 +28,6 @@ site: WildChina
     - [Rest of World (Outbound)](https://www.beshan.com/)
 
   - By Length
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Day Experiences](https://wildchina.com/day-experiences/)
     - [Multi-day Journeys](https://wildchina.com/search-tours/)
@@ -181,7 +179,6 @@ site: WildChina
     - [First-Time Traveler](https://wildchina.com/first-time-trips-to-china)
 
   - By Destination
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Mainland China](https://wildchina.com/search-tours/)
     - [Hong Kong](https://wildchina.com/travel-to-hong-kong/)
@@ -190,7 +187,6 @@ site: WildChina
     - [Rest of World (Outbound)](https://www.beshan.com/)
 
   - By Length
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Day Experiences](https://wildchina.com/day-experiences/)
     - [Multi-day Journeys](https://wildchina.com/search-tours/)
@@ -328,8 +324,6 @@ site: WildChina
   - [Cultural Projects & Spaces](https://wildchina.com/what-we-offer/)
 
 - [Plan YOUR JOURNEY](https://wildchina.com/get-started/)
-
-# Frequently Asked Questions
 
 **China:**
 +86 10 6465 6602

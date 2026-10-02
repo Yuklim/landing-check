@@ -20,7 +20,6 @@ site: WildChina
     - [First-Time Traveler](https://wildchina.com/first-time-trips-to-china)
 
   - By Destination
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Mainland China](https://wildchina.com/search-tours/)
     - [Hong Kong](https://wildchina.com/travel-to-hong-kong/)
@@ -29,7 +28,6 @@ site: WildChina
     - [Rest of World (Outbound)](https://www.beshan.com/)
 
   - By Length
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Day Experiences](https://wildchina.com/day-experiences/)
     - [Multi-day Journeys](https://wildchina.com/search-tours/)
@@ -181,7 +179,6 @@ site: WildChina
     - [First-Time Traveler](https://wildchina.com/first-time-trips-to-china)
 
   - By Destination
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Mainland China](https://wildchina.com/search-tours/)
     - [Hong Kong](https://wildchina.com/travel-to-hong-kong/)
@@ -190,7 +187,6 @@ site: WildChina
     - [Rest of World (Outbound)](https://www.beshan.com/)
 
   - By Length
-![](https://wildchina.com/wp-content/uploads/2025/06/by-destination-icon.svg)
 
     - [Day Experiences](https://wildchina.com/day-experiences/)
     - [Multi-day Journeys](https://wildchina.com/search-tours/)
@@ -329,8 +325,6 @@ site: WildChina
 
 - [Plan YOUR JOURNEY](https://wildchina.com/get-started/)
 
-# Your Pre-Departure Guide
-
 ![Predeparture Guide Tea Plantation in China](https://wildchina.com/wp-content/uploads/2024/07/1-Your-Predeparture-Guide-Tea-Plantation-in-China.jpg)
 
 ![Predeparture Guide Tea Plantation in China](https://wildchina.com/wp-content/uploads/2024/07/1-Your-Predeparture-Guide-Tea-Plantation-in-China-1024x576.jpg)
@@ -341,23 +335,20 @@ Here, you’ll find everything you need to know to prepare for your trip to Chin
 
 ![](https://wildchina.com/wp-content/uploads/2024/09/1-Cropped-Guide-Mei-Running-in-Dali-Yunnan.jpg)
 
-## Preparing for China  ![](https://wildchina.com/wp-content/uploads/2024/07/preparing-china-icon.svg)
+## Preparing for China
+ 
 
 ![](https://wildchina.com/wp-content/uploads/2024/08/The-Forbidden-City-Beijing-WOW-X5-scaled.jpeg)
 
-## On the Ground in China  ![](https://wildchina.com/wp-content/uploads/2024/07/ground-china-icon.svg)
+## On the Ground in China
+ 
 
 ![](https://wildchina.com/wp-content/uploads/2024/09/cropped_image_adjusted_858x626.jpg)
 
-## Make the Most of Your Time  ![](https://wildchina.com/wp-content/uploads/2024/07/your-time-icon.svg)
+## Make the Most of Your Time
+ 
 
 #### Your Pre-Departure Guide
-
-![](https://wildchina.com/wp-content/uploads/2024/07/preparing-china-icon.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/07/ground-china-icon.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/07/your-time-icon.svg)
 
 ## China Pre-Trip Checklist
 
@@ -395,12 +386,6 @@ Visiting this year? Be sure to read our guide on [how to visit China in 2024](ht
 ![](https://wildchina.com/wp-content/uploads/2024/07/shutterstock_370694174.png)
 
 ### Any questions?
-
-![](https://wildchina.com/wp-content/uploads/2024/07/preparing-china-icon.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/07/ground-china-icon.svg)
-
-![](https://wildchina.com/wp-content/uploads/2024/07/your-time-icon.svg)
 
 Got questions about traveling in China? We’ve got answers—and real people to give them! Our travel designers are on hand to help you out whenever you need.
 
