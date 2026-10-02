@@ -8,6 +8,7 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from kb import KnowledgeBase
@@ -23,6 +24,9 @@ app.add_middleware(CORSMiddleware,
 
 kb = KnowledgeBase()
 trip = MockTrip()
+_H5 = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'h5'))
+if os.path.isdir(_H5):
+    app.mount('/app', StaticFiles(directory=_H5, html=True), name='h5')
 
 
 @app.get('/')

@@ -43,7 +43,7 @@ BIND = [
     ('trips', 'name:Tab Home', 'go:home'),
     # 行前检查
     ('preflight', 'name:Back', 'back'),
-    ('preflight', 'id:jVYml', 'go:payment'),
+    ('preflight', 'id:jVYml', 'api:pay'),
     ('preflight', 'id:R0m1Rg', 'go:transfers'),
     ('preflight', 'id:H7HhcV', 'go:esim'),
     # 接机落地页
@@ -55,27 +55,27 @@ BIND = [
     ('transfers', 'name:Train Card', 'toast:Demo：火车接站'),
     # eSIM 页
     ('esim', 'name:Back', 'back'),
-    ('esim', 'name:Dest Chinese mainland', 'toast:Demo：中国大陆 eSIM · 5 天 1GB/天 · US$4.9'),
+    ('esim', 'name:Dest Chinese mainland', 'api:esim'),
     ('esim', 'name:Dest Search', 'toast:Demo：搜索目的地'),
     ('esim', 'name:Claim Button', 'toast:已领取新客 5% 优惠'),
     ('esim', 'name:View All', 'toast:Demo：全部目的地'),
-    ('preflight', 'name:Run Check Button', 'then:检测通过 · 模拟时间来到落地那一刻|island'),
+    ('preflight', 'name:Run Check Button', 'api:land'),
     ('preflight', 'id:arHv3', 'go:car'),
     # 租车页
     ('car', 'name:Back', 'back'),
     ('car', 'name:Search Button', 'toast:Demo：搜索可租车辆'),
     ('car', 'name:Tab Airport Transfers', 'go:transfers'),
     ('car', 'name:My Bookings', 'toast:Demo：我的租车订单'),
-    ('preflight', 'name:Stuck FAB', 'go:stuck'),
+    ('preflight', 'name:Stuck FAB', 'api:stuck'),
     ('preflight', 'name:Tab Home', 'go:home'),
     ('preflight', 'name:Tab My Trips', 'go:trips'),
     # 支付验证
     ('payment', 'name:Back', 'back'),
     ('payment', 'name:Done Button', 'go:preflight'),
-    ('payment', 'name:Stuck FAB', 'go:stuck'),
+    ('payment', 'name:Stuck FAB', 'api:stuck'),
     # 接机预订
     ('transfer', 'name:Back', 'back'),
-    ('transfer', 'name:Book Button', 'then:已预订接机，司机将在落地后举牌等候|go:preflight'),
+    ('transfer', 'name:Book Button', 'api:transfer'),
     ('transfer', 'name:Vehicle Business', 'toast:Demo：选择 Business'),
     ('transfer', 'name:Vehicle Van', 'toast:Demo：选择 Van'),
     # 锁屏
@@ -85,7 +85,7 @@ BIND = [
     ('step1', 'name:Back', 'go:trips'),
     ('step1', 'name:Primary Button', 'go:wifi'),
     ('step1', 'name:Alt Left', 'go:online'),
-    ('step1', 'name:Stuck Card', 'go:stuck'),
+    ('step1', 'name:Stuck Card', 'api:stuck'),
     ('step1', 'name:Tab Home', 'go:home'),
     # 已联网分支
     ('online', 'name:Back', 'go:trips'),
@@ -98,36 +98,36 @@ BIND = [
     ('wifi', 'name:eSIM Row', 'go:esim'),
     ('wifi', 'name:Backup Passport kiosk', 'toast:Demo：显示自助机位置'),
     ('wifi', 'name:Backup Service desk', 'toast:Demo：显示服务台位置'),
-    ('wifi', 'name:Stuck FAB', 'go:stuck'),
+    ('wifi', 'name:Stuck FAB', 'api:stuck'),
     # 我卡住了
     ('stuck', 'name:Back', 'back'),
-    ('stuck', 'name:Solved Button', 'back'),
-    ('stuck', 'name:Retake Button', 'toast:Demo：打开相机'),
+    ('stuck', 'name:Solved Button', 'api:solved'),
+    ('stuck', 'name:Retake Button', 'api:stuck'),
     ('stuck', 'name:Support Row', 'toast:Demo：转英文客服，附截图'),
     # 第三步 交通
     ('step3', 'name:Back', 'go:online'),
     ('step3', 'name:Primary Button', 'go:driver'),
     ('step3', 'id:kwA7p', 'go:transit'),
     ('step3', 'id:aFhcw', 'toast:Demo：打开支付宝里的滴滴小程序'),
-    ('step3', 'name:In Car Button', 'go:done'),
-    ('step3', 'name:Stuck FAB', 'go:stuck'),
+    ('step3', 'name:In Car Button', 'api:incar'),
+    ('step3', 'name:Stuck FAB', 'api:stuck'),
     ('step3', 'name:Tab Home', 'go:home'),
     # 地铁导航
     ('transit', 'name:Back', 'back'),
     ('transit', 'name:Start Button', 'toast:Demo：跳转地图 App 开始导航'),
     ('transit', 'name:Ticket Button', 'toast:Demo：购买地铁票'),
-    ('transit', 'name:Stuck FAB', 'go:stuck'),
+    ('transit', 'name:Stuck FAB', 'api:stuck'),
     # 司机地址
     ('driver', 'name:Close', 'back'),
     ('driver', 'name:Didi Button', 'toast:Demo：打开支付宝里的滴滴小程序'),
     ('driver', 'name:Call Button', 'toast:Demo：拨打酒店电话'),
-    ('driver', 'name:Stuck FAB', 'go:stuck'),
+    ('driver', 'name:Stuck FAB', 'api:stuck'),
     # 完成页
     ('done', 'name:Close', 'go:trips'),
     ('done', 'name:Share Card', 'go:share'),
-    ('done', 'name:FB Wi-Fi', 'toast:谢谢，已记录：Wi-Fi 最难'),
-    ('done', 'name:FB Payment', 'toast:谢谢，已记录：支付最难'),
-    ('done', 'name:FB Transport', 'toast:谢谢，已记录：交通最难'),
+    ('done', 'name:FB Wi-Fi', 'api:fb:wifi'),
+    ('done', 'name:FB Payment', 'api:fb:payment'),
+    ('done', 'name:FB Transport', 'api:fb:transport'),
     # 分享卡
     ('share', 'name:Close', 'back'),
     ('share', 'name:Share Button', 'then:Demo：调起系统分享|go:home'),
@@ -356,6 +356,7 @@ function show(route, push=true){{
   const fabs = scr ? scr.querySelectorAll(':scope > [data-pencil-name="Stuck FAB"], :scope > [data-pencil-name="AI Pill"]') : [];
   fabs.forEach(f => {{ f.style.bottom = (ph + 12) + 'px'; }});
   const sc = scr && scr.querySelector(':scope > .scroll'); if (sc) sc.style.paddingBottom = fabs.length ? '72px' : '0px';
+  if (window.lcOnShow) window.lcOnShow(route);
 }}
 function back(){{ const r = hist.pop(); show(r || 'home', false); }}
 let tt;
@@ -382,6 +383,8 @@ document.addEventListener('click', e => {{
   else if (act.startsWith('toast:')) toast(act.slice(6));
   else if (act.startsWith('then:')) {{ const [t, g] = act.slice(5).split('|'); toast(t); setTimeout(() => g === 'island' ? island() : show(g.slice(3)), 900); }}
   else if (act === 'island') island();
+  else if (act.startsWith('api:') && window.lcHandle) window.lcHandle(act.slice(4), el);
+  else if (act.startsWith('api:')) toast('Demo：静态模式');
 }});
 function island(){{
   const n = $('#notif');
@@ -423,6 +426,7 @@ if (/island=1/.test(location.search)) setTimeout(island, 300);
 if (/island=2/.test(location.search)) {{ const n = $('#notif'); n.style.transition = 'none'; n.classList.add('show', 'in'); }}
 if (/island=3/.test(location.search)) {{ const n = $('#notif'); n.style.transition = 'none'; n.classList.add('show', 'in', 'expanded'); }}
 </script>
+<script src="app.js"></script>
 </body>
 </html>'''
 open(OUT, 'w', encoding='utf-8').write(page)
