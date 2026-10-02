@@ -7,6 +7,7 @@ import os
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from kb import KnowledgeBase
@@ -26,6 +27,11 @@ trip = MockTrip()
 @app.get('/')
 def root():
     return {'service': 'landing-check', 'entries': len(kb.entries), 'scenarios': list(kb.scenarios), 'flight': trip.flight_status}
+
+
+@app.get('/test', include_in_schema=False)
+def test_page():
+    return FileResponse(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'test.html'))
 
 
 @app.get('/health')
