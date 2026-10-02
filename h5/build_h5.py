@@ -17,13 +17,13 @@ SCREENS = {
     'N6YJqb': 'home',      'BMjtO': 'preflight', 'XGzE4': 'payment',  'd4Fizk': 'transfer',
     'p6jXS': 'lock',       't7mCs': 'trips',     'E91Ggd': 'step1',   'cQhO3': 'online',
     'kKY1n': 'wifi',       'rK2om': 'stuck',     'Sxxn5': 'step3',    'SByuS': 'transit',
-    'ZV1Kk': 'driver',     'tmk1G': 'done',      'Bn5F2': 'share',
+    'ZV1Kk': 'driver',     'tmk1G': 'done',      'Bn5F2': 'share',    'd8xLl': 'car',
 }
 TITLES = {
     'home': '首页入口', 'preflight': '行前检查', 'payment': '支付验证', 'transfer': '接机预订',
     'lock': '锁屏推送', 'trips': 'My Trips', 'step1': '落地卡·第一步', 'online': '已联网分支',
     'wifi': 'Wi-Fi 引导', 'stuck': '我卡住了', 'step3': '第三步交通', 'transit': '地铁导航',
-    'driver': '司机地址', 'done': '完成页', 'share': '分享卡',
+    'driver': '司机地址', 'done': '完成页', 'share': '分享卡', 'car': '租车页',
 }
 
 # 点击绑定：(路由, 选择器) -> 动作。选择器用 data-pencil-id 或 data-pencil-name（在该屏范围内）。
@@ -44,7 +44,13 @@ BIND = [
     ('preflight', 'id:jVYml', 'go:payment'),
     ('preflight', 'id:R0m1Rg', 'go:transfer'),
     ('preflight', 'id:H7HhcV', 'toast:Demo：跳转 Trip.com eSIM 购买页'),
-    ('preflight', 'name:Run Check Button', 'then:检测通过 · 模拟时间来到落地那一刻|go:lock'),
+    ('preflight', 'name:Run Check Button', 'then:检测通过 · 模拟时间来到落地那一刻|island'),
+    ('preflight', 'id:arHv3', 'go:car'),
+    # 租车页
+    ('car', 'name:Back', 'go:preflight'),
+    ('car', 'name:Search Button', 'toast:Demo：搜索可租车辆'),
+    ('car', 'name:Tab Airport Transfers', 'go:transfer'),
+    ('car', 'name:My Bookings', 'toast:Demo：我的租车订单'),
     ('preflight', 'name:Stuck FAB', 'go:stuck'),
     ('preflight', 'name:Tab Home', 'go:home'),
     ('preflight', 'name:Tab My Trips', 'go:trips'),
@@ -207,6 +213,22 @@ for div in root.find_all('div', recursive=False):
     screens_html.append(str(div))
 
 screens_block = '\n'.join(screens_html)
+import hashlib, urllib.request
+IMG_DIR = os.path.join(HERE, 'img'); os.makedirs(IMG_DIR, exist_ok=True)
+def localize(m):
+    url = m.group(1).strip('"\'')
+    if not url.startswith('http'):
+        return m.group(0)
+    name = hashlib.md5(url.encode()).hexdigest()[:12] + '.jpg'
+    path = os.path.join(IMG_DIR, name)
+    if not os.path.exists(path):
+        try:
+            u = url.split('?')[0] + '?w=900&q=75&auto=format&fit=crop'
+            urllib.request.urlretrieve(u, path)
+        except Exception as e:
+            print('download failed', url[:60], e); return m.group(0)
+    return 'url(img/%s)' % name
+screens_block = re.sub(r'url\(([^)]+)\)', localize, screens_block)
 nav_items = ''.join(f'<button data-go="{r}">{TITLES[r]}</button>' for r in SCREENS.values())
 
 page = f'''<!doctype html>
@@ -244,6 +266,19 @@ page = f'''<!doctype html>
   .tap:active{{transform:scale(.98);filter:brightness(.95)}}
   #toast{{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:rgba(18,24,38,.92);color:#fff;font-size:13px;font-weight:600;padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:320px;text-align:center;z-index:50}}
   #toast.show{{opacity:1}}
+  #island{{position:absolute;left:50%;top:11px;transform:translateX(-50%);width:126px;height:37px;border-radius:24px;background:#0B0B0F;z-index:60;overflow:hidden;opacity:0;pointer-events:none;transition:width .45s cubic-bezier(.2,.9,.3,1.2),height .45s cubic-bezier(.2,.9,.3,1.2),opacity .2s;box-shadow:0 10px 30px rgba(0,0,0,.35)}}
+  #island.show{{opacity:1;pointer-events:auto}}
+  #island.open{{width:369px;height:96px;border-radius:26px}}
+  #island .card{{position:absolute;inset:0;display:flex;gap:12px;align-items:flex-start;padding:14px 16px;opacity:0;transition:opacity .25s .25s}}
+  #island.open .card{{opacity:1}}
+  #island .ic{{width:40px;height:40px;border-radius:10px;background:#2C61FE;color:#fff;font-weight:800;font-size:22px;display:flex;align-items:center;justify-content:center;flex-shrink:0}}
+  #island .tx{{min-width:0;color:#fff;font-family:Inter,-apple-system,sans-serif}}
+  #island .hd{{display:flex;justify-content:space-between;font-size:12px}}
+  #island .hd b{{font-weight:600}} #island .hd span{{color:rgba(255,255,255,.6)}}
+  #island .ti{{font-size:14px;font-weight:600;margin-top:1px}}
+  #island .bd{{font-size:12.5px;line-height:1.3;color:rgba(255,255,255,.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+  body.mobile #island{{top:max(11px, calc(env(safe-area-inset-top,0px) - 48px))}}
+  #island.now{{transition:none}}
   #menu{{position:fixed;top:12px;right:12px;z-index:100}}
   #menu>button{{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:8px 12px;font:600 12px Inter,sans-serif;cursor:pointer}}
   #list{{position:fixed;top:48px;right:12px;background:#fff;border-radius:12px;padding:8px;display:none;flex-direction:column;gap:4px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:100;max-height:80vh;overflow:auto}}
@@ -260,6 +295,7 @@ page = f'''<!doctype html>
   }}
   body.mobile .screen > .sb [data-pencil-name="Status Bar"]{{height:env(safe-area-inset-top,0px) !important;min-height:env(safe-area-inset-top,0px) !important;padding:0 !important;overflow:hidden}}
   body.mobile .screen > .sb [data-pencil-name="Status Bar"] > *{{visibility:hidden}}
+  body.mobile [data-pencil-name="Status Bar"] > *{{visibility:hidden}}
   body.mobile .screen[data-route="lock"] > .sb{{display:none}}
   body.mobile [data-pencil-name="Dynamic Island"]{{display:none !important}}
 </style>
@@ -268,6 +304,7 @@ page = f'''<!doctype html>
 <div id="stage"><div id="phone">
 {screens_block}
 <div id="toast"></div>
+<div id="island"><div class="pill"></div><div class="card"><div class="ic">T</div><div class="tx"><div class="hd"><b>Trip.com</b><span>now</span></div><div class="ti">Welcome to Shanghai</div><div class="bd">You've landed at PVG T2. Wi-Fi, payment and your ride to The PuLi — tap to open your landing check.</div></div></div></div>
 </div></div>
 <div id="menu"><button id="menuBtn">页面 ≡</button><div id="list">{nav_items}</div></div>
 <div id="hint">← → 上一页/下一页 · 点屏幕内的按钮跳转 · 右上角可直接跳到任意页</div>
@@ -297,6 +334,11 @@ function show(route, push=true){{
   document.querySelectorAll('.screen').forEach(s => s.classList.toggle('on', s.dataset.route === route));
   location.hash = route;
   $('#list').classList.remove('open');
+  const scr = document.querySelector('.screen.on'), pin = scr && scr.querySelector(':scope > .pin');
+  const ph = pin ? pin.offsetHeight : 0;
+  const fabs = scr ? scr.querySelectorAll(':scope > [data-pencil-name="Stuck FAB"], :scope > [data-pencil-name="AI Pill"]') : [];
+  fabs.forEach(f => {{ f.style.bottom = (ph + 12) + 'px'; }});
+  const sc = scr && scr.querySelector(':scope > .scroll'); if (sc) sc.style.paddingBottom = fabs.length ? '72px' : '0px';
 }}
 function back(){{ const r = hist.pop(); show(r || 'home', false); }}
 let tt;
@@ -321,8 +363,17 @@ document.addEventListener('click', e => {{
   else if (act === 'back') back();
   else if (act === 'toggle-privacy') togglePrivacy();
   else if (act.startsWith('toast:')) toast(act.slice(6));
-  else if (act.startsWith('then:')) {{ const [t, g] = act.slice(5).split('|'); toast(t); setTimeout(() => show(g.slice(3)), 900); }}
+  else if (act.startsWith('then:')) {{ const [t, g] = act.slice(5).split('|'); toast(t); setTimeout(() => g === 'island' ? island() : show(g.slice(3)), 900); }}
+  else if (act === 'island') island();
 }});
+function island(){{
+  const b = $('#island');
+  b.classList.remove('open', 'show'); void b.offsetWidth;
+  b.classList.add('show');
+  setTimeout(() => b.classList.add('open'), 350);
+  clearTimeout(b._t); b._t = setTimeout(() => b.classList.remove('open', 'show'), 9000);
+}}
+$('#island').onclick = () => {{ const b = $('#island'); b.classList.remove('open', 'show'); show('trips'); }};
 $('#menuBtn').onclick = () => $('#list').classList.toggle('open');
 let lp, tx0, ty0;
 document.addEventListener('touchstart', e => {{ tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; lp = setTimeout(() => $('#list').classList.toggle('open'), 700); }}, {{passive:true}});
@@ -348,6 +399,8 @@ if (window.visualViewport) window.visualViewport.addEventListener('resize', fit)
 if (window.navigator.standalone || matchMedia('(display-mode: standalone)').matches) document.body.classList.add('standalone');
 fit();
 show((location.hash || '#home').slice(1), false);
+if (/island=1/.test(location.search)) setTimeout(island, 300);
+if (/island=2/.test(location.search)) {{ const b = $('#island'); b.classList.add('now', 'show', 'open'); }}
 </script>
 </body>
 </html>'''
