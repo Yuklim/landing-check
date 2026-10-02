@@ -145,6 +145,65 @@ for div in root.find_all('div', recursive=False):
         for el in div.find_all(attrs={attr: val}):
             el['data-act'] = act
             el['class'] = (el.get('class') or []) + ['tap']
+
+    # ---- 重新组装成 iOS 页面：状态栏区 / 滚动内容区 / 固定底栏，绝对定位元素按底部对齐 ----
+    def px(style, prop, default=None):
+        m = re.search(r'(?<![\w-])%s:\s*([\d.-]+)px' % prop, style or '')
+        return float(m.group(1)) if m else default
+
+    def anchor_bottom(el, default_h=48):
+        est = el.get('style', '')
+        top = px(est, 'top'); h = px(est, 'height', default_h) or default_h
+        if top is None:
+            return
+        est = re.sub(r'(?<![\w-])top:\s*[^;]+;?', '', est)
+        el['style'] = est + '; bottom: %dpx; top: auto;' % round(852 - top - h)
+
+    kids = [k for k in div.find_all(recursive=False)]
+    if route == 'lock':
+        # 锁屏：整屏绝对布局，底部元素改为贴底，顶部状态栏区按安全区处理
+        for k in kids:
+            nm = k.get('data-pencil-name', '')
+            if nm in ('Notif Stack', 'Btn flashlight', 'Btn camera', 'Home Indicator'):
+                anchor_bottom(k, {'Home Indicator': 5, 'Notif Stack': 268}.get(nm, 48))
+            if nm == 'Status Wrap':
+                k['class'] = (k.get('class') or []) + ['sb']
+    else:
+        sb = tab = footer = None
+        content, absitems = [], []
+        for k in kids:
+            nm = k.get('data-pencil-name', '')
+            est = k.get('style', '')
+            if nm == 'Status Bar' and sb is None:
+                sb = k
+            elif nm == 'Tab Bar':
+                tab = k
+            elif nm == 'Footer':
+                footer = k
+            elif 'position: absolute' in est:
+                absitems.append(k)
+            else:
+                content.append(k)
+        for k in kids:
+            k.extract()
+        if sb is not None:
+            sbw = soup.new_tag('div'); sbw['class'] = ['sb']
+            sbw.append(sb); div.append(sbw)
+        scroll = soup.new_tag('div'); scroll['class'] = ['scroll']
+        for k in content:
+            scroll.append(k)
+        div.append(scroll)
+        pin = soup.new_tag('div'); pin['class'] = ['pin']
+        for k in (footer, tab):
+            if k is not None:
+                est = k.get('style', '')
+                est = re.sub(r'(position|left|top)\s*:[^;]+;?', '', est)
+                k['style'] = est + '; position: relative; width: 100%;'
+                pin.append(k)
+        div.append(pin)
+        for k in absitems:
+            anchor_bottom(k, 40 if k.get('data-pencil-name') == 'AI Pill' else 48)
+            div.append(k)
     screens_html.append(str(div))
 
 screens_block = '\n'.join(screens_html)
@@ -170,11 +229,16 @@ page = f'''<!doctype html>
   html,body{{margin:0;height:100%;background:#0F1A3A;font-family:Inter,-apple-system,"PingFang SC","Noto Sans SC",sans-serif;-webkit-tap-highlight-color:transparent}}
   #stage{{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}}
   #phone{{width:393px;height:852px;position:relative;overflow:hidden;background:#fff;transform-origin:center center;border-radius:46px;box-shadow:0 30px 80px rgba(0,0,0,.5)}}
-  .screen{{position:absolute !important;inset:0 !important;display:none !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch}}
+  .screen{{position:absolute !important;inset:0 !important;display:none !important;flex-direction:column !important;height:100% !important;overflow:hidden !important}}
   .screen.on{{display:flex !important}}
   .screen, .screen *{{box-sizing:border-box !important}}
   .screen [style*="flex: 1 1 0"]{{min-width:0}}
   .screen [style*="width: 100%"]{{max-width:100%}}
+  .screen > .sb{{flex-shrink:0;width:100%}}
+  .screen > .scroll{{flex:1 1 0;min-height:0;width:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}}
+  .screen > .scroll > *{{flex-shrink:0}}
+  .screen > .pin{{flex-shrink:0;width:100%;background:#fff;padding-bottom:env(safe-area-inset-bottom,0px)}}
+  .screen[data-route="lock"] > .sb{{position:absolute;top:0;left:0}}
   html,body{{overflow:hidden;overscroll-behavior:none}}
   .tap{{cursor:pointer;transition:transform .08s,filter .08s}}
   .tap:active{{transform:scale(.98);filter:brightness(.95)}}
@@ -188,14 +252,16 @@ page = f'''<!doctype html>
   #list button:hover{{background:#EAF0FF;color:#2C61FE}}
   #hint{{position:fixed;left:16px;bottom:12px;color:rgba(255,255,255,.55);font-size:12px}}
   @media (max-width:430px){{
-    html,body{{background:#0F1A3A;overflow:auto;height:auto}}
-    #stage{{position:static;display:block;height:auto}}
+    html,body{{background:#0F1A3A;overflow:hidden;height:100%}}
+    #stage{{position:fixed;inset:0;display:block}}
     #phone{{border-radius:0;box-shadow:none;transform-origin:top left;margin:0}}
     #hint,#menu>button{{display:none}}
     #list{{top:auto;bottom:16px;right:16px;left:16px;flex-direction:row;flex-wrap:wrap}}
   }}
-  body.standalone [data-pencil-name="Status Bar"]{{height:env(safe-area-inset-top,44px) !important;min-height:env(safe-area-inset-top,44px) !important;padding:0 !important}}
-  body.standalone [data-pencil-name="Status Bar"] > *{{visibility:hidden}}
+  body.mobile .screen > .sb [data-pencil-name="Status Bar"]{{height:env(safe-area-inset-top,0px) !important;min-height:env(safe-area-inset-top,0px) !important;padding:0 !important;overflow:hidden}}
+  body.mobile .screen > .sb [data-pencil-name="Status Bar"] > *{{visibility:hidden}}
+  body.mobile .screen[data-route="lock"] > .sb{{display:none}}
+  body.mobile [data-pencil-name="Dynamic Island"]{{display:none !important}}
 </style>
 </head>
 <body>
@@ -213,13 +279,14 @@ function fit(){{
   const ph = $('#phone');
   const vv = window.visualViewport;
   const w = vv ? vv.width : window.innerWidth, h = vv ? vv.height : window.innerHeight;
-  if (w <= 430) {{
+  if (w <= 430 || /mobile/.test(location.search)) {{
     const s = w / 393;
+    document.body.classList.add('mobile');
     ph.style.transform = 'scale(' + s + ')';
-    ph.style.height = Math.max(852, Math.round(h / s)) + 'px';
-    document.body.style.height = Math.round(Math.max(852, h / s) * s) + 'px';
+    ph.style.height = Math.round(h / s) + 'px';
     return;
   }}
+  document.body.classList.remove('mobile');
   ph.style.height = '852px';
   const s = Math.min((h-40)/852, (w-40)/393, 1.05);
   ph.style.transform = 'scale(' + s + ')';
