@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Landing Check 流程演示</title>
+<style>
+  :root{--brand:#2C61FE;--text:#121826;--text2:#6F7685;--line:#DADFE6;--bg:#F0F2F5;--warn:#E8890C}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,-apple-system,"PingFang SC","Noto Sans SC",sans-serif;background:var(--bg);color:var(--text)}
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:#fff;border-bottom:1px solid var(--line)}
+  header h1{font-size:16px;margin:0;font-weight:700}
+  header h1 span{color:var(--brand)}
+  header .hint{font-size:12px;color:var(--text2)}
+  main{display:grid;grid-template-columns:420px 1fr;gap:32px;max-width:1100px;margin:28px auto;padding:0 28px}
+  .phone{position:relative;width:393px;margin:0 auto;border-radius:44px;overflow:hidden;box-shadow:0 20px 60px rgba(18,24,38,.25);background:#000;aspect-ratio:393/852}
+  .phone img{display:block;width:100%;height:100%;object-fit:cover;transition:opacity .18s}
+  .phone img.fade{opacity:0}
+  .hot{position:absolute;border:2px solid var(--brand);border-radius:10px;cursor:pointer;background:rgba(44,97,254,.06);animation:pulse 1.4s ease-in-out infinite}
+  .hot::after{content:"点这里";position:absolute;right:-2px;top:-24px;background:var(--brand);color:#fff;font-size:11px;font-weight:700;padding:3px 7px;border-radius:5px;white-space:nowrap}
+  .hot.up::after{top:auto;bottom:-24px}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(44,97,254,.45)}50%{box-shadow:0 0 0 8px rgba(44,97,254,0)}}
+  .panel{background:#fff;border-radius:16px;border:1px solid var(--line);padding:28px;display:flex;flex-direction:column;min-height:560px}
+  .steps{display:flex;gap:6px;margin-bottom:22px;flex-wrap:wrap}
+  .steps b{width:28px;height:28px;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;background:var(--bg);color:var(--text2);cursor:pointer}
+  .steps b.on{background:var(--brand);color:#fff}
+  .steps b.done{background:#EAF0FF;color:var(--brand)}
+  .stage{font-size:12px;font-weight:700;color:var(--brand);letter-spacing:.06em;text-transform:uppercase}
+  h2{font-size:26px;margin:6px 0 12px;line-height:1.25}
+  .desc{font-size:15px;line-height:1.7;color:var(--text2);margin:0 0 18px}
+  .box{border-radius:10px;padding:14px 16px;font-size:14px;line-height:1.6;margin-bottom:12px}
+  .box.do{background:#EAF0FF;color:#1136A6}
+  .box.do b{color:var(--brand)}
+  .box.why{background:var(--bg);color:var(--text)}
+  .box.why b{display:block;margin-bottom:2px}
+  .nav{margin-top:auto;display:flex;gap:10px;padding-top:18px}
+  button{font:inherit;font-weight:700;font-size:15px;border-radius:6px;padding:12px 18px;border:1px solid var(--line);background:#fff;cursor:pointer;color:var(--text)}
+  button.primary{background:var(--brand);border-color:var(--brand);color:#fff;flex:1}
+  button:disabled{opacity:.4;cursor:default}
+  @media (max-width:900px){main{grid-template-columns:1fr}.phone{width:100%;max-width:393px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Trip.com <span>Landing Check</span> · 流程演示</h1>
+  <div class="hint">键盘 ← → 切换步骤 · 点手机上的高亮区域推进</div>
+</header>
+<main>
+  <div class="phone" id="phone"><img id="shot" src="" alt=""></div>
+  <section class="panel">
+    <div class="steps" id="dots"></div>
+    <div class="stage" id="stage"></div>
+    <h2 id="title"></h2>
+    <p class="desc" id="desc"></p>
+    <div class="box do" id="do"></div>
+    <div class="box why" id="why"></div>
+    <div class="nav">
+      <button id="prev">上一步</button>
+      <button class="primary" id="next">下一步</button>
+    </div>
+  </section>
+</main>
+<script>
+const IMG = f => '../exports/' + f;
+// hot: [left%, top%, width%, height%], up = 标签放下方
+const STEPS = [
+  {stage:'起飞前一天 · 有网时', img:'01-行前检查.png', title:'行前检查：能提前做的，都在有网时做完',
+   desc:'起飞前 24 小时推送。七项里支付和上网两项未完成，接机是可选项。上网给两条路：买 Trip.com eSIM，或看本地电话卡购买指引；没买的话还有机场 Wi-Fi 指引。底部"现在检测"按钮重新跑一遍检查。',
+   do:'用户先点支付宝那一行的 <b>Verify ¥1</b>。',
+   why:'<b>为什么支付放这里</b>支付宝"已安装"不等于能付。验证要花一分钟、要有网、可能要换卡，这些都不该留到落地那一刻。',
+   hot:[74,44,20,5]},
+  {stage:'起飞前一天 · 支付验证', img:'02-支付验证.png', title:'一笔 1 元真实交易，退回账户',
+   desc:'通过 Trip.com 自己的支付宝收款通道扣 1 元，后端收到回调即为"支付已就绪"的证据，1 到 3 天原路退回。失败时读支付宝返回的错误码，直接告诉用户换卡、关 VPN 还是补实名。',
+   do:'验证通过，用户点 <b>Back to pre-flight check</b> 回到清单。',
+   why:'<b>为什么是真交易</b>第三方站点 readyforchina.com 已用同样方法服务两万旅客，但只有 Trip.com 能把它原生嵌进行程，因为收款通道和订单都在它手里。',
+   hot:[6,85.5,88,5.5], up:true},
+  {stage:'起飞前一天 · 可选项', img:'01-行前检查.png', title:'接机在落地前订，不在落地后',
+   desc:'清单里"Ride from the airport"是可选项，根据行李、人数、酒店距离给一句建议：两件行李两个人，预订接机比排出租车队强，新客 12% 折扣。',
+   do:'用户点 <b>Book</b>。',
+   why:'<b>为什么提前</b>落地那一刻用户没网、累、急，不是下单的好时机。接机本来就是提前预订的产品。',
+   hot:[76,51.5,18,5]},
+  {stage:'起飞前一天 · 接机预订', img:'03-携程接机预订.png', title:'接机预订页：全部字段已自动填好',
+   desc:'上车点 PVG T2 到达 8 号口，司机举牌等候；下车点是酒店；时间是航班落地时刻，航班号已跟踪，落地后免费等 60 分钟。三种车型，新客券已应用，含举牌、英文司机、免费取消。',
+   do:'用户这次先不订，点左上角 <b>返回</b>。落地后第三步会按推荐走。',
+   why:'<b>一次填好</b>所有字段来自航班和酒店订单，用户不输入任何东西，这就是嵌在 Trip.com 里的价值。',
+   hot:[2,6.3,10,5], up:true},
+  {stage:'落地 0 分钟 · 锁屏', img:'04-锁屏推送.png', title:'航班落地触发本地通知，不依赖网络',
+   desc:'起飞前已在本机排好两个本地通知：按预计落地时间触发，或进入机场地理围栏触发。两者都不需要网络。有网时再由航班状态推送补一次。',
+   do:'用户点开最上面这条 <b>Welcome to Shanghai</b>。',
+   why:'<b>完全没网怎么办</b>这一屏就是答案：提醒走本地通知，内容起飞前已下载。联网是落地后的第一个任务，而不是使用这个功能的前提。',
+   hot:[3,54.5,94,16]},
+  {stage:'落地 1 分钟 · My Trips', img:'05-MyTrips入口.png', title:'My Trips 顶部出现落地检查卡',
+   desc:'卡片给出航站楼、落地时间、LIVE 标，三个状态一眼看出：Wi-Fi 未连，支付和酒店已就绪。筛选条第一个 Chip 就是 Landing Check，没落地时也在。',
+   do:'用户点 <b>Open landing check</b>。',
+   why:'<b>和 Trip tools 的关系</b>Trip.com 已有 Live Translate 和 Menu Assistant，我们不做翻译；我们是落地那一刻的检查和引导，与它们互补。',
+   hot:[8,38,84,5.5]},
+  {stage:'落地 2 分钟 · 第一步 · 分支 A', img:'08-落地卡-已联网分支.png', title:'先检测自己的数据：能上网就直接过',
+   desc:'第一步不是"连机场 Wi-Fi"，而是"能不能上网"。有 eSIM 或漫游的用户，三项检测通过（数据开着、网页能开、国际服务可达），第一步自动标为完成，5 秒后进入下一步。机场 Wi-Fi 根本不会出现。',
+   do:'检测通过，用户点 <b>Continue to step 3</b>，或者什么都不做等它自己跳。',
+   why:'<b>为什么 eSIM 才是根本</b>用户在中国不可能随时有 Wi-Fi。行前检查已经推过 eSIM，买了的用户落地就是这个分支。',
+   hot:[8,46.5,84,5.5]},
+  {stage:'落地 2 分钟 · 第一步 · 分支 B', img:'07-落地卡-第一步联网.png', title:'没有自己的数据，才推机场 Wi-Fi',
+   desc:'检测失败：eSIM 和漫游都没连上。这时才给机场 Wi-Fi，并且明说它只是过渡，出了机场就没了。有 eSIM 但没开的用户，底部一行提示打开后重新检测。',
+   do:'用户点 <b>Connect to PVG Wi-Fi</b>。',
+   why:'<b>一次只给一个任务</b>当前任务一张大卡，其余两步收成进度列表。支付显示"起飞前已验证"直接跳过。',
+   hot:[8,37.5,84,5.5]},
+  {stage:'落地 3 分钟 · Wi-Fi 引导', img:'09-浦东WiFi引导.png', title:'三步连网，60 秒没短信自动切备选，连上后推 eSIM',
+   desc:'按机场给具体步骤。点"获取验证码"后计时，60 秒没回来就把护照自助机和服务台推上来。连上 Wi-Fi 后，底部蓝色卡片推 eSIM 购买："Wi-Fi 到机场门口为止，现在给城市里买数据"。右下角的"I\'m stuck"悬浮按钮在每一页都在。',
+   do:'用户连上网后点左上角 <b>返回</b>。',
+   why:'<b>顺序的逻辑</b>没有数据 → 机场 Wi-Fi 过渡 → 有了网立刻买 eSIM → 之后不再依赖 Wi-Fi。',
+   hot:[2,6.3,10,5], up:true},
+  {stage:'落地 10 分钟 · 卡住了', img:'07-落地卡-第一步联网.png', title:'联网之后，卡住了可以拍照求助',
+   desc:'第一步完成，用户去便利店买水时扫码点单页面全是中文，卡住了。现在有网了，"我卡住了"可以用。它不只服务翻译类问题：做落地检查本身卡住了，比如 Wi-Fi 登录页看不懂、支付验证失败，同样拍一张就行。',
+   do:'用户点 <b>I\'m stuck</b>，拍一张卡住的页面。',
+   why:'<b>入口在哪</b>落地卡上是一张卡片，其他每一页右下角都有悬浮按钮。<b>答案从哪来</b>大模型只判断"这是六类问题里的哪一类"，解决办法来自人工核验的知识库。',
+   hot:[7,77,86,9.5]},
+  {stage:'落地 11 分钟 · 识别结果', img:'10-ImStuck结果.png', title:'识别卡在哪一步，用母语给三步',
+   desc:'识别出是支付宝绑卡验证失败页，给三步：换卡、关 VPN、Tour Card。底部小字注明来源和更新月份，还有英文客服入口。',
+   do:'用户照着做，成功后点 <b>Solved it</b>。',
+   why:'<b>反馈回流</b>"解决了"和"没解决"按条目记录，哪条解决率低就说明内容该更新了。',
+   hot:[7,79.5,86,5.5], up:true},
+  {stage:'落地 15 分钟 · 第三步', img:'11-落地卡-第三步交通.png', title:'直接推荐一种交通方式，并说明为什么',
+   desc:'输入都是携程已有数据：落地时间、托运行李件数、酒店坐标、人数。两件行李加两个人，所以推荐出租车。两个备选是可点的选项：地铁打开公共交通导航，网约车通过支付宝里的滴滴小程序叫车，不需要中国手机号。行前订了接机的用户，这里会直接显示司机位置。',
+   do:'先看备选：用户点地铁那一行的 <b>Route</b>。',
+   why:'<b>一个推荐加两个可选</b>推荐替用户做决定，备选保留选择权，每个都写清时间和价格。',
+   hot:[71,48,20,5]},
+  {stage:'落地 15 分钟 · 备选', img:'12-公共交通导航.png', title:'点地铁：直接给公共交通导航路径',
+   desc:'地图上画出从 PVG T2 到静安寺的路线，顶部显示下一班车时间和站台。概览是 70 分钟、7 元、1 次换乘。下面是逐步指引，底部一键跳到地图 App 开始导航，或买票。',
+   do:'用户看完点左上角 <b>返回</b>。',
+   why:'<b>数据来源</b>路线和班次来自地图服务商接口，Demo 用静态数据。换乘站名这类细节必须核验。',
+   hot:[2,6.3,10,5], up:true},
+  {stage:'落地 16 分钟 · 第三步', img:'11-落地卡-第三步交通.png', title:'按推荐走：打车',
+   desc:'用户采纳推荐，去出租车排队点。',
+   do:'用户点 <b>Show address to driver</b>。',
+   why:'<b>商业闭环</b>推荐、备选、预订都在流程之内，接机的生意在起飞前就做完了。',
+   hot:[10,39.5,80,5.5]},
+  {stage:'落地 16 分钟 · 给司机看', img:'13-给司机看地址.png', title:'中文大字地址，亮度拉满',
+   desc:'酒店中文名、地址、地标用大字，英文放小字。信息块是酒店电话和手机尾号，蓝色提示条替用户说一句"乘客不会说中文"。',
+   do:'司机看完，用户点 <b>关闭</b> 回到第三步。',
+   why:'<b>细节来源</b>"司机会问手机尾号"这类知识，过去只有高端定制社的向导知道。',
+   hot:[2,6.3,10,5], up:true},
+  {stage:'落地 20 分钟 · 上车', img:'11-落地卡-第三步交通.png', title:'成功上车：自动检测优先，手动兜底',
+   desc:'手机离开机场地理围栏且速度超过 30 公里每小时，自动判定"已上车"；判不出来就让用户点一下。',
+   do:'用户点 <b>I\'m in the car</b>。',
+   why:'<b>为什么要这一步</b>没有它，第一小时就没有终点，也就没有"落地到上车 N 分钟"这个指标。',
+   hot:[7,83.5,61,6], up:true},
+  {stage:'落地 36 分钟 · 完成', img:'14-完成页.png', title:'第一小时闭环：36 分钟，一条时间线',
+   desc:'落地 14:32、联网 14:41、支付起飞前已验证、上车 15:08。到酒店那一行等到达围栏再点亮。下面三选一"哪一步最难"，答案回流知识库。',
+   do:'用户点 <b>Share your 36-minute card</b>。',
+   why:'<b>路演最后一屏之一</b>这个数字就是产品指标，也是用户愿意发到社交媒体的内容。',
+   hot:[7,75,86,7]},
+  {stage:'落地 36 分钟 · 分享', img:'15-分享卡.png', title:'分享卡：36 分钟走出浦东机场',
+   desc:'一张可保存的卡片：Trip.com 标识、大数字、四个时间点、姓名和路线、二维码指向落地检查页。卡片下面是"Hide my name and hotel"开关，打开后卡片上的姓名和酒店换成"A traveler · PVG → Shanghai"。再下面是 Instagram、WhatsApp、保存图片、复制链接。',
+   do:'用户点 <b>Share</b>。',
+   why:'<b>传播入口</b>外国游客爱发社交媒体，这张卡是产品自然的获客渠道，二维码把看到的人带回 Trip.com。',
+   hot:[6,85.5,88,5.5], up:true},
+  {stage:'常驻入口 · 首页', img:'06-首页入口.png', title:'常驻入口：首页功能区第一位，带 NEW 标',
+   desc:'推送是主入口，首页是常驻入口。Trip.com 首页的功能图标行里，Landing Check 排在 Deals 和 Events 之前，带 NEW 标；下面还有一条横幅"Flying to China? Run your Landing Check"，有即将出发的中国航班时才出现。My Trips 的筛选条第一个 Chip 也是它。',
+   do:'用户随时可从这里进入，比如起飞前想先看一眼。',
+   why:'<b>一句话收尾</b>起飞前验证支付、订好接机，落地本地通知，一次一个任务，卡住了拍照，送到酒店，36 分钟闭环。',
+   hot:[3,44,20,10]},
+];
+let i = 0;
+const $ = id => document.getElementById(id);
+function render(){
+  const s = STEPS[i];
+  const img = $('shot'); img.classList.add('fade');
+  setTimeout(()=>{ img.src = IMG(s.img); img.onload = () => img.classList.remove('fade'); }, 120);
+  $('stage').textContent = `第 ${i+1} 步 / 共 ${STEPS.length} 步 · ${s.stage}`;
+  $('title').textContent = s.title;
+  $('desc').textContent = s.desc;
+  $('do').innerHTML = '用户操作：' + s.do;
+  $('why').innerHTML = s.why;
+  $('prev').disabled = i === 0;
+  $('next').textContent = i === STEPS.length-1 ? '回到开头' : '下一步';
+  document.querySelectorAll('.hot').forEach(h=>h.remove());
+  if (s.hot){
+    const h = document.createElement('div'); h.className = 'hot' + (s.up ? ' up' : '');
+    const [l,t,w,hh] = s.hot; h.style.cssText = `left:${l}%;top:${t}%;width:${w}%;height:${hh}%`;
+    h.onclick = next; $('phone').appendChild(h);
+  }
+  $('dots').innerHTML = STEPS.map((_,k)=>`<b class="${k===i?'on':k<i?'done':''}" data-k="${k}">${k+1}</b>`).join('');
+  document.querySelectorAll('#dots b').forEach(b=>b.onclick=()=>{i=+b.dataset.k;render();});
+}
+function next(){ i = (i+1) % STEPS.length; render(); }
+function prev(){ if (i>0){ i--; render(); } }
+$('next').onclick = next; $('prev').onclick = prev;
+document.addEventListener('keydown', e => { if (e.key==='ArrowRight'||e.key===' ') next(); if (e.key==='ArrowLeft') prev(); });
+STEPS.forEach(s => { const im = new Image(); im.src = IMG(s.img); });
+render();
+</script>
+</body>
+</html>
