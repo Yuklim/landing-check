@@ -1,0 +1,237 @@
+{
+  "scenario": "alipay",
+  "name": {"en": "Alipay", "zh": "支付宝"},
+  "detect": {
+    "keywords_zh": ["支付宝", "绑定银行卡", "添加银行卡", "验证失败", "身份验证", "实名认证", "付款码", "扫一扫", "支付密码", "TourCard", "交易限额", "银行卡不支持"],
+    "keywords_en": ["Alipay", "Add bank card", "Bank Cards", "Verification failed", "Identity Verification", "Card not supported", "Issuer declined", "Payment limit", "TourCard", "Pay/Receive", "payment password"],
+    "visual_cues": "Blue Alipay app chrome. Screens with a bank-card form (card number, expiry, CVV), a red or grey failure banner, a passport-upload prompt, a QR payment code page, or a mini-program named TourCard.",
+    "sub_steps": ["alipay_setup_before_flight", "alipay_card_bind_failed", "alipay_sms_code_not_received", "alipay_payment_declined", "alipay_identity_verification", "alipay_tourcard", "alipay_how_to_pay", "alipay_didi_miniprogram"]
+  },
+  "entries": [
+    {
+      "id": "alipay_setup_before_flight",
+      "stage": "preflight",
+      "title": "Set up Alipay before you fly",
+      "why": "Most shops, taxis and metro gates in China take mobile payment only. Setting up at home on Wi-Fi takes 10 minutes and avoids doing it jet-lagged with no data.",
+      "steps": [
+        "Install Alipay from the App Store or Google Play. Outside China it opens in English automatically.",
+        "Sign up with your own mobile number (any country) and enter the SMS code. No Chinese number or Chinese bank account is needed.",
+        "Tap Me > Bank Cards > Add Now. Set a 6-digit payment password, then add one mainstream credit card: Visa, Mastercard, JCB, Discover, Diners Club or UnionPay.",
+        "Tap Me > Settings > Account & Security > Identity Verification. Upload your passport photo page and do the face check. Do this now, not later."
+      ],
+      "fallback": "If the card will not link, see Card won't link. If you prefer not to link a card, open TourCard inside Alipay as a prepaid wallet.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "Trip.com · How to Use Alipay in China for Foreigners 2026", "url": "https://www.trip.com/guide/phone/how-to-use-alipay.html", "date": "2026-04-08"},
+        {"name": "Beijing Government · Payment Services (step-by-step card linking)", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html", "date": "2024-08-30"},
+        {"name": "WildChina · Guide to Using Alipay in 2026", "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/", "date": "2026-05-29"}
+      ],
+      "verified_at": "2026-10-02",
+      "volatility": "low",
+      "facts": [
+        {"fact": "Supported card networks: Visa, Mastercard, JCB, Discover, Diners Club, UnionPay", "status": "verified", "note": "Trip.com, WildChina and Beijing gov agree. Amex: not on the official list; treat as unsupported."},
+        {"fact": "Registration works with a non-Chinese phone number", "status": "verified", "note": "All sources agree."}
+      ],
+      "related": ["alipay_card_bind_failed", "alipay_identity_verification", "alipay_tourcard"],
+      "reader_links": [
+        {"name": "Trip.com guide: How to use Alipay in China", "url": "https://www.trip.com/guide/phone/how-to-use-alipay.html"},
+        {"name": "Beijing Government: Payment Services for new arrivals", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html"}
+      ],
+      "tags": ["payment", "setup"]
+    },
+    {
+      "id": "alipay_card_bind_failed",
+      "stage": "anytime",
+      "title": "Card won't link to Alipay",
+      "why": "Alipay asks your bank to approve the card. Banks often block an unfamiliar Chinese merchant, and debit, prepaid and virtual cards fail more than mainstream credit cards.",
+      "steps": [
+        "Try a different card first: a credit card from a major bank on another network (Visa if Mastercard failed, or the reverse). This fixes most cases.",
+        "Check that the name on the card, on your passport and in your Alipay profile match exactly.",
+        "Finish Identity Verification (Me > Settings > Account & Security > Identity Verification), then add the card again. Some link failures are really verification failures.",
+        "Call your bank: ask them to allow international online transactions and confirm the card supports online verification (3-D Secure). Then retry once."
+      ],
+      "fallback": "Open TourCard inside Alipay and top it up from your card instead. If that also fails, withdraw cash at a Bank of China ATM with your foreign card.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "WaysChina · How to Use Alipay with Foreign Cards: Setup, Fees and Fixes", "url": "https://wayschina.com/en/articles/how-to-use-alipay-with-foreign-cards", "date": "2026-08"},
+        {"name": "WildChina · Guide to Using Alipay in 2026 (Option 1)", "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/", "date": "2026-05-29"},
+        {"name": "PayInChinaGuide · Alipay for Foreigners FAQ", "url": "https://www.payinchinaguide.com/blog/alipay-foreigners-2025-ultimate-faq", "date": "2026-03"}
+      ],
+      "verified_at": "2026-10-02",
+      "volatility": "low",
+      "facts": [
+        {"fact": "Alipay English hotline +86 571 2688 6000, daily 08:00-24:00 China time", "status": "verified", "note": "Beijing gov page and WaysChina agree."},
+        {"fact": "Bank of China ATMs accept Visa/Mastercard/JCB/Amex, 3,000 RMB per withdrawal", "status": "unverified", "note": "Single source (WaysChina). Check before quoting the cap."}
+      ],
+      "related": ["alipay_identity_verification", "alipay_tourcard", "alipay_setup_before_flight"],
+      "tags": ["payment", "error"]
+    },
+    {
+      "id": "alipay_sms_code_not_received",
+      "stage": "anytime",
+      "title": "No SMS code from Alipay",
+      "why": "The code goes to the number you registered with. After landing, many phones are on a new eSIM or have roaming off, so the SMS to your home number never arrives.",
+      "steps": [
+        "Make sure the SIM that owns your registered number can receive texts: turn on roaming for that line, or switch it back on if you disabled it for an eSIM.",
+        "On the code screen choose the voice-call option if offered. Alipay can read the code out in an automated call.",
+        "Wait 60 seconds before requesting again. Repeated taps can lock requests for a few minutes.",
+        "Check your country code is correct on the login screen and that the number has no leading zero."
+      ],
+      "fallback": "If your home number cannot receive texts in China at all, you cannot log in until it can: turn roaming on for that line, or contact Alipay support at +86 571 2688 6000 to change the registered number.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "WildChina · Guide to Using Alipay in 2026 (Registration)", "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/", "date": "2026-05-29"},
+        {"name": "Trip.com · How to Use Alipay in China for Foreigners 2026", "url": "https://www.trip.com/guide/phone/how-to-use-alipay.html", "date": "2026-04-08"}
+      ],
+      "verified_at": "2026-10-02",
+      "volatility": "low",
+      "facts": [
+        {"fact": "Alipay offers a voice-call delivery of the verification code", "status": "verified", "note": "WildChina registration section."}
+      ],
+      "related": ["alipay_setup_before_flight"],
+      "tags": ["payment", "error", "sms"]
+    },
+    {
+      "id": "alipay_payment_declined",
+      "stage": "anytime",
+      "title": "Payment failed at the counter",
+      "why": "Either the shop's amount tripped a limit, your bank declined the charge, or the terminal only reads one payment method. Alipay shows a short reason on the failure screen.",
+      "steps": [
+        "Read the failure line. Issuer declined or Bank declined means your bank: retry once, then call the bank to allow transactions in China.",
+        "Limit exceeded means you have hit the unverified allowance. Complete Identity Verification in Me > Settings > Account & Security, then pay again.",
+        "If the amount is above 200 RMB, expect a fee line on the confirmation screen before you confirm. Approve it.",
+        "If nothing is shown, close and reopen Alipay, then tap Pay/Receive again. Let the cashier scan your code instead of you scanning theirs."
+      ],
+      "fallback": "Pay with cash. Every merchant in China must accept RMB cash by law. Withdraw at a Bank of China ATM with your foreign card.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "PayInChinaGuide · Alipay for Foreigners FAQ (fees, limits, errors)", "url": "https://www.payinchinaguide.com/blog/alipay-foreigners-2025-ultimate-faq", "date": "2026-03"},
+        {"name": "WaysChina · Alipay with Foreign Cards (fees and limits)", "url": "https://wayschina.com/en/articles/how-to-use-alipay-with-foreign-cards", "date": "2026-08"},
+        {"name": "Beijing Government · Payment Services (cash must be accepted)", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html", "date": "2024-08-30"}
+      ],
+      "verified_at": "2026-10-02",
+      "volatility": "high",
+      "facts": [
+        {"fact": "Payments under 200 RMB are fee-free; above 200 RMB a 3% fee applies", "status": "conflict", "note": "PayInChinaGuide states this for Alipay. China Briefing confirms it as WeChat Pay's published rule. WaysChina says Alipay 'works out similarly' and to read the confirmation screen. Keep the wording 'expect a fee line' until Alipay's own page is found."},
+        {"fact": "Minimum transaction 10 RMB", "status": "unverified", "note": "WildChina only."},
+        {"fact": "Verified users: 5,000 USD per transaction, 50,000 USD per year; unverified about 2,000 USD cumulative", "status": "verified", "note": "WildChina, PayInChinaGuide and WaysChina agree; raised in March 2024 per PBOC."}
+      ],
+      "related": ["alipay_identity_verification", "alipay_card_bind_failed"],
+      "tags": ["payment", "error"]
+    },
+    {
+      "id": "alipay_identity_verification",
+      "stage": "anytime",
+      "title": "Alipay asks for your passport",
+      "why": "Chinese rules let you spend a small total without ID. Past that, or for larger single payments, Alipay must verify your passport before it lets the payment through.",
+      "steps": [
+        "Tap Me > Settings > Account & Security > Identity Verification.",
+        "Choose passport, photograph the photo page in good light with all four corners visible, then follow the face check.",
+        "Wait for the result. It usually completes within the hour; the app allows up to 72 hours.",
+        "Retry the payment once the status shows verified."
+      ],
+      "fallback": "If verification is rejected, retake the passport photo without glare and make sure the name you typed matches the passport exactly. If it fails twice, contact Alipay support at +86 571 2688 6000.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "WildChina · Guide to Using Alipay in 2026 (Verification, FAQ)", "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/", "date": "2026-05-29"},
+        {"name": "Trip.com · How to Use Alipay in China for Foreigners 2026 (menu path)", "url": "https://www.trip.com/guide/phone/how-to-use-alipay.html", "date": "2026-04-08"},
+        {"name": "PayInChinaGuide · Alipay for Foreigners FAQ", "url": "https://www.payinchinaguide.com/blog/alipay-foreigners-2025-ultimate-faq", "date": "2026-03"}
+      ],
+      "verified_at": "2026-10-02",
+      "volatility": "high",
+      "facts": [
+        {"fact": "Up to about 2,000 USD may be spent without ID; verification is required for single transactions over 500 USD", "status": "verified", "note": "WildChina states both thresholds (March 2024 rules); PayInChinaGuide confirms the 2,000 USD cap."},
+        {"fact": "Verification usually completes within an hour, up to 72 hours", "status": "unverified", "note": "WildChina only."}
+      ],
+      "related": ["alipay_payment_declined", "alipay_card_bind_failed"],
+      "tags": ["payment", "verification"]
+    },
+    {
+      "id": "alipay_tourcard",
+      "stage": "anytime",
+      "title": "Use TourCard when your card won't link",
+      "why": "TourCard is a prepaid wallet inside Alipay issued by a Chinese bank. You top it up from your foreign card, so it works even when direct card linking is refused. It costs more per top-up.",
+      "steps": [
+        "In Alipay, type TourCard in the top search bar and open the mini-program.",
+        "Register with your passport when prompted.",
+        "Top up from a Visa, Mastercard, JCB or Diners Club card. A service charge is added to each top-up; the exact rate is shown before you confirm.",
+        "Pay as usual with Pay/Receive or Scan. TourCard is for paying merchants only, not for sending money to people."
+      ],
+      "fallback": "If TourCard also refuses your card, use cash from a Bank of China ATM, or check whether your home e-wallet is part of the Alipay+ network and can scan Chinese codes directly.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "WildChina · Guide to Using Alipay in 2026 (Option 2: TourCard)", "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/", "date": "2026-05-29"},
+        {"name": "PayInChinaGuide · Alipay for Foreigners FAQ (TourCard)", "url": "https://www.payinchinaguide.com/blog/alipay-foreigners-2025-ultimate-faq", "date": "2026-03"},
+        {"name": "ChinaGuidelines · Tour Card 完整申请与使用指南 (中文)", "url": "https://chinaguidelines.com/zh/posts/tour-card", "date": "2026"}
+      ],
+      "verified_at": "2026-10-02",
+      "volatility": "high",
+      "facts": [
+        {"fact": "TourCard validity 180 days, top-up cap 10,000 RMB, 5% fee per top-up", "status": "conflict", "note": "WildChina and PayInChinaGuide say 180 days / 10,000 RMB / 5%. A 2026 search summary cited 90 days. WaysChina says fees and caps vary between sources. Do not quote numbers to users until checked in the TourCard mini-program agreement."},
+        {"fact": "TourCard accepts Visa, Mastercard, Diners Club, JCB; Amex not yet", "status": "unverified", "note": "WildChina only."},
+        {"fact": "PayInChinaGuide claims TourCard allows peer-to-peer transfers; WildChina says it does not", "status": "conflict", "note": "Entry says merchants only, the safer claim."}
+      ],
+      "related": ["alipay_card_bind_failed"],
+      "tags": ["payment", "fallback"]
+    },
+    {
+      "id": "alipay_how_to_pay",
+      "stage": "landing",
+      "title": "How to pay at a shop with Alipay",
+      "why": "There are two directions: the cashier scans you, or you scan the shop's printed code. Small stalls usually have a printed code; chains and taxis scan you.",
+      "steps": [
+        "To be scanned: open Alipay, tap Pay/Receive at the top, hold the barcode and QR code to the scanner. Enter your 6-digit payment password if asked.",
+        "To scan them: tap Scan, point at the shop's printed QR code, type the amount the cashier tells you, confirm.",
+        "Check the confirmation screen for the amount and any fee line, then confirm.",
+        "Online, choose Alipay at checkout; the site opens the app or shows a QR code for you to scan."
+      ],
+      "fallback": "If the code will not scan, ask the cashier to scan yours instead, or pay cash.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "WildChina · Guide to Using Alipay in 2026 (Using Alipay for Payments)", "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/", "date": "2026-05-29"},
+        {"name": "Beijing Government · Payment Services", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html", "date": "2024-08-30"}
+      ],
+      "verified_at": "2026-10-02",
+      "volatility": "low",
+      "related": ["alipay_payment_declined"],
+      "tags": ["payment", "howto"]
+    },
+    {
+      "id": "alipay_didi_miniprogram",
+      "stage": "landing",
+      "title": "Call a DiDi ride from inside Alipay",
+      "why": "DiDi inside Alipay needs no Chinese phone number and charges your linked card automatically. The WeChat version of DiDi may refuse accounts without a Chinese number.",
+      "steps": [
+        "Open Alipay and type DiDi in the top search bar, or tap the DiDi icon on the home screen.",
+        "Allow location, confirm the pickup pin, type the destination in English or Chinese.",
+        "Pick a ride type (Express is the cheapest), confirm. The fare is charged to your linked card after the ride.",
+        "When the car arrives, match the licence plate with the one shown. The driver may ask for the last 4 digits of your phone number; show them on screen."
+      ],
+      "fallback": "Use the in-app chat; messages are translated automatically. For help, DiDi has 24/7 English support under Account > Help.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "WildChina · Guide to Using Didi in China 2025", "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/", "date": "2025-11-10"},
+        {"name": "WildChina · Guide to Using Alipay in 2026 (Using Didi in Alipay)", "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/", "date": "2026-05-29"},
+        {"name": "Trip.com · How to Use DiDi in China for Foreigners", "url": "https://www.trip.com/guide/transport/how-to-use-didi-in-china.html", "date": "2026-05-14"}
+      ],
+      "verified_at": "2026-10-02",
+      "volatility": "low",
+      "facts": [
+        {"fact": "DiDi via the Alipay mini-program does not require a Chinese phone number", "status": "verified", "note": "WildChina Didi guide; WeChat guide notes WeChat mini-programs may need a Chinese number."}
+      ],
+      "related": ["alipay_setup_before_flight"],
+      "reader_links": [
+        {"name": "Trip.com guide: How to use DiDi in China", "url": "https://www.trip.com/guide/transport/how-to-use-didi-in-china.html"}
+      ],
+      "tags": ["transport", "howto"]
+    }
+  ]
+}
