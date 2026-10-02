@@ -55,6 +55,7 @@
         txt($$('payment', 'Result Sub'), `¥1.00 charged via Alipay at ${r.verified_at.slice(11, 16)} · ${r.card}\nRefund issued · back on your card in 1–3 days`);
         txt($$('payment', 'Chip Label'), 'VERIFIED · ' + r.verified_at.slice(5, 10).replace('-', '/'));
         renderPayOk(); show('payment'); renderPreflight();
+        if (S.payReturn) { const to = S.payReturn; S.payReturn = null; const btn = $$('payment', 'Done Button'); if (btn) { btn.dataset.act = 'go:' + to; txt($$('payment', 'Done Label'), 'Continue to step 3 · Get to your hotel'); } }
       } else { renderPayFail(r); show('payment'); }
     } catch (e) { toast('后端不可达'); show('payment'); }
   }
@@ -158,6 +159,7 @@
     }
     txt($$('step3', 'Primary Label'), r.id === 'transfer' ? 'Show my booking to the driver' : r.id === 'metro' || r.id === 'maglev' ? 'Open the route' : 'Show address to driver');
     const pb = $$('step3', 'Primary Button'); if (pb) pb.dataset.act = r.id === 'metro' || r.id === 'maglev' ? 'go:transit' : 'go:driver';
+    try { const pf = await get('/rules/preflight'); const pay = pf.items.find(i => i.id === 'alipay'); if (pay && pay.status !== 'done' && pb) { pb.dataset.act = 'api:pay2'; txt($$('step3', 'Primary Label'), 'Verify payment first · ¥1 test'); } } catch (e) {}
   }
   async function incar() { try { await post('/mock/event', { event: 'in_car' }); } catch (e) {} show('done'); }
 
@@ -180,6 +182,7 @@
   // ---------- 动作分发 ----------
   window.lcHandle = (act, el) => {
     if (act === 'pay') pay();
+    else if (act === 'pay2') { S.payReturn = 'step3'; pay(); }
     else if (act === 'landing') landingEntry();
     else if (act === 'land') land();
     else if (act === 'stuck') stuckPick();
@@ -225,6 +228,8 @@
   async function renderSteps(route) {
     let S0; try { S0 = await loadState(); } catch (e) { return; }
     snapStepStyles(route);
+    const payOk0 = S0.paid && S0.paid.status === 'done';
+    if (route === 'wifi') { const ob = $$('wifi', 'Open Settings'); if (ob) { ob.dataset.act = payOk0 ? 'go:step3' : 'api:pay2'; txt($$('wifi', 'Open Label'), payOk0 ? "I'm online · continue to step 3" : "I'm online · verify payment next"); } return S0; }
     const rows = stepList(route); if (!rows) return;
     const onlineDone = route === 'step3' || route === 'online' || !!S0.online;
     const dataOk = route === 'online' || (S0.by.data && S0.by.data.status === 'done');
@@ -236,7 +241,12 @@
     applyStep(rows[2], carState, route === 'step3' ? 'In progress · tap “I\'m in the car” when moving' : 'Up next · we\'ll recommend a ride once you\'re online', '3');
     const landedTxt = S0.landed ? `Landed at PVG T2 · ${S0.landed} local` : 'Not landed yet · preview';
     if (route === 'step1') { txt($$('step1', 'Subtitle'), landedTxt + ' · one thing at a time'); txt($$('step1', 'Task Sub'), `Checked eSIM and roaming · no connection${S0.landed ? ' at ' + S0.landed : ''}`); }
-    if (route === 'online') { txt($$('online', 'Subtitle'), landedTxt + ' · nothing to do here'); }
+    if (route === 'online') {
+      txt($$('online', 'Subtitle'), landedTxt + (payOk ? ' · nothing to do here' : ' · one thing left before your ride'));
+      const pb = $$('online', 'Primary Button'), pl = $$('online', 'Primary Label');
+      if (pb && pl) { pb.dataset.act = payOk ? 'go:step3' : 'api:pay2'; txt(pl, payOk ? 'Continue to step 3 · Get to your hotel' : 'Continue to step 2 · Verify payment'); pb.style.backgroundColor = payOk ? '#1BA672' : '#2C61FE'; }
+      txt($$('online', 'Task Desc'), payOk ? 'We checked: mobile data is on, pages load, and international services respond. You can skip airport Wi-Fi.' : 'We checked: mobile data is on and pages load. Next, run the ¥1 payment test so you can pay at the taxi queue.');
+    }
     if (route === 'step3') { txt($$('step3', 'Subtitle'), `${S0.online ? 'Online since ' + S0.online : 'Online'} · ${payOk ? 'payment verified' : 'payment not verified'} · last step`); }
     return S0;
   }
@@ -264,7 +274,7 @@
     if (route === 'preflight') renderPreflight();
     if (route === 'step3') renderTransport();
     if (route === 'done' || route === 'share') renderDone();
-    if (route === 'online' || route === 'wifi' || route === 'step3') post('/mock/event', { event: 'online' }).then(() => { if (route === 'step3') renderSteps('step3'); }).catch(() => {});
+    if (route === 'online' || route === 'wifi' || route === 'step3') post('/mock/event', { event: 'online' }).then(() => { if (route === 'step3') renderSteps('step3'); if (route === 'wifi') renderSteps('wifi'); }).catch(() => {});
   };
 
   // ---------- 演示控制：加进右上角菜单 ----------
