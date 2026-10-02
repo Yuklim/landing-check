@@ -129,6 +129,13 @@ for div in root.find_all('div', recursive=False):
     div['style'] = st + '; position: relative; left: 0; top: 0; margin: 0 auto;'
     div['class'] = 'screen'
     div['data-route'] = route
+    for el in div.find_all('div'):
+        if el.find(True) is None:
+            continue
+        est = el.get('style', '')
+        m = re.search(r'(?<![\w-])height:\s*([\d.]+)px', est)
+        if m and float(m.group(1)) > 56:
+            el['style'] = est.replace(m.group(0), 'min-height: %spx' % m.group(1))
     # 绑定
     for r, sel, act in BIND:
         if r != route:
@@ -163,8 +170,12 @@ page = f'''<!doctype html>
   html,body{{margin:0;height:100%;background:#0F1A3A;font-family:Inter,-apple-system,"PingFang SC","Noto Sans SC",sans-serif;-webkit-tap-highlight-color:transparent}}
   #stage{{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}}
   #phone{{width:393px;height:852px;position:relative;overflow:hidden;background:#fff;transform-origin:center center;border-radius:46px;box-shadow:0 30px 80px rgba(0,0,0,.5)}}
-  .screen{{position:absolute !important;inset:0 !important;display:none !important}}
+  .screen{{position:absolute !important;inset:0 !important;display:none !important;overflow-y:auto !important;overflow-x:hidden !important;-webkit-overflow-scrolling:touch}}
   .screen.on{{display:flex !important}}
+  .screen, .screen *{{box-sizing:border-box !important}}
+  .screen [style*="flex: 1 1 0"]{{min-width:0}}
+  .screen [style*="width: 100%"]{{max-width:100%}}
+  html,body{{overflow:hidden;overscroll-behavior:none}}
   .tap{{cursor:pointer;transition:transform .08s,filter .08s}}
   .tap:active{{transform:scale(.98);filter:brightness(.95)}}
   #toast{{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:rgba(18,24,38,.92);color:#fff;font-size:13px;font-weight:600;padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:opacity .2s;max-width:320px;text-align:center;z-index:50}}
@@ -180,8 +191,8 @@ page = f'''<!doctype html>
     html,body{{background:#0F1A3A}}
     #stage{{height:100dvh}}
     #phone{{border-radius:0;box-shadow:none}}
-    #hint{{display:none}}
-    #menu>button{{opacity:.6}}
+    #hint,#menu>button{{display:none}}
+    #list{{top:auto;bottom:16px;right:16px;left:16px;flex-direction:row;flex-wrap:wrap}}
   }}
   body.standalone [data-pencil-name="Status Bar"]{{height:env(safe-area-inset-top,44px) !important;min-height:env(safe-area-inset-top,44px) !important;padding:0 !important}}
   body.standalone [data-pencil-name="Status Bar"] > *{{visibility:hidden}}
@@ -238,6 +249,10 @@ document.addEventListener('click', e => {{
   else if (act.startsWith('toast:')) toast(act.slice(6));
 }});
 $('#menuBtn').onclick = () => $('#list').classList.toggle('open');
+let lp;
+document.addEventListener('touchstart', e => {{ lp = setTimeout(() => $('#list').classList.toggle('open'), 700); }}, {{passive:true}});
+document.addEventListener('touchend', () => clearTimeout(lp));
+document.addEventListener('touchmove', () => clearTimeout(lp), {{passive:true}});
 document.querySelectorAll('#list button').forEach(b => b.onclick = () => show(b.dataset.go));
 document.addEventListener('keydown', e => {{
   const cur = document.querySelector('.screen.on').dataset.route;
