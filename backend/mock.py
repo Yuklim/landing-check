@@ -71,6 +71,9 @@ class MockTrip:
     # ---------- 事件时间线 ----------
     def mark(self, event: str):
         with self._lock:
+            for e in self.events:
+                if e['event'] == event:
+                    return e                      # 同一事件只记第一次
             rec = {'event': event, 'at': self.now()}
             self.events.append(rec)
         return rec

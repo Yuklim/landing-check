@@ -138,7 +138,6 @@
     $all('step3', 'Chip Label').forEach((c, i) => txt(c, d.facts[i]));
     const rows = [$$('step3', 'Option Metro Line 2'), $$('step3', 'Option Trip.com transfer')];
     rows.forEach((row, i) => { const a = d.alternatives[i]; if (!row) return; row.style.display = a ? '' : 'none'; if (!a) return; txt(row.querySelector('[data-pencil-name="Opt Title"]'), a.title); txt(row.querySelector('[data-pencil-name="Opt Meta"]'), `${a.price} · ${a.min} min · ${a.where}`); txt(row.querySelector('[data-pencil-name="Opt Button Label"]'), a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'); row.querySelector('[data-pencil-name="Opt Button"]').dataset.act = a.action === 'transit' ? 'go:transit' : a.action === 'transfer' ? 'go:transfers' : 'toast:Demo：打开支付宝里的滴滴小程序'; });
-    txt($$('step3', 'Subtitle'), (d.night ? 'Landed 23:40 · night mode · ' : 'Online since 14:41 · ') + 'payment verified · last step');
     const g = r.go_to || {};
     txt($$('step3', 'Task Desc'), 'Why: ' + r.why);
     const cur = $$('step3', 'Current Task');
@@ -170,6 +169,7 @@
     const landed = at('landed'), online = at('online'), car = at('in_car');
     const evt = (name, v) => { const n = $$('done', name); if (n && v) txt(n.querySelector('[data-pencil-name="Event Time"]'), v); };
     evt('Event Landed at PVG T2', hhmm(landed)); evt('Event Online · PVG free Wi-Fi', hhmm(online)); evt('Event In the car · detected automatically', hhmm(car));
+    try { const pf = await get('/rules/preflight'); const pay = pf.items.find(i => i.id === 'alipay'); const prow = $$('done', 'Event Payment verified before flight'); if (prow && pay) { txt(prow.querySelector('[data-pencil-name="Event Title"]'), pay.status === 'done' ? 'Payment verified before flight' : 'Payment not verified'); txt(prow.querySelector('[data-pencil-name="Event Time"]'), pay.status === 'done' ? (pay.desc.match(/on (\S+)/) || [])[1] || 'pre-flight' : '—'); const sp = $$('share', 'TL Paid'); if (sp) txt(sp.querySelector('[data-pencil-name="TL Time"]'), pay.status === 'done' ? 'pre-flight' : '—'); } } catch (e) {}
     const tl2 = (name, v) => { const n = $$('share', name); if (n && v) txt(n.querySelector('[data-pencil-name="TL Time"]'), v); };
     tl2('TL Landed', hhmm(landed)); tl2('TL Online', hhmm(online)); tl2('TL In car', hhmm(car));
     if (landed) { const d = new Date(landed.replace(' ', 'T')); txt($$('share', 'Foot Date'), d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) + ' · trip.com/landing'); }
@@ -194,6 +194,53 @@
     try { const d = await get('/rules/preflight'); const data = d.items.find(i => i.id === 'data'); show(data && data.status === 'done' ? 'online' : 'step1'); }
     catch (e) { show('step1'); }
   }
+  // ---------- 三步进度列表 + 落地时间（step1 / online / step3 共用） ----------
+  const hh = v => v ? v.slice(11, 16) : null;
+  async function loadState() {
+    const [pf, fl, tl] = await Promise.all([get('/rules/preflight'), get('/mock/flight'), get('/mock/timeline')]);
+    const by = Object.fromEntries(pf.items.map(i => [i.id, i]));
+    const at = ev => (tl.find(x => x.event === ev) || {}).at;
+    return { pf, by, fl, landed: hh(fl.landed_at), online: hh(at('online')), car: hh(at('in_car')), paid: pf.items.find(i => i.id === 'alipay') };
+  }
+  function stepList(route) {
+    const rows = ['Step Get online', 'Step Pay like a local', 'Step Get to your hotel'].map(n => $$(route, n));
+    return rows.every(Boolean) ? rows : null;
+  }
+  const STEP_STYLE = {};
+  function snapStepStyles(route) {
+    if (STEP_STYLE.done) return;
+    const rows = stepList('step3'); if (!rows) return;               // step3 里三种状态齐全：done, done, now
+    const s1 = stepList('step1'); if (!s1) return;                    // step1 里第三行是 next
+    const pick = (row) => ({ num: row.querySelector('[data-pencil-name="Step Num"]').outerHTML, rowBg: row.style.backgroundColor, titleColor: row.querySelector('[data-pencil-name="Step Title"]').style.color, descColor: row.querySelector('[data-pencil-name="Step Desc"]').style.color, iconHTML: row.querySelector('[data-pencil-name="Step Icon"]').outerHTML });
+    STEP_STYLE.done = pick(rows[0]); STEP_STYLE.now = pick(rows[2]); STEP_STYLE.next = pick(s1[2]);
+  }
+  function applyStep(row, state, desc, iconName) {
+    const st = STEP_STYLE[state]; if (!st) return;
+    row.style.backgroundColor = st.rowBg;
+    const num = row.querySelector('[data-pencil-name="Step Num"]'); if (num) { const t = document.createElement('div'); t.innerHTML = st.num; const n = t.firstElementChild; const txtEl = n.querySelector('[data-pencil-name="Num Text"]'); if (txtEl) txtEl.textContent = iconName; num.replaceWith(n); }
+    const ti = row.querySelector('[data-pencil-name="Step Title"]'); if (ti) ti.style.color = st.titleColor;
+    const de = row.querySelector('[data-pencil-name="Step Desc"]'); if (de) { de.style.color = st.descColor; de.textContent = desc; }
+    const ic = row.querySelector('[data-pencil-name="Step Icon"]'); if (ic) ic.style.color = ic.style.fill = (state === 'next' ? '#DADFE6' : state === 'done' ? '#1BA672' : '#2C61FE');
+  }
+  async function renderSteps(route) {
+    let S0; try { S0 = await loadState(); } catch (e) { return; }
+    snapStepStyles(route);
+    const rows = stepList(route); if (!rows) return;
+    const onlineDone = route === 'step3' || route === 'online' || !!S0.online;
+    const dataOk = route === 'online' || (S0.by.data && S0.by.data.status === 'done');
+    applyStep(rows[0], onlineDone ? 'done' : 'now',
+      onlineDone ? (dataOk ? 'Passed automatically · own data works' : `Done${S0.online ? ' ' + S0.online : ''} · PVG free Wi-Fi`) : 'Checking own data first · Wi-Fi only if needed', '1');
+    const payOk = S0.paid && S0.paid.status === 'done';
+    applyStep(rows[1], payOk ? 'done' : 'now', payOk ? 'Verified before you flew · ¥1 test refunded' : 'Not verified yet · run the ¥1 test in Before you fly', '2');
+    const carState = route === 'step3' ? 'now' : 'next';
+    applyStep(rows[2], carState, route === 'step3' ? 'In progress · tap “I\'m in the car” when moving' : 'Up next · we\'ll recommend a ride once you\'re online', '3');
+    const landedTxt = S0.landed ? `Landed at PVG T2 · ${S0.landed} local` : 'Not landed yet · preview';
+    if (route === 'step1') { txt($$('step1', 'Subtitle'), landedTxt + ' · one thing at a time'); txt($$('step1', 'Task Sub'), `Checked eSIM and roaming · no connection${S0.landed ? ' at ' + S0.landed : ''}`); }
+    if (route === 'online') { txt($$('online', 'Subtitle'), landedTxt + ' · nothing to do here'); }
+    if (route === 'step3') { txt($$('step3', 'Subtitle'), `${S0.online ? 'Online since ' + S0.online : 'Online'} · ${payOk ? 'payment verified' : 'payment not verified'} · last step`); }
+    return S0;
+  }
+
   // ---------- My Trips 落地检查卡 ----------
   const PILL = {};
   async function renderTripsCard() {
@@ -208,14 +255,16 @@
       n.setAttribute('data-pencil-name', name); txt(n.querySelector('[data-pencil-name="Pill Label"]'), st.label); el.replaceWith(n);
       if (!st.ok) open++;
     });
+    try { const fl = await get('/mock/flight'); if (fl.landed_at) { txt($$('trips', 'LC Where Text'), `Landed at PVG · Terminal 2 · ${hh(fl.landed_at)}`); const b = $$('trips', 'Booking CX 362 · HKG → PVG'); if (b) txt(b.querySelector('[data-pencil-name="Booking Sub"]'), `Landed ${hh(fl.landed_at)} · Baggage belt 12`); } } catch (e) {}
     txt($$('trips', 'LC Sub'), open === 0 ? 'Everything is ready. Tap to see your route to the hotel.' : `${open} of 3 things still to sort out before you leave the airport.`);
   }
   window.lcOnShow = route => {
     if (route === 'trips') renderTripsCard();
+    if (route === 'step1' || route === 'online' || route === 'step3') renderSteps(route);
     if (route === 'preflight') renderPreflight();
     if (route === 'step3') renderTransport();
     if (route === 'done' || route === 'share') renderDone();
-    if (route === 'online' || route === 'wifi') post('/mock/event', { event: 'online' }).catch(() => {});
+    if (route === 'online' || route === 'wifi' || route === 'step3') post('/mock/event', { event: 'online' }).then(() => { if (route === 'step3') renderSteps('step3'); }).catch(() => {});
   };
 
   // ---------- 演示控制：加进右上角菜单 ----------
@@ -229,4 +278,5 @@
     mk('💳 模拟支付失败', async () => { try { const r = await post('/mock/pay-test?fail=1'); renderPayFail(r); show('payment'); } catch (e) { toast('后端不可达'); } });
   }
   renderPreflight();
+  const cur = document.querySelector('.screen.on'); if (cur) window.lcOnShow(cur.dataset.route);
 })();
