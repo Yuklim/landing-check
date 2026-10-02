@@ -165,19 +165,26 @@
 
   // ---------- 完成页 ----------
   async function renderDone() {
-    let tl; try { tl = await get('/mock/timeline'); } catch (e) { return; }
+    let tl, fl; try { [tl, fl] = await Promise.all([get('/mock/timeline'), get('/mock/flight')]); } catch (e) { return; }
     const at = ev => (tl.find(x => x.event === ev) || {}).at;
     const hhmm = s => s ? s.slice(11, 16) : null;
-    const landed = at('landed'), online = at('online'), car = at('in_car');
+    const landed = fl.landed_at || at('landed') || (tl[0] && tl[0].at), online = at('online'), car = at('in_car');
     const evt = (name, v) => { const n = $$('done', name); if (n && v) txt(n.querySelector('[data-pencil-name="Event Time"]'), v); };
     evt('Event Landed at PVG T2', hhmm(landed)); evt('Event Online · PVG free Wi-Fi', hhmm(online)); evt('Event In the car · detected automatically', hhmm(car));
-    try { const pf = await get('/rules/preflight'); const pay = pf.items.find(i => i.id === 'alipay'); const prow = $$('done', 'Event Payment verified before flight'); if (prow && pay) { txt(prow.querySelector('[data-pencil-name="Event Title"]'), pay.status === 'done' ? 'Payment verified before flight' : 'Payment not verified'); txt(prow.querySelector('[data-pencil-name="Event Time"]'), pay.status === 'done' ? (pay.desc.match(/on (\S+)/) || [])[1] || 'pre-flight' : '—'); const sp = $$('share', 'TL Paid'); if (sp) txt(sp.querySelector('[data-pencil-name="TL Time"]'), pay.status === 'done' ? 'pre-flight' : '—'); } } catch (e) {}
+    try { const pf = await get('/rules/preflight'); const pay = pf.items.find(i => i.id === 'alipay'); const prow = $$('done', 'Event Payment verified before flight'); if (prow && pay) { txt(prow.querySelector('[data-pencil-name="Event Title"]'), pay.status === 'done' ? 'Payment verified before flight' : 'Payment not verified'); const payAt = at('payment'); const sameDay = payAt && landed && payAt.slice(0, 10) === landed.slice(0, 10); txt(prow.querySelector('[data-pencil-name="Event Title"]'), pay.status !== 'done' ? 'Payment not verified' : sameDay ? 'Payment verified · ¥1 test' : 'Payment verified before flight'); txt(prow.querySelector('[data-pencil-name="Event Time"]'), pay.status === 'done' ? (sameDay ? hhmm(payAt) : 'before flight') : '—'); const sp = $$('share', 'TL Paid'); if (sp) txt(sp.querySelector('[data-pencil-name="TL Time"]'), pay.status === 'done' ? (sameDay ? hhmm(payAt) : 'pre-flight') : '—'); } } catch (e) {}
     const tl2 = (name, v) => { const n = $$('share', name); if (n && v) txt(n.querySelector('[data-pencil-name="TL Time"]'), v); };
     tl2('TL Landed', hhmm(landed)); tl2('TL Online', hhmm(online)); tl2('TL In car', hhmm(car));
     if (landed) { const d = new Date(landed.replace(' ', 'T')); txt($$('share', 'Foot Date'), d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) + ' · trip.com/landing'); }
     if (landed && car) { const m = Math.max(1, Math.round((new Date(car.replace(' ', 'T')) - new Date(landed.replace(' ', 'T'))) / 60000)); txt($$('done', 'Big Number'), m + ' min'); txt($$('share', 'Big Number'), String(m)); txt($$('done', 'Share Title'), `Share your ${m}-minute card`); txt($$('share', 'Share Title'), `Share your ${m}-minute card`); }
   }
-  async function feedback(which) { toast({ wifi: 'Thanks, recorded: Wi-Fi was hardest', payment: 'Thanks, recorded: payment was hardest', transport: 'Thanks, recorded: transport was hardest' }[which]); }
+  const FB = { wifi: 'FB Wi-Fi', payment: 'FB Payment', transport: 'FB Transport' };
+  const FB_STYLE = {};
+  async function feedback(which) {
+    if (!FB_STYLE.on) { const on = $$('done', 'FB Wi-Fi'), off = $$('done', 'FB Payment'); if (on && off) { const pick = el => ({ bg: el.style.backgroundColor, border: el.style.borderColor, label: el.querySelector('[data-pencil-name="FB Label"]').style.color, icon: el.querySelector('svg') && el.querySelector('svg').style.color }); FB_STYLE.on = pick(on); FB_STYLE.off = pick(off); } }
+    Object.entries(FB).forEach(([k, name]) => { const el = $$('done', name); if (!el) return; const st = k === which ? FB_STYLE.on : FB_STYLE.off; el.style.backgroundColor = st.bg; el.style.borderColor = st.border; const lb = el.querySelector('[data-pencil-name="FB Label"]'); if (lb) lb.style.color = st.label; const ic = el.querySelector('svg'); if (ic) ic.style.color = ic.style.fill = (k === which ? '#2C61FE' : '#6F7685'); });
+    toast({ wifi: 'Thanks, recorded: Wi-Fi was hardest', payment: 'Thanks, recorded: payment was hardest', transport: 'Thanks, recorded: transport was hardest' }[which]);
+    try { await post('/kb/feedback', { entry_id: 'alipay_setup_before_flight', solved: true, note: 'hardest:' + which }); } catch (e) {}
+  }
 
   // ---------- 动作分发 ----------
   window.lcHandle = (act, el) => {
