@@ -194,7 +194,24 @@
     try { const d = await get('/rules/preflight'); const data = d.items.find(i => i.id === 'data'); show(data && data.status === 'done' ? 'online' : 'step1'); }
     catch (e) { show('step1'); }
   }
+  // ---------- My Trips 落地检查卡 ----------
+  const PILL = {};
+  async function renderTripsCard() {
+    let d; try { d = await get('/rules/preflight'); } catch (e) { return; }
+    if (!PILL.todo) { const w = $$('trips', 'Pill Wi-Fi'), a = $$('trips', 'Pill Alipay'); if (!w || !a) return; PILL.todo = w.outerHTML; PILL.done = a.outerHTML; }
+    const by = Object.fromEntries(d.items.map(i => [i.id, i]));
+    const states = { 'Pill Wi-Fi': { ok: by.data && by.data.status === 'done', label: 'Wi-Fi' }, 'Pill Alipay': { ok: by.alipay && by.alipay.status === 'done', label: 'Alipay' }, 'Pill Hotel': { ok: true, label: 'Hotel' } };
+    let open = 0;
+    Object.entries(states).forEach(([name, st]) => {
+      const el = $$('trips', name); if (!el) return;
+      const t = document.createElement('div'); t.innerHTML = st.ok ? PILL.done : PILL.todo; const n = t.firstElementChild;
+      n.setAttribute('data-pencil-name', name); txt(n.querySelector('[data-pencil-name="Pill Label"]'), st.label); el.replaceWith(n);
+      if (!st.ok) open++;
+    });
+    txt($$('trips', 'LC Sub'), open === 0 ? 'Everything is ready. Tap to see your route to the hotel.' : `${open} of 3 things still to sort out before you leave the airport.`);
+  }
   window.lcOnShow = route => {
+    if (route === 'trips') renderTripsCard();
     if (route === 'preflight') renderPreflight();
     if (route === 'step3') renderTransport();
     if (route === 'done' || route === 'share') renderDone();
