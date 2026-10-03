@@ -1,0 +1,282 @@
+[
+ {
+  "file": "blogs_alipay-for-foreigners_277da5.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_tourcard",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_alipay-for-foreigners_e1fc2c.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_tourcard",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_didi-guide-foreigners-china._413612.webp",
+  "scenario": "alipay",
+  "expected_entry": "alipay_didi_miniprogram",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_didi-guide-foreigners-china._bc9c13.webp",
+  "scenario": "alipay",
+  "expected_entry": "alipay_didi_miniprogram",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_didi-guide-foreigners-china._fb9acd.webp",
+  "scenario": "alipay",
+  "expected_entry": "alipay_didi_miniprogram",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._3e2f2f.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_identity_verification",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._56c0e5.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_identity_verification",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._57323b.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_setup",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._5c2a75.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_identity_verification",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._6cae9c.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_how_to_pay",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._9dc74f.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_identity_verification",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._a23eb8.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_risk_control",
+  "kind": "error",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._a5d589.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_card_bind",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._ab3fe3.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_identity_verification",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._b2a563.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_identity_verification",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._b390c6.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_setup",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._b59ed1.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_identity_verification",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "blogs_wechat-pay-foreigners-guide._eb1561.webp",
+  "scenario": "wechat",
+  "expected_entry": "wechat_identity_verification",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "tripcom_phone-how-to-use-alipay_45dc53.png",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "tripcom_phone-how-to-use-alipay_767ad4.jpg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "tripcom_phone-how-to-use-alipay_c7f60c.jpg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_a-guide-to-using-didi-in-chi_5a0762.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_didi_miniprogram",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_a-guide-to-using-didi-in-chi_5e75ac.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_didi_miniprogram",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_a-guide-to-using-didi-in-chi_dc79f9.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_didi_miniprogram",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_a-guide-to-using-didi-in-chi_e7286c.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_didi_miniprogram",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_guide-to-using-alipay-2026.m_171182.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_setup_before_flight",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_guide-to-using-alipay-2026.m_2ebd9a.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_sms_code_not_received",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_guide-to-using-alipay-2026.m_4661db.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_tourcard",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_guide-to-using-alipay-2026.m_dbcf27.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_tourcard",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_guide-to-using-alipay-2026.m_ea5be0.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_setup_before_flight",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_guide-to-using-alipay-2026.m_ff6b2f.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_card_bind_failed",
+  "kind": "error",
+  "note": ""
+ },
+ {
+  "file": "wildchina_wechat-pay-in-2026_0b7d21.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_card_bind",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_wechat-pay-in-2026_256823.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_setup",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_wechat-pay-in-2026_46c96e.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_setup",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_wechat-pay-in-2026_498d14.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_setup",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_wechat-pay-in-2026_8ec814.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_setup",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_wechat-pay-in-2026_92366e.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_card_bind",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_wechat-pay-in-2026_acd9c4.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_how_to_pay",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_wechat-pay-in-2026_ad08e8.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_sms_code",
+  "kind": "normal",
+  "note": ""
+ },
+ {
+  "file": "wildchina_wechat-pay-in-2026_fb0b81.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_setup",
+  "kind": "normal",
+  "note": ""
+ }
+]

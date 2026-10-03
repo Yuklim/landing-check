@@ -1,0 +1,233 @@
+[
+ {
+  "file": "rfc_alipay_c01ff8.svg",
+  "ok": false,
+  "url": "https://www.readyforchina.com/alipaylogo.svg",
+  "alt": "AliPay Logo",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_f28526.svg",
+  "ok": false,
+  "url": "https://www.readyforchina.com/apple-line-logo.svg",
+  "alt": "iOS Icon",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_0a0886.svg",
+  "ok": false,
+  "url": "https://www.readyforchina.com/android-line-logo.svg",
+  "alt": "Android Icon",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_b180c2.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep1.gif&w=828&q=75",
+  "alt": "Download from App Store demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_b180c2.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep1.gif&w=828&q=75",
+  "alt": "Download from App Store demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_b2a57c.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep2.gif&w=828&q=75",
+  "alt": "Sign Up with Mobile demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_b2a57c.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep2.gif&w=828&q=75",
+  "alt": "Sign Up with Mobile demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_8a4d60.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep3.gif&w=828&q=75",
+  "alt": "Verify Identity demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_8a4d60.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep3.gif&w=828&q=75",
+  "alt": "Verify Identity demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_c8e0f9.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep4.gif&w=828&q=75",
+  "alt": "Await Verification demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_c8e0f9.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep4.gif&w=828&q=75",
+  "alt": "Await Verification demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_190f20.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep5.gif&w=828&q=75",
+  "alt": "Link Your Card demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_190f20.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep5.gif&w=828&q=75",
+  "alt": "Link Your Card demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_067f20.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep6.gif&w=828&q=75",
+  "alt": "Test your Payment demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_067f20.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2FiosStep6.gif&w=828&q=75",
+  "alt": "Test your Payment demonstration",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_alipay_f591a9.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fpayment-badge-transparent.png&w=750&q=75",
+  "alt": "Secure Payment",
+  "page": "alipay"
+ },
+ {
+  "file": "rfc_wechat_428129.svg",
+  "ok": false,
+  "url": "https://www.readyforchina.com/wechatlogo.svg",
+  "alt": "WeChat Pay Logo",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_f28526.svg",
+  "ok": false,
+  "url": "https://www.readyforchina.com/apple-line-logo.svg",
+  "alt": "iOS Icon",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_0a0886.svg",
+  "ok": false,
+  "url": "https://www.readyforchina.com/android-line-logo.svg",
+  "alt": "Android Icon",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_2769fc.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step1.gif&w=828&q=75",
+  "alt": "Download from App Store demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_2769fc.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step1.gif&w=828&q=75",
+  "alt": "Download from App Store demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_c111d2.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step2.gif&w=828&q=75",
+  "alt": "Register Account demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_c111d2.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step2.gif&w=828&q=75",
+  "alt": "Register Account demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_280c7b.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step3.gif&w=828&q=75",
+  "alt": "Complete Verification demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_280c7b.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step3.gif&w=828&q=75",
+  "alt": "Complete Verification demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_c47386.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step4.gif&w=828&q=75",
+  "alt": "Link Your Card demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_c47386.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step4.gif&w=828&q=75",
+  "alt": "Link Your Card demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_eb09d5.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step5.gif&w=828&q=75",
+  "alt": "Configure Security demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_eb09d5.png",
+  "ok": false,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fgifs%2Fwechat-ios-step5.gif&w=828&q=75",
+  "alt": "Configure Security demonstration",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_wechat_f591a9.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fpayment-badge-transparent.png&w=750&q=75",
+  "alt": "Secure Payment",
+  "page": "wechat"
+ },
+ {
+  "file": "rfc_resources__378c2b.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Farticleimages%2Fdigital-payments-guide-feature.webp&w=1920&q=75",
+  "alt": "eSIM for China travel",
+  "page": "resources_digital-payments-china-guide"
+ },
+ {
+  "file": "rfc_resources__c01ff8.svg",
+  "ok": false,
+  "url": "https://www.readyforchina.com/alipaylogo.svg",
+  "alt": "Alipay Logo",
+  "page": "resources_digital-payments-china-guide"
+ },
+ {
+  "file": "rfc_resources__f591a9.png",
+  "ok": true,
+  "url": "https://www.readyforchina.com/_next/image?url=%2Fpayment-badge-transparent.png&w=750&q=75",
+  "alt": "Secure Payment",
+  "page": "resources_digital-payments-china-guide"
+ }
+]

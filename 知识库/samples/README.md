@@ -1,0 +1,41 @@
+# 识别评测样本
+
+真实界面截图，用来测"我卡住了"的识别。每个目录一个 `manifest.json`，写明每张图的预期场景和条目；`backend/tools/eval_samples.py` 读它跑评测，输出命中率和错例，报告写到 `eval_report.json`。
+
+```bash
+cd backend && python3 tools/eval_samples.py from_guides      # 需要 DEEPSEEK_API_KEY
+```
+
+## 目录
+
+| 目录 | 张数 | 来源 | 说明 |
+|---|---|---|---|
+| `from_guides/` | 197 张，其中 40 张竖屏手机截图已打标签 | WildChina、Trip.com、payinchinaguide、chinavigators 等指南正文里的截图 | 真实 App 界面。只有 2 张是报错页（微信"存在风险"弹窗、支付宝添加银行卡页），其余是正常步骤页 |
+| `readyforchina/` | 6 个 GIF | readyforchina.com 的设置教程动图 | 支付宝六步、微信五步，无报错页 |
+
+## 2026-10-03 基线评测（40 张，只有支付宝条目）
+
+| 指标 | 结果 |
+|---|---|
+| 场景命中 | 27/40 = 68% |
+| 条目命中（仅支付宝 16 张） | 12/16 = 75% |
+| 判定分布 | 直接答 7 · 让用户选 16 · 未知 17 |
+| 平均耗时 | 3.0 秒 |
+
+错例 13 张里 11 张是同一个原因：**微信支付的截图被归到支付宝**（实名验证页、绑卡页、支付密码页）。知识库里还没有微信场景，模型只能在支付宝里选。写完微信条目后预计场景命中到 85% 以上。
+
+另外 2 张是滴滴 App 自身的"Payment Methods"页被判未知，因为条目只写了支付宝里的滴滴小程序，没写滴滴独立 App。写滴滴场景时补。
+
+模型返回非法 JSON 4 次（截断或空），都自动走了规则兜底，没有崩。
+
+## 样本的局限
+
+- 真正的报错截图只有 2 张。指南作者截的是"怎么做"，不是"做失败了"。真实用户的失败截图（卡被拒、验证失败弹窗、风控锁定）仍然缺。
+- Reddit 的 r/chinatravel、r/travelchina 有大量这类帖子，但官方接口和第三方归档都拒绝了抓取请求。要补这部分只能人工：登录 Reddit 搜 "alipay declined"、"verification failed"，把带图的帖子截图存进 `from_reddit/`，按同样格式写 manifest。
+- 团队里有国外卡的人在支付宝里真实绑一次，是最有价值的样本。
+
+## 怎么加样本
+
+1. 截图放进对应目录，文件名随意。
+2. 在 `manifest.json` 加一条：`{"file": "xxx.png", "scenario": "alipay", "expected_entry": "alipay_card_bind_failed", "kind": "error", "note": "..."}`。场景在知识库里还没有时照样写，评测会按"应判未知"处理。
+3. 重跑评测。
