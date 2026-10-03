@@ -133,9 +133,10 @@
     const d = f.scheduled_arrival ? new Date(f.scheduled_arrival.replace(' ', 'T')) : null;
     const dateS = d ? d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).replace(',', '') : 'Fri Sep 25';
     const from = (f.from && f.from.code) || 'HKG', to = (f.to && f.to.code) || 'PVG';
-    const swap = t => t.replace(/CX 362/g, f.number).replace(/HKG/g, from).replace(/11:05/g, dep || '11:05').replace(/14:20/g, arr || '14:20').replace(/Fri Sep 25/g, dateS);
+    // 设计稿里的占位航班（当前 UA 857 / SFO 14:10 → PVG 07:40 Mon Oct 12，旧版 CX 362）都换成接口值
+    const swap = t => t.replace(/CX 362|UA 857/g, f.number).replace(/HKG|SFO/g, from).replace(/11:05|14:10/g, dep || '14:10').replace(/14:20|07:40/g, arr || '07:40').replace(/Fri Sep 25|Mon Oct 12/g, dateS);
     [['home', 'Banner Sub'], ['preflight', 'Flight No'], ['preflight', 'Flight Time'], ['transfer', 'Time Title'], ['lock', 'Title'], ['lock', 'Body'], ['trips', 'Booking Title'], ['transfers', 'Flight Text']].forEach(([r, n]) => {
-      document.querySelectorAll(`.screen[data-route="${r}"] [data-pencil-name="${n}"]`).forEach(el => { if (/CX 362|HKG|Fri Sep 25/.test(el.textContent)) txt(el, swap(el.textContent.trim()) + (n === 'Flight Time' && nextDay ? ' +1' : '')); });
+      document.querySelectorAll(`.screen[data-route="${r}"] [data-pencil-name="${n}"]`).forEach(el => { if (/CX 362|UA 857|HKG|SFO|Fri Sep 25|Mon Oct 12/.test(el.textContent)) txt(el, swap(el.textContent.trim().replace(/ \+1$/, '')) + (n === 'Flight Time' && nextDay ? ' +1' : '')); });
     });
   }
   renderFlight();

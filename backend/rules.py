@@ -33,7 +33,7 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
 
     pay_ok = pay.get('status') == 'verified' or 'alipay' in done
     add('alipay', 'Alipay payment', 'done' if pay_ok else 'todo',
-        ('Verified · ¥1 test on %s, refunded' % (pay.get('verified_at') or '')[:10]) if pay_ok else 'Installed · not verified yet · ¥1 test, refunded in 24 h',
+        (('Verified · ¥1 test on %s, refunded' % pay['verified_at'][:10]) if pay.get('verified_at') else 'Verified before you flew · ¥1 test, refunded') if pay_ok else 'Installed · not verified yet · ¥1 test, refunded in 24 h',
         None if pay_ok else 'verify_payment', 'alipay_setup_before_flight')
 
     add('transfer', 'Ride from the airport · optional', 'done' if trip.get('transfer_booked') else 'optional',
@@ -66,12 +66,13 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
     return {'items': items, 'ready': ndone, 'required': len(required),
             'optional_open': sum(1 for i in items if i['status'] == 'optional'),
             'pct': int(round(100 * ndone / len(required))) if required else 100,
-            'summary': '%d of %d ready · %d to do · %d optional' % (ndone, len(required), len(required) - ndone, sum(1 for i in items if i['status'] == 'optional'))}
+            'summary': ('You\'re ready for Shanghai · %d of %d ready' % (ndone, len(required))) if required and ndone == len(required) else
+                       '%d of %d ready · %d to do · %d optional' % (ndone, len(required), len(required) - ndone, sum(1 for i in items if i['status'] == 'optional'))}
 
 
 def _transfer_hint(trip):
     f, h = trip.get('flight', {}), trip.get('hotel', {})
-    return '%d bags, %d adults, %d km · a pre-booked transfer beats the taxi queue' % (f.get('checked_bags', 0), f.get('adults', 1), h.get('distance_from_airport_km', 0))
+    return '%d bag%s, %d adult%s, %d km · a pre-booked transfer beats the taxi queue' % (f.get('checked_bags', 0), '' if f.get('checked_bags', 0) == 1 else 's', f.get('adults', 1), '' if f.get('adults', 1) == 1 else 's', h.get('distance_from_airport_km', 0))
 
 
 # ---------------- 交通推荐 ----------------
@@ -106,7 +107,7 @@ def transport(trip: dict, landed_at: str = None, airport: str = 'PVG', weather: 
     elif night:
         rec, why, alts = 'taxi', 'Landed at %s: the metro has stopped for the night. A taxi from the official queue is the simplest.' % when, ['transfer', 'didi']
     elif bags >= 2 or adults >= 3:
-        rec, why, alts = 'taxi', '%d checked bags and %d adults make the metro a hassle. Hotel is %d km away%s.' % (bags, adults, dist, ', not rush hour' if not _is_rush(when) else ''), ['metro', 'didi']
+        rec, why, alts = 'taxi', '%d checked bag%s%s make the metro a hassle. Hotel is %d km away%s.' % (bags, '' if bags == 1 else 's', (' and %d adults' % adults) if adults >= 3 else '', dist, ', not rush hour' if not _is_rush(when) else ''), ['metro', 'didi']
     elif metro_walk > 1000:
         rec, why, alts = 'taxi', 'Your hotel is %d m from the nearest metro station, too far with luggage.' % metro_walk, ['metro', 'didi']
     elif weather == 'rain':
