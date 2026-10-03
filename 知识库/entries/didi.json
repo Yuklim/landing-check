@@ -1,18 +1,130 @@
 {
   "scenario": "didi",
-  "name": {"en": "DiDi ride-hailing", "zh": "滴滴出行"},
+  "name": {
+    "en": "DiDi ride-hailing",
+    "zh": "滴滴出行"
+  },
   "detect": {
-    "keywords_zh": ["滴滴", "滴滴出行", "网约车", "打车", "上车点", "司机", "车牌", "尾号", "行程", "快车", "专车", "预约", "取消"],
-    "keywords_en": ["DiDi", "DiDi China", "Ride Hailing", "Where to?", "Express", "Premier", "Comfort", "Pickup point", "driver", "licence plate", "last 4 digits", "Trips", "Cancel", "Payment Methods", "Auto Debit", "Online Car-hailing"],
+    "keywords_zh": [
+      "滴滴",
+      "滴滴出行",
+      "网约车",
+      "打车",
+      "上车点",
+      "司机",
+      "车牌",
+      "尾号",
+      "行程",
+      "快车",
+      "专车",
+      "预约",
+      "取消",
+      "滴滴出行",
+      "我的钱包",
+      "全部订单",
+      "待出发",
+      "多语言",
+      "开发票",
+      "优惠卡券",
+      "快车",
+      "特惠快车",
+      "顺风车"
+    ],
+    "keywords_en": [
+      "DiDi",
+      "DiDi China",
+      "Ride Hailing",
+      "Where to?",
+      "Express",
+      "Premier",
+      "Comfort",
+      "Pickup point",
+      "driver",
+      "licence plate",
+      "last 4 digits",
+      "Trips",
+      "Cancel",
+      "Payment Methods",
+      "Auto Debit",
+      "Online Car-hailing",
+      "Enter Destination",
+      "Confirm Destination",
+      "Discount Express",
+      "DiDi Flash",
+      "Didi Chuxing",
+      "Confirm Request",
+      "Leave now",
+      "Change Rider",
+      "My Trips",
+      "Invoice",
+      "Invite a friend",
+      "Travel Card",
+      "DiDi Pay"
+    ],
     "visual_cues": "Orange DiDi app chrome, a map with a 'Where to?' box, ride-type price list (Express / Comfort / Premier), a driver card with plate number and ETA, the Payment Methods list (Alipay Payment, Credit/Debit Card, Apple Pay), or airport signs reading 网约车 / Online Car-hailing with pickup point codes like P2 or A1.",
-    "sub_steps": ["didi_setup_before_flight", "didi_sms_code_not_received", "didi_payment_failed", "didi_airport_pickup", "didi_find_driver", "didi_cancel_or_wrong_car"],
+    "sub_steps": [
+      "didi_setup_before_flight",
+      "didi_sms_code_not_received",
+      "didi_payment_failed",
+      "didi_airport_pickup",
+      "didi_find_driver",
+      "didi_cancel_or_wrong_car"
+    ],
     "entry_keywords": {
-      "didi_setup_before_flight": ["download", "sign up", "register", "install", "didi china", "didi rider", "注册", "下载"],
-      "didi_sms_code_not_received": ["verification code", "sms", "code", "验证码"],
-      "didi_payment_failed": ["payment", "auto debit", "card", "declined", "pay", "支付", "付款", "unpaid"],
-      "didi_airport_pickup": ["airport", "pickup", "pick-up", "terminal", "p1", "p2", "网约车", "online car-hailing", "机场"],
-      "didi_find_driver": ["driver", "plate", "arrived", "where are you", "司机", "车牌", "尾号", "last 4"],
-      "didi_cancel_or_wrong_car": ["cancel", "wrong car", "fee", "取消", "另一辆"]
+      "didi_setup_before_flight": [
+        "download",
+        "sign up",
+        "register",
+        "install",
+        "didi china",
+        "didi rider",
+        "注册",
+        "下载"
+      ],
+      "didi_sms_code_not_received": [
+        "verification code",
+        "sms",
+        "code",
+        "验证码"
+      ],
+      "didi_payment_failed": [
+        "payment",
+        "auto debit",
+        "card",
+        "declined",
+        "pay",
+        "支付",
+        "付款",
+        "unpaid"
+      ],
+      "didi_airport_pickup": [
+        "airport",
+        "pickup",
+        "pick-up",
+        "terminal",
+        "p1",
+        "p2",
+        "网约车",
+        "online car-hailing",
+        "机场"
+      ],
+      "didi_find_driver": [
+        "driver",
+        "plate",
+        "arrived",
+        "where are you",
+        "司机",
+        "车牌",
+        "尾号",
+        "last 4"
+      ],
+      "didi_cancel_or_wrong_car": [
+        "cancel",
+        "wrong car",
+        "fee",
+        "取消",
+        "另一辆"
+      ]
     }
   },
   "entries": [
@@ -28,22 +140,56 @@
         "If the app asks for identity verification, complete it with your passport now rather than at the airport."
       ],
       "fallback": "If DiDi will not register, skip the app: in Alipay search DiDi or tap Transport > Taxi; it uses your Alipay account and needs no Chinese number.",
-      "applies_to": ["ios", "android"],
+      "applies_to": [
+        "ios",
+        "android"
+      ],
       "scope": "global",
       "sources": [
-        {"name": "Trip.com · How to Use DiDi in China for Foreigners", "url": "https://www.trip.com/guide/transport/how-to-use-didi-in-china.html", "date": "2026-05-14"},
-        {"name": "TripChina · How to Use DiDi in China: Before Your First Ride", "url": "https://tripchina.me/didi-guide-foreigners-china/", "date": "2026-09-29"},
-        {"name": "WildChina · Guide to Using Didi in China 2025", "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/", "date": "2025-11-10"}
+        {
+          "name": "Trip.com · How to Use DiDi in China for Foreigners",
+          "url": "https://www.trip.com/guide/transport/how-to-use-didi-in-china.html",
+          "date": "2026-05-14"
+        },
+        {
+          "name": "TripChina · How to Use DiDi in China: Before Your First Ride",
+          "url": "https://tripchina.me/didi-guide-foreigners-china/",
+          "date": "2026-09-29"
+        },
+        {
+          "name": "WildChina · Guide to Using Didi in China 2025",
+          "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/",
+          "date": "2025-11-10"
+        }
       ],
       "verified_at": "2026-10-03",
       "volatility": "low",
       "facts": [
-        {"fact": "DiDi-Greater China supports foreign mobile numbers, international credit cards, English interface and bilingual chat", "status": "verified", "note": "TripChina citing official guidance (Sep 2026); Trip.com and WildChina agree."},
-        {"fact": "Do not install DiDi Rider; it does not operate in mainland China", "status": "verified", "note": "WildChina."}
+        {
+          "fact": "DiDi-Greater China supports foreign mobile numbers, international credit cards, English interface and bilingual chat",
+          "status": "verified",
+          "note": "TripChina citing official guidance (Sep 2026); Trip.com and WildChina agree."
+        },
+        {
+          "fact": "Do not install DiDi Rider; it does not operate in mainland China",
+          "status": "verified",
+          "note": "WildChina."
+        }
       ],
-      "related": ["alipay_didi_miniprogram", "didi_payment_failed"],
-      "reader_links": [{"name": "Trip.com guide: How to use DiDi in China", "url": "https://www.trip.com/guide/transport/how-to-use-didi-in-china.html"}],
-      "tags": ["transport", "setup"]
+      "related": [
+        "alipay_didi_miniprogram",
+        "didi_payment_failed"
+      ],
+      "reader_links": [
+        {
+          "name": "Trip.com guide: How to use DiDi in China",
+          "url": "https://www.trip.com/guide/transport/how-to-use-didi-in-china.html"
+        }
+      ],
+      "tags": [
+        "transport",
+        "setup"
+      ]
     },
     {
       "id": "didi_sms_code_not_received",
@@ -57,16 +203,34 @@
         "Still nothing: book the ride inside Alipay instead (search DiDi), which uses your Alipay login and needs no new code."
       ],
       "fallback": "Take the official taxi queue at the airport, or pre-book a Trip.com transfer so the ride does not depend on an unresolved app.",
-      "applies_to": ["ios", "android"],
+      "applies_to": [
+        "ios",
+        "android"
+      ],
       "scope": "global",
       "sources": [
-        {"name": "TripChina · How to Use DiDi in China (SMS troubleshooting)", "url": "https://tripchina.me/didi-guide-foreigners-china/", "date": "2026-09-29"},
-        {"name": "WildChina · Guide to Using Didi in China 2025", "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/", "date": "2025-11-10"}
+        {
+          "name": "TripChina · How to Use DiDi in China (SMS troubleshooting)",
+          "url": "https://tripchina.me/didi-guide-foreigners-china/",
+          "date": "2026-09-29"
+        },
+        {
+          "name": "WildChina · Guide to Using Didi in China 2025",
+          "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/",
+          "date": "2025-11-10"
+        }
       ],
       "verified_at": "2026-10-03",
       "volatility": "low",
-      "related": ["alipay_sms_code_not_received", "alipay_didi_miniprogram"],
-      "tags": ["transport", "error", "sms"]
+      "related": [
+        "alipay_sms_code_not_received",
+        "alipay_didi_miniprogram"
+      ],
+      "tags": [
+        "transport",
+        "error",
+        "sms"
+      ]
     },
     {
       "id": "didi_payment_failed",
@@ -80,21 +244,51 @@
         "For a ride right now, choose the Taxi option inside DiDi, which lets you pay the driver with Alipay or cash at the end."
       ],
       "fallback": "Contact DiDi's 24/7 English support under Account > Help with the trip number. Unpaid trips block new bookings until settled.",
-      "applies_to": ["ios", "android"],
+      "applies_to": [
+        "ios",
+        "android"
+      ],
       "scope": "global",
       "sources": [
-        {"name": "TripChina · How to Use DiDi in China (payment)", "url": "https://tripchina.me/didi-guide-foreigners-china/", "date": "2026-09-29"},
-        {"name": "Trip.com · How to Get Didi Ride in China: Airport Booking, Payment Tips", "url": "https://in.trip.com/guide/transport/didi-china.html", "date": "2026-07-07"},
-        {"name": "WildChina · Guide to Using Didi in China 2025 (FAQ)", "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/", "date": "2025-11-10"}
+        {
+          "name": "TripChina · How to Use DiDi in China (payment)",
+          "url": "https://tripchina.me/didi-guide-foreigners-china/",
+          "date": "2026-09-29"
+        },
+        {
+          "name": "Trip.com · How to Get Didi Ride in China: Airport Booking, Payment Tips",
+          "url": "https://in.trip.com/guide/transport/didi-china.html",
+          "date": "2026-07-07"
+        },
+        {
+          "name": "WildChina · Guide to Using Didi in China 2025 (FAQ)",
+          "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/",
+          "date": "2025-11-10"
+        }
       ],
       "verified_at": "2026-10-03",
       "volatility": "high",
       "facts": [
-        {"fact": "DiDi accepts Alipay, WeChat Pay, credit/debit card and Apple Pay as payment methods", "status": "verified", "note": "WildChina screenshots of the Payment Methods list; TripChina."},
-        {"fact": "The Taxi ride type accepts cash", "status": "verified", "note": "WildChina FAQ."}
+        {
+          "fact": "DiDi accepts Alipay, WeChat Pay, credit/debit card and Apple Pay as payment methods",
+          "status": "verified",
+          "note": "WildChina screenshots of the Payment Methods list; TripChina."
+        },
+        {
+          "fact": "The Taxi ride type accepts cash",
+          "status": "verified",
+          "note": "WildChina FAQ."
+        }
       ],
-      "related": ["alipay_card_bind_failed", "alipay_didi_miniprogram"],
-      "tags": ["transport", "payment", "error"]
+      "related": [
+        "alipay_card_bind_failed",
+        "alipay_didi_miniprogram"
+      ],
+      "tags": [
+        "transport",
+        "payment",
+        "error"
+      ]
     },
     {
       "id": "didi_airport_pickup",
@@ -103,26 +297,76 @@
       "why": "Ride-hailing cars cannot stop at the arrivals kerb. Every major airport has a signed pickup zone, usually a numbered bay in a car park, and the app will not match you until you are near it.",
       "steps": [
         "Collect your luggage first; do not book from the plane or the baggage hall.",
-        "Follow the signs reading Online Car-hailing / 网约车 to the pickup zone (at PVG T2 the signs lead to the P2 area on the ground floor). Ignore anyone offering a ride inside the terminal.",
+        "Follow the signs reading Online Car-hailing / 网约车 to the pickup zone. At Pudong T2 the signs say 网约车上车点请前往P2停车库: take the lift down into the P2 car park (level B1) and find a numbered waiting point (等候点). Ignore anyone offering a ride inside the terminal.",
         "Open DiDi at the zone. It auto-selects the airport pickup spot; if the pin is across the road, drag it to your bay and note the bay code (such as A1 or B3).",
         "Type the hotel name in English, pick Express or, with big luggage, the Airport Transfer car type, then confirm. Follow the in-app arrow to your bay."
       ],
-      "fallback": "If no cars are matching, walk to the official taxi queue (PVG T2: ground floor, Exit 9). A pre-booked Trip.com transfer avoids all of this: the driver waits at arrivals with your name.",
-      "applies_to": ["ios", "android"],
+      "fallback": "If no cars are matching, walk to the official taxi queue (Pudong T2: take the escalator down to level 1 and go out through Door 25). A pre-booked Trip.com transfer avoids all of this: the driver waits at arrivals with your name.",
+      "applies_to": [
+        "ios",
+        "android"
+      ],
       "scope": "PVG",
       "sources": [
-        {"name": "Trip.com · How to Get Didi Ride in China: Airport Booking, Payment Tips", "url": "https://in.trip.com/guide/transport/didi-china.html", "date": "2026-07-07"},
-        {"name": "TripChina · How to Use DiDi in China (airport pickup)", "url": "https://tripchina.me/didi-guide-foreigners-china/", "date": "2026-09-29"}
+        {
+          "name": "Trip.com · How to Get Didi Ride in China: Airport Booking, Payment Tips",
+          "url": "https://in.trip.com/guide/transport/didi-china.html",
+          "date": "2026-07-07"
+        },
+        {
+          "name": "TripChina · How to Use DiDi in China (airport pickup)",
+          "url": "https://tripchina.me/didi-guide-foreigners-china/",
+          "date": "2026-09-29"
+        },
+        {
+          "name": "京报网 · 实探上海浦东机场：出租车随到随走，新增“网约车上车点”标识",
+          "url": "https://news.bjd.com.cn/2024/02/05/10695782.shtml",
+          "date": "2024-02-05"
+        },
+        {
+          "name": "Shanghai Tourism · Using Didi in Shanghai (2026)",
+          "url": "https://www.shanghaitourism.org/using-didi-shanghai/",
+          "date": "2026-07-25"
+        }
       ],
       "verified_at": "2026-10-03",
       "volatility": "high",
       "facts": [
-        {"fact": "PVG T2 ride-hailing pickup is the P2 area, ground floor; taxi queue at Exit 9", "status": "unverified", "note": "From our mock data and Trip.com's general P1/P2 description. Verify on site before quoting."},
-        {"fact": "Order only once you reach the pickup zone to avoid waiting fees", "status": "verified", "note": "Trip.com airport tips."}
+        {
+          "fact": "PVG ride-hailing pickup: P1 car park for T1, P2 car park for T2, 40 numbered waiting points",
+          "status": "verified",
+          "note": "Official signage photographed by 京报网 (Feb 2024); Shanghai Tourism 2026 agrees."
+        },
+        {
+          "fact": "Pickup level inside P2",
+          "status": "conflict",
+          "note": "京报网 says B1; Shanghai Tourism says B2. Signs on site decide."
+        },
+        {
+          "fact": "PVG T2 taxi stand: level 1 via Door 25",
+          "status": "conflict",
+          "note": "Shanghai local guides (bendibao, Ctrip airport page) say Door 25; one English guide says Door 26."
+        },
+        {
+          "fact": "Order only once you reach the pickup zone to avoid waiting fees",
+          "status": "verified",
+          "note": "Trip.com airport tips."
+        }
       ],
-      "related": ["didi_find_driver", "alipay_didi_miniprogram"],
-      "reader_links": [{"name": "Trip.com guide: DiDi airport booking", "url": "https://in.trip.com/guide/transport/didi-china.html"}],
-      "tags": ["transport", "airport"]
+      "related": [
+        "didi_find_driver",
+        "alipay_didi_miniprogram"
+      ],
+      "reader_links": [
+        {
+          "name": "Trip.com guide: DiDi airport booking",
+          "url": "https://in.trip.com/guide/transport/didi-china.html"
+        }
+      ],
+      "tags": [
+        "transport",
+        "airport"
+      ]
     },
     {
       "id": "didi_find_driver",
@@ -136,19 +380,40 @@
         "Tap Call only if chat fails; the driver may not speak English."
       ],
       "fallback": "If you cannot meet within a few minutes, cancel from the trip screen and rebook from the exact bay. DiDi English support is under Account > Help, 24/7.",
-      "applies_to": ["ios", "android"],
+      "applies_to": [
+        "ios",
+        "android"
+      ],
       "scope": "global",
       "sources": [
-        {"name": "WildChina · Guide to Using Didi in China 2025", "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/", "date": "2025-11-10"},
-        {"name": "Trip.com · How to Get Didi Ride in China (meet your driver)", "url": "https://in.trip.com/guide/transport/didi-china.html", "date": "2026-07-07"}
+        {
+          "name": "WildChina · Guide to Using Didi in China 2025",
+          "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/",
+          "date": "2025-11-10"
+        },
+        {
+          "name": "Trip.com · How to Get Didi Ride in China (meet your driver)",
+          "url": "https://in.trip.com/guide/transport/didi-china.html",
+          "date": "2026-07-07"
+        }
       ],
       "verified_at": "2026-10-03",
       "volatility": "low",
       "facts": [
-        {"fact": "In-app chat auto-translates between English and Chinese", "status": "verified", "note": "WildChina, Trip.com and TripChina all state it."}
+        {
+          "fact": "In-app chat auto-translates between English and Chinese",
+          "status": "verified",
+          "note": "WildChina, Trip.com and TripChina all state it."
+        }
       ],
-      "related": ["didi_airport_pickup", "didi_cancel_or_wrong_car"],
-      "tags": ["transport", "howto"]
+      "related": [
+        "didi_airport_pickup",
+        "didi_cancel_or_wrong_car"
+      ],
+      "tags": [
+        "transport",
+        "howto"
+      ]
     },
     {
       "id": "didi_cancel_or_wrong_car",
@@ -162,19 +427,39 @@
         "At airports, ignore anyone approaching with 'taxi?' inside the terminal; licensed rides only come from the signed zone or the official queue."
       ],
       "fallback": "DiDi has a safety hotline inside the app for emergencies; for a wrong charge, support usually refunds within the same conversation.",
-      "applies_to": ["ios", "android"],
+      "applies_to": [
+        "ios",
+        "android"
+      ],
       "scope": "global",
       "sources": [
-        {"name": "Trip.com · How to Get Didi Ride in China (pitfalls, black cars)", "url": "https://in.trip.com/guide/transport/didi-china.html", "date": "2026-07-07"},
-        {"name": "WildChina · Guide to Using Didi in China 2025 (FAQ: problems)", "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/", "date": "2025-11-10"}
+        {
+          "name": "Trip.com · How to Get Didi Ride in China (pitfalls, black cars)",
+          "url": "https://in.trip.com/guide/transport/didi-china.html",
+          "date": "2026-07-07"
+        },
+        {
+          "name": "WildChina · Guide to Using Didi in China 2025 (FAQ: problems)",
+          "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/",
+          "date": "2025-11-10"
+        }
       ],
       "verified_at": "2026-10-03",
       "volatility": "low",
       "facts": [
-        {"fact": "Exact free-cancellation window and fee amounts", "status": "unverified", "note": "Not stated in sources; wording kept generic."}
+        {
+          "fact": "Exact free-cancellation window and fee amounts",
+          "status": "unverified",
+          "note": "Not stated in sources; wording kept generic."
+        }
       ],
-      "related": ["didi_find_driver"],
-      "tags": ["transport", "error"]
+      "related": [
+        "didi_find_driver"
+      ],
+      "tags": [
+        "transport",
+        "error"
+      ]
     }
   ]
 }

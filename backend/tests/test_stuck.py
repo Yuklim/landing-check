@@ -110,3 +110,20 @@ def test_http_rejects_oversized_and_non_image():
     assert c.post('/stuck/classify', files=big, data={'advice': 'false'}).status_code == 413
     bad = {'image': ('x.txt', b'hello', 'text/plain')}
     assert c.post('/stuck/classify', files=bad, data={'advice': 'false'}).status_code == 415
+
+
+def test_low_confidence_model_pick_is_lifted_by_matching_keywords():
+    """模型选对了场景但置信度低于 CONF_LOW，截图文字里的场景关键词一致时抬到 ask，不抬到 answer。"""
+    from stuck import classify, CONF_LOW, CONF_HIGH
+    k = kb
+    def fake(kb, img, text):
+        return {'scenario': 'didi', 'entry_id': 'didi_airport_pickup', 'confidence': 0.35,
+                'ocr_text': 'Discount Express · Express · Taxi · Confirm Request', 'candidates': [{'entry_id': 'didi_airport_pickup', 'confidence': 0.35}]}
+    out = classify(k, None, 'x', model_fn=fake, advice=False)
+    assert out['decision'] == 'ask' and out['scenario'] == 'didi'
+    assert CONF_LOW <= out['confidence'] < CONF_HIGH
+    def fake2(kb, img, text):
+        return {'scenario': 'alipay', 'entry_id': 'alipay_how_to_pay', 'confidence': 0.35,
+                'ocr_text': 'Discount Express · Express · Taxi', 'candidates': []}
+    out2 = classify(k, None, 'x', model_fn=fake2, advice=False)
+    assert out2['decision'] == 'unknown'   # 关键词场景与模型不一致：不抬

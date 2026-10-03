@@ -148,10 +148,14 @@ def classify(kb, image_bytes: Optional[bytes], text: str = '', lang: str = 'en',
         log.warning('model classify failed, falling back to rules: %s', e, exc_info=not isinstance(e, (httpx.HTTPError, RuntimeError, ValueError)))
         mode = 'rules'
         res = classify_with_rules(kb, text)
-    if mode == 'model' and res['entry_id'] is None and (text or res.get('ocr_text')):
+    if mode == 'model' and res['confidence'] < CONF_LOW and (text or res.get('ocr_text')):
         rules = classify_with_rules(kb, (text + ' ' + (res.get('ocr_text') or '')).strip())
-        if rules['entry_id']:
-            res, mode = rules, 'rules'
+        if rules['entry_id'] and res['entry_id'] is None:
+            res, mode = rules, 'rules'                       # 模型没选出条目，关键词选出来了
+        elif rules['entry_id'] and rules['scenario'] == res['scenario']:
+            # 模型选了条目但不自信，而截图文字里的场景关键词与它一致：抬到"让用户选"档，不抬到"直接答"
+            res['confidence'] = max(res['confidence'], min(CONF_LOW + 0.1, rules['confidence']))
+            res['rules_hits'] = rules.get('hits', [])
     conf = res['confidence']
     out = {'scenario': res['scenario'], 'entry_id': res['entry_id'], 'confidence': round(conf, 2),
            'ocr_text': res.get('ocr_text', ''), 'mode': mode, 'lang': lang, 'airport': airport,

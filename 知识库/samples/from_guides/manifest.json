@@ -278,5 +278,173 @@
     "expected_entry": "wechat_setup_before_flight",
     "kind": "normal",
     "note": ""
+  },
+  {
+    "file": "crop_266c22_1.png",
+    "scenario": "didi",
+    "expected_entry": "didi_setup_before_flight",
+    "kind": "normal",
+    "note": "DiDi home, Enter Destination"
+  },
+  {
+    "file": "crop_266c22_3.png",
+    "scenario": "didi",
+    "expected_entry": "didi_airport_pickup",
+    "kind": "normal",
+    "note": "DiDi Chuxing fixed pickup point selection at Hongqiao station"
+  },
+  {
+    "file": "crop_937073_1.png",
+    "scenario": "didi",
+    "expected_entry": "didi_setup_before_flight",
+    "kind": "normal",
+    "note": "DiDi Account page (low-res)"
+  },
+  {
+    "file": "crop_937073_2.png",
+    "scenario": "didi",
+    "expected_entry": "didi_payment_failed",
+    "kind": "normal",
+    "note": "My Wallet + Payment Methods (low-res)"
+  },
+  {
+    "file": "crop_491227_1.png",
+    "scenario": "wechat",
+    "expected_entry": "wechat_miniprogram_needs_chinese_number",
+    "kind": "normal",
+    "note": "WeChat Discover, DiDi mini program search (Chinese)"
+  },
+  {
+    "file": "crop_491227_2.png",
+    "scenario": "wechat",
+    "expected_entry": "wechat_miniprogram_needs_chinese_number",
+    "kind": "normal",
+    "note": "WeChat DiDi mini program home (Chinese)"
+  },
+  {
+    "file": "crop_6f0a2e_1.png",
+    "scenario": "didi",
+    "expected_entry": "didi_setup_before_flight",
+    "kind": "normal",
+    "note": "DiDi map confirm destination The Bund"
+  },
+  {
+    "file": "crop_6f0a2e_2.png",
+    "scenario": "didi",
+    "expected_entry": "didi_airport_pickup",
+    "kind": "normal",
+    "note": "DiDi ride type price list, Confirm"
+  },
+  {
+    "file": "crop_f1652c_1.png",
+    "scenario": "didi",
+    "expected_entry": "didi_setup_before_flight",
+    "kind": "normal",
+    "note": "DiDi home Where to?"
+  },
+  {
+    "file": "crop_f1652c_2.png",
+    "scenario": "didi",
+    "expected_entry": "didi_airport_pickup",
+    "kind": "normal",
+    "note": "DiDi destination search listing Pudong Airport T2"
+  },
+  {
+    "file": "crop_5353bc_1.png",
+    "scenario": "alipay",
+    "expected_entry": "alipay_didi_miniprogram",
+    "kind": "normal",
+    "note": "Alipay home, Transport circled"
+  },
+  {
+    "file": "crop_5353bc_2.png",
+    "scenario": "alipay",
+    "expected_entry": "alipay_didi_miniprogram",
+    "kind": "normal",
+    "note": "Alipay Transport > Taxi, Where are you going?"
+  },
+  {
+    "file": "crop_8c3f58_1.png",
+    "scenario": "didi",
+    "expected_entry": "didi_airport_pickup",
+    "kind": "normal",
+    "note": "DiDi ride types list"
+  },
+  {
+    "file": "crop_8c3f58_2.png",
+    "scenario": "didi",
+    "expected_entry": "didi_airport_pickup",
+    "kind": "normal",
+    "note": "DiDi ride types, Confirm Request Express"
+  },
+  {
+    "file": "crop_9227c3_1.png",
+    "scenario": "didi",
+    "expected_entry": "didi_setup_before_flight",
+    "kind": "normal",
+    "note": "DiDi Chinese-language home, Settings highlighted"
+  },
+  {
+    "file": "crop_9227c3_2.png",
+    "scenario": "didi",
+    "expected_entry": "didi_setup_before_flight",
+    "kind": "normal",
+    "note": "DiDi Settings > Language"
+  },
+  {
+    "file": "crop_a38001_1.png",
+    "scenario": "didi",
+    "expected_entry": "didi_setup_before_flight",
+    "kind": "normal",
+    "note": "DiDi home Beijing with Account tab"
+  },
+  {
+    "file": "crop_a38001_2.png",
+    "scenario": "didi",
+    "expected_entry": "didi_sms_code_not_received",
+    "kind": "normal",
+    "note": "DiDi Let's Get Started, +86 enter number"
+  },
+  {
+    "file": "crop_e0dc15_1.png",
+    "scenario": "didi",
+    "expected_entry": "didi_setup_before_flight",
+    "kind": "error",
+    "note": "App Store showing DiDi-Rider vs DiDi China (wrong app trap)"
+  },
+  {
+    "file": "crop_e0dc15_2.png",
+    "scenario": "didi",
+    "expected_entry": "didi_sms_code_not_received",
+    "kind": "normal",
+    "note": "DiDi Welcome Back, +1 enter number"
+  },
+  {
+    "file": "apple_cellular_1.png",
+    "scenario": "connectivity",
+    "expected_entry": "connectivity_esim_not_working",
+    "kind": "normal",
+    "note": "iOS 26 Settings > Cellular > Cellular Data (Apple Support)"
+  },
+  {
+    "file": "apple_cellular_2.png",
+    "scenario": "connectivity",
+    "expected_entry": "connectivity_esim_not_working",
+    "kind": "error",
+    "note": "iOS Control Center showing SOS only (Apple Support)"
+  },
+  {
+    "file": "apple_cellular_3.png",
+    "scenario": "connectivity",
+    "expected_entry": "connectivity_esim_not_working",
+    "kind": "normal",
+    "note": "iOS Settings > Cellular Data Options with Data Roaming (Apple Support)"
+  },
+  {
+    "file": "official_pek_wifi_guide.jpg",
+    "scenario": "connectivity",
+    "expected_entry": "connectivity_airport_wifi_sms",
+    "kind": "normal",
+    "note": "Beijing Capital official Free Wireless Internet Access Guide poster (SSID, SMS, kiosk, passport login)"
   }
 ]

@@ -66,19 +66,20 @@
 **Why** Public Wi-Fi in China requires identity verification by law. Airports accept an SMS code to many foreign numbers; shops and malls usually accept only Chinese numbers.
 
 **Do this now**
-1. Join the airport network: PVG Airport-Free-WiFi, Beijing Capital AIRPORT-FREE-WIFI-NEW, Daxing BDIA-FREE-WIFI. The login page opens by itself; if not, open any website.
+1. Join the airport network: Pudong #AIRPORTPVG-FREE-WIFI, Beijing Capital AIRPORT-FREE-WIFI-NEW, Daxing BDIA-FREE-WIFI. The login page opens by itself; if not, open any website.
 2. Choose the overseas or international phone option, pick your country code, type your number and tap Get code (获得验证码). The SMS arrives on your roaming line even with data off.
 3. Enter the code and tap Login (登录). The session lasts a few hours; reconnect the same way if it drops.
-4. No code after 60 seconds: do not keep tapping. Use the passport kiosk method instead.
+4. No code after 60 seconds: do not keep tapping. All three airports' login pages have a Passport Login option where you photograph your passport instead; Beijing Capital also has passport kiosks.
 
 **Still stuck** Airport information desks and the Payment Service Center in the arrivals hall help in person; ask for 免费WiFi.
 
 **依赖的事实**
 
-- [unverified] PVG Wi-Fi SMS login supports numbers from 220+ countries — ChinaAirlineTravel only; SSID spelling also needs on-site check.
+- [verified] PVG Wi-Fi name is #AIRPORTPVG-FREE-WIFI and SMS login accepts foreign numbers from 220+ countries — ChinaAirlineTravel airport guide; name also in Chinese airport news. Not yet checked on site.
+- [verified] PVG login page offers passport-photo authentication for passengers without a Chinese SIM — Shanghai Airport Authority news 2026-05-28 (Wi-Fi易认证).
 - [verified] Beijing Capital SSID AIRPORT-FREE-WIFI-NEW, Daxing Green Airport / BDIA-FREE-WIFI — Beijing government pages (2024 and Dec 2025); Daxing has two names in two official pages, both listed.
 
-**来源** [Beijing Government · Get Connected (Beijing airports Wi-Fi step by step)](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html) 2024-08-30；[MyChinaCompass · Free Wi-Fi in China: Hotspots, Login Guide & SMS Verification](https://mychinacompass.com/free-wifi/) 2026-05-17；[ChinaAirlineTravel · Shanghai Pudong Airport Wi-Fi guide](https://www.chinaairlinetravel.com/airport-guide/shanghai-airport/pudong-airport-wifi.html) 2026
+**来源** [Beijing Government · Get Connected (Beijing airports Wi-Fi step by step)](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html) 2024-08-30；[MyChinaCompass · Free Wi-Fi in China: Hotspots, Login Guide & SMS Verification](https://mychinacompass.com/free-wifi/) 2026-05-17；[ChinaAirlineTravel · Shanghai Pudong Airport Wi-Fi guide](https://www.chinaairlinetravel.com/airport-guide/shanghai-airport/pudong-airport-wifi.html) 2026；[Shanghai Airport Authority · 浦东机场打造高效便捷的“1+2+N”入境服务链](https://www.shanghaiairport.com/xwg/info_itemid_44442.html) 2026-05-28
 
 **可推荐给用户** [Beijing Government: how to connect to airport Wi-Fi](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html)
 
@@ -90,22 +91,22 @@
 
 `connectivity_airport_wifi_passport` · 阶段 landing · 适用 ios/android · 范围 global · 易变 low · 核验 2026-10-03
 
-**Why** Every major airport has a way to log in without any phone number: a kiosk that scans your passport and prints a username and password, or at Daxing a page where you photograph the passport.
+**Why** Every major airport has a way to log in without any phone number. The login page at Pudong, Beijing Capital and Daxing has a Passport Login option where you photograph your passport; Beijing Capital additionally has kiosks that scan the passport and print a username and password.
 
 **Do this now**
-1. Find the Wi-Fi kiosk (无线上网身份验证自助终端). Show staff this line if needed: 请问最近的无线上网身份验证自助终端在哪里?
-2. Open the passport to the photo page and slide it into the slot marked 护照扫码口 Passport Scanning. A slip prints with a username and password.
-3. Back on the login page type them into 输入账号 (username) and 输入密码 (password), tap 登录.
-4. At Daxing, the login page lets you photograph the passport page directly instead of using a kiosk.
+1. On the Wi-Fi login page tap Passport Login (护照登录), photograph the passport photo page in good light with all four corners visible, then take the selfie if asked and confirm.
+2. Beijing Capital alternative: find the Wi-Fi kiosk (无线上网身份验证自助终端). Show staff this line if needed: 请问最近的无线上网身份验证自助终端在哪里?
+3. Open the passport to the photo page and slide it into the slot marked 护照扫码口 Passport Scanning. A slip prints with a username and password.
+4. Type them into 输入账号 (username) and 输入密码 (password) on the login page, then tap 登录.
 
-**Still stuck** One passport can print a limited number of slips (three at Beijing Capital, five hours each). If the kiosk is broken, the information desk can issue access.
+**Still stuck** Beijing Capital slips last 5 hours, max 3 per passport. At Pudong the kiosks are all past security in departures, so arriving passengers should use the passport-photo login or ask the information desk; Wi-Fi service line (+86) 400 920 1851.
 
 **依赖的事实**
 
-- [verified] Beijing Capital kiosk slip is valid 5 hours; max 3 print-outs per passport — Beijing government page.
-- [unverified] PVG kiosk location (Arrivals, beside Exit 8 in our mock) — Placeholder; verify on site.
+- [verified] Beijing Capital offers three methods: SMS, passport kiosk (slip valid 5 hours, max 3 per passport), and Passport Login on the portal page — Beijing Capital Airport official poster on the Beijing government page (2024-08).
+- [verified] PVG offers passport-photo login on the Wi-Fi page; its passport kiosks are in departures after security (T1 gates 17-20, T2 gate D73-D75 area) — Shanghai Airport Authority 2026-05-28 for the photo login; ChinaAirlineTravel for kiosk locations.
 
-**来源** [Beijing Government · Get Connected (Authentication via passport kiosk)](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html) 2024-08-30；[Beijing Government · Free Wi-Fi at Daxing Airport with passport login](https://english.beijing.gov.cn/latest/news/202512/t20251205_4322494.html) 2025-12-05；[MyChinaCompass · Free Wi-Fi in China (airport kiosks)](https://mychinacompass.com/free-wifi/) 2026-05-17
+**来源** [Beijing Government · Get Connected (Authentication via passport kiosk)](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html) 2024-08-30；[Beijing Government · Free Wi-Fi at Daxing Airport with passport login](https://english.beijing.gov.cn/latest/news/202512/t20251205_4322494.html) 2025-12-05；[MyChinaCompass · Free Wi-Fi in China (airport kiosks)](https://mychinacompass.com/free-wifi/) 2026-05-17；[Shanghai Airport Authority · 浦东机场打造高效便捷的“1+2+N”入境服务链](https://www.shanghaiairport.com/xwg/info_itemid_44442.html) 2026-05-28；[ChinaAirlineTravel · Shanghai Pudong Airport Wi-Fi guide](https://www.chinaairlinetravel.com/airport-guide/shanghai-airport/pudong-airport-wifi.html) 2026
 
 相关：`connectivity_airport_wifi_sms`
 
@@ -118,7 +119,7 @@
 **Why** If the phone has no eSIM support or the eSIM failed, a physical SIM from a counter in arrivals is the next best option. It needs your passport, and note that local SIMs do not reach international services.
 
 **Do this now**
-1. At PVG T2 look for the Roamingman counter just after customs, or the China Telecom counter after baggage claim; both sell 7, 15 and 30 day data packages.
+1. At Pudong go to the integrated service center inside the international baggage claim hall (before customs): China Telecom sells 7, 15 and 30 day tourist SIMs there against your passport. Another counter sits in the arrivals public area after customs.
 2. At Beijing Capital T3 go to the Beijing Service counter at Exit B on the international arrivals floor; at Daxing ask for the TravelPass desk. Both airports also have SIM vending machines.
 3. Hand over your passport; registration is required by law and takes a few minutes. Make sure the counter cuts the SIM to your phone's size or offers an eSIM.
 4. Before you leave the counter, confirm data works and ask them to set the APN if needed.
@@ -127,10 +128,11 @@
 
 **依赖的事实**
 
-- [unverified] PVG counters: Roamingman after customs, China Telecom after baggage claim (T2) — WildChina only; verify on site.
+- [verified] PVG: China Telecom 7/15/30-day tourist SIM at the integrated service center in the international baggage claim area — Shanghai Airport Authority news 2026-05-28; WildChina describes the same counter after baggage claim.
+- [unverified] PVG arrivals-hall counters open roughly 07:00-23:00 and may close early on quiet nights — Third-party eSIM sellers only (chinaesim.com, mychina.guide).
 - [verified] PEK T3 Beijing Service counter, Exit B, international arrivals F2 — Beijing government page and airport's own post.
 
-**来源** [WildChina · Staying Connected in China (SIM cards at Pudong)](https://wildchina.com/trip-to-china-pre-departure-guide/#internet) 2026-09-24；[Beijing Government · PEK SIM Card Application/Collection](https://english.beijing.gov.cn/specials/beijingservice/pek/sim/) 2025；[Beijing Government · A Guide for Purchasing SIM Cards in Beijing](https://english.beijing.gov.cn/quickguideservices/purchasingsimcards/) 2025
+**来源** [Shanghai Airport Authority · 浦东机场打造高效便捷的“1+2+N”入境服务链](https://www.shanghaiairport.com/xwg/info_itemid_44442.html) 2026-05-28；[WildChina · Staying Connected in China (SIM cards at Pudong)](https://wildchina.com/trip-to-china-pre-departure-guide/#internet) 2026-09-24；[Beijing Government · PEK SIM Card Application/Collection](https://english.beijing.gov.cn/specials/beijingservice/pek/sim/) 2025；[Beijing Government · A Guide for Purchasing SIM Cards in Beijing](https://english.beijing.gov.cn/quickguideservices/purchasingsimcards/) 2025
 
 相关：`connectivity_esim_before_flight`, `connectivity_blocked_services`
 

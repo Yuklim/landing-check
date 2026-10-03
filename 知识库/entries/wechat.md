@@ -1,8 +1,8 @@
 # 微信支付 / WeChat Pay · 知识库条目预览
 
-识别关键词（中）：微信、微信支付、钱包、安全验证、实名、添加银行卡、绑定银行卡、不支持的卡、存在风险、好友验证、支付密码、小程序
+识别关键词（中）：微信、微信支付、钱包、安全验证、实名、添加银行卡、绑定银行卡、不支持的卡、存在风险、好友验证、支付密码、小程序、发现、朋友圈
 
-识别关键词（英）：WeChat, Weixin, Weixin Pay, WeChat Pay, Wallet, Security Verification, Verify ID Info, Add Bank Card, Unsupported Card, Risk exists in this operation, friend verification, Services, Mini Program
+识别关键词（英）：WeChat, Weixin, Weixin Pay, WeChat Pay, Wallet, Security Verification, Verify ID Info, Add Bank Card, Unsupported Card, Risk exists in this operation, friend verification, Services, Mini Program, Mini Programs, Discover, Moments, Channels
 
 界面特征：Green WeChat app chrome. Screens titled Wallet, Verify ID Info, Add Bank Card, Security Verification, a grey modal saying 'Risk exists in this operation', a 'Select a Security Verification Method' list, or a mini-program asking for a Chinese phone number.
 

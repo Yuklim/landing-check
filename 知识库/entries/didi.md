@@ -1,8 +1,8 @@
 # 滴滴出行 / DiDi ride-hailing · 知识库条目预览
 
-识别关键词（中）：滴滴、滴滴出行、网约车、打车、上车点、司机、车牌、尾号、行程、快车、专车、预约、取消
+识别关键词（中）：滴滴、滴滴出行、网约车、打车、上车点、司机、车牌、尾号、行程、快车、专车、预约、取消、滴滴出行、我的钱包、全部订单、待出发、多语言、开发票、优惠卡券、快车、特惠快车、顺风车
 
-识别关键词（英）：DiDi, DiDi China, Ride Hailing, Where to?, Express, Premier, Comfort, Pickup point, driver, licence plate, last 4 digits, Trips, Cancel, Payment Methods, Auto Debit, Online Car-hailing
+识别关键词（英）：DiDi, DiDi China, Ride Hailing, Where to?, Express, Premier, Comfort, Pickup point, driver, licence plate, last 4 digits, Trips, Cancel, Payment Methods, Auto Debit, Online Car-hailing, Enter Destination, Confirm Destination, Discount Express, DiDi Flash, Didi Chuxing, Confirm Request, Leave now, Change Rider, My Trips, Invoice, Invite a friend, Travel Card, DiDi Pay
 
 界面特征：Orange DiDi app chrome, a map with a 'Where to?' box, ride-type price list (Express / Comfort / Premier), a driver card with plate number and ETA, the Payment Methods list (Alipay Payment, Credit/Debit Card, Apple Pay), or airport signs reading 网约车 / Online Car-hailing with pickup point codes like P2 or A1.
 
@@ -88,18 +88,20 @@
 
 **Do this now**
 1. Collect your luggage first; do not book from the plane or the baggage hall.
-2. Follow the signs reading Online Car-hailing / 网约车 to the pickup zone (at PVG T2 the signs lead to the P2 area on the ground floor). Ignore anyone offering a ride inside the terminal.
+2. Follow the signs reading Online Car-hailing / 网约车 to the pickup zone. At Pudong T2 the signs say 网约车上车点请前往P2停车库: take the lift down into the P2 car park (level B1) and find a numbered waiting point (等候点). Ignore anyone offering a ride inside the terminal.
 3. Open DiDi at the zone. It auto-selects the airport pickup spot; if the pin is across the road, drag it to your bay and note the bay code (such as A1 or B3).
 4. Type the hotel name in English, pick Express or, with big luggage, the Airport Transfer car type, then confirm. Follow the in-app arrow to your bay.
 
-**Still stuck** If no cars are matching, walk to the official taxi queue (PVG T2: ground floor, Exit 9). A pre-booked Trip.com transfer avoids all of this: the driver waits at arrivals with your name.
+**Still stuck** If no cars are matching, walk to the official taxi queue (Pudong T2: take the escalator down to level 1 and go out through Door 25). A pre-booked Trip.com transfer avoids all of this: the driver waits at arrivals with your name.
 
 **依赖的事实**
 
-- [unverified] PVG T2 ride-hailing pickup is the P2 area, ground floor; taxi queue at Exit 9 — From our mock data and Trip.com's general P1/P2 description. Verify on site before quoting.
+- [verified] PVG ride-hailing pickup: P1 car park for T1, P2 car park for T2, 40 numbered waiting points — Official signage photographed by 京报网 (Feb 2024); Shanghai Tourism 2026 agrees.
+- [conflict] Pickup level inside P2 — 京报网 says B1; Shanghai Tourism says B2. Signs on site decide.
+- [conflict] PVG T2 taxi stand: level 1 via Door 25 — Shanghai local guides (bendibao, Ctrip airport page) say Door 25; one English guide says Door 26.
 - [verified] Order only once you reach the pickup zone to avoid waiting fees — Trip.com airport tips.
 
-**来源** [Trip.com · How to Get Didi Ride in China: Airport Booking, Payment Tips](https://in.trip.com/guide/transport/didi-china.html) 2026-07-07；[TripChina · How to Use DiDi in China (airport pickup)](https://tripchina.me/didi-guide-foreigners-china/) 2026-09-29
+**来源** [Trip.com · How to Get Didi Ride in China: Airport Booking, Payment Tips](https://in.trip.com/guide/transport/didi-china.html) 2026-07-07；[TripChina · How to Use DiDi in China (airport pickup)](https://tripchina.me/didi-guide-foreigners-china/) 2026-09-29；[京报网 · 实探上海浦东机场：出租车随到随走，新增“网约车上车点”标识](https://news.bjd.com.cn/2024/02/05/10695782.shtml) 2024-02-05；[Shanghai Tourism · Using Didi in Shanghai (2026)](https://www.shanghaitourism.org/using-didi-shanghai/) 2026-07-25
 
 **可推荐给用户** [Trip.com guide: DiDi airport booking](https://in.trip.com/guide/transport/didi-china.html)
 

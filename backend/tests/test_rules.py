@@ -126,7 +126,7 @@ def test_transport_has_go_to_location():
     r = rules.transport(t(transfer_booked=True))
     assert r['recommended']['go_to']['title'] == 'Meet your driver' and 'Exit 8' in r['recommended']['go_to']['where']
     r2 = rules.transport(t())
-    assert 'Exit 9' in r2['recommended']['go_to']['where']
+    assert 'Door 25' in r2['recommended']['go_to']['where']
 
 
 def test_http_transport_honors_booked_transfer_mark():

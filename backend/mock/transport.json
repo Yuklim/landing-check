@@ -8,12 +8,12 @@
         160,
         200
       ],
-      "where": "Official queue at Exit 9, ground floor",
+      "where": "Official queue at Door 25, level 1",
       "action": "driver_card",
       "go_to": {
         "title": "Official taxi queue",
-        "where": "Follow the Taxi signs to the ground floor, Exit 9 of T2. Ignore anyone offering a ride inside the terminal.",
-        "verified": false
+        "where": "Take the escalator down to level 1 and go out through Door 25 of T2 (some signs say 26). Ignore anyone offering a ride inside the terminal.",
+        "verified": true
       }
     },
     "transfer": {
@@ -57,12 +57,12 @@
         140,
         180
       ],
-      "where": "Pickup point P2, follow DiDi signs",
+      "where": "P2 car park, follow 网约车 signs",
       "action": "didi",
       "go_to": {
         "title": "Ride-hailing pickup point",
-        "where": "Follow the Online Ride-hailing signs to pickup point P2 (ground floor). Enter the point number in DiDi.",
-        "verified": false
+        "where": "Follow the Online Car-hailing / 网约车 signs into the P2 car park (level B1). Order only once you are at a numbered waiting point and tell the driver its number.",
+        "verified": true
       }
     },
     "maglev": {

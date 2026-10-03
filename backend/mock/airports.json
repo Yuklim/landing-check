@@ -1,29 +1,84 @@
 {
   "PVG": {
     "name": "Shanghai Pudong International Airport",
-    "terminals": ["T1", "T2"],
+    "terminals": [
+      "T1",
+      "T2"
+    ],
     "wifi": {
-      "ssid": "Airport-Free-WiFi",
+      "ssid": "#AIRPORTPVG-FREE-WIFI",
       "password": null,
       "login_methods": [
-        {"method": "sms", "desc": "Choose Overseas mobile, enter your number with country code, get the SMS code. Works for numbers from 220+ countries."},
-        {"method": "kiosk", "desc": "Scan your passport at a Wi-Fi kiosk to print a username and password."},
-        {"method": "wechat", "desc": "Quick login with WeChat if you already have an account."}
+        {
+          "method": "sms",
+          "desc": "Choose Overseas mobile, enter your number with country code, get the SMS code. Works for numbers from 220+ countries."
+        },
+        {
+          "method": "passport_photo",
+          "desc": "On the login page choose the passport option and photograph your passport photo page. No phone number needed."
+        },
+        {
+          "method": "kiosk",
+          "desc": "Passport kiosks print a username and password, but at PVG they are past security in departures, not in arrivals."
+        }
       ],
-      "valid_hours": 24,
-      "note": "SSID and kiosk locations are placeholders pending on-site verification.",
-      "verified_at": null
+      "valid_hours": null,
+      "support_phone": "+86 400 920 1851",
+      "note": "SSID and passport-photo login from Shanghai Airport Authority news 2026-05-28 and ChinaAirlineTravel; session length not published.",
+      "verified_at": "2026-10-03"
     },
     "kiosks": [
-      {"name": "Passport Wi-Fi kiosk", "where": "Arrivals hall, beside Exit 8", "verified": false},
-      {"name": "Service desk", "where": "Arrivals hall B, 24 h", "verified": false}
+      {
+        "name": "Integrated service center (SIM, ShanghaiPass, payments)",
+        "where": "International baggage claim hall, and the arrivals public area after customs",
+        "verified": true,
+        "source": "Shanghai Airport Authority 2026-05-28"
+      },
+      {
+        "name": "Information desk",
+        "where": "Arrivals hall",
+        "verified": false
+      }
     ],
     "sim_counters": [
-      {"name": "Roamingman", "where": "Just after customs, T2 international arrivals", "passport": true, "source": "WildChina internet guide 2026-09"},
-      {"name": "China Telecom", "where": "After baggage claim, T2", "passport": true, "packages": "7 / 15 / 30 days", "source": "WildChina internet guide 2026-09"}
+      {
+        "name": "China Telecom",
+        "where": "Integrated service center, international baggage claim hall (T2)",
+        "passport": true,
+        "packages": "7 / 15 / 30 days",
+        "source": "Shanghai Airport Authority 2026-05-28; WildChina 2026-09"
+      },
+      {
+        "name": "Roamingman",
+        "where": "Just after customs, T2 international arrivals",
+        "passport": true,
+        "source": "WildChina internet guide 2026-09 only",
+        "verified": false
+      }
     ],
-    "taxi_queue": {"where": "Exit 9, ground floor", "verified": false},
-    "metro": {"line": "2", "first": "06:00", "last": "22:00", "to_city_min": 70, "fare_cny": 7, "note": "last train time is a placeholder, verify"},
-    "maglev": {"to": "Longyang Road", "min": 8, "fare_cny": 50, "fare_with_ticket_cny": 40}
+    "taxi_queue": {
+      "where": "T2 level 1, Door 25 (one source says Door 26)",
+      "verified": true,
+      "source": "bendibao / Ctrip airport page; conflict noted"
+    },
+    "metro": {
+      "line": "2",
+      "first": "06:00",
+      "last": "22:00",
+      "to_city_min": 70,
+      "fare_cny": 7,
+      "note": "last train time is a placeholder, verify"
+    },
+    "maglev": {
+      "to": "Longyang Road",
+      "min": 8,
+      "fare_cny": 50,
+      "fare_with_ticket_cny": 40
+    },
+    "ride_hailing": {
+      "where": "P2 car park, level B1 (one source says B2), numbered waiting points",
+      "verified": true,
+      "source": "京报网 2024-02-05 signage photo; Shanghai Tourism 2026-07"
+    }
   }
 }
