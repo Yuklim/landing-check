@@ -4,8 +4,10 @@ Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 
 
 在 Trip.com App 内新增「落地检查」：外国散客落地中国机场那一刻，先检测自己的数据能否上网，再按顺序解决上网、支付、到酒店三件事，一次只给一个任务。支付在起飞前用一笔 1 元真实交易验证，接机和租车在起飞前预订。卡住了拍一张截图，AI 认出场景，答案来自人工核验的知识库。
 
-**在线演示（静态版）** https://yuklim.github.io/landing-check/h5/
+**在线演示（接 Render 后端，手机可用）** https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com
+**静态版（不依赖后端）** https://yuklim.github.io/landing-check/h5/
 **流程讲解页** `LandingCheck-流程演示.html`（单文件，可直接发人）
+二维码：`h5/qr-pages.png`（指向接后端的版本）
 
 ## 现在能跑什么
 
@@ -14,8 +16,8 @@ Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 
 | H5 原型，18 屏 | 可用 | 设计稿导出 + 点击绑定，手机浏览器可开，可添加到主屏幕 |
 | 后端接口 | 可用，本机 | FastAPI：知识库、识别、模拟携程数据、规则引擎，37 个测试 |
 | "我卡住了"识别 | 可用 | DeepSeek `deepseek-flash` 看截图选条目，置信度分档，规则兜底 |
-| 知识库 | 1 个场景 | 支付宝 8 条，含来源和核验日期；资料库 88 篇待写成条目 |
-| 公网后端（Render） | 未部署 | 部署后 H5 加 `?api=` 即接上 |
+| 知识库 | 2 个场景 | 支付宝 10 条、微信 8 条，含来源和核验日期；资料库 115 篇；40 张真实截图评测场景命中 78% |
+| 公网后端（Render） | 已部署 | https://landing-check.onrender.com ，免费档首次访问需等约 30 秒唤醒 |
 | 离线包 / Service Worker | 未做 | 方案承诺项，初赛前完成 |
 | 多语言预翻译 | 未做 | 同上 |
 
@@ -89,10 +91,15 @@ cd h5 && python3 build_h5.py
 - 知识库条目按 `知识库/entries/schema.md` 写，提交前跑 `python3 知识库/tools/validate_entries.py`。
 - 密钥只放 `backend/.env`，不进仓库。公开仓库，用户数据和真实接口密钥一律不提交。
 
+## Render 部署说明
+
+- 服务根目录 `backend/`，启动命令 `uvicorn app:app --host 0.0.0.0 --port $PORT`，环境变量 `DEEPSEEK_API_KEY`。
+- 免费档 15 分钟无访问会休眠，唤醒约 30 秒。路演前先打开一次。
+- 模拟数据在内存里，服务重启或休眠唤醒后归零；页面菜单里的"重置演示数据"同样效果。
+
 ## 下一步
 
-1. 部署后端到 Render，手机可用
-2. 补微信支付、滴滴、上网三个场景的知识库条目
-3. 用真机截图验证识别，调阈值
-4. 离线包 + Service Worker；预翻译
-5. 初赛材料：方案 PDF、演示视频
+1. 补滴滴、上网两个场景的知识库条目
+2. 收集真实报错截图继续评测
+3. 离线包 + Service Worker；预翻译
+4. 初赛材料：方案 PDF、演示视频
