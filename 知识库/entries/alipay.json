@@ -19,7 +19,11 @@
       "交易限额",
       "银行卡不支持",
       "滴滴",
-      "打车"
+      "打车",
+      "账户受限",
+      "风险",
+      "冻结",
+      "你好中国"
     ],
     "keywords_en": [
       "Alipay",
@@ -35,7 +39,12 @@
       "payment password",
       "DiDi",
       "taxi",
-      "ride"
+      "ride",
+      "locked",
+      "restricted",
+      "risk",
+      "Nihao China",
+      "personal collection code"
     ],
     "visual_cues": "Blue Alipay app chrome. Screens with a bank-card form (card number, expiry, CVV), a red or grey failure banner, a passport-upload prompt, a QR payment code page, or a mini-program named TourCard.",
     "sub_steps": [
@@ -46,7 +55,9 @@
       "alipay_identity_verification",
       "alipay_tourcard",
       "alipay_how_to_pay",
-      "alipay_didi_miniprogram"
+      "alipay_didi_miniprogram",
+      "alipay_account_locked",
+      "alipay_nihao_china"
     ],
     "entry_keywords": {
       "alipay_card_bind_failed": [
@@ -108,6 +119,19 @@
         "sign up",
         "注册",
         "安装"
+      ],
+      "alipay_account_locked": [
+        "locked",
+        "restricted",
+        "受限",
+        "冻结",
+        "risk",
+        "风险"
+      ],
+      "alipay_nihao_china": [
+        "nihao",
+        "你好中国",
+        "unionpay app"
       ]
     }
   },
@@ -186,12 +210,12 @@
       "title": "Card won't link to Alipay",
       "why": "Alipay asks your bank to approve the card. Banks often block an unfamiliar Chinese merchant, and debit, prepaid and virtual cards fail more than mainstream credit cards.",
       "steps": [
-        "Try a different card first: a credit card from a major bank on another network (Visa if Mastercard failed, or the reverse). This fixes most cases.",
-        "Check that the name on the card, on your passport and in your Alipay profile match exactly.",
-        "Finish Identity Verification (Me > Settings > Account & Security > Identity Verification), then add the card again. Some link failures are really verification failures.",
-        "Call your bank: ask them to allow international online transactions and confirm the card supports online verification (3-D Secure). Then retry once."
+        "Try a different card first: a credit card from a major bank on another network (Visa if Mastercard failed, or the reverse). Fintech cards such as Wise or Revolut succeed more often than traditional bank cards.",
+        "In your banking app turn on International transactions and Online purchases, wait 10 minutes, then add the card again. If it still fails, call the bank: say you are in China paying through Alipay and the merchant will show as Alipay or Ant Group.",
+        "Make the name on the card, your passport and your Alipay profile match exactly, including middle names, then finish Identity Verification (Me > Settings > Account & Security) before adding the card again.",
+        "Still refused: set up Nihao China instead. It is the official inbound-visitor app, registers with email or Apple ID, links Visa, Mastercard and UnionPay, and does not depend on an Alipay card link."
       ],
-      "fallback": "Open TourCard inside Alipay and top it up from your card instead. If that also fails, withdraw cash at a Bank of China ATM with your foreign card.",
+      "fallback": "Open TourCard inside Alipay as a prepaid wallet, or withdraw cash at a Bank of China ATM with your foreign card. Alipay English support: +86 571 2688 6000, daily 08:00-24:00.",
       "applies_to": [
         "ios",
         "android"
@@ -199,22 +223,27 @@
       "scope": "global",
       "sources": [
         {
+          "name": "PayInChinaGuide · Alipay 'Card Issuing Bank Declined' Error",
+          "url": "https://www.payinchinaguide.com/blog/alipay-issuing-bank-declined-fix",
+          "date": "2026-03"
+        },
+        {
+          "name": "Trip.com · Alipay Not Working in China? Common Causes and How to Fix It",
+          "url": "https://www.trip.com/guide/payments/alipay-not-working-in-china.html",
+          "date": "2026-07-02"
+        },
+        {
           "name": "WaysChina · How to Use Alipay with Foreign Cards: Setup, Fees and Fixes",
           "url": "https://wayschina.com/en/articles/how-to-use-alipay-with-foreign-cards",
           "date": "2026-08"
         },
         {
-          "name": "WildChina · Guide to Using Alipay in 2026 (Option 1)",
-          "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/",
-          "date": "2026-05-29"
-        },
-        {
-          "name": "PayInChinaGuide · Alipay for Foreigners FAQ",
-          "url": "https://www.payinchinaguide.com/blog/alipay-foreigners-2025-ultimate-faq",
-          "date": "2026-03"
+          "name": "Trip.com · Nihao China App: Setup, Card Link & Payment Guide",
+          "url": "https://www.trip.com/guide/info/nihao-china-app.html",
+          "date": "2026-06-12"
         }
       ],
-      "verified_at": "2026-10-02",
+      "verified_at": "2026-10-03",
       "volatility": "low",
       "facts": [
         {
@@ -231,7 +260,8 @@
       "related": [
         "alipay_identity_verification",
         "alipay_tourcard",
-        "alipay_setup_before_flight"
+        "alipay_nihao_china",
+        "alipay_account_locked"
       ],
       "tags": [
         "payment",
@@ -289,14 +319,14 @@
       "id": "alipay_payment_declined",
       "stage": "anytime",
       "title": "Payment failed at the counter",
-      "why": "Either the shop's amount tripped a limit, your bank declined the charge, or the terminal only reads one payment method. Alipay shows a short reason on the failure screen.",
+      "why": "Three different things look the same at the counter: your bank refused the charge, the shop showed a personal collection code that foreign cards cannot pay, or you hit a limit. Alipay prints a short reason on the failure screen.",
       "steps": [
-        "Read the failure line. Issuer declined or Bank declined means your bank: retry once, then call the bank to allow transactions in China.",
-        "Limit exceeded means you have hit the unverified allowance. Complete Identity Verification in Me > Settings > Account & Security, then pay again.",
-        "If the amount is above 200 RMB, expect a fee line on the confirmation screen before you confirm. Approve it.",
-        "If nothing is shown, close and reopen Alipay, then tap Pay/Receive again. Let the cashier scan your code instead of you scanning theirs."
+        "Ask the cashier to scan YOUR code instead: open Pay/Receive and show the barcode. Foreign cards cannot pay a person's own collection QR, only registered merchant codes, and scanning their code at a stall or small shop fails for that reason.",
+        "Issuer declined or Bank declined means your bank. Retry once, then turn on international and online payments in your banking app, or call the bank to allow charges from Alipay / Ant Group in China.",
+        "Limit exceeded or a request for ID means you hit the unverified allowance. Complete Identity Verification (Me > Settings > Account & Security), then pay again. For large amounts, ask to split the bill.",
+        "Quick test: try the same card for a small payment in WeChat Pay. If both fail, it is the card or bank. If only Alipay fails, reopen Alipay, update it, and switch from Wi-Fi to mobile data."
       ],
-      "fallback": "Pay with cash. Every merchant in China must accept RMB cash by law. Withdraw at a Bank of China ATM with your foreign card.",
+      "fallback": "Pay with cash. Every merchant in China must accept RMB cash by law; withdraw at a Bank of China ATM with your foreign card. If the account says it is locked, see Account locked.",
       "applies_to": [
         "ios",
         "android"
@@ -304,14 +334,19 @@
       "scope": "global",
       "sources": [
         {
-          "name": "PayInChinaGuide · Alipay for Foreigners FAQ (fees, limits, errors)",
-          "url": "https://www.payinchinaguide.com/blog/alipay-foreigners-2025-ultimate-faq",
+          "name": "PayInChinaGuide · Alipay 'Card Issuing Bank Declined' Error",
+          "url": "https://www.payinchinaguide.com/blog/alipay-issuing-bank-declined-fix",
           "date": "2026-03"
         },
         {
-          "name": "WaysChina · Alipay with Foreign Cards (fees and limits)",
-          "url": "https://wayschina.com/en/articles/how-to-use-alipay-with-foreign-cards",
-          "date": "2026-08"
+          "name": "Trip.com · Alipay Not Working in China? Common Causes and How to Fix It",
+          "url": "https://www.trip.com/guide/payments/alipay-not-working-in-china.html",
+          "date": "2026-07-02"
+        },
+        {
+          "name": "PayInChinaGuide · Alipay for Foreigners FAQ (fees, limits, errors)",
+          "url": "https://www.payinchinaguide.com/blog/alipay-foreigners-2025-ultimate-faq",
+          "date": "2026-03"
         },
         {
           "name": "Beijing Government · Payment Services (cash must be accepted)",
@@ -319,7 +354,7 @@
           "date": "2024-08-30"
         }
       ],
-      "verified_at": "2026-10-02",
+      "verified_at": "2026-10-03",
       "volatility": "high",
       "facts": [
         {
@@ -336,11 +371,17 @@
           "fact": "Verified users: 5,000 USD per transaction, 50,000 USD per year; unverified about 2,000 USD cumulative",
           "status": "verified",
           "note": "WildChina, PayInChinaGuide and WaysChina agree; raised in March 2024 per PBOC."
+        },
+        {
+          "fact": "Foreign cards cannot pay personal collection codes, only merchant codes; there is no visual difference",
+          "status": "verified",
+          "note": "PayInChinaGuide and Trip.com both state it."
         }
       ],
       "related": [
         "alipay_identity_verification",
-        "alipay_card_bind_failed"
+        "alipay_card_bind_failed",
+        "alipay_account_locked"
       ],
       "tags": [
         "payment",
@@ -353,12 +394,12 @@
       "title": "Alipay asks for your passport",
       "why": "Chinese rules let you spend a small total without ID. Past that, or for larger single payments, Alipay must verify your passport before it lets the payment through.",
       "steps": [
-        "Tap Me > Settings > Account & Security > Identity Verification.",
-        "Choose passport, photograph the photo page in good light with all four corners visible, then follow the face check.",
-        "Wait for the result. It usually completes within the hour; the app allows up to 72 hours.",
-        "Retry the payment once the status shows verified."
+        "Tap Me > Settings > Account & Security > Identity Verification. When asked for region choose Non-Mainland China, then Passport. Choosing Mainland China asks for a Chinese ID number and fails.",
+        "Photograph the passport photo page flat, in daylight, no glare, all four corners visible. If offered, scan the passport's NFC chip instead by holding the phone on the back cover; it skips the photo check and succeeds more often.",
+        "Type your name exactly as the passport prints it, including middle names and suffixes, and make the linked card's name match. For the face check, face a window, remove glasses, hold still.",
+        "Wait. Most checks finish within minutes; manual reviews take up to 24 hours. After 3 to 5 failed attempts the flow locks for 24 hours, so stop retrying and wait."
       ],
-      "fallback": "If verification is rejected, retake the passport photo without glare and make sure the name you typed matches the passport exactly. If it fails twice, contact Alipay support at +86 571 2688 6000.",
+      "fallback": "Still rejected after a day: contact Alipay support in the app (Me > Settings > Help Center) or call +86 571 2688 6000 for a manual review, which takes 1 to 3 working days. Meanwhile use Nihao China or cash.",
       "applies_to": [
         "ios",
         "android"
@@ -366,22 +407,27 @@
       "scope": "global",
       "sources": [
         {
+          "name": "ChinaVigators · Alipay Verification Failed? How to Fix It",
+          "url": "https://www.chinavigators.com/alipay-verification-failed/",
+          "date": "2026-03-19"
+        },
+        {
+          "name": "Trip.com · Alipay Not Working in China? Common Causes and How to Fix It",
+          "url": "https://www.trip.com/guide/payments/alipay-not-working-in-china.html",
+          "date": "2026-07-02"
+        },
+        {
+          "name": "PayInChinaGuide · Alipay Passport Verification Failed: How to Fix",
+          "url": "https://www.payinchinaguide.com/blog/alipay-passport-verification-failed-fix",
+          "date": "2026"
+        },
+        {
           "name": "WildChina · Guide to Using Alipay in 2026 (Verification, FAQ)",
           "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/",
           "date": "2026-05-29"
-        },
-        {
-          "name": "Trip.com · How to Use Alipay in China for Foreigners 2026 (menu path)",
-          "url": "https://www.trip.com/guide/phone/how-to-use-alipay.html",
-          "date": "2026-04-08"
-        },
-        {
-          "name": "PayInChinaGuide · Alipay for Foreigners FAQ",
-          "url": "https://www.payinchinaguide.com/blog/alipay-foreigners-2025-ultimate-faq",
-          "date": "2026-03"
         }
       ],
-      "verified_at": "2026-10-02",
+      "verified_at": "2026-10-03",
       "volatility": "high",
       "facts": [
         {
@@ -393,6 +439,16 @@
           "fact": "Verification usually completes within an hour, up to 72 hours",
           "status": "unverified",
           "note": "WildChina only."
+        },
+        {
+          "fact": "Passports with under 6 months validity are often rejected by verification",
+          "status": "unverified",
+          "note": "Trip.com guide only."
+        },
+        {
+          "fact": "3-5 failed attempts lock verification for 24 hours",
+          "status": "verified",
+          "note": "Trip.com and ChinaVigators agree."
         }
       ],
       "related": [
@@ -559,6 +615,111 @@
       "tags": [
         "transport",
         "howto"
+      ]
+    },
+    {
+      "id": "alipay_account_locked",
+      "stage": "anytime",
+      "title": "Alipay says your account is locked or restricted",
+      "why": "Too many failed card links, verification attempts or payments in a short time trigger a temporary risk lock. It usually lifts by itself; retrying makes it longer.",
+      "steps": [
+        "Stop retrying. Note the exact message and the time.",
+        "Make sure you are on a normal mobile or Wi-Fi connection without any network tool that routes traffic abroad; Alipay's risk system flags foreign-looking traffic.",
+        "Wait 24 hours, then open Alipay once and check whether the lock has lifted.",
+        "If it has not, contact support in the app (Me > Settings > Help Center > Contact Us) with your passport number, registered phone and a screenshot of the message."
+      ],
+      "fallback": "Use Nihao China or cash in the meantime. Alipay English support: +86 571 2688 6000, daily 08:00-24:00.",
+      "applies_to": [
+        "ios",
+        "android"
+      ],
+      "scope": "global",
+      "sources": [
+        {
+          "name": "Trip.com · Alipay Not Working in China? Common Causes and How to Fix It",
+          "url": "https://www.trip.com/guide/payments/alipay-not-working-in-china.html",
+          "date": "2026-07-02"
+        },
+        {
+          "name": "ChinaVigators · Alipay Verification Failed? How to Fix It",
+          "url": "https://www.chinavigators.com/alipay-verification-failed/",
+          "date": "2026-03-19"
+        },
+        {
+          "name": "TravelerLocal · Alipay Foreign Card Declined in China: What to Check",
+          "url": "https://www.travelerlocal.com/payments/alipay-foreign-card-fails",
+          "date": "2026-08-02"
+        }
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "facts": [
+        {
+          "fact": "Risk locks typically auto-release within 24-72 hours",
+          "status": "unverified",
+          "note": "TravelerLocal; Trip.com says wait 24 hours."
+        }
+      ],
+      "related": [
+        "alipay_card_bind_failed",
+        "alipay_identity_verification"
+      ],
+      "tags": [
+        "payment",
+        "error"
+      ]
+    },
+    {
+      "id": "alipay_nihao_china",
+      "stage": "anytime",
+      "title": "Use Nihao China when Alipay won't take your card",
+      "why": "Nihao China is the official app for inbound visitors, run by China UnionPay. It registers with email or Apple ID, needs no Chinese phone number, links Visa, Mastercard and UnionPay, and charges no platform fee on QR payments.",
+      "steps": [
+        "Install Nihao China from the App Store or Google Play. Register with email, Apple ID or Google if SMS codes are not reaching you.",
+        "Complete identity verification with your passport when prompted.",
+        "Tap Profile > Tour Wallet > Bank Card > +. Enter the card details and pass your bank's one-time check; a 1 yuan pre-authorisation is taken and refunded.",
+        "Pay with Pay (show your code) or Scan (scan the shop's code), the same two ways as Alipay."
+      ],
+      "fallback": "If Nihao China also refuses the card, top up its Tour Wallet from the card instead (small load fee), or use cash.",
+      "applies_to": [
+        "ios",
+        "android"
+      ],
+      "scope": "global",
+      "sources": [
+        {
+          "name": "Trip.com · Nihao China App: Setup, Card Link & Payment Guide",
+          "url": "https://www.trip.com/guide/info/nihao-china-app.html",
+          "date": "2026-06-12"
+        }
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "high",
+      "facts": [
+        {
+          "fact": "Tour Wallet top-up fee about 0.5%",
+          "status": "unverified",
+          "note": "Single source (Trip.com guide)."
+        },
+        {
+          "fact": "Launched December 2025 by China UnionPay",
+          "status": "unverified",
+          "note": "Trip.com guide and search summary."
+        }
+      ],
+      "related": [
+        "alipay_card_bind_failed",
+        "alipay_tourcard"
+      ],
+      "reader_links": [
+        {
+          "name": "Trip.com guide: Nihao China App setup",
+          "url": "https://www.trip.com/guide/info/nihao-china-app.html"
+        }
+      ],
+      "tags": [
+        "payment",
+        "fallback"
       ]
     }
   ]

@@ -1,0 +1,217 @@
+{
+  "scenario": "wechat",
+  "name": {"en": "WeChat Pay", "zh": "微信支付"},
+  "detect": {
+    "keywords_zh": ["微信", "微信支付", "钱包", "安全验证", "实名", "添加银行卡", "绑定银行卡", "不支持的卡", "存在风险", "好友验证", "支付密码", "小程序"],
+    "keywords_en": ["WeChat", "Weixin", "Weixin Pay", "WeChat Pay", "Wallet", "Security Verification", "Verify ID Info", "Add Bank Card", "Unsupported Card", "Risk exists in this operation", "friend verification", "Services", "Mini Program"],
+    "visual_cues": "Green WeChat app chrome. Screens titled Wallet, Verify ID Info, Add Bank Card, Security Verification, a grey modal saying 'Risk exists in this operation', a 'Select a Security Verification Method' list, or a mini-program asking for a Chinese phone number.",
+    "sub_steps": ["wechat_setup_before_flight", "wechat_security_verification", "wechat_card_unsupported", "wechat_identity_verification", "wechat_risk_control", "wechat_miniprogram_needs_chinese_number", "wechat_sms_code_not_received", "wechat_how_to_pay"],
+    "entry_keywords": {
+      "wechat_setup_before_flight": ["sign up", "register", "install", "下载", "注册"],
+      "wechat_security_verification": ["security verification", "verify", "friend", "scan your qr", "安全验证", "好友"],
+      "wechat_card_unsupported": ["unsupported card", "not supported", "card type", "不支持", "unsupported"],
+      "wechat_identity_verification": ["verify id info", "id document", "passport", "identity", "实名", "身份", "护照"],
+      "wechat_risk_control": ["risk exists", "risk", "存在风险", "temporarily", "cannot be performed"],
+      "wechat_miniprogram_needs_chinese_number": ["mini program", "小程序", "phone number", "手机号", "+86"],
+      "wechat_sms_code_not_received": ["verification code", "sms", "验证码", "code"],
+      "wechat_how_to_pay": ["money", "pay", "receive money", "qr", "付款", "收付款", "scan"]
+    }
+  },
+  "entries": [
+    {
+      "id": "wechat_setup_before_flight",
+      "stage": "preflight",
+      "title": "Set up WeChat Pay before you fly",
+      "why": "Some small shops and street stalls only take WeChat Pay. Setting it up at home avoids the friend-verification step, which is hard to complete once you are travelling alone.",
+      "steps": [
+        "Install WeChat and sign up with your own mobile number (any country). Enter the SMS code.",
+        "When WeChat asks for security verification, choose the option to add a payment card and activate Weixin Pay; it is easier than finding an existing user to scan your QR code.",
+        "Add a Visa, Mastercard, American Express, JCB, Discover or Diners Club card issued outside mainland China. A small verification charge of about 0.05 USD is taken.",
+        "Set the 6-digit payment password when prompted and keep it; every payment asks for it."
+      ],
+      "fallback": "If the card step fails, finish Alipay first and come back to WeChat later; most travellers manage with Alipay alone.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "Beijing Government · How can Foreigners Use WeChat Pay? (updated 2026-03)", "url": "https://english.beijing.gov.cn/livinginbeijing/finance/mobilepaymentlist/202005/t20200516_1899230.html", "date": "2026-03-26"},
+        {"name": "WildChina · How to Set Up WeChat Pay (Weixin Pay) in 2026", "url": "https://wildchina.com/2026/05/wechat-pay-in-2026/", "date": "2026-06-01"},
+        {"name": "China Briefing · WeChat Enables Foreigners to Pay with Overseas Cards in China", "url": "https://www.china-briefing.com/news/wechat-enables-foreigners-to-pay-with-overseas-cards-in-china/", "date": "2025-03-03"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "facts": [
+        {"fact": "Accepted card networks: Visa, Mastercard, American Express, Discover, JCB, Diners Club, UnionPay International", "status": "verified", "note": "Beijing gov page and WildChina agree; Amex IS accepted here unlike Alipay."},
+        {"fact": "Verification charge about 0.05 USD when adding a card", "status": "unverified", "note": "WildChina only."}
+      ],
+      "related": ["wechat_security_verification", "wechat_card_unsupported"],
+      "reader_links": [{"name": "Beijing Government: How can foreigners use WeChat Pay", "url": "https://english.beijing.gov.cn/livinginbeijing/finance/mobilepaymentlist/202005/t20200516_1899230.html"}],
+      "tags": ["payment", "setup"]
+    },
+    {
+      "id": "wechat_security_verification",
+      "stage": "anytime",
+      "title": "WeChat asks a friend to verify you",
+      "why": "New accounts must pass a security check to keep spammers out. WeChat offers three ways; only one needs another person.",
+      "steps": [
+        "On the Select a Security Verification Method screen pick Verify via Payment Card (or Verify and Activate Weixin Pay). It needs no friend.",
+        "Add a card from Visa, Mastercard, Amex, JCB, Discover or Diners Club issued outside mainland China and confirm the small verification charge.",
+        "If the card option is missing, choose Verify via QR scan and ask anyone with a WeChat account older than 6 months, such as hotel reception, to scan your code.",
+        "Set the payment password when prompted."
+      ],
+      "fallback": "If no option works, use Alipay for payments; WeChat is rarely essential for a short trip.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "WildChina · How to Set Up WeChat Pay (Security Verification)", "url": "https://wildchina.com/2026/05/wechat-pay-in-2026/", "date": "2026-06-01"},
+        {"name": "ReadyForChina · Test your WeChat Pay setup (setup guide)", "url": "https://www.readyforchina.com/en/wechat", "date": "2026"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "related": ["wechat_setup_before_flight", "wechat_card_unsupported"],
+      "tags": ["payment", "verification"]
+    },
+    {
+      "id": "wechat_card_unsupported",
+      "stage": "anytime",
+      "title": "WeChat Pay says Unsupported Card",
+      "why": "Either the card was issued in a region WeChat's foreign-card service does not cover, the account region is set wrong, or the bank refused the small verification charge.",
+      "steps": [
+        "Check WeChat's region: Me > Settings > General > Region should match your passport country, not China.",
+        "Try a different card, ideally a Visa or Mastercard credit card from a major bank. Debit, prepaid and virtual cards fail more often.",
+        "Turn on international and online transactions in your banking app, then add the card again after 10 minutes.",
+        "If it still fails, switch to Alipay with the same card; many cards refused by WeChat link fine in Alipay."
+      ],
+      "fallback": "Set up Nihao China (official inbound app, no platform fee) or carry cash from a Bank of China ATM.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "PayInChinaGuide · WeChat Pay 'Unsupported Card' Error: 5 Proven Fixes", "url": "https://www.payinchinaguide.com/tool/specific-error/wechat-pay-unsupported-card", "date": "2026"},
+        {"name": "PayInChinaGuide · WeChat Pay Card Declined? Fix Guide", "url": "https://www.payinchinaguide.com/blog/wechat-pay-card-declined-fix", "date": "2026"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "high",
+      "facts": [
+        {"fact": "A card refused by WeChat often links in Alipay", "status": "unverified", "note": "PayInChinaGuide, user reports."}
+      ],
+      "related": ["wechat_setup_before_flight", "alipay_card_bind_failed", "alipay_nihao_china"],
+      "tags": ["payment", "error"]
+    },
+    {
+      "id": "wechat_identity_verification",
+      "stage": "anytime",
+      "title": "WeChat asks for your passport (Verify ID Info)",
+      "why": "Payments above a small total need real-name verification. The form asks for ID type, passport number, dates, nationality, address and occupation.",
+      "steps": [
+        "On Verify ID Info choose ID type Passport and enter the number, country and expiry exactly as printed.",
+        "Fill the remaining fields: address can be your hotel, occupation any honest option. Empty fields block the Next button.",
+        "Upload the passport photo page in good light and complete the face scan facing a window.",
+        "If the screen says Risk exists in this operation, stop, wait, and see Risk control."
+      ],
+      "fallback": "Verification can take up to a day. Pay with Alipay or cash meanwhile; contact WeChat Pay support from Me > Services > Wallet > Customer Service Center if it stays pending.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "ChinaVigators · WeChat Pay for Foreigners 2026: Link Visa & Mastercard", "url": "https://www.chinavigators.com/wechat-pay-foreigners-guide/", "date": "2026-07-03"},
+        {"name": "HiddenChinaTravel · Alipay/WeChat Verification Failed? Fixes", "url": "https://hiddenchinatravel.com/alipay-wechat-pay-verification-failed", "date": "2026-08-26"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "related": ["wechat_risk_control", "wechat_security_verification"],
+      "tags": ["payment", "verification"]
+    },
+    {
+      "id": "wechat_risk_control",
+      "stage": "anytime",
+      "title": "WeChat: Risk exists in this operation",
+      "why": "WeChat's risk system pauses real-name verification or payments when something looks unusual: a new account, many attempts, or traffic that appears to come from outside China.",
+      "steps": [
+        "Tap Close and stop retrying for now.",
+        "Switch to a normal connection: mobile data or ordinary Wi-Fi, without any tool that routes traffic through another country.",
+        "Wait a few hours, reopen WeChat and try the same step once.",
+        "If it repeats, open Me > Services > Wallet > Customer Service Center and describe the message; keep a screenshot."
+      ],
+      "fallback": "Use Alipay or Nihao China for payments while WeChat is restricted.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "ChinaVigators · WeChat Pay for Foreigners 2026 (screens)", "url": "https://www.chinavigators.com/wechat-pay-foreigners-guide/", "date": "2026-07-03"},
+        {"name": "HiddenChinaTravel · Alipay/WeChat Verification Failed? Fixes", "url": "https://hiddenchinatravel.com/alipay-wechat-pay-verification-failed", "date": "2026-08-26"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "related": ["wechat_identity_verification", "alipay_account_locked"],
+      "tags": ["payment", "error"]
+    },
+    {
+      "id": "wechat_miniprogram_needs_chinese_number",
+      "stage": "landing",
+      "title": "A WeChat mini-program wants a Chinese phone number",
+      "why": "Many mini-programs inside WeChat, including ride-hailing and food delivery, register users by +86 number. Without one they stop at the phone screen.",
+      "steps": [
+        "Do not buy a Chinese SIM just for this. Use the same service inside Alipay instead: Alipay's DiDi mini-program works with a foreign number.",
+        "For menus and ordering, ask staff to take the order at the counter and pay by scanning your Alipay or WeChat code.",
+        "For attractions, book through Trip.com or the venue's website with your passport instead of the WeChat mini-program."
+      ],
+      "fallback": "If a Chinese number is unavoidable, hotel reception can sometimes help; otherwise skip that service.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "WildChina · How to Set Up WeChat Pay (Limitations)", "url": "https://wildchina.com/2026/05/wechat-pay-in-2026/", "date": "2026-06-01"},
+        {"name": "WildChina · Guide to Using Didi in China 2025", "url": "https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/", "date": "2025-11-10"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "related": ["alipay_didi_miniprogram"],
+      "tags": ["howto"]
+    },
+    {
+      "id": "wechat_sms_code_not_received",
+      "stage": "anytime",
+      "title": "No SMS code from WeChat",
+      "why": "The code goes to the number you registered. If that line has roaming off, or you switched to an eSIM and disabled it, nothing arrives.",
+      "steps": [
+        "Turn on roaming for the line that owns the registered number, or re-enable that SIM if you turned it off for an eSIM.",
+        "Wait 60 seconds before requesting again; rapid retries pause delivery.",
+        "Check the country code and that the number has no leading zero.",
+        "Try the voice-call option if the screen offers one."
+      ],
+      "fallback": "If the number cannot receive texts in China at all, log in from a device where WeChat is still signed in, or set up Alipay or Nihao China (email sign-up) instead.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "PayInChinaGuide · Not Receiving SMS Code from Alipay/WeChat?", "url": "https://www.payinchinaguide.com/tool/specific-error/fix-sms-verification-code-error", "date": "2026"},
+        {"name": "Trip.com · Nihao China App (SMS fallback to email sign-up)", "url": "https://www.trip.com/guide/info/nihao-china-app.html", "date": "2026-06-12"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "related": ["alipay_sms_code_not_received"],
+      "tags": ["error", "sms"]
+    },
+    {
+      "id": "wechat_how_to_pay",
+      "stage": "landing",
+      "title": "How to pay at a shop with WeChat Pay",
+      "why": "Same two directions as Alipay: show your code or scan theirs. Fees apply above 200 RMB.",
+      "steps": [
+        "To be scanned: tap the + at the top right, then Money, and show the barcode. Enter your 6-digit password if asked.",
+        "To scan them: tap + then Scan, point at the shop's printed code, type the amount.",
+        "Check the confirmation screen: payments under 200 RMB are free; above that a 3% fee is shown before you confirm.",
+        "Keep in mind foreign cards cannot send money to people or receive red packets; merchant payments only."
+      ],
+      "fallback": "If the code will not scan, ask the cashier to scan yours, or pay cash.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "China Briefing · WeChat Enables Foreigners to Pay with Overseas Cards (fees)", "url": "https://www.china-briefing.com/news/wechat-enables-foreigners-to-pay-with-overseas-cards-in-china/", "date": "2025-03-03"},
+        {"name": "WildChina · How to Set Up WeChat Pay (Using WeChat Pay for payments)", "url": "https://wildchina.com/2026/05/wechat-pay-in-2026/", "date": "2026-06-01"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "high",
+      "facts": [
+        {"fact": "Fee-free under 200 RMB; 3% above; new users 60 days fee-free under 1,000 RMB", "status": "verified", "note": "China Briefing citing WeChat Pay's published policy; PayInChinaGuide agrees."}
+      ],
+      "related": ["alipay_how_to_pay"],
+      "tags": ["payment", "howto"]
+    }
+  ]
+}

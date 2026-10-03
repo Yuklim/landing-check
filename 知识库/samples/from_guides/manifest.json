@@ -51,7 +51,7 @@
  {
   "file": "blogs_wechat-pay-foreigners-guide._57323b.webp",
   "scenario": "wechat",
-  "expected_entry": "wechat_setup",
+  "expected_entry": "wechat_setup_before_flight",
   "kind": "normal",
   "note": ""
  },
@@ -86,7 +86,7 @@
  {
   "file": "blogs_wechat-pay-foreigners-guide._a5d589.webp",
   "scenario": "wechat",
-  "expected_entry": "wechat_card_bind",
+  "expected_entry": "wechat_security_verification",
   "kind": "normal",
   "note": ""
  },
@@ -107,7 +107,7 @@
  {
   "file": "blogs_wechat-pay-foreigners-guide._b390c6.webp",
   "scenario": "wechat",
-  "expected_entry": "wechat_setup",
+  "expected_entry": "wechat_setup_before_flight",
   "kind": "normal",
   "note": ""
  },
@@ -219,42 +219,42 @@
  {
   "file": "wildchina_wechat-pay-in-2026_0b7d21.png",
   "scenario": "wechat",
-  "expected_entry": "wechat_card_bind",
+  "expected_entry": "wechat_security_verification",
   "kind": "normal",
   "note": ""
  },
  {
   "file": "wildchina_wechat-pay-in-2026_256823.png",
   "scenario": "wechat",
-  "expected_entry": "wechat_setup",
+  "expected_entry": "wechat_setup_before_flight",
   "kind": "normal",
   "note": ""
  },
  {
   "file": "wildchina_wechat-pay-in-2026_46c96e.png",
   "scenario": "wechat",
-  "expected_entry": "wechat_setup",
+  "expected_entry": "wechat_setup_before_flight",
   "kind": "normal",
   "note": ""
  },
  {
   "file": "wildchina_wechat-pay-in-2026_498d14.png",
   "scenario": "wechat",
-  "expected_entry": "wechat_setup",
+  "expected_entry": "wechat_setup_before_flight",
   "kind": "normal",
   "note": ""
  },
  {
   "file": "wildchina_wechat-pay-in-2026_8ec814.png",
   "scenario": "wechat",
-  "expected_entry": "wechat_setup",
+  "expected_entry": "wechat_setup_before_flight",
   "kind": "normal",
   "note": ""
  },
  {
   "file": "wildchina_wechat-pay-in-2026_92366e.png",
   "scenario": "wechat",
-  "expected_entry": "wechat_card_bind",
+  "expected_entry": "wechat_security_verification",
   "kind": "normal",
   "note": ""
  },
@@ -268,14 +268,14 @@
  {
   "file": "wildchina_wechat-pay-in-2026_ad08e8.png",
   "scenario": "wechat",
-  "expected_entry": "wechat_sms_code",
+  "expected_entry": "wechat_sms_code_not_received",
   "kind": "normal",
   "note": ""
  },
  {
   "file": "wildchina_wechat-pay-in-2026_fb0b81.png",
   "scenario": "wechat",
-  "expected_entry": "wechat_setup",
+  "expected_entry": "wechat_setup_before_flight",
   "kind": "normal",
   "note": ""
  }

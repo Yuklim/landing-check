@@ -15,10 +15,22 @@ VOL = {'high', 'low'}
 READER_OK = ('trip.com', 'gov.cn', 'alipayplus.com', '12306.cn', 'alipay.com', 'weixin.qq.com', 'tencent.com')
 
 
+def all_ids():
+    out = set()
+    for f in glob.glob(os.path.join(ENT, '*.json')):
+        try:
+            for e in json.load(open(f, encoding='utf-8')).get('entries', []):
+                out.add(e.get('id'))
+        except Exception:
+            pass
+    return out
+
+
 def check(path):
     d = json.load(open(path, encoding='utf-8'))
     errs = []
     ids = set()
+    global_ids = all_ids()
     for e in d.get('entries', []):
         for k in REQ:
             if k not in e:
@@ -51,7 +63,7 @@ def check(path):
             errs.append('detect.sub_steps 引用了不存在的 id %s' % sid)
     for e in d.get('entries', []):
         for rid in e.get('related', []) or []:
-            if rid not in ids:
+            if rid not in ids and rid not in global_ids:
                 errs.append('%s: related 引用了不存在的 id %s' % (e['id'], rid))
     return d, errs
 

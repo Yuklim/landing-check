@@ -68,8 +68,15 @@ def classify_with_model(kb, image_bytes: Optional[bytes], text: str) -> dict:
     content.append({'type': 'text', 'text': (('<user_text>' + text.replace('<', '‹') + '</user_text>\n') if text else '') + ask})
     messages = [{'role': 'system', 'content': PROMPT.replace('{SCENARIOS}', scenarios_block(kb))},
                 {'role': 'user', 'content': content}]
-    raw = call_model(messages)
-    return clean_model_output(kb, json.loads(raw))
+    last = None
+    for attempt in range(2):                      # 模型偶尔返回空串或截断 JSON，重试一次
+        raw = call_model(messages)
+        try:
+            return clean_model_output(kb, json.loads(raw))
+        except ValueError as e:
+            last = e
+            log.info('model output not JSON (attempt %d): %r', attempt + 1, raw[:80])
+    raise RuntimeError('model returned non-JSON twice: %s' % last)
 
 
 def clean_model_output(kb, out: dict) -> dict:
