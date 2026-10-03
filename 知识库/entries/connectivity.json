@@ -1,0 +1,186 @@
+{
+  "scenario": "connectivity",
+  "name": {"en": "Getting online", "zh": "上网"},
+  "detect": {
+    "keywords_zh": ["无线网络", "免费WiFi", "机场WiFi", "验证码", "手机号", "护照", "自助终端", "输入账号", "输入密码", "登录", "获得验证码", "无服务", "数据漫游", "蜂窝", "eSIM", "SIM卡", "流量"],
+    "keywords_en": ["Wi-Fi", "WiFi", "AIRPORT-FREE-WIFI", "Green Airport", "BDIA-FREE-WIFI", "Airport-Free-WiFi", "login", "captive portal", "verification code", "passport", "kiosk", "No Service", "SOS", "Data Roaming", "Cellular", "eSIM", "APN", "SIM", "No Internet", "Mobile Data"],
+    "visual_cues": "A phone Settings page for Cellular / Mobile Data / eSIM / Data Roaming, a status bar showing No Service or SOS, a Wi-Fi captive portal page (often Chinese) asking for a phone number and code or an account and password, an airport Wi-Fi kiosk, or a browser page that will not load.",
+    "sub_steps": ["connectivity_esim_before_flight", "connectivity_esim_not_working", "connectivity_airport_wifi_sms", "connectivity_airport_wifi_passport", "connectivity_buy_sim_at_airport", "connectivity_blocked_services"],
+    "entry_keywords": {
+      "connectivity_esim_before_flight": ["buy esim", "install esim", "carrier lock", "compatible", "qr code", "eid", "购买", "安装"],
+      "connectivity_esim_not_working": ["no service", "sos", "data roaming", "cellular", "apn", "esim", "no internet", "无服务", "数据漫游", "蜂窝", "not working"],
+      "connectivity_airport_wifi_sms": ["verification code", "获得验证码", "输入手机号", "phone number", "sms", "overseas mobile", "login"],
+      "connectivity_airport_wifi_passport": ["passport", "kiosk", "输入账号", "输入密码", "username", "password", "护照", "自助终端", "dispenser"],
+      "connectivity_buy_sim_at_airport": ["sim card", "china telecom", "china mobile", "china unicom", "roamingman", "counter", "vending", "sim卡"],
+      "connectivity_blocked_services": ["google", "whatsapp", "instagram", "gmail", "maps", "blocked", "cannot load", "打不开"]
+    }
+  },
+  "entries": [
+    {
+      "id": "connectivity_esim_before_flight",
+      "stage": "preflight",
+      "title": "Get a China eSIM before you fly",
+      "why": "An eSIM is the one thing that makes everything else work: maps, payments, DiDi, translation. Travel eSIMs route through international gateways, so your usual apps keep working. Airport Wi-Fi only covers the terminal.",
+      "steps": [
+        "Check the phone is carrier-unlocked: iPhone Settings > General > About > Carrier Lock should say No SIM restrictions; on Android dial *#06# and confirm an EID appears.",
+        "Buy a China mainland eSIM (Trip.com sells China Mobile and China Unicom plans by day or by data) and install it at home on Wi-Fi. Trip.com's installs directly from its app without scanning a QR code.",
+        "Keep your home SIM active for SMS codes but turn its data off, so verification texts from Alipay and DiDi still arrive after landing.",
+        "Write down the APN from the confirmation email in case the phone asks for it."
+      ],
+      "fallback": "No eSIM support on the phone: plan to buy a physical SIM at the airport counter with your passport, or rely on international roaming from your home carrier, which also reaches international services.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "Trip.com · Best China eSIM Guide: No VPN Needed for Foreigners", "url": "https://in.trip.com/guide/phone/china-esim.html", "date": "2026-04-02"},
+        {"name": "WildChina · Staying Connected in China (Internet)", "url": "https://wildchina.com/trip-to-china-pre-departure-guide/#internet", "date": "2026-09-24"},
+        {"name": "Beijing Government · Get Connected & Essential Apps", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html", "date": "2024-08-30"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "high",
+      "facts": [
+        {"fact": "Travel eSIMs and international roaming reach international services because traffic exits through overseas gateways; local physical SIMs do not", "status": "verified", "note": "Trip.com and WildChina agree."},
+        {"fact": "Data-only eSIMs cannot receive SMS", "status": "verified", "note": "TripChina DiDi guide."}
+      ],
+      "related": ["connectivity_esim_not_working", "connectivity_buy_sim_at_airport"],
+      "reader_links": [
+        {"name": "Trip.com guide: China eSIM", "url": "https://in.trip.com/guide/phone/china-esim.html"},
+        {"name": "Beijing Government: Get Connected & Essential Apps", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html"}
+      ],
+      "tags": ["connectivity", "setup"]
+    },
+    {
+      "id": "connectivity_esim_not_working",
+      "stage": "landing",
+      "title": "eSIM installed but no internet after landing",
+      "why": "Nine times out of ten the eSIM is fine and one switch is off: Data Roaming. Travel eSIMs count as roaming, so the phone refuses to use them until you allow it.",
+      "steps": [
+        "Open Settings > Cellular (Mobile Data). Set Cellular Data to the eSIM line, then turn Data Roaming ON for that line.",
+        "Turn Airplane Mode on for 10 seconds and off again so the phone re-registers with the local tower.",
+        "If it still says No Service, open the eSIM line's settings and enter the APN from the confirmation email, then restart the phone.",
+        "Check the plan is activated: some eSIMs activate on first connection, others at a start date you chose."
+      ],
+      "fallback": "Connect to the airport Wi-Fi to reach the eSIM seller's 24/7 chat (Trip.com has one), or buy a physical SIM at the arrivals counter with your passport.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "Trip.com · Best China eSIM Guide (What should I do if my eSIM doesn't work)", "url": "https://in.trip.com/guide/phone/china-esim.html", "date": "2026-04-02"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "facts": [
+        {"fact": "Data Roaming off is the number one cause of eSIM 'not working' reports", "status": "verified", "note": "Trip.com guide; consistent with how travel eSIMs work."}
+      ],
+      "related": ["connectivity_airport_wifi_sms", "connectivity_buy_sim_at_airport"],
+      "tags": ["connectivity", "error"]
+    },
+    {
+      "id": "connectivity_airport_wifi_sms",
+      "stage": "landing",
+      "title": "Airport Wi-Fi asks for a phone number",
+      "why": "Public Wi-Fi in China requires identity verification by law. Airports accept an SMS code to many foreign numbers; shops and malls usually accept only Chinese numbers.",
+      "steps": [
+        "Join the airport network: PVG Airport-Free-WiFi, Beijing Capital AIRPORT-FREE-WIFI-NEW, Daxing BDIA-FREE-WIFI. The login page opens by itself; if not, open any website.",
+        "Choose the overseas or international phone option, pick your country code, type your number and tap Get code (获得验证码). The SMS arrives on your roaming line even with data off.",
+        "Enter the code and tap Login (登录). The session lasts a few hours; reconnect the same way if it drops.",
+        "No code after 60 seconds: do not keep tapping. Use the passport kiosk method instead."
+      ],
+      "fallback": "Airport information desks and the Payment Service Center in the arrivals hall help in person; ask for 免费WiFi.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "Beijing Government · Get Connected (Beijing airports Wi-Fi step by step)", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html", "date": "2024-08-30"},
+        {"name": "MyChinaCompass · Free Wi-Fi in China: Hotspots, Login Guide & SMS Verification", "url": "https://mychinacompass.com/free-wifi/", "date": "2026-05-17"},
+        {"name": "ChinaAirlineTravel · Shanghai Pudong Airport Wi-Fi guide", "url": "https://www.chinaairlinetravel.com/airport-guide/shanghai-airport/pudong-airport-wifi.html", "date": "2026"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "high",
+      "facts": [
+        {"fact": "PVG Wi-Fi SMS login supports numbers from 220+ countries", "status": "unverified", "note": "ChinaAirlineTravel only; SSID spelling also needs on-site check."},
+        {"fact": "Beijing Capital SSID AIRPORT-FREE-WIFI-NEW, Daxing Green Airport / BDIA-FREE-WIFI", "status": "verified", "note": "Beijing government pages (2024 and Dec 2025); Daxing has two names in two official pages, both listed."}
+      ],
+      "related": ["connectivity_airport_wifi_passport", "connectivity_esim_not_working"],
+      "reader_links": [{"name": "Beijing Government: how to connect to airport Wi-Fi", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html"}],
+      "tags": ["connectivity", "airport"]
+    },
+    {
+      "id": "connectivity_airport_wifi_passport",
+      "stage": "landing",
+      "title": "Get airport Wi-Fi with your passport",
+      "why": "Every major airport has a way to log in without any phone number: a kiosk that scans your passport and prints a username and password, or at Daxing a page where you photograph the passport.",
+      "steps": [
+        "Find the Wi-Fi kiosk (无线上网身份验证自助终端). Show staff this line if needed: 请问最近的无线上网身份验证自助终端在哪里?",
+        "Open the passport to the photo page and slide it into the slot marked 护照扫码口 Passport Scanning. A slip prints with a username and password.",
+        "Back on the login page type them into 输入账号 (username) and 输入密码 (password), tap 登录.",
+        "At Daxing, the login page lets you photograph the passport page directly instead of using a kiosk."
+      ],
+      "fallback": "One passport can print a limited number of slips (three at Beijing Capital, five hours each). If the kiosk is broken, the information desk can issue access.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "Beijing Government · Get Connected (Authentication via passport kiosk)", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html", "date": "2024-08-30"},
+        {"name": "Beijing Government · Free Wi-Fi at Daxing Airport with passport login", "url": "https://english.beijing.gov.cn/latest/news/202512/t20251205_4322494.html", "date": "2025-12-05"},
+        {"name": "MyChinaCompass · Free Wi-Fi in China (airport kiosks)", "url": "https://mychinacompass.com/free-wifi/", "date": "2026-05-17"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "facts": [
+        {"fact": "Beijing Capital kiosk slip is valid 5 hours; max 3 print-outs per passport", "status": "verified", "note": "Beijing government page."},
+        {"fact": "PVG kiosk location (Arrivals, beside Exit 8 in our mock)", "status": "unverified", "note": "Placeholder; verify on site."}
+      ],
+      "related": ["connectivity_airport_wifi_sms"],
+      "tags": ["connectivity", "airport"]
+    },
+    {
+      "id": "connectivity_buy_sim_at_airport",
+      "stage": "landing",
+      "title": "Buy a SIM card at the airport",
+      "why": "If the phone has no eSIM support or the eSIM failed, a physical SIM from a counter in arrivals is the next best option. It needs your passport, and note that local SIMs do not reach international services.",
+      "steps": [
+        "At PVG T2 look for the Roamingman counter just after customs, or the China Telecom counter after baggage claim; both sell 7, 15 and 30 day data packages.",
+        "At Beijing Capital T3 go to the Beijing Service counter at Exit B on the international arrivals floor; at Daxing ask for the TravelPass desk. Both airports also have SIM vending machines.",
+        "Hand over your passport; registration is required by law and takes a few minutes. Make sure the counter cuts the SIM to your phone's size or offers an eSIM.",
+        "Before you leave the counter, confirm data works and ask them to set the APN if needed."
+      ],
+      "fallback": "Keep your home SIM for SMS codes. For international apps on a local SIM, switch to home-carrier roaming when needed, or use a Trip.com eSIM instead.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "WildChina · Staying Connected in China (SIM cards at Pudong)", "url": "https://wildchina.com/trip-to-china-pre-departure-guide/#internet", "date": "2026-09-24"},
+        {"name": "Beijing Government · PEK SIM Card Application/Collection", "url": "https://english.beijing.gov.cn/specials/beijingservice/pek/sim/", "date": "2025"},
+        {"name": "Beijing Government · A Guide for Purchasing SIM Cards in Beijing", "url": "https://english.beijing.gov.cn/quickguideservices/purchasingsimcards/", "date": "2025"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "high",
+      "facts": [
+        {"fact": "PVG counters: Roamingman after customs, China Telecom after baggage claim (T2)", "status": "unverified", "note": "WildChina only; verify on site."},
+        {"fact": "PEK T3 Beijing Service counter, Exit B, international arrivals F2", "status": "verified", "note": "Beijing government page and airport's own post."}
+      ],
+      "related": ["connectivity_esim_before_flight", "connectivity_blocked_services"],
+      "tags": ["connectivity", "airport"]
+    },
+    {
+      "id": "connectivity_blocked_services",
+      "stage": "anytime",
+      "title": "Google, WhatsApp or Instagram won't load",
+      "why": "On a local Chinese SIM or most public Wi-Fi, international services are not reachable. On a travel eSIM or home-carrier roaming they are, because the connection exits abroad.",
+      "steps": [
+        "Check which line is carrying data: Settings > Cellular. If it is a local SIM or Wi-Fi, switch Cellular Data to your travel eSIM or home SIM with roaming on, and turn Wi-Fi off.",
+        "For maps, use Apple Maps or Amap (高德) which work on any connection and have better local data than Google Maps.",
+        "For messaging locals and hotels, WeChat works everywhere; ask contacts for their WeChat ID.",
+        "Trip.com, Alipay, DiDi and translation apps all work on local connections; only overseas services are affected."
+      ],
+      "fallback": "Buy a Trip.com eSIM from the airport Wi-Fi if you do not have one; it activates in minutes and restores access to your usual apps.",
+      "applies_to": ["ios", "android"],
+      "scope": "global",
+      "sources": [
+        {"name": "Trip.com · Best China eSIM Guide (why you need an eSIM)", "url": "https://in.trip.com/guide/phone/china-esim.html", "date": "2026-04-02"},
+        {"name": "WildChina · Staying Connected in China (international roaming)", "url": "https://wildchina.com/trip-to-china-pre-departure-guide/#internet", "date": "2026-09-24"},
+        {"name": "Beijing Government · Get Connected (map apps)", "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html", "date": "2024-08-30"}
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "related": ["connectivity_esim_before_flight", "connectivity_buy_sim_at_airport"],
+      "tags": ["connectivity", "howto"]
+    }
+  ]
+}

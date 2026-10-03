@@ -1,5 +1,5 @@
 {
- "when": "2026-10-03 01:39",
+ "when": "2026-10-03 02:11",
  "n": 40,
  "rows": [
   {
@@ -12,10 +12,10 @@
    "decision": "answer",
    "conf": 0.86,
    "mode": "model",
-   "ms": 2020,
+   "ms": 2374,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Step2 Top up money > Step3 Use QR code to pay. Q1: Supported"
+   "ocr": "Step2 Top up money > Step3 Use QR code to pay; Q1: Supported"
   },
   {
    "file": "blogs_alipay-for-foreigners_e1fc2c.jpg",
@@ -25,57 +25,57 @@
    "exp_e": "alipay_tourcard",
    "got_e": "alipay_tourcard",
    "decision": "answer",
-   "conf": 0.95,
+   "conf": 0.96,
    "mode": "model",
-   "ms": 1498,
+   "ms": 1979,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Tour Card — Your prepaid card for mobile payment in China; B"
+   "ocr": "Tour Card — Your prepaid card for mobile payment in China / "
   },
   {
    "file": "blogs_didi-guide-foreigners-china._413612.webp",
    "kind": "normal",
-   "exp_s": "alipay",
-   "got_s": "unknown",
-   "exp_e": "alipay_didi_miniprogram",
-   "got_e": null,
-   "decision": "unknown",
-   "conf": 0.15,
+   "exp_s": "didi",
+   "got_s": "didi",
+   "exp_e": "didi_payment_failed",
+   "got_e": "didi_setup_before_flight",
+   "decision": "ask",
+   "conf": 0.5,
    "mode": "model",
-   "ms": 5263,
-   "s_ok": false,
+   "ms": 2940,
+   "s_ok": true,
    "e_ok": false,
    "ocr": "Payment Methods / Auto Debit / About Payment Methods / QQ Wa"
   },
   {
    "file": "blogs_didi-guide-foreigners-china._bc9c13.webp",
    "kind": "normal",
-   "exp_s": "alipay",
-   "got_s": "alipay",
-   "exp_e": "alipay_didi_miniprogram",
-   "got_e": "alipay_didi_miniprogram",
+   "exp_s": "didi",
+   "got_s": "didi",
+   "exp_e": "didi_setup_before_flight",
+   "got_e": "didi_setup_before_flight",
    "decision": "ask",
-   "conf": 0.4,
+   "conf": 0.42,
    "mode": "model",
-   "ms": 4555,
+   "ms": 2489,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Beijing Scan • Industrial Bank ATM Southwest Side • Agricult"
+   "ocr": "17:35 Beijing Silicon Valley Closer Industrial Bank ATM Sout"
   },
   {
    "file": "blogs_didi-guide-foreigners-china._fb9acd.webp",
    "kind": "normal",
-   "exp_s": "alipay",
-   "got_s": "alipay",
-   "exp_e": "alipay_didi_miniprogram",
-   "got_e": "alipay_didi_miniprogram",
+   "exp_s": "didi",
+   "got_s": "didi",
+   "exp_e": "didi_setup_before_flight",
+   "got_e": "didi_setup_before_flight",
    "decision": "ask",
-   "conf": 0.4,
+   "conf": 0.42,
    "mode": "model",
-   "ms": 4102,
+   "ms": 1983,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "DiDi China: Ride Hailing — Ride in Chinese mainland,... Upda"
+   "ocr": "DiDi China: Ride Hailing — Ride in Chinese mainland, Update,"
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._3e2f2f.webp",
@@ -84,13 +84,13 @@
    "got_s": "wechat",
    "exp_e": "wechat_identity_verification",
    "got_e": "wechat_identity_verification",
-   "decision": "ask",
-   "conf": 0.66,
+   "decision": "answer",
+   "conf": 0.85,
    "mode": "model",
-   "ms": 2241,
+   "ms": 1598,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Verify New Identity — Please follow the instructions to comp"
+   "ocr": "Verify New Identity / Please follow the instructions to comp"
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._56c0e5.webp",
@@ -102,7 +102,7 @@
    "decision": "answer",
    "conf": 0.92,
    "mode": "model",
-   "ms": 1365,
+   "ms": 1673,
    "s_ok": true,
    "e_ok": true,
    "ocr": "Passport No. / Passport number / Country/Region / Select Cou"
@@ -111,16 +111,16 @@
    "file": "blogs_wechat-pay-foreigners-guide._57323b.webp",
    "kind": "normal",
    "exp_s": "wechat",
-   "got_s": "alipay",
+   "got_s": "wechat",
    "exp_e": "wechat_setup_before_flight",
-   "got_e": "alipay_nihao_china",
+   "got_e": "wechat_setup_before_flight",
    "decision": "ask",
-   "conf": 0.42,
+   "conf": 0.4,
    "mode": "model",
-   "ms": 5470,
-   "s_ok": false,
-   "e_ok": false,
-   "ocr": "English | Select Sign Up Method | Sign Up with Mobile | Or |"
+   "ms": 5322,
+   "s_ok": true,
+   "e_ok": true,
+   "ocr": "Select Sign Up Method / Sign Up with Mobile / Or / Sign up w"
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._5c2a75.webp",
@@ -130,9 +130,9 @@
    "exp_e": "wechat_identity_verification",
    "got_e": "wechat_identity_verification",
    "decision": "answer",
-   "conf": 0.9,
+   "conf": 0.85,
    "mode": "model",
-   "ms": 1236,
+   "ms": 1784,
    "s_ok": true,
    "e_ok": true,
    "ocr": "Verify ID Info / ID Document / ID type / Document Informatio"
@@ -145,9 +145,9 @@
    "exp_e": "wechat_how_to_pay",
    "got_e": "wechat_setup_before_flight",
    "decision": "ask",
-   "conf": 0.55,
+   "conf": 0.4,
    "mode": "model",
-   "ms": 2201,
+   "ms": 2275,
    "s_ok": true,
    "e_ok": false,
    "ocr": "12:22 Wallet Transactions Balance ¥0.00 Mini Fund Yield1.01%"
@@ -160,12 +160,12 @@
    "exp_e": "wechat_identity_verification",
    "got_e": "wechat_identity_verification",
    "decision": "answer",
-   "conf": 0.9,
+   "conf": 0.78,
    "mode": "model",
-   "ms": 1533,
+   "ms": 1557,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Verify ID Info / ID Document / ID type / Document Informatio"
+   "ocr": "Verify ID Info | ID Document | ID type | Document Informatio"
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._a23eb8.webp",
@@ -175,27 +175,27 @@
    "exp_e": "wechat_risk_control",
    "got_e": "wechat_risk_control",
    "decision": "answer",
-   "conf": 0.93,
+   "conf": 0.95,
    "mode": "model",
-   "ms": 1358,
+   "ms": 1243,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "ID Effective Date 2024-06-23, ID Expiration Date 2034-06-23,"
+   "ocr": "Region / ID Effective Date 2024-06-23 / ID Expiration Date 2"
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._a5d589.webp",
    "kind": "normal",
    "exp_s": "wechat",
-   "got_s": "unknown",
+   "got_s": "alipay",
    "exp_e": "wechat_security_verification",
-   "got_e": null,
-   "decision": "unknown",
-   "conf": 0.3,
+   "got_e": "alipay_setup_before_flight",
+   "decision": "ask",
+   "conf": 0.42,
    "mode": "model",
-   "ms": 3311,
+   "ms": 11413,
    "s_ok": false,
    "e_ok": false,
-   "ocr": "Bank Cards; CMBC Credit Card; Supports installment payment; "
+   "ocr": "Bank Cards / CMBC Credit Card / Supports installment payment"
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._ab3fe3.webp",
@@ -204,13 +204,13 @@
    "got_s": "wechat",
    "exp_e": "wechat_identity_verification",
    "got_e": "wechat_identity_verification",
-   "decision": "answer",
-   "conf": 0.72,
+   "decision": "ask",
+   "conf": 0.62,
    "mode": "model",
-   "ms": 2370,
+   "ms": 2374,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Country/Region  Micronesia / ID Effective Date  Select ID ef"
+   "ocr": "Country/Region  Micronesia | ID Effective Date  Select ID ef"
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._b2a563.webp",
@@ -219,13 +219,13 @@
    "got_s": "wechat",
    "exp_e": "wechat_identity_verification",
    "got_e": "wechat_identity_verification",
-   "decision": "answer",
-   "conf": 0.72,
+   "decision": "ask",
+   "conf": 0.62,
    "mode": "model",
-   "ms": 1581,
+   "ms": 3080,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Country/Region Micronesia; ID Effective Date Select ID effec"
+   "ocr": "Country/Region  Micronesia  ID Effective Date  Select ID eff"
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._b390c6.webp",
@@ -237,10 +237,10 @@
    "decision": "unknown",
    "conf": 0.3,
    "mode": "model",
-   "ms": 3363,
+   "ms": 2362,
    "s_ok": false,
    "e_ok": false,
-   "ocr": "English\n\"WeChat\" Would Like to Send You Notifications\nNotifi"
+   "ocr": "English / \"WeChat\" Would Like to Send You Notifications / No"
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._b59ed1.webp",
@@ -252,10 +252,10 @@
    "decision": "unknown",
    "conf": 0.35,
    "mode": "model",
-   "ms": 2647,
+   "ms": 2341,
    "s_ok": false,
    "e_ok": false,
-   "ocr": "12:24 Payment Settings Change Payment Password Forgot Paymen"
+   "ocr": "Payment Settings / Change Payment Password / Forgot Payment "
   },
   {
    "file": "blogs_wechat-pay-foreigners-guide._eb1561.webp",
@@ -265,12 +265,12 @@
    "exp_e": "wechat_identity_verification",
    "got_e": "wechat_identity_verification",
    "decision": "answer",
-   "conf": 0.7,
+   "conf": 0.72,
    "mode": "model",
-   "ms": 2367,
+   "ms": 2866,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Country/Region  Micronesia  ID Effective Date  Select ID eff"
+   "ocr": "Country/Region Micronesia; ID Effective Date – Select ID eff"
   },
   {
    "file": "tripcom_phone-how-to-use-alipay_45dc53.png",
@@ -282,7 +282,7 @@
    "decision": "answer",
    "conf": 0.92,
    "mode": "model",
-   "ms": 1467,
+   "ms": 1202,
    "s_ok": true,
    "e_ok": true,
    "ocr": "Identity Verification — To access this service, please selec"
@@ -297,7 +297,7 @@
    "decision": "unknown",
    "conf": 0.0,
    "mode": "model",
-   "ms": 1032,
+   "ms": 847,
    "s_ok": true,
    "e_ok": true,
    "ocr": ""
@@ -312,7 +312,7 @@
    "decision": "unknown",
    "conf": 0.0,
    "mode": "model",
-   "ms": 854,
+   "ms": 810,
    "s_ok": true,
    "e_ok": true,
    "ocr": ""
@@ -320,62 +320,62 @@
   {
    "file": "wildchina_a-guide-to-using-didi-in-chi_5a0762.jpg",
    "kind": "normal",
-   "exp_s": "alipay",
-   "got_s": "unknown",
-   "exp_e": "alipay_didi_miniprogram",
-   "got_e": null,
-   "decision": "unknown",
-   "conf": 0.15,
+   "exp_s": "didi",
+   "got_s": "didi",
+   "exp_e": "didi_payment_failed",
+   "got_e": "didi_payment_failed",
+   "decision": "ask",
+   "conf": 0.55,
    "mode": "model",
-   "ms": 2692,
-   "s_ok": false,
-   "e_ok": false,
-   "ocr": "Payment Methods / Auto Debit / Alipay Payment / e-CNY / WeCh"
+   "ms": 2888,
+   "s_ok": true,
+   "e_ok": true,
+   "ocr": "Payment Methods / Auto Debit / About Payment Methods / Alipa"
   },
   {
    "file": "wildchina_a-guide-to-using-didi-in-chi_5e75ac.jpg",
    "kind": "normal",
-   "exp_s": "alipay",
-   "got_s": "alipay",
-   "exp_e": "alipay_didi_miniprogram",
-   "got_e": "alipay_didi_miniprogram",
+   "exp_s": "didi",
+   "got_s": "didi",
+   "exp_e": "didi_payment_failed",
+   "got_e": "didi_payment_failed",
    "decision": "ask",
-   "conf": 0.5,
+   "conf": 0.45,
    "mode": "model",
-   "ms": 4766,
+   "ms": 2887,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "My Wallet | Balance | My Balance ¥ 0.00 | Payment Methods | "
+   "ocr": "My Wallet / Balance / My Balance ¥0.00 / Payment Methods / S"
   },
   {
    "file": "wildchina_a-guide-to-using-didi-in-chi_dc79f9.jpg",
    "kind": "normal",
-   "exp_s": "alipay",
+   "exp_s": "didi",
    "got_s": "unknown",
-   "exp_e": "alipay_didi_miniprogram",
+   "exp_e": "didi_setup_before_flight",
    "got_e": null,
    "decision": "unknown",
-   "conf": 0.2,
+   "conf": 0.35,
    "mode": "model",
-   "ms": 1960,
+   "ms": 2011,
    "s_ok": false,
    "e_ok": false,
-   "ocr": "My Trips, Wallet, Invoice, Help, Invite a friend Get 90% off"
+   "ocr": "My Trips, Wallet, Invoice, Help, Invite a friend, Get 90% of"
   },
   {
    "file": "wildchina_a-guide-to-using-didi-in-chi_e7286c.jpg",
    "kind": "normal",
-   "exp_s": "alipay",
-   "got_s": "alipay",
-   "exp_e": "alipay_didi_miniprogram",
-   "got_e": "alipay_didi_miniprogram",
+   "exp_s": "didi",
+   "got_s": "didi",
+   "exp_e": "didi_setup_before_flight",
+   "got_e": "didi_setup_before_flight",
    "decision": "ask",
    "conf": 0.4,
    "mode": "model",
-   "ms": 5552,
+   "ms": 2692,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Shanghai ▾ | Scan | Far Away | Jishi Lake | 990 Tongxin Road"
+   "ocr": "Shanghai, Scan, Far Away, Jishi Lake, 990 Tongxin Road Resid"
   },
   {
    "file": "wildchina_guide-to-using-alipay-2026.m_171182.jpg",
@@ -385,12 +385,12 @@
    "exp_e": "alipay_setup_before_flight",
    "got_e": "alipay_setup_before_flight",
    "decision": "ask",
-   "conf": 0.62,
+   "conf": 0.55,
    "mode": "model",
-   "ms": 2470,
+   "ms": 2698,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "City Search | Scan Pay Collect Pocket | DiDi Trip Air/Train "
+   "ocr": "City Search — Scan, Pay, Collect, Pocket; DiDi, Trip Air/Tra"
   },
   {
    "file": "wildchina_guide-to-using-alipay-2026.m_2ebd9a.jpg",
@@ -400,12 +400,12 @@
    "exp_e": "alipay_sms_code_not_received",
    "got_e": "alipay_sms_code_not_received",
    "decision": "ask",
-   "conf": 0.55,
+   "conf": 0.5,
    "mode": "model",
-   "ms": 2468,
+   "ms": 2840,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "ALIPAY · now Sign-up verification code: 937461... COPY '9374"
+   "ocr": "ALIPAY · now Sign-up verification code: 937461. ... COPY '93"
   },
   {
    "file": "wildchina_guide-to-using-alipay-2026.m_4661db.jpg",
@@ -417,7 +417,7 @@
    "decision": "answer",
    "conf": 0.88,
    "mode": "model",
-   "ms": 1825,
+   "ms": 1561,
    "s_ok": true,
    "e_ok": true,
    "ocr": "tourcard | All Mini-apps Lifestyle Finance City Services | t"
@@ -430,12 +430,12 @@
    "exp_e": "alipay_tourcard",
    "got_e": "alipay_tourcard",
    "decision": "answer",
-   "conf": 0.92,
+   "conf": 0.95,
    "mode": "model",
-   "ms": 1866,
+   "ms": 1501,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Tour card / Tour Card / Your prepaid card for mobile payment"
+   "ocr": "Tour card, Tour Card, Your prepaid card for mobile payment i"
   },
   {
    "file": "wildchina_guide-to-using-alipay-2026.m_ea5be0.jpg",
@@ -447,10 +447,10 @@
    "decision": "ask",
    "conf": 0.5,
    "mode": "model",
-   "ms": 2078,
+   "ms": 2332,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Help / Welcome to Alipay / +1 888 888 8888 / Next / If the m"
+   "ocr": "Help; Welcome to Alipay; +1 · 888 888 8888; Next; If the mob"
   },
   {
    "file": "wildchina_guide-to-using-alipay-2026.m_ff6b2f.jpg",
@@ -460,12 +460,12 @@
    "exp_e": "alipay_card_bind_failed",
    "got_e": "alipay_card_bind_failed",
    "decision": "ask",
-   "conf": 0.45,
+   "conf": 0.5,
    "mode": "model",
-   "ms": 5268,
+   "ms": 5052,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Add Bank Card / The following cards are accepted. / VISA Mas"
+   "ocr": "Add Bank Card / The following cards are accepted. / VISA, Ma"
   },
   {
    "file": "wildchina_wechat-pay-in-2026_0b7d21.png",
@@ -475,9 +475,9 @@
    "exp_e": "wechat_security_verification",
    "got_e": "wechat_setup_before_flight",
    "decision": "ask",
-   "conf": 0.4,
+   "conf": 0.5,
    "mode": "model",
-   "ms": 3458,
+   "ms": 2733,
    "s_ok": true,
    "e_ok": false,
    "ocr": "Enter card information / Valid Date 04 / 28 / CVV Code *** /"
@@ -492,10 +492,10 @@
    "decision": "ask",
    "conf": 0.4,
    "mode": "model",
-   "ms": 2359,
+   "ms": 2005,
    "s_ok": true,
    "e_ok": false,
-   "ocr": "WeChat / Search / 新建聊天 New Chat / Add Contacts / Scan / Mone"
+   "ocr": "WeChat / Search / New Chat / Add Contacts / Scan / Money / I"
   },
   {
    "file": "wildchina_wechat-pay-in-2026_46c96e.png",
@@ -505,9 +505,9 @@
    "exp_e": "wechat_setup_before_flight",
    "got_e": "wechat_how_to_pay",
    "decision": "ask",
-   "conf": 0.4,
+   "conf": 0.5,
    "mode": "model",
-   "ms": 4593,
+   "ms": 3147,
    "s_ok": true,
    "e_ok": false,
    "ocr": "Payment Password / Confirm Password / 1 2 3 4 5 6 7 8 9 0 (n"
@@ -520,12 +520,12 @@
    "exp_e": "wechat_setup_before_flight",
    "got_e": null,
    "decision": "unknown",
-   "conf": 0.25,
-   "mode": "model",
-   "ms": 10476,
+   "conf": 0.0,
+   "mode": "rules",
+   "ms": 12962,
    "s_ok": false,
    "e_ok": false,
-   "ocr": "Sign Up with Mobile / Full Name John Appleseed / Region Sing"
+   "ocr": ""
   },
   {
    "file": "wildchina_wechat-pay-in-2026_8ec814.png",
@@ -535,12 +535,12 @@
    "exp_e": "wechat_setup_before_flight",
    "got_e": null,
    "decision": "unknown",
-   "conf": 0.3,
+   "conf": 0.38,
    "mode": "model",
-   "ms": 3131,
+   "ms": 2146,
    "s_ok": false,
    "e_ok": false,
-   "ocr": "Johnny / WeChat ID: DIIN&$£)28283jssj1 / + Status / Services"
+   "ocr": "Johnny WeChat ID: DIIN&$£)j28283jssj1 + Status Services Favo"
   },
   {
    "file": "wildchina_wechat-pay-in-2026_92366e.png",
@@ -550,12 +550,12 @@
    "exp_e": "wechat_security_verification",
    "got_e": "wechat_security_verification",
    "decision": "ask",
-   "conf": 0.62,
+   "conf": 0.6,
    "mode": "model",
-   "ms": 2244,
+   "ms": 2832,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Add Bank Card\nTo complete the security verification, please "
+   "ocr": "Add Bank Card — To complete the security verification, pleas"
   },
   {
    "file": "wildchina_wechat-pay-in-2026_acd9c4.png",
@@ -565,12 +565,12 @@
    "exp_e": "wechat_how_to_pay",
    "got_e": "wechat_how_to_pay",
    "decision": "ask",
-   "conf": 0.66,
+   "conf": 0.62,
    "mode": "model",
-   "ms": 2201,
+   "ms": 2375,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "Money, Payment Code, Balance will be used first, barcode, QR"
+   "ocr": "Money — Payment Code — Balance will be used first — barcode "
   },
   {
    "file": "wildchina_wechat-pay-in-2026_ad08e8.png",
@@ -579,13 +579,13 @@
    "got_s": "wechat",
    "exp_e": "wechat_sms_code_not_received",
    "got_e": "wechat_sms_code_not_received",
-   "decision": "ask",
-   "conf": 0.55,
+   "decision": "answer",
+   "conf": 0.72,
    "mode": "model",
-   "ms": 9182,
+   "ms": 2270,
    "s_ok": true,
    "e_ok": true,
-   "ocr": "27-03-2024 16:08:16. Use the code (606808) on Wechat to log "
+   "ocr": "Verify Mobile / 27-03-2024 16:08:16: Use the code (606808) o"
   },
   {
    "file": "wildchina_wechat-pay-in-2026_fb0b81.png",
@@ -595,12 +595,12 @@
    "exp_e": "wechat_setup_before_flight",
    "got_e": "wechat_security_verification",
    "decision": "answer",
-   "conf": 0.92,
+   "conf": 0.88,
    "mode": "model",
-   "ms": 1299,
+   "ms": 1734,
    "s_ok": true,
    "e_ok": false,
-   "ocr": "Select a Security Verification Method / Verify via Payment C"
+   "ocr": "Select a Security Verification Method\nVerify via Payment Car"
   }
  ]
 }
