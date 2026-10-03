@@ -65,6 +65,8 @@
       <div id="tutPrev" style="flex:1;height:48px;border-radius:24px;background:${BG};color:${INK};font:600 15px/48px Inter,sans-serif;text-align:center;cursor:pointer">Previous</div>
       <div id="tutNext" style="flex:2;height:48px;border-radius:24px;background:${BLUE};color:#fff;font:600 15px/48px Inter,sans-serif;text-align:center;cursor:pointer">Next step</div>
     </div>`;
+  // 顶部放设计稿同款 iOS 状态栏（浅色版，从 Wi-Fi 引导屏克隆），标题区不再留 54px 空白
+  (() => { const sb = document.querySelector('.screen[data-route="wifi"] [data-pencil-name="Status Bar"]'); if (!sb) return; const c = sb.cloneNode(true); c.style.flexShrink = '0'; tut.insertBefore(c, tut.firstChild); c.nextElementSibling.style.padding = '0 20px 0'; })();
   const screens = document.querySelectorAll('#phone > .screen');
   if (screens.length) screens[screens.length - 1].after(tut);
   if (typeof order !== 'undefined' && !order.includes('tutorial')) order.push('tutorial');
