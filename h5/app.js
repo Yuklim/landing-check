@@ -124,6 +124,22 @@
   if (!API) { status('静态模式'); window.lcHandle = (act) => staticHandle(act); window.lcOnShow = () => {}; return; }
   get('/health').then(() => status('后端已连接 · ' + API.replace(/^https?:\/\//, ''), 'rgba(27,166,114,.85)')).catch(() => status('后端不可达，静态模式', 'rgba(232,137,12,.9)'));
 
+  // ---------- 航班信息：把设计稿里写死的 CX 362 / HKG / 时间换成接口里的航班（6 个屏共用） ----------
+  async function renderFlight() {
+    let f; try { f = await get('/mock/flight'); } catch (e) { return; }
+    if (!f || !f.number) return;
+    const dep = (f.scheduled_departure || '').slice(11, 16), arr = (f.scheduled_arrival || '').slice(11, 16);
+    const nextDay = f.scheduled_departure && f.scheduled_arrival && f.scheduled_departure.slice(0, 10) !== f.scheduled_arrival.slice(0, 10);
+    const d = f.scheduled_arrival ? new Date(f.scheduled_arrival.replace(' ', 'T')) : null;
+    const dateS = d ? d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).replace(',', '') : 'Fri Sep 25';
+    const from = (f.from && f.from.code) || 'HKG', to = (f.to && f.to.code) || 'PVG';
+    const swap = t => t.replace(/CX 362/g, f.number).replace(/HKG/g, from).replace(/11:05/g, dep || '11:05').replace(/14:20/g, arr || '14:20').replace(/Fri Sep 25/g, dateS);
+    [['home', 'Banner Sub'], ['preflight', 'Flight No'], ['preflight', 'Flight Time'], ['transfer', 'Time Title'], ['lock', 'Title'], ['lock', 'Body'], ['trips', 'Booking Title'], ['transfers', 'Flight Text']].forEach(([r, n]) => {
+      document.querySelectorAll(`.screen[data-route="${r}"] [data-pencil-name="${n}"]`).forEach(el => { if (/CX 362|HKG|Fri Sep 25/.test(el.textContent)) txt(el, swap(el.textContent.trim()) + (n === 'Flight Time' && nextDay ? ' +1' : '')); });
+    });
+  }
+  renderFlight();
+
   // ---------- 行前检查 ----------
   const ICONS = {};
   function captureIcons() {
