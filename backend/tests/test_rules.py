@@ -74,7 +74,8 @@ def test_transport_default_is_taxi_because_two_bags():
     r = rules.transport(t())
     assert r['recommended']['id'] == 'taxi' and r['night'] is False
     assert [a['id'] for a in r['alternatives']] == ['metro', 'didi']
-    assert 'Landed 14:20' in r['facts'] and r['recommended']['price'] == '¥160–200'
+    landed = 'Landed ' + TRIP['flight']['scheduled_arrival'][-5:]
+    assert landed in r['facts'] and r['recommended']['price'] == '¥160–200'
 
 
 def test_transport_night_landing_taxi_with_transfer_alt():

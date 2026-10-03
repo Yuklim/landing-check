@@ -23,7 +23,10 @@
       "账户受限",
       "风险",
       "冻结",
-      "你好中国"
+      "你好中国",
+      "申诉",
+      "功能受限",
+      "未认证"
     ],
     "keywords_en": [
       "Alipay",
@@ -44,17 +47,28 @@
       "restricted",
       "risk",
       "Nihao China",
-      "personal collection code"
+      "personal collection code",
+      "ID Validated",
+      "Not Authenticated",
+      "mainland bank card",
+      "account restricted",
+      "Appeal",
+      "Merchant does not support payment via international bank cards",
+      "payment environment not secure",
+      "does not support functions like transfer",
+      "Collection restriction"
     ],
-    "visual_cues": "Blue Alipay app chrome. Screens with a bank-card form (card number, expiry, CVV), a red or grey failure banner, a passport-upload prompt, a QR payment code page, or a mini-program named TourCard.",
+    "visual_cues": "Blue Alipay app chrome. Screens with a bank-card form (card number, expiry, CVV), a red or grey failure banner, a passport-upload prompt, a QR payment code page, or a mini-program named TourCard. Restriction screens show a red or orange banner with an Appeal button. Identity Information page shows a status line such as ID Validated - Not Authenticated.",
     "sub_steps": [
       "alipay_setup_before_flight",
       "alipay_card_bind_failed",
       "alipay_sms_code_not_received",
       "alipay_payment_declined",
       "alipay_identity_verification",
+      "alipay_not_authenticated",
       "alipay_tourcard",
       "alipay_how_to_pay",
+      "alipay_transfer_to_person",
       "alipay_didi_miniprogram",
       "alipay_account_locked",
       "alipay_nihao_china"
@@ -145,9 +159,9 @@
         "Install Alipay from the App Store or Google Play. Outside China it opens in English automatically.",
         "Sign up with your own mobile number (any country) and enter the SMS code. No Chinese number or Chinese bank account is needed.",
         "Tap Me > Bank Cards > Add Now. Set a 6-digit payment password, then add one mainstream credit card: Visa, Mastercard, American Express, JCB, Discover, Diners Club or UnionPay.",
-        "Tap Me > Settings > Account & Security > Identity Verification. Upload your passport photo page and do the face check. Do this now, not later."
+        "Tap Me > Settings > Account & Security > Identity Verification and upload your passport photo page. Outside China the status usually stops at ID Validated - Not Authenticated: that is normal and enough to pay. Do not tap Complete and do not bind a mainland bank card; finish the face check after landing."
       ],
-      "fallback": "If the card will not link, see Card won't link. If you prefer not to link a card, open TourCard inside Alipay as a prepaid wallet.",
+      "fallback": "If the card will not link, see Card won't link. Set up WeChat Pay with the same card as a backup before you fly; restrictions and refusals hit one app far more often than both.",
       "applies_to": [
         "ios",
         "android"
@@ -183,6 +197,21 @@
           "name": "WildChina · Guide to Using Alipay in 2026",
           "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/",
           "date": "2026-05-29"
+        },
+        {
+          "name": "Reddit r/travelchina · Alipay asking me for Mainland China bank card (↑2, support explanation: no face check in EU/US ↑3)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1tkh9z1/alipay_asking_me_for_mainland_china_bank_card_for/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/chinatravel · Alipay Not Authenticated identity information (↑2)",
+          "url": "https://www.reddit.com/r/chinatravel/comments/1txeyao/alipay_not_authenticated_identity_information/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Calm my nerves about digital payments (↑0, No need for Tour Card ↑10; 3% fee is real ↑6)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1e9mxnj/calm_my_nerves_about_digital_payments/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-03",
@@ -202,12 +231,28 @@
           "fact": "Card-adding path Me > Bank Cards > Add",
           "status": "verified",
           "note": "Beijing gov Payment Services: Me > Bank Cards > Add bank cards. Nantong gov FAQ: 我的 > 银行卡 > 立即绑定. The readyforchina demo GIF reaches the same page via Me > Settings > Bank Cards."
+        },
+        {
+          "fact": "Outside China (EU, UK, US) Alipay does not offer the face check, so verification stops at ID Validated - Not Authenticated and payments to merchants still work",
+          "status": "verified",
+          "note": "Alipay support explanation quoted on Reddit (1tkh9z1 ↑3) and confirmed by several users whose payments worked in that state (1ve79qo, 1txeyao, 1s0l36o)."
+        },
+        {
+          "fact": "Wise and Revolut cards link and pay reliably; prepaid and travel cards are often refused",
+          "status": "verified",
+          "note": "Multiple independent Reddit reports 2024-2026 (1e9mxnj ↑7, 1m6pxcm ↑6, 1sduf2z ↑3, 1g16m8i ↑2)."
+        },
+        {
+          "fact": "One 2026 report of American Express giving \"account not supported\"",
+          "status": "unverified",
+          "note": "Single Reddit report (1qtl60s); official release says Amex-issued cards are eligible."
         }
       ],
       "related": [
+        "alipay_not_authenticated",
         "alipay_card_bind_failed",
         "alipay_identity_verification",
-        "alipay_tourcard"
+        "alipay_account_locked"
       ],
       "reader_links": [
         {
@@ -283,10 +328,10 @@
       "steps": [
         "Try a different card first: a credit card from a major bank on another network (Visa if Mastercard failed, or the reverse). Fintech cards such as Wise or Revolut succeed more often than traditional bank cards.",
         "In your banking app turn on International transactions and Online purchases, wait a few minutes, then add the card again. If it still fails, call the bank: say you are in China paying through Alipay and the merchant will show as Alipay or Ant Group.",
-        "Make the name on the card, your passport and your Alipay profile match exactly, including middle names, then finish Identity Verification (Me > Settings > Account & Security) before adding the card again.",
+        "Make the name on the card, your passport and your Alipay profile match exactly, including middle names. Upload the passport page first (ID Validated is enough outside China). If Alipay then asks for a photo of you holding the passport and the card, that is its normal second check: do it in good light.",
         "Still refused: set up Nihao China instead. It is the official inbound-visitor app, registers with an email address or Apple account, links UnionPay, Visa and Mastercard cards, and does not depend on an Alipay card link."
       ],
-      "fallback": "Open TourCard inside Alipay as a prepaid wallet, or withdraw cash at a Bank of China ATM with your foreign card. Alipay English support: +86 571 2688 6000, daily 08:00-24:00.",
+      "fallback": "Add the same card to WeChat Pay instead; many cards refused by one app link in the other. Otherwise withdraw cash at a Bank of China ATM. Tour Pass is a last resort: 5% per top-up and frequent sign-up errors. Alipay English support: +86 571 2688 6000, daily 08:00-24:00.",
       "applies_to": [
         "ios",
         "android"
@@ -322,6 +367,16 @@
           "name": "Trip.com · Nihao China App: Setup, Card Link & Payment Guide",
           "url": "https://www.trip.com/guide/info/nihao-china-app.html",
           "date": "2026-06-12"
+        },
+        {
+          "name": "Reddit r/transferwiser · AliPay Merchant Services Pte. Ltd debit card verification on Wise (↑5)",
+          "url": "https://www.reddit.com/r/transferwiser/comments/1s2ji2j/alipay_merchant_services_pte_ltd/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Calm my nerves about digital payments (↑0, No need for Tour Card ↑10; 3% fee is real ↑6)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1e9mxnj/calm_my_nerves_about_digital_payments/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-03",
@@ -336,13 +391,30 @@
           "fact": "Bank of China ATMs accept Visa/Mastercard/JCB/Amex, 3,000 RMB per withdrawal",
           "status": "unverified",
           "note": "Single source (WaysChina). Check before quoting the cap."
+        },
+        {
+          "fact": "Wise shows a debit card verification request from \"AliPay Merchant Services Pte. Ltd\" when linking; approve it in the Wise app",
+          "status": "verified",
+          "note": "Three independent Reddit reports (1s2ji2j, 1jvhojo, 1n9xk6k)."
+        },
+        {
+          "fact": "Prepaid and travel money cards are refused by the bank-side check; Capital One, Fidelity and Monzo refusals reported",
+          "status": "unverified",
+          "note": "Single reports each (1g16m8i, 1vp7loc, 1w95qun)."
+        },
+        {
+          "fact": "Nihao China has no Reddit reports yet",
+          "status": "unverified",
+          "note": "Zero mentions across 608 threads collected 2026-10-03; keep it as a documented option, not a user-proven one."
         }
       ],
       "related": [
+        "alipay_not_authenticated",
         "alipay_identity_verification",
         "alipay_tourcard",
         "alipay_nihao_china",
-        "alipay_account_locked"
+        "alipay_account_locked",
+        "wechat_card_unsupported"
       ],
       "tags": [
         "payment",
@@ -356,11 +428,11 @@
       "why": "The code goes to the number you registered with. After landing, many phones are on a new eSIM or have roaming off, so the SMS to your home number never arrives.",
       "steps": [
         "Make sure the SIM that owns your registered number can receive texts: turn on roaming for that line, or switch it back on if you disabled it for an eSIM.",
-        "On the code screen choose the voice-call option if offered. Alipay can read the code out in an automated call.",
-        "Wait about a minute before requesting again. Repeated taps can lock requests for a few minutes.",
-        "Check your country code is correct on the login screen and that the number has no leading zero."
+        "Turn Wi-Fi off so the phone is on mobile data only, then request the code again after about a minute. Repeated taps pause delivery.",
+        "Check the country code and that the number has no leading zero. Check the spam or filtered messages folder; on iPhone turn off Filter Unknown Senders.",
+        "If the screen offers a voice call or email option, use it."
       ],
-      "fallback": "If your home number cannot receive texts in China at all, you cannot log in until it can: turn roaming on for that line, or contact Alipay support at +86 571 2688 6000 to change the registered number.",
+      "fallback": "If your home number cannot receive texts in China at all, log in with the email address on the account if one is set, or contact Alipay support at +86 571 2688 6000 to change the registered number.",
       "applies_to": [
         "ios",
         "android"
@@ -376,6 +448,11 @@
           "name": "Trip.com · How to Use Alipay in China for Foreigners 2026",
           "url": "https://www.trip.com/guide/phone/how-to-use-alipay.html",
           "date": "2026-04-08"
+        },
+        {
+          "name": "Reddit r/travelchina · SMS verification code tips (↑3)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1s0l36o/wechat_sms_verification_code/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-02",
@@ -383,8 +460,13 @@
       "facts": [
         {
           "fact": "Alipay offers a voice-call delivery of the verification code",
-          "status": "verified",
-          "note": "WildChina registration section."
+          "status": "unverified",
+          "note": "WildChina registration section; no Reddit user confirms seeing it, so the body says \"if offered\"."
+        },
+        {
+          "fact": "Wi-Fi off plus mobile data only, and checking filtered messages, fixed delivery for some users",
+          "status": "unverified",
+          "note": "Single Reddit thread with two confirmations (1s0l36o)."
         }
       ],
       "related": [
@@ -404,10 +486,10 @@
       "title": "Payment failed at the counter",
       "why": "Three different things look the same at the counter: your bank refused the charge, the shop showed a personal collection code that foreign cards cannot pay, or you hit a limit. Alipay prints a short reason on the failure screen.",
       "steps": [
-        "Ask the cashier to scan YOUR code instead: open Pay/Receive and show the barcode. Foreign cards cannot pay a person's own collection QR, only registered merchant codes, and scanning their code at a stall or small shop fails for that reason.",
+        "If the card is greyed out or the screen says Merchant does not support payment via international bank cards, the shop is using a personal collection code, which foreign cards cannot pay. Ask for a merchant code or offer your own code to scan; if neither works, pay with WeChat Pay or cash. It is not a fault in your account.",
         "Issuer declined or Bank declined means your bank. Retry once, then turn on international and online payments in your banking app, or call the bank to allow charges from Alipay / Ant Group in China.",
         "Limit exceeded or a request for ID means you hit the unverified allowance. Complete Identity Verification (Me > Settings > Account & Security), then pay again. For large amounts, ask to split the bill.",
-        "Quick test: try the same card for a small payment in WeChat Pay. If both fail, it is the card or bank. If only Alipay fails, reopen Alipay, update it, and switch from Wi-Fi to mobile data."
+        "Quick test: try the same card for a small payment in WeChat Pay. If both fail, it is the card or bank. If only Alipay fails, reopen Alipay, update it, and switch from Wi-Fi to mobile data. Do not keep retrying: repeated failures can restrict the account."
       ],
       "fallback": "Pay with cash. Every merchant in China must accept RMB cash by law; withdraw at a Bank of China ATM with your foreign card. If the account says it is locked, see Account locked.",
       "applies_to": [
@@ -440,6 +522,11 @@
           "name": "People's Bank of China · Xinhua report on measures for inbound visitors' mobile payment (single 5,000 USD, annual 50,000 USD; simplified identity verification)",
           "url": "https://www.pbc.gov.cn/redianzhuanti/118742/5275415/5275421/5391688/index.html",
           "date": "2024-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Merchant does not support payment via international bank cards (↑10)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1p6uixs/merchant_does_not_support_payment_via/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-03",
@@ -447,8 +534,8 @@
       "facts": [
         {
           "fact": "Payments under 200 RMB are fee-free; above 200 RMB a 3% fee applies",
-          "status": "unverified",
-          "note": "No Alipay page states the fee. Trip.com's card guide and most third-party guides say fee-free up to 200 RMB and 3% above. Nantong gov FAQ states the same rule for WeChat Pay only. Body keeps 'expect a fee line'."
+          "status": "verified",
+          "note": "Trip.com card guide plus at least five independent Reddit confirmations 2024-2026 (1e9mxnj ↑6, 1bys9g8 ↑2, 1m6pxcm ↑4, 1vvx0nj, 1l2thjl). No Alipay page states it, so the body still says 'check the fee line'."
         },
         {
           "fact": "Minimum transaction 10 RMB",
@@ -464,12 +551,23 @@
           "fact": "Foreign cards cannot pay personal collection codes, only merchant codes; there is no visual difference",
           "status": "verified",
           "note": "PayInChinaGuide and Trip.com both state it."
+        },
+        {
+          "fact": "Message \"payment environment not secure\" appears when traffic is routed through another country; turning that off fixes it",
+          "status": "verified",
+          "note": "Reddit 1izxwc4 ↑7 and others."
+        },
+        {
+          "fact": "A failed or test payment can itself trigger a restriction",
+          "status": "unverified",
+          "note": "Single reports (1wt6nqa, 1ri5oa9 comment) that payments to unknown test merchants led to a restriction."
         }
       ],
       "related": [
         "alipay_identity_verification",
         "alipay_card_bind_failed",
-        "alipay_account_locked"
+        "alipay_account_locked",
+        "alipay_transfer_to_person"
       ],
       "tags": [
         "payment",
@@ -482,12 +580,12 @@
       "title": "Alipay asks for your passport",
       "why": "Chinese rules let you spend a small total without ID. Past that, or for larger single payments, Alipay must verify your passport before it lets the payment through.",
       "steps": [
-        "Tap Me > Settings > Account & Security > Identity Verification. When asked for region choose Non-Mainland China, then Passport. Choosing Mainland China asks for a Chinese ID number and fails.",
-        "Photograph the passport photo page flat, in daylight, no glare, all four corners visible. If the photo keeps failing, retry on a plain dark background with the flash off.",
+        "Tap Me > Settings > Account & Security > Identity Verification and choose Passport as the ID type. If the only option shown is to bind a mainland bank card, you are outside China where the face check is not offered: stop at ID Validated and finish after landing (see ID Validated - Not Authenticated).",
+        "Photograph the passport photo page flat, in daylight, no glare, all four corners visible. If the app offers to read the passport chip and says Reading failed, skip it: the chip reader works for Chinese passports only.",
         "Type your name exactly as the passport prints it, including middle names and suffixes, and make the linked card's name match. For the face check, face a window, remove glasses, hold still.",
-        "Wait. Most checks finish within minutes; a manual review can take a day or more. After 3 to 5 failed attempts the flow locks for 24 hours, so stop retrying and wait."
+        "Stop after two failed face checks. Repeated failures restrict the account and the Appeal button can disappear. Open Help Center, tell the assistant it was not helpful and ask for a customer service representative; they request a photo of you holding the passport and clear it, usually the same day."
       ],
-      "fallback": "Still rejected after a day: contact Alipay support in the app (Me > Settings > Help Center) or call +86 571 2688 6000 for a manual review, which takes a few working days. Meanwhile use Nihao China or cash.",
+      "fallback": "Still rejected after a day: call +86 571 2688 6000 for a manual review. Meanwhile pay with WeChat Pay or cash; payments at ID Validated level keep working for everyday amounts.",
       "applies_to": [
         "ios",
         "android"
@@ -518,6 +616,16 @@
           "name": "People's Bank of China · Xinhua report on measures for inbound visitors' mobile payment (single 5,000 USD, annual 50,000 USD; simplified identity verification)",
           "url": "https://www.pbc.gov.cn/redianzhuanti/118742/5275415/5275421/5391688/index.html",
           "date": "2024-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Account restricted and stuck in appeal loop (↑4, human agent via Help Center ↑7; NFC only for Chinese passports ↑7)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1wuii4i/alipay_issue_account_restricted_and_stuck_in/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Alipay asking me for Mainland China bank card (↑2, support explanation: no face check in EU/US ↑3)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1tkh9z1/alipay_asking_me_for_mainland_china_bank_card_for/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-03",
@@ -540,13 +648,25 @@
         },
         {
           "fact": "3-5 failed attempts lock verification for 24 hours",
+          "status": "unverified",
+          "note": "Trip.com and ChinaVigators say so; Reddit users instead report the account being restricted and the Appeal button disappearing after repeated liveness failures (1t0r71e, 1viblua)."
+        },
+        {
+          "fact": "Passport chip (NFC) reading fails for non-Chinese passports with \"Reading failed: Your passport information wasn't recognized\"",
           "status": "verified",
-          "note": "Trip.com and ChinaVigators agree."
+          "note": "Reddit 1wuii4i ↑7 and 1v6zxn4 ↑2 agree it only works for Chinese passports."
+        },
+        {
+          "fact": "Human support reachable by telling the Help Center bot \"not helpful\" and asking for a representative",
+          "status": "verified",
+          "note": "Reddit 1wuii4i ↑7, confirmed by several users in restriction threads."
         }
       ],
       "related": [
+        "alipay_not_authenticated",
         "alipay_payment_declined",
-        "alipay_card_bind_failed"
+        "alipay_card_bind_failed",
+        "alipay_account_locked"
       ],
       "tags": [
         "payment",
@@ -554,10 +674,78 @@
       ]
     },
     {
+      "id": "alipay_not_authenticated",
+      "stage": "anytime",
+      "title": "Alipay shows ID Validated - Not Authenticated or asks for a mainland bank card",
+      "why": "Outside China, especially in the EU, UK and US, Alipay does not run its face check, so the only option it shows is to bind a mainland bank card. The status ID Validated - Not Authenticated is the normal stopping point abroad and payments to merchants work.",
+      "steps": [
+        "Stop at ID Validated - Not Authenticated. It is enough for paying shops, taxis and DiDi. Do not tap Complete and never tap Verify Chinese Mainland bank; that path cannot be undone from abroad and leaves verification stuck.",
+        "If a screen says the current situation does not support foreign bank cards and asks whether to continue adding a bank card, tap Cancel. You are in the mainland-resident flow by mistake. Go back to Me > Settings > Account & Security > Identity Verification and choose Passport.",
+        "After landing in China, open Identity Verification again. The face check is now offered; finish it before any large payment.",
+        "If verification is stuck after a wrong tap or a failed face check, do not retry. Open Help Center, tell the assistant it was not helpful and ask for a customer service representative, then send the photo of you holding your passport when asked."
+      ],
+      "fallback": "If a payment is refused for missing verification before you can finish the face check, use WeChat Pay or cash. Taobao and other apps that jump to Alipay for real-name checks accept the same passport verification once it is done.",
+      "applies_to": [
+        "ios",
+        "android"
+      ],
+      "scope": "global",
+      "sources": [
+        {
+          "name": "Reddit r/travelchina · Alipay asking me for Mainland China bank card (↑2, support explanation: no face check in EU/US ↑3)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1tkh9z1/alipay_asking_me_for_mainland_china_bank_card_for/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/chinatravel · Alipay Not Authenticated identity information (↑2)",
+          "url": "https://www.reddit.com/r/chinatravel/comments/1txeyao/alipay_not_authenticated_identity_information/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Alipay Real Name verification is stuck (↑3)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1uc0bm6/alipay_real_name_verification_is_stuck/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Account restricted and stuck in appeal loop (↑4, human agent via Help Center ↑7; NFC only for Chinese passports ↑7)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1wuii4i/alipay_issue_account_restricted_and_stuck_in/",
+          "date": "2026-10-03"
+        }
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "high",
+      "facts": [
+        {
+          "fact": "Alipay support: in Europe and the US the face recognition service is not provided, so only mainland-bank-card binding is shown; verification by face is available once in China",
+          "status": "verified",
+          "note": "Support message quoted by a user (1tkh9z1 ↑3) and matched by several others told to re-upload after arrival (1o0anhh, 1w3fkt9 ↑2, 1m98d1o ↑2)."
+        },
+        {
+          "fact": "Payments work at ID Validated - Not Authenticated; the app popup says full authentication is only needed when a restricted service prompts for it",
+          "status": "verified",
+          "note": "Popup text quoted in 1txeyao; payments confirmed in 1ve79qo and 1s0l36o."
+        },
+        {
+          "fact": "Tapping Verify Chinese Mainland bank by mistake leaves the status stuck with no self-service way back",
+          "status": "unverified",
+          "note": "Single report (1uc0bm6 ↑3); no user reported a fix other than support."
+        }
+      ],
+      "related": [
+        "alipay_identity_verification",
+        "alipay_account_locked",
+        "alipay_setup_before_flight"
+      ],
+      "tags": [
+        "verification",
+        "abroad"
+      ]
+    },
+    {
       "id": "alipay_tourcard",
       "stage": "anytime",
       "title": "Use Tour Pass (TourCard) when your card won't link",
-      "why": "Tour Pass, often called TourCard, is a prepaid card inside Alipay issued by Bank of Shanghai. You top it up from your foreign card, so it works even when direct card linking is refused. Each top-up carries a 5% service charge.",
+      "why": "Tour Pass, often called TourCard, is a prepaid card inside Alipay issued by Bank of Shanghai, topped up from your foreign card with a 5% service charge. Since 2024 a passport-verified account with a linked card does the same job without the fee, and the mini-program often fails at sign-up or phone binding, so treat it as the last resort.",
       "steps": [
         "In Alipay, type Tour Pass or TourCard in the top search bar and open the mini-program.",
         "Register with your passport when prompted.",
@@ -595,6 +783,16 @@
           "name": "ChinaGuidelines · Tour Card 完整申请与使用指南 (中文)",
           "url": "https://chinaguidelines.com/zh/posts/tour-card",
           "date": "2026"
+        },
+        {
+          "name": "Reddit r/travelchina · Calm my nerves about digital payments (↑0, No need for Tour Card ↑10; 3% fee is real ↑6)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1e9mxnj/calm_my_nerves_about_digital_payments/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Payment Visa/Mastercard/TourCard (↑1, TourCard mini-program not working 2026-03)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1s2uiyh/payment_visamastercardtourcard/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-03",
@@ -619,6 +817,11 @@
           "fact": "No transfers to own or other people's cards",
           "status": "verified",
           "note": "Agreement explicitly forbids using the card for transfers or remittance. PayInChinaGuide's claim of peer-to-peer transfer is wrong."
+        },
+        {
+          "fact": "Travellers consistently report TourCard as unnecessary since 2024 and the mini-program as unreliable (phone number mismatch, sign-up failing without reason, codes not arriving)",
+          "status": "verified",
+          "note": "Reddit 1e9mxnj ↑10, 1kqg8hc ↑3, 1etk63l ↑2, 13dvcs4 ↑11, 1s2uiyh (2026-03 \"not working at all\")."
         }
       ],
       "related": [
@@ -642,11 +845,11 @@
       "why": "There are two directions: the cashier scans you, or you scan the shop's printed code. Small stalls usually have a printed code; chains and taxis scan you.",
       "steps": [
         "To be scanned: open Alipay, tap Pay/Receive at the top, hold the barcode and QR code to the scanner. Enter your 6-digit payment password if asked.",
-        "To scan them: tap Scan, point at the shop's printed QR code, type the amount the cashier tells you, confirm. Foreign cards can only pay registered merchant codes, so if a stall's code fails, ask them to scan yours instead.",
+        "To scan them: tap Scan, point at the shop's printed QR code, type the amount the cashier tells you, confirm. Foreign cards can only pay registered merchant codes; if a stall's code fails or the card is greyed out, pay with WeChat Pay or cash.",
         "Check the confirmation screen for the amount and any fee line, then confirm.",
         "Online, choose Alipay at checkout; the site opens the app or shows a QR code for you to scan."
       ],
-      "fallback": "If the code will not scan, ask the cashier to scan yours instead, or pay cash.",
+      "fallback": "If the code will not scan, ask the cashier to scan yours instead, or pay cash. Metro gates: the transport code mini-program may refuse foreign cards; buy a single ticket or tap the physical card at gates that take it.",
       "applies_to": [
         "ios",
         "android"
@@ -662,16 +865,86 @@
           "name": "Beijing Government · Payment Services",
           "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html",
           "date": "2024-08-30"
+        },
+        {
+          "name": "Reddit r/travelchina · Merchant does not support payment via international bank cards (↑10)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1p6uixs/merchant_does_not_support_payment_via/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-02",
       "volatility": "low",
       "related": [
-        "alipay_payment_declined"
+        "alipay_payment_declined",
+        "alipay_transfer_to_person"
       ],
       "tags": [
         "payment",
         "howto"
+      ],
+      "facts": [
+        {
+          "fact": "Metro transport codes often refuse international cards; single tickets or tapping the physical card at the gate works",
+          "status": "verified",
+          "note": "Reddit 1c54je9 (three confirmations), 1232vqo ↑5, 1m19u6g."
+        }
+      ]
+    },
+    {
+      "id": "alipay_transfer_to_person",
+      "stage": "anytime",
+      "title": "Alipay won't send money to a person",
+      "why": "An Alipay account on a foreign card can pay merchants only. Transfers to people, topping up the balance and paying a personal collection code are switched off, and the message says the international card only supports daily expenses.",
+      "steps": [
+        "Do not retry the transfer; repeated attempts are a known trigger for an account restriction.",
+        "For a guide, driver, landlord or private seller, pay cash: withdraw at a Bank of China ATM with your foreign card.",
+        "If you must pay a person digitally, hand cash to a friend, your hotel reception or a tour guide and ask them to transfer it from their own account.",
+        "For a shop or stall whose code fails, see Payment failed at the counter: it is a personal collection code, and WeChat Pay or cash is the way out."
+      ],
+      "fallback": "WeChat Pay on a foreign card has the same limit: merchant payments only, no transfers or red packets.",
+      "applies_to": [
+        "ios",
+        "android"
+      ],
+      "scope": "global",
+      "sources": [
+        {
+          "name": "Reddit r/travelchina · How do I pay a Chinese resident on WeChat or Alipay (↑1, no transfers with foreign cards ↑8)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1iqq3n4/how_do_i_pay_a_chinese_resident_on_wechat_or/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/chinalife · Foreigners can't pay Chinese people (↑72, friend tops up balance ↑11)",
+          "url": "https://www.reddit.com/r/chinalife/comments/1cdk3w0/foreigners_cant_pay_chinese_people_buying_stuff/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Merchant does not support payment via international bank cards (↑10)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1p6uixs/merchant_does_not_support_payment_via/",
+          "date": "2026-10-03"
+        }
+      ],
+      "verified_at": "2026-10-03",
+      "volatility": "low",
+      "facts": [
+        {
+          "fact": "Foreign-card accounts cannot transfer to people or hold a balance; message \"Alipay international card only supports daily expenses and does not support functions like transfer\"",
+          "status": "verified",
+          "note": "Reddit 1iqq3n4 ↑8, 1l2thjl ↑4, 1w1o2su ↑7, 1s5jsqk; message text quoted in two threads."
+        },
+        {
+          "fact": "Having a local friend or hotel staff transfer on your behalf in exchange for cash is the common workaround",
+          "status": "verified",
+          "note": "Reddit 1cdk3w0 ↑11, 17nekct, 1wrj0k4 ↑3, 1fdckcz ↑9."
+        }
+      ],
+      "related": [
+        "alipay_payment_declined",
+        "alipay_how_to_pay",
+        "wechat_transfer_to_person"
+      ],
+      "tags": [
+        "transfer"
       ]
     },
     {
@@ -680,7 +953,7 @@
       "title": "Call a DiDi ride from inside Alipay",
       "why": "DiDi inside Alipay needs no Chinese phone number and charges your linked card automatically. The WeChat version of DiDi may refuse accounts without a Chinese number.",
       "steps": [
-        "Open Alipay and type DiDi in the top search bar, or tap the DiDi icon on the home screen.",
+        "Open Alipay and search DiDi Travel or 滴滴出行 in the top bar, or tap Transport on the home screen. Make one small payment at a shop before your first ride; the first payment after landing is a common trigger for a restriction and a DiDi booking is a bad place to hit it.",
         "Allow location, confirm the pickup pin, type the destination in English or Chinese.",
         "Pick a ride type (Express is the cheapest), confirm. The fare is charged to your linked card after the ride.",
         "When the car arrives, match the licence plate with the one shown. The driver may ask for the last 4 digits of your phone number; show them on screen."
@@ -706,6 +979,11 @@
           "name": "Trip.com · How to Use DiDi in China for Foreigners",
           "url": "https://www.trip.com/guide/transport/how-to-use-didi-in-china.html",
           "date": "2026-05-14"
+        },
+        {
+          "name": "Reddit r/travelchina · China travel must-have apps (↑235, DiDi mini app in Alipay, no Chinese number ↑26)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1p2ys74/china_travel_musthave_apps/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-02",
@@ -715,6 +993,11 @@
           "fact": "DiDi via the Alipay mini-program does not require a Chinese phone number",
           "status": "verified",
           "note": "WildChina Didi guide; WeChat guide notes WeChat mini-programs may need a Chinese number."
+        },
+        {
+          "fact": "The Alipay mini-program is the path most travellers use successfully; it inherits the Alipay passport verification",
+          "status": "verified",
+          "note": "Reddit 1p2ys74 ↑26, 1b5cius ↑5, 1rayefc ↑3, 1u46zjq, 1geu6qn; 1p3myr3 ↑15 on inherited verification."
         }
       ],
       "related": [
@@ -734,15 +1017,15 @@
     {
       "id": "alipay_account_locked",
       "stage": "anytime",
-      "title": "Alipay says your account is locked or restricted",
-      "why": "Too many failed card links, verification attempts or payments in a short time trigger a temporary risk lock. It usually lifts by itself; retrying makes it longer.",
+      "title": "Alipay says your account is restricted",
+      "why": "Alipay's risk system often restricts a new foreign account at the first payment after landing, after switching cards mid-payment, after a transfer attempt to a person, a web login, or when traffic looks routed through another country. Appeals are usually cleared within one or two hours; waiting it out rarely helps.",
       "steps": [
-        "Stop retrying. Note the exact message and the time.",
-        "Make sure you are on a normal mobile or Wi-Fi connection without any network tool that routes traffic abroad; Alipay's risk system flags foreign-looking traffic.",
-        "Wait 24 hours, then open Alipay once and check whether the lock has lifted.",
-        "If it has not, contact support in the app (Me > Settings > Help Center > Contact Us) with your passport number, registered phone and a screenshot of the message."
+        "Tap Appeal on the restriction screen right away. Upload what it asks for: passport photo page, a photo of you holding the passport in front of your chest, and both sides of the linked bank card. The appeal page itself says the average time is 2 hours.",
+        "While waiting, pay with WeChat Pay or cash. Do not retry payments, do not open a second account with the same card or number, and stay on a normal mobile or Wi-Fi connection without any tool that routes traffic through another country.",
+        "If the appeal is rejected, or the appeal page only offers binding a mainland bank card, open Help Center, tell the assistant it was not helpful and ask for a customer service representative. They request the same photos by chat or email and usually clear it the same day. English hotline +86 571 2688 6000.",
+        "If support confirms the restriction cannot be lifted, register a new account with a different email and phone number. A card already used on the restricted account can trigger the same block, so start with another card."
       ],
-      "fallback": "Use Nihao China or cash in the meantime. Alipay English support: +86 571 2688 6000, daily 08:00-24:00.",
+      "fallback": "WeChat Pay is the practical backup, so set it up before you fly. Cash is accepted everywhere by law; withdraw at a Bank of China ATM.",
       "applies_to": [
         "ios",
         "android"
@@ -768,20 +1051,57 @@
           "name": "Alipay+ · Pay in the Chinese mainland (official page; customer service +86 571 2688 6000, 08:00-24:00)",
           "url": "https://www.alipayplus.com/pay-in-the-chinese-mainland/",
           "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Alipay app restricted and I appealed it (↑2, appeal cleared within one hour ↑8)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1v5s8tl/alipay_app_restricted_and_i_appealed_it/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · I have over $145k but I am starving in china (↑6, resolved in two hours ↑27)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1onqs74/i_have_over_145k_but_i_am_starving_in_china/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/chinatravel · Alipay Account Restricted twice rejected (↑9)",
+          "url": "https://www.reddit.com/r/chinatravel/comments/1w3fkt9/alipay_account_restricted_twice_rejected/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Reddit r/travelchina · Account restricted and stuck in appeal loop (↑4, human agent via Help Center ↑7; NFC only for Chinese passports ↑7)",
+          "url": "https://www.reddit.com/r/travelchina/comments/1wuii4i/alipay_issue_account_restricted_and_stuck_in/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-03",
       "volatility": "low",
       "facts": [
         {
-          "fact": "Risk locks typically auto-release within 24-72 hours",
+          "fact": "Appeal with passport, selfie holding passport and card photos is cleared within about 1 to 2 hours",
+          "status": "verified",
+          "note": "Reddit 1v5s8tl ↑8, 1onqs74 ↑27, 1w81a2v, 1wt6nqa ↑5; appeal page text \"Average time: 2 hours\" (1gflip8)."
+        },
+        {
+          "fact": "Common triggers: first payment after landing, switching card during a payment, transfer to a person, web login, traffic routed abroad, repeated verification failures, payments to test-QR sites",
+          "status": "verified",
+          "note": "Collected from 16 restriction threads; each trigger reported by at least two users except the test-QR one."
+        },
+        {
+          "fact": "Some new accounts are restricted before any use, appeals are rejected twice and support says it cannot be lifted; a new account with a new email sometimes works and sometimes is restricted again",
+          "status": "verified",
+          "note": "Reddit 1w3fkt9 ↑9, 1v6z87p ↑2, 1uekpx1 ↑5."
+        },
+        {
+          "fact": "Risk locks auto-release within 24-72 hours",
           "status": "unverified",
-          "note": "TravelerLocal; Trip.com says wait 24 hours."
+          "note": "TravelerLocal and Trip.com say to wait; Reddit threads show almost no case resolved by waiting alone."
         }
       ],
       "related": [
+        "alipay_not_authenticated",
+        "alipay_identity_verification",
         "alipay_card_bind_failed",
-        "alipay_identity_verification"
+        "wechat_setup_before_flight"
       ],
       "tags": [
         "payment",

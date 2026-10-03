@@ -1,13 +1,13 @@
 {
-  "user": {"name": "Alex", "lang": "en", "phone_last4": "4471", "nationality": "GB"},
+  "user": {"name": "Alex", "lang": "en", "phone_last4": "4471", "nationality": "US"},
   "flight": {
-    "number": "CX 362",
-    "from": {"code": "HKG", "name": "Hong Kong"},
+    "number": "UA 857",
+    "from": {"code": "SFO", "name": "San Francisco"},
     "to": {"code": "PVG", "name": "Shanghai Pudong", "terminal": "T2"},
-    "scheduled_departure": "2026-09-25 11:05",
-    "scheduled_arrival": "2026-09-25 14:20",
+    "scheduled_departure": "2026-10-11 14:10",
+    "scheduled_arrival": "2026-10-12 07:40",
     "checked_bags": 2,
-    "adults": 2,
+    "adults": 1,
     "children": 0
   },
   "hotel": {
@@ -17,18 +17,18 @@
     "address_zh": "静安区常德路 1 号",
     "landmark_zh": "延安中路口，靠近静安寺",
     "phone": "021 3203 9999",
-    "checkin": "2026-09-25",
+    "checkin": "2026-10-12",
     "lat": 31.2256, "lng": 121.4455,
     "distance_from_airport_km": 18,
     "nearest_metro": {"name": "Jing'an Temple", "line": "2", "walk_m": 600}
   },
   "tickets": [
-    {"name": "Palace Museum", "city": "Beijing", "date": "2026-09-27", "slot": "08:30-11:00", "realname": true, "passport_required": true}
+    {"name": "Palace Museum", "city": "Beijing", "date": "2026-10-14", "slot": "08:30-11:00", "realname": true, "passport_required": true}
   ],
   "transfer_booked": false,
   "car_rental_booked": false,
   "esim": {"bought": false, "provider": "Trip.com eSIM", "price_usd": 4.9},
-  "offline_pack": {"downloaded": true, "airport": "PVG", "size_mb": 1.8, "date": "2026-09-24"},
+  "offline_pack": {"downloaded": true, "airport": "PVG", "size_mb": 1.8, "date": "2026-10-11"},
   "permissions": {"location": "always", "notifications": true},
   "passport": {"valid_until": "2031-03-01"}
 }
