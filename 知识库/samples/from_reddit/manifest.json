@@ -1,0 +1,677 @@
+[
+ {
+  "file": "images/167s9mq_1.jpg",
+  "scenario": "didi",
+  "expected_entry": "didi_setup_before_flight",
+  "kind": "error",
+  "note": "Failed to activate, unable to process application (post: Help with transport?)",
+  "post": "https://www.reddit.com/r/shenzhen/comments/167s9mq/help_with_transport/",
+  "date": "2023-09-02"
+ },
+ {
+  "file": "images/16u03k4_1.jpg",
+  "scenario": "wechat",
+  "expected_entry": "wechat_card_unsupported",
+  "kind": "error",
+  "note": "Top Up: must link a Type I bank card issued in mainland China",
+  "post": "https://www.reddit.com/r/China/comments/16u03k4/how_the_hell_do_i_use_wechat_pay/",
+  "date": "2023-09-27"
+ },
+ {
+  "file": "images/1aew98s_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "normal",
+  "note": "Taobao/Alipay 认证方式 with 护照认证 (Chinese)",
+  "post": "https://www.reddit.com/r/taobao/comments/1aew98s/mod_post_psa_to_new_users_verify_your_accounts_to/",
+  "date": "2024-01-30"
+ },
+ {
+  "file": "images/1aew98s_3.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "normal",
+  "note": "实名认证 form (Chinese)",
+  "post": "https://www.reddit.com/r/taobao/comments/1aew98s/mod_post_psa_to_new_users_verify_your_accounts_to/",
+  "date": "2024-01-30"
+ },
+ {
+  "file": "images/1aew98s_4.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "normal",
+  "note": "账户设置 实名认证 未认证 (Chinese)",
+  "post": "https://www.reddit.com/r/taobao/comments/1aew98s/mod_post_psa_to_new_users_verify_your_accounts_to/",
+  "date": "2024-01-30"
+ },
+ {
+  "file": "images/1boq3w2_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "Account Restrictions: profile modification restricted, appeal failed",
+  "post": "https://www.reddit.com/r/China/comments/1boq3w2/my_alipay_account_got_restricted_tried_to_appeal/",
+  "date": "2024-03-27"
+ },
+ {
+  "file": "images/1djfamw_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_tourcard",
+  "kind": "normal",
+  "note": "TourCard activation application submitted",
+  "post": "https://www.reddit.com/r/travelchina/comments/1djfamw/tourcard_in_alipay/",
+  "date": "2024-06-19"
+ },
+ {
+  "file": "images/1etk63l_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_tourcard",
+  "kind": "error",
+  "note": "TourCard: your card is not successfully activated",
+  "post": "https://www.reddit.com/r/chinalife/comments/1etk63l/alipay_tour_card_issue/",
+  "date": "2024-08-16"
+ },
+ {
+  "file": "images/1f3c332_1.png",
+  "scenario": "connectivity",
+  "expected_entry": "connectivity_buy_sim_at_airport",
+  "kind": "normal",
+  "note": "comment screenshot about SIM stalls at PEK arrivals",
+  "post": "https://www.reddit.com/r/travelchina/comments/1f3c332/getting_a_local_phone_number_in_china_a_guide_for/",
+  "date": "2024-08-28"
+ },
+ {
+  "file": "images/1f3c332_3.png",
+  "scenario": "connectivity",
+  "expected_entry": "connectivity_buy_sim_at_airport",
+  "kind": "normal",
+  "note": "China Mobile counter location map photo",
+  "post": "https://www.reddit.com/r/travelchina/comments/1f3c332/getting_a_local_phone_number_in_china_a_guide_for/",
+  "date": "2024-08-28"
+ },
+ {
+  "file": "images/1f3c332_4.png",
+  "scenario": "connectivity",
+  "expected_entry": "connectivity_buy_sim_at_airport",
+  "kind": "normal",
+  "note": "China Mobile counter photo",
+  "post": "https://www.reddit.com/r/travelchina/comments/1f3c332/getting_a_local_phone_number_in_china_a_guide_for/",
+  "date": "2024-08-28"
+ },
+ {
+  "file": "images/1f5jdwp_2.jpg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "Great Wall photo",
+  "post": "https://www.reddit.com/r/travelchina/comments/1f5jdwp/trip_report_two_weeks_in_china_august_2024/",
+  "date": "2024-08-31"
+ },
+ {
+  "file": "images/1gflip8_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "Transaction Termination, reason fraud risk",
+  "post": "https://www.reddit.com/r/chinalife/comments/1gflip8/alipay_account_under_review/",
+  "date": "2024-10-30"
+ },
+ {
+  "file": "images/1jiv73s_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "error",
+  "note": "Alipay certification not completed (Google Lens translated)",
+  "post": "https://www.reddit.com/r/taobao/comments/1jiv73s/alipay_asks_for_a_chinese_bank_card_when_i_try_to/",
+  "date": "2025-03-24"
+ },
+ {
+  "file": "images/1jiv73s_2.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "error",
+  "note": "Verify Chinese Mainland bank card to verify identity",
+  "post": "https://www.reddit.com/r/taobao/comments/1jiv73s/alipay_asks_for_a_chinese_bank_card_when_i_try_to/",
+  "date": "2025-03-24"
+ },
+ {
+  "file": "images/1kia4oq_1.jpg",
+  "scenario": "wechat",
+  "expected_entry": "wechat_risk_control",
+  "kind": "error",
+  "note": "Weixin Security Alert: account cannot be used",
+  "post": "https://www.reddit.com/r/chinalife/comments/1kia4oq/how_does_adding_people_cause_your_wechat_account/",
+  "date": "2025-05-09"
+ },
+ {
+  "file": "images/1kihtm1_2.jpg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "lake scenery photo",
+  "post": "https://www.reddit.com/r/travelchina/comments/1kihtm1/1_month_solo_trip_review/",
+  "date": "2025-05-09"
+ },
+ {
+  "file": "images/1l0ix3u_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "normal",
+  "note": "支付小蜜 chat: 支付宝账户被冻结导致无法付款 (Chinese)",
+  "post": "https://www.reddit.com/r/taobao/comments/1l0ix3u/payment_failed_with_international_credit_card/",
+  "date": "2025-06-01"
+ },
+ {
+  "file": "images/1ocssw5_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "account risk notice (translated overlay)",
+  "post": "https://www.reddit.com/r/taobao/comments/1ocssw5/account_risk_detection_help_verifying_account/",
+  "date": "2025-10-21"
+ },
+ {
+  "file": "images/1ocssw5_2.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "error",
+  "note": "Alipay certification not completed",
+  "post": "https://www.reddit.com/r/taobao/comments/1ocssw5/account_risk_detection_help_verifying_account/",
+  "date": "2025-10-21"
+ },
+ {
+  "file": "images/1ocssw5_3.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "error",
+  "note": "Query timed out, please try authenticate",
+  "post": "https://www.reddit.com/r/taobao/comments/1ocssw5/account_risk_detection_help_verifying_account/",
+  "date": "2025-10-21"
+ },
+ {
+  "file": "images/1ocssw5_4.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_setup_before_flight",
+  "kind": "normal",
+  "note": "switch-account dialog over Alipay home",
+  "post": "https://www.reddit.com/r/taobao/comments/1ocssw5/account_risk_detection_help_verifying_account/",
+  "date": "2025-10-21"
+ },
+ {
+  "file": "images/1ogfv47_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_card_bind_failed",
+  "kind": "error",
+  "note": "Add Bank Card: unable to confirm payment due to network error",
+  "post": "https://www.reddit.com/r/travelchina/comments/1ogfv47/alipay_card_binding_issue_resolved/",
+  "date": "2025-10-26"
+ },
+ {
+  "file": "images/1ogfv47_2.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_how_to_pay",
+  "kind": "normal",
+  "note": "TestChinaPay -1.00 transaction successful",
+  "post": "https://www.reddit.com/r/travelchina/comments/1ogfv47/alipay_card_binding_issue_resolved/",
+  "date": "2025-10-26"
+ },
+ {
+  "file": "images/1ohiuuw_1.png",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "账号风险检测 (Chinese, Taobao)",
+  "post": "https://www.reddit.com/r/taobao/comments/1ohiuuw/alipay_taobao_suddenly_logged_out_without_id/",
+  "date": "2025-10-27"
+ },
+ {
+  "file": "images/1onqs74_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "Transaction Termination, account risk, hotline shown",
+  "post": "https://www.reddit.com/r/travelchina/comments/1onqs74/i_have_over_145k_but_i_am_starving_in_china/",
+  "date": "2025-11-03"
+ },
+ {
+  "file": "images/1oytwk2_1.jpeg",
+  "scenario": "didi",
+  "expected_entry": "didi_setup_before_flight",
+  "kind": "normal",
+  "note": "Amap ride-hailing aggregator price list (Chinese)",
+  "post": "https://www.reddit.com/r/travelchina/comments/1oytwk2/rideshare_between_amap_and_didi/",
+  "date": "2025-11-16"
+ },
+ {
+  "file": "images/1p8d967_1.jpeg",
+  "scenario": "connectivity",
+  "expected_entry": "connectivity_buy_sim_at_airport",
+  "kind": "normal",
+  "note": "SIM price list photo at airport counter",
+  "post": "https://www.reddit.com/r/travelchina/comments/1p8d967/prices_for_sim_card_available_at_china_unicom_at/",
+  "date": "2025-11-27"
+ },
+ {
+  "file": "images/1qcb3st_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "Restricting main account functions, Upload Proof",
+  "post": "https://www.reddit.com/r/Alipay/comments/1qcb3st/alipay_uk_restricted_account/",
+  "date": "2026-01-14"
+ },
+ {
+  "file": "images/1rgrxmt_2.jpg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "Forbidden City photo",
+  "post": "https://www.reddit.com/r/travelchina/comments/1rgrxmt/im_a_beijing_local_heres_what_i_wish_every/",
+  "date": "2026-02-28"
+ },
+ {
+  "file": "images/1rgrxmt_3.jpg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "stone lion photo",
+  "post": "https://www.reddit.com/r/travelchina/comments/1rgrxmt/im_a_beijing_local_heres_what_i_wish_every/",
+  "date": "2026-02-28"
+ },
+ {
+  "file": "images/1rhusqw_1.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_setup_before_flight",
+  "kind": "normal",
+  "note": "WeChat contacts page (dark)",
+  "post": "https://www.reddit.com/r/weidianwarriors/comments/1rhusqw/wechat_wechat_pay_setup_complete_mobile_guide/",
+  "date": "2026-03-01"
+ },
+ {
+  "file": "images/1rhusqw_2.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_identity_verification",
+  "kind": "normal",
+  "note": "Verify Identity: select ID type",
+  "post": "https://www.reddit.com/r/weidianwarriors/comments/1rhusqw/wechat_wechat_pay_setup_complete_mobile_guide/",
+  "date": "2026-03-01"
+ },
+ {
+  "file": "images/1t7tje5_1.png",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "error",
+  "note": "Reading failed: passport information not recognized",
+  "post": "https://www.reddit.com/r/taobao/comments/1t7tje5/taobao_not_sending_sms_code_to_phone/",
+  "date": "2026-05-09"
+ },
+ {
+  "file": "images/1teuqmy_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "normal",
+  "note": "Taobao unusual activity notice (text)",
+  "post": "https://www.reddit.com/r/taobao/comments/1teuqmy/constantly_being_flagged_and_suspended/",
+  "date": "2026-05-16"
+ },
+ {
+  "file": "images/1tfr9ew_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "error",
+  "note": "Verification failed, verify Chinese mainland bank card",
+  "post": "https://www.reddit.com/r/Alipay/comments/1tfr9ew/passport_validate_but_failed_to_verify/",
+  "date": "2026-05-17"
+ },
+ {
+  "file": "images/1turmgh_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "Restricting main account functions, Appeal",
+  "post": "https://www.reddit.com/r/travelchina/comments/1turmgh/is_this_easily_uplifted/",
+  "date": "2026-06-02"
+ },
+ {
+  "file": "images/1u6ejcn_1.jpg",
+  "scenario": "connectivity",
+  "expected_entry": "connectivity_esim_not_working",
+  "kind": "error",
+  "note": "eSIM download: authenticating device with server warning",
+  "post": "https://www.reddit.com/r/esimadapters/comments/1u6ejcn/i_used_chillaxsim_esim_adapter_for_my_china_trip/",
+  "date": "2026-06-15"
+ },
+ {
+  "file": "images/1u6ejcn_3.jpg",
+  "scenario": "connectivity",
+  "expected_entry": "connectivity_esim_not_working",
+  "kind": "error",
+  "note": "eSIM download: loading profile into storage warning",
+  "post": "https://www.reddit.com/r/esimadapters/comments/1u6ejcn/i_used_chillaxsim_esim_adapter_for_my_china_trip/",
+  "date": "2026-06-15"
+ },
+ {
+  "file": "images/1u6ejcn_4.jpg",
+  "scenario": "connectivity",
+  "expected_entry": "connectivity_esim_before_flight",
+  "kind": "normal",
+  "note": "select eSIM slot to download to",
+  "post": "https://www.reddit.com/r/esimadapters/comments/1u6ejcn/i_used_chillaxsim_esim_adapter_for_my_china_trip/",
+  "date": "2026-06-15"
+ },
+ {
+  "file": "images/1uc0bm6_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "normal",
+  "note": "Identity Information: ID validated, not authenticated",
+  "post": "https://www.reddit.com/r/travelchina/comments/1uc0bm6/alipay_real_name_verification_is_stuck/",
+  "date": "2026-06-21"
+ },
+ {
+  "file": "images/1v5s8tl_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "Transaction Termination under review",
+  "post": "https://www.reddit.com/r/travelchina/comments/1v5s8tl/alipay_app_restricted_and_i_appealed_it/",
+  "date": "2026-07-24"
+ },
+ {
+  "file": "images/1v6z87p_1.png",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "restricted payment status, cannot be resolved through appeal",
+  "post": "https://www.reddit.com/r/travelchina/comments/1v6z87p/how_to_escape_the_alipay_restricted_without/",
+  "date": "2026-07-26"
+ },
+ {
+  "file": "images/1vbcxh5_1.jpg",
+  "scenario": "wechat",
+  "expected_entry": "wechat_card_unsupported",
+  "kind": "error",
+  "note": "three cards: you cannot use this card for this transaction",
+  "post": "https://www.reddit.com/r/chinalife/comments/1vbcxh5/wechat_test_pay_not_working/",
+  "date": "2026-07-31"
+ },
+ {
+  "file": "images/1vbcxh5_2.jpg",
+  "scenario": "wechat",
+  "expected_entry": "wechat_how_to_pay",
+  "kind": "normal",
+  "note": "readyforchina Test WeChat page",
+  "post": "https://www.reddit.com/r/chinalife/comments/1vbcxh5/wechat_test_pay_not_working/",
+  "date": "2026-07-31"
+ },
+ {
+  "file": "images/1w81a2v_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "restricted payment status",
+  "post": "https://www.reddit.com/r/travelchina/comments/1w81a2v/alipay_restricted/",
+  "date": "2026-09-05"
+ },
+ {
+  "file": "images/1wikel4_1.jpeg",
+  "scenario": "wechat",
+  "expected_entry": "wechat_card_unsupported",
+  "kind": "error",
+  "note": "银行反馈今日交易次数已达此卡设定上限 (Chinese)",
+  "post": "https://www.reddit.com/r/chinalife/comments/1wikel4/daily_limit_reached_for_foreign_card_cannot_make/",
+  "date": "2026-09-17"
+ },
+ {
+  "file": "images/1wrj0k4_1.jpeg",
+  "scenario": "wechat",
+  "expected_entry": "wechat_card_unsupported",
+  "kind": "error",
+  "note": "Transfer: cards issued outside Chinese mainland not supported",
+  "post": "https://www.reddit.com/r/travelchina/comments/1wrj0k4/how_to_pay_local_individual_via_wechat_or_alipay/",
+  "date": "2026-09-27"
+ },
+ {
+  "file": "images/cbh6e0_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_card_bind_failed",
+  "kind": "error",
+  "note": "该银行卡暂不支持支付这笔交易 (Chinese)",
+  "post": "https://www.reddit.com/r/shanghai/comments/cbh6e0/alipay_with_american_visa_i_travel_to_shanghai/",
+  "date": "2019-07-10"
+ },
+ {
+  "file": "images/uccb0u_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_payment_declined",
+  "kind": "error",
+  "note": "merchant does not support international credit card",
+  "post": "https://www.reddit.com/r/Sugargoo/comments/uccb0u/could_sugargoo_enable_international_credit_card/",
+  "date": "2022-04-26"
+ },
+ {
+  "file": "images/1m7pi2h_1.png",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "tree photo",
+  "post": "https://www.reddit.com/r/arknights/comments/1m7pi2h/according_to_screenshots_circulating_on_cn_forums/",
+  "date": "2025-07-24"
+ },
+ {
+  "file": "images/1wo4xls_1.png",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "unrelated countdown app screenshot",
+  "post": "https://www.reddit.com/r/iosapps/comments/1wo4xls/i_made_daytrove_a_countdown_and_anniversary_app/",
+  "date": "2026-09-23"
+ },
+ {
+  "file": "images/1wuj7cg_1.jpeg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "street photo",
+  "post": "https://www.reddit.com/r/chinatravel/comments/1wuj7cg/i_spent_1_month_in_china_1010_experience_photos/",
+  "date": "2026-09-30"
+ },
+ {
+  "file": "images/1uupwin_1.jpeg",
+  "scenario": "wechat",
+  "expected_entry": "wechat_miniprogram_needs_chinese_number",
+  "kind": "error",
+  "note": "This service is temporarily unavailable for users in the current region",
+  "post": "https://www.reddit.com/r/travelchina/comments/1uupwin/wechat_pay_help/",
+  "date": "2026-07-12"
+ },
+ {
+  "file": "images/1v82efh_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "normal",
+  "note": "Identity Information: ID validated, complete full authentication prompt",
+  "post": "https://www.reddit.com/r/travelchina/comments/1v82efh/how_do_i_know_if_my_wechat_and_alipay_accounts/",
+  "date": "2026-07-27"
+ },
+ {
+  "file": "images/1v82efh_2.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "error",
+  "note": "Your information is incomplete, go to Me > avatar > Identity authentication",
+  "post": "https://www.reddit.com/r/travelchina/comments/1v82efh/how_do_i_know_if_my_wechat_and_alipay_accounts/",
+  "date": "2026-07-27"
+ },
+ {
+  "file": "images/1vcv9dx_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "normal",
+  "note": "账号认证 实名认证 (Chinese)",
+  "post": "https://www.reddit.com/r/taobao/comments/1vcv9dx/cant_log_into_my_account_before_verifying_my/",
+  "date": "2026-08-01"
+ },
+ {
+  "file": "images/1vcv9dx_2.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "error",
+  "note": "实名认证 未绑定支付宝 (Chinese)",
+  "post": "https://www.reddit.com/r/taobao/comments/1vcv9dx/cant_log_into_my_account_before_verifying_my/",
+  "date": "2026-08-01"
+ },
+ {
+  "file": "images/1vcv9dx_3.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "normal",
+  "note": "实名认证 method list incl. 护照认证 (Chinese)",
+  "post": "https://www.reddit.com/r/taobao/comments/1vcv9dx/cant_log_into_my_account_before_verifying_my/",
+  "date": "2026-08-01"
+ },
+ {
+  "file": "images/1vhenz8_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "photo of phone: Restricting main account functions",
+  "post": "https://www.reddit.com/r/travelchina/comments/1vhenz8/alipay_restriction/",
+  "date": "2026-08-06"
+ },
+ {
+  "file": "images/1vhenz8_2.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "normal",
+  "note": "photo of phone: customer service chat about restriction",
+  "post": "https://www.reddit.com/r/travelchina/comments/1vhenz8/alipay_restriction/",
+  "date": "2026-08-06"
+ },
+ {
+  "file": "images/1vhenz8_3.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_identity_verification",
+  "kind": "error",
+  "note": "photo of phone: bind Chinese mainland bank card to verify identity",
+  "post": "https://www.reddit.com/r/travelchina/comments/1vhenz8/alipay_restriction/",
+  "date": "2026-08-06"
+ },
+ {
+  "file": "images/1w0kq4o_1.jpeg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "restricted payment status, cannot be resolved through appeal",
+  "post": "https://www.reddit.com/r/travelchina/comments/1w0kq4o/wechat_pay_help_cannot_use_card/",
+  "date": "2026-08-28"
+ },
+ {
+  "file": "images/1w95qun_1.png",
+  "scenario": "alipay",
+  "expected_entry": "alipay_account_locked",
+  "kind": "error",
+  "note": "Transaction Termination, Appeal",
+  "post": "https://www.reddit.com/r/travelchina/comments/1w95qun/i_cant_pay_with_any_cards_on_wechat_or_alipay/",
+  "date": "2026-09-06"
+ },
+ {
+  "file": "images/1w95qun_2.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_card_bind_failed",
+  "kind": "error",
+  "note": "Add bank card: due to potential risks, Solution / Exit",
+  "post": "https://www.reddit.com/r/travelchina/comments/1w95qun/i_cant_pay_with_any_cards_on_wechat_or_alipay/",
+  "date": "2026-09-06"
+ },
+ {
+  "file": "images/1wshxh9_1.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_security_verification",
+  "kind": "normal",
+  "note": "Security Verification: ask friends or activate Weixin Pay",
+  "post": "https://www.reddit.com/r/wechat_verify_scan/comments/1wshxh9/i_activated_weixen_pay_but_still_not_working/",
+  "date": "2026-09-28"
+ },
+ {
+  "file": "images/1w0qut9_1.jpg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "Meituan login prompt (Chinese, out of scope)",
+  "post": "https://www.reddit.com/r/travelchina/comments/1w0qut9/china_alipay_meituan_not_working/",
+  "date": "2026-08-28"
+ },
+ {
+  "file": "images/5fbf4s_1.jpg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "news photo of a person",
+  "post": "https://www.reddit.com/r/autotldr/comments/5fbf4s/ubers_china_app_is_now_separate_from_its_global/",
+  "date": "2016-11-28"
+ },
+ {
+  "file": "images/1w0l4h1_1.jpeg",
+  "scenario": "unknown",
+  "expected_entry": null,
+  "kind": "negative",
+  "note": "photo of a foreign permanent resident ID card",
+  "post": "https://www.reddit.com/r/shanghai/comments/1w0l4h1/how_rarewhat_benefits_does_the_foreign_permanent/",
+  "date": "2026-08-28"
+ },
+ {
+  "file": "images/1rhusqw_3.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_security_verification",
+  "kind": "normal",
+  "note": "You have not enabled payment function, add a bank card",
+  "post": "https://www.reddit.com/r/weidianwarriors/comments/1rhusqw/wechat_wechat_pay_setup_complete_mobile_guide/",
+  "date": "2026-03-01"
+ },
+ {
+  "file": "images/1rhusqw_4.png",
+  "scenario": "wechat",
+  "expected_entry": "wechat_setup_before_flight",
+  "kind": "normal",
+  "note": "invite another user to scan QR to complete registration",
+  "post": "https://www.reddit.com/r/weidianwarriors/comments/1rhusqw/wechat_wechat_pay_setup_complete_mobile_guide/",
+  "date": "2026-03-01"
+ },
+ {
+  "file": "images/1ri5oa9_1.jpeg",
+  "scenario": "wechat",
+  "expected_entry": "wechat_card_unsupported",
+  "kind": "error",
+  "note": "Payment ¥1: current transaction does not support international bank cards",
+  "post": "https://www.reddit.com/r/travelchina/comments/1ri5oa9/testchinapay_alipay_works_wechat_is_failing/",
+  "date": "2026-03-01"
+ },
+ {
+  "file": "images/1ri64j4_1.jpeg",
+  "scenario": "wechat",
+  "expected_entry": "wechat_card_unsupported",
+  "kind": "error",
+  "note": "Payment ¥1: current transaction does not support international bank cards",
+  "post": "https://www.reddit.com/r/Wechat/comments/1ri64j4/testchinapay_alipay_works_wechat_is_failing/",
+  "date": "2026-03-01"
+ },
+ {
+  "file": "images/1kqg8hc_1.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_tourcard",
+  "kind": "normal",
+  "note": "TourCard standard vs experience card",
+  "post": "https://www.reddit.com/r/travelchina/comments/1kqg8hc/alipay_tourcard_standard_vs_experience_card/",
+  "date": "2025-05-19"
+ },
+ {
+  "file": "images/1l0ix3u_2.jpg",
+  "scenario": "alipay",
+  "expected_entry": "alipay_payment_declined",
+  "kind": "error",
+  "note": "很遗憾支付失败了 支付宝账户存在异常 (Chinese, Taobao)",
+  "post": "https://www.reddit.com/r/taobao/comments/1l0ix3u/payment_failed_with_international_credit_card/",
+  "date": "2025-06-01"
+ }
+]

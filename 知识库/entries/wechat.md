@@ -17,21 +17,29 @@
 **Do this now**
 1. Install WeChat and sign up with your own mobile number (any country). Enter the SMS code.
 2. When WeChat asks for security verification, choose the option to add a payment card and activate Weixin Pay; it is easier than finding an existing user to scan your QR code.
-3. Add a Visa, Mastercard, American Express, JCB, Discover or Diners Club card issued outside mainland China. A small verification charge of about 0.05 USD is taken.
+3. Go to Me > Services > Wallet > Cards > Add a Card and add a Visa, Mastercard, American Express, JCB, Discover or Diners Club card issued outside mainland China. A small verification charge is taken.
 4. Set the 6-digit payment password when prompted and keep it; every payment asks for it.
 
 **Still stuck** If the card step fails, finish Alipay first and come back to WeChat later; most travellers manage with Alipay alone.
 
 **依赖的事实**
 
-- [verified] Accepted card networks: Visa, Mastercard, American Express, Discover, JCB, Diners Club, UnionPay International — Beijing gov page and WildChina agree; Amex IS accepted here unlike Alipay.
-- [unverified] Verification charge about 0.05 USD when adding a card — WildChina only.
+- [verified] Accepted card networks: Visa, Mastercard, American Express, Discover, JCB, Diners Club, UnionPay International — Beijing gov Payment Services page (2024-08): Visa, Mastercard, JCB, American Express, Diners Club, Discover. Beijing gov 2020 page and WildChina agree. Amex IS accepted here.
+- [unverified] Verification charge about 0.05 USD when adding a card — WildChina only; the body no longer quotes the amount.
+- [verified] Card-adding path Me > Services > Wallet > Cards > Add a Card — Beijing gov Payment Services: Me > WeChat Pay > Wallet > Cards > Add a Card. Nantong gov FAQ: 我 > 服务 > 钱包 > 添加银行卡.
 
-**来源** [Beijing Government · How can Foreigners Use WeChat Pay? (updated 2026-03)](https://english.beijing.gov.cn/livinginbeijing/finance/mobilepaymentlist/202005/t20200516_1899230.html) 2026-03-26；[WildChina · How to Set Up WeChat Pay (Weixin Pay) in 2026](https://wildchina.com/2026/05/wechat-pay-in-2026/) 2026-06-01；[China Briefing · WeChat Enables Foreigners to Pay with Overseas Cards in China](https://www.china-briefing.com/news/wechat-enables-foreigners-to-pay-with-overseas-cards-in-china/) 2025-03-03
+**来源** [Beijing Government · Payment Services: Alipay and Weixin Pay card-adding paths, accepted networks, cash must be accepted, hotlines](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html) 2024-08-30；[Nantong Government (Foreign Affairs Office) · 境外人士在华使用移动支付常见知识问答: Alipay and WeChat binding paths, accepted documents, WeChat fee rule](https://www.nantong.gov.cn/ntsrmzf/wscl/content/d052c16c-1ea0-464a-bc90-125f9bff5cfa.html) 2023-08-01；[Beijing Government · How can Foreigners Use WeChat Pay? (updated 2026-03)](https://english.beijing.gov.cn/livinginbeijing/finance/mobilepaymentlist/202005/t20200516_1899230.html) 2026-03-26；[WildChina · How to Set Up WeChat Pay (Weixin Pay) in 2026](https://wildchina.com/2026/05/wechat-pay-in-2026/) 2026-06-01；[China Briefing · WeChat Enables Foreigners to Pay with Overseas Cards in China](https://www.china-briefing.com/news/wechat-enables-foreigners-to-pay-with-overseas-cards-in-china/) 2025-03-03
 
-**可推荐给用户** [Beijing Government: How can foreigners use WeChat Pay](https://english.beijing.gov.cn/livinginbeijing/finance/mobilepaymentlist/202005/t20200516_1899230.html)
+**可推荐给用户** [Beijing Government: How can foreigners use WeChat Pay](https://english.beijing.gov.cn/livinginbeijing/finance/mobilepaymentlist/202005/t20200516_1899230.html)；[Beijing Government · Payment Services](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html)
 
 相关：`wechat_security_verification`, `wechat_card_unsupported`
+
+**配图**
+
+- 第 1 步 `wechat/wechat_setup_before_flight/step1.png`（占位，演示用） — WeChat Sign Up with Mobile: region, phone number, password, then Accept and Continue（WildChina · WeChat Pay in 2026 guide）
+- 第 2 步 `wechat/wechat_setup_before_flight/step2.png`（占位，演示用） — Select a Security Verification Method: pick Verify and Activate Weixin Pay（WildChina · WeChat Pay in 2026 guide）
+- 第 3 步 `wechat/wechat_setup_before_flight/step3.png`（占位，演示用） — Enter card information: valid date and CVV, a 0.05 USD verification fee is deducted（WildChina · WeChat Pay in 2026 guide）
+- 第 4 步 `wechat/wechat_setup_before_flight/step4.png`（占位，演示用） — Payment Password: set and confirm the 6-digit code（WildChina · WeChat Pay in 2026 guide）
 
 ---
 
@@ -49,7 +57,11 @@
 
 **Still stuck** If no option works, use Alipay for payments; WeChat is rarely essential for a short trip.
 
-**来源** [WildChina · How to Set Up WeChat Pay (Security Verification)](https://wildchina.com/2026/05/wechat-pay-in-2026/) 2026-06-01；[ReadyForChina · Test your WeChat Pay setup (setup guide)](https://www.readyforchina.com/en/wechat) 2026
+**依赖的事实**
+
+- [verified] The QR-scan option requires the scanning user to have registered more than 6 months ago — Text of WeChat's own Select a Security Verification Method screen, visible in the sample screenshot samples/from_guides/wildchina_wechat-pay-in-2026_fb0b81.png.
+
+**来源** [WildChina · How to Set Up WeChat Pay (Security Verification)](https://wildchina.com/2026/05/wechat-pay-in-2026/) 2026-06-01；[ReadyForChina · Test your WeChat Pay setup (setup guide)](https://www.readyforchina.com/en/wechat) 2026；[Beijing Government · Payment Services: Alipay and Weixin Pay card-adding paths, accepted networks, cash must be accepted, hotlines](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html) 2024-08-30
 
 相关：`wechat_setup_before_flight`, `wechat_card_unsupported`
 
@@ -64,7 +76,7 @@
 **Do this now**
 1. Check WeChat's region: Me > Settings > General > Region should match your passport country, not China.
 2. Try a different card, ideally a Visa or Mastercard credit card from a major bank. Debit, prepaid and virtual cards fail more often.
-3. Turn on international and online transactions in your banking app, then add the card again after 10 minutes.
+3. Turn on international and online transactions in your banking app, then add the card again after a few minutes.
 4. If it still fails, switch to Alipay with the same card; many cards refused by WeChat link fine in Alipay.
 
 **Still stuck** Set up Nihao China (official inbound app, no platform fee) or carry cash from a Bank of China ATM.
@@ -73,7 +85,7 @@
 
 - [unverified] A card refused by WeChat often links in Alipay — PayInChinaGuide, user reports.
 
-**来源** [PayInChinaGuide · WeChat Pay 'Unsupported Card' Error: 5 Proven Fixes](https://www.payinchinaguide.com/tool/specific-error/wechat-pay-unsupported-card) 2026；[PayInChinaGuide · WeChat Pay Card Declined? Fix Guide](https://www.payinchinaguide.com/blog/wechat-pay-card-declined-fix) 2026
+**来源** [PayInChinaGuide · WeChat Pay 'Unsupported Card' Error: 5 Proven Fixes](https://www.payinchinaguide.com/tool/specific-error/wechat-pay-unsupported-card) 2026；[PayInChinaGuide · WeChat Pay Card Declined? Fix Guide](https://www.payinchinaguide.com/blog/wechat-pay-card-declined-fix) 2026；[Beijing Government · Payment Services: Alipay and Weixin Pay card-adding paths, accepted networks, cash must be accepted, hotlines](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html) 2024-08-30
 
 相关：`wechat_setup_before_flight`, `alipay_card_bind_failed`, `alipay_nihao_china`
 
@@ -93,9 +105,19 @@
 
 **Still stuck** Verification can take up to a day. Pay with Alipay or cash meanwhile; contact WeChat Pay support from Me > Services > Wallet > Customer Service Center if it stays pending.
 
-**来源** [ChinaVigators · WeChat Pay for Foreigners 2026: Link Visa & Mastercard](https://www.chinavigators.com/wechat-pay-foreigners-guide/) 2026-07-03；[HiddenChinaTravel · Alipay/WeChat Verification Failed? Fixes](https://hiddenchinatravel.com/alipay-wechat-pay-verification-failed) 2026-08-26
+**依赖的事实**
+
+- [verified] Accepted documents: passport, HK/Macao and Taiwan travel permits and residence permits, Foreign Permanent Resident ID Card — Nantong gov FAQ 2023-08.
+
+**来源** [Nantong Government (Foreign Affairs Office) · 境外人士在华使用移动支付常见知识问答: Alipay and WeChat binding paths, accepted documents, WeChat fee rule](https://www.nantong.gov.cn/ntsrmzf/wscl/content/d052c16c-1ea0-464a-bc90-125f9bff5cfa.html) 2023-08-01；[ChinaVigators · WeChat Pay for Foreigners 2026: Link Visa & Mastercard](https://www.chinavigators.com/wechat-pay-foreigners-guide/) 2026-07-03；[HiddenChinaTravel · Alipay/WeChat Verification Failed? Fixes](https://hiddenchinatravel.com/alipay-wechat-pay-verification-failed) 2026-08-26
 
 相关：`wechat_risk_control`, `wechat_security_verification`
+
+**配图**
+
+- 第 1 步 `wechat/wechat_identity_verification/step1.webp`（占位，演示用） — Verify ID Info: ID type picker, choose Passport（ChinaVigators · WeChat Pay for foreigners guide）
+- 第 2 步 `wechat/wechat_identity_verification/step2.webp`（占位，演示用） — Verify ID Info: address field, Select on map or Enter address（ChinaVigators · WeChat Pay for foreigners guide）
+- 第 4 步 `wechat/wechat_identity_verification/step4.webp`（占位，演示用） — WeChat popup: Risk exists in this operation（ChinaVigators · WeChat Pay for foreigners guide）
 
 ---
 
@@ -146,7 +168,7 @@
 
 **Do this now**
 1. Turn on roaming for the line that owns the registered number, or re-enable that SIM if you turned it off for an eSIM.
-2. Wait 60 seconds before requesting again; rapid retries pause delivery.
+2. Wait about a minute before requesting again; rapid retries pause delivery.
 3. Check the country code and that the number has no leading zero.
 4. Try the voice-call option if the screen offers one.
 
@@ -154,7 +176,7 @@
 
 **来源** [PayInChinaGuide · Not Receiving SMS Code from Alipay/WeChat?](https://www.payinchinaguide.com/tool/specific-error/fix-sms-verification-code-error) 2026；[Trip.com · Nihao China App (SMS fallback to email sign-up)](https://www.trip.com/guide/info/nihao-china-app.html) 2026-06-12
 
-相关：`alipay_sms_code_not_received`
+相关：`alipay_sms_code_not_received`, `didi_sms_code_not_received`
 
 ---
 
@@ -166,7 +188,7 @@
 
 **Do this now**
 1. To be scanned: tap the + at the top right, then Money, and show the barcode. Enter your 6-digit password if asked.
-2. To scan them: tap + then Scan, point at the shop's printed code, type the amount.
+2. To scan them: tap + then Scan, point at the shop's printed code, type the amount. Foreign cards can only pay registered merchant codes; if a stall's code fails, ask them to scan yours.
 3. Check the confirmation screen: payments under 200 RMB are free; above that a 3% fee is shown before you confirm.
 4. Keep in mind foreign cards cannot send money to people or receive red packets; merchant payments only.
 
@@ -174,9 +196,9 @@
 
 **依赖的事实**
 
-- [verified] Fee-free under 200 RMB; 3% above; new users 60 days fee-free under 1,000 RMB — China Briefing citing WeChat Pay's published policy; PayInChinaGuide agrees.
+- [verified] Fee-free under 200 RMB; 3% above; new users 60 days fee-free under 1,000 RMB — Nantong gov FAQ (official): 单笔不超过200元免手续费, 超过200元收3%. China Briefing citing WeChat Pay's policy; PayInChinaGuide agrees. The 60-day new-user waiver is from China Briefing only.
 
-**来源** [China Briefing · WeChat Enables Foreigners to Pay with Overseas Cards (fees)](https://www.china-briefing.com/news/wechat-enables-foreigners-to-pay-with-overseas-cards-in-china/) 2025-03-03；[WildChina · How to Set Up WeChat Pay (Using WeChat Pay for payments)](https://wildchina.com/2026/05/wechat-pay-in-2026/) 2026-06-01
+**来源** [Nantong Government (Foreign Affairs Office) · 境外人士在华使用移动支付常见知识问答: Alipay and WeChat binding paths, accepted documents, WeChat fee rule](https://www.nantong.gov.cn/ntsrmzf/wscl/content/d052c16c-1ea0-464a-bc90-125f9bff5cfa.html) 2023-08-01；[Beijing Government · Payment Services: Alipay and Weixin Pay card-adding paths, accepted networks, cash must be accepted, hotlines](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html) 2024-08-30；[China Briefing · WeChat Enables Foreigners to Pay with Overseas Cards (fees)](https://www.china-briefing.com/news/wechat-enables-foreigners-to-pay-with-overseas-cards-in-china/) 2025-03-03；[WildChina · How to Set Up WeChat Pay (Using WeChat Pay for payments)](https://wildchina.com/2026/05/wechat-pay-in-2026/) 2026-06-01
 
 相关：`alipay_how_to_pay`
 

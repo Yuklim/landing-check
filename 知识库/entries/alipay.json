@@ -144,7 +144,7 @@
       "steps": [
         "Install Alipay from the App Store or Google Play. Outside China it opens in English automatically.",
         "Sign up with your own mobile number (any country) and enter the SMS code. No Chinese number or Chinese bank account is needed.",
-        "Tap Me > Bank Cards > Add Now. Set a 6-digit payment password, then add one mainstream credit card: Visa, Mastercard, JCB, Discover, Diners Club or UnionPay.",
+        "Tap Me > Bank Cards > Add Now. Set a 6-digit payment password, then add one mainstream credit card: Visa, Mastercard, American Express, JCB, Discover, Diners Club or UnionPay.",
         "Tap Me > Settings > Account & Security > Identity Verification. Upload your passport photo page and do the face check. Do this now, not later."
       ],
       "fallback": "If the card will not link, see Card won't link. If you prefer not to link a card, open TourCard inside Alipay as a prepaid wallet.",
@@ -154,6 +154,21 @@
       ],
       "scope": "global",
       "sources": [
+        {
+          "name": "Ant Group · Press release on inbound spending via Alipay: international cards Visa, Mastercard, JCB, Discover, Diners Club; no local bank account or phone number needed",
+          "url": "https://www.antgroup.com/en/news-media/press-releases/1714976531000",
+          "date": "2024-05-06"
+        },
+        {
+          "name": "Alipay · American Express and Alipay enable payments for international travelers in China (official release)",
+          "url": "https://idocs.alipay.com/intl-website/intl-website/en/american-express-and-alipay-to-enable-seamless-payments-for-international-travelers-in-china",
+          "date": "2025-02-25"
+        },
+        {
+          "name": "Nantong Government (Foreign Affairs Office) · 境外人士在华使用移动支付常见知识问答: Alipay and WeChat binding paths, accepted documents, WeChat fee rule",
+          "url": "https://www.nantong.gov.cn/ntsrmzf/wscl/content/d052c16c-1ea0-464a-bc90-125f9bff5cfa.html",
+          "date": "2023-08-01"
+        },
         {
           "name": "Trip.com · How to Use Alipay in China for Foreigners 2026",
           "url": "https://www.trip.com/guide/phone/how-to-use-alipay.html",
@@ -170,18 +185,23 @@
           "date": "2026-05-29"
         }
       ],
-      "verified_at": "2026-10-02",
+      "verified_at": "2026-10-03",
       "volatility": "low",
       "facts": [
         {
-          "fact": "Supported card networks: Visa, Mastercard, JCB, Discover, Diners Club, UnionPay",
+          "fact": "Supported card networks: Visa, Mastercard, JCB, Discover, Diners Club, UnionPay, and American Express cards issued by Amex itself",
           "status": "verified",
-          "note": "Trip.com, WildChina and Beijing gov agree. Amex: not on the official list; treat as unsupported."
+          "note": "Ant Group press release 2024-05 lists Visa, Mastercard, JCB, Discover, Diners Club. Amex-Alipay official release 2025-02-25: eligible global Amex Card Members can link; Amex-branded cards issued by third parties outside the mainland cannot. Beijing gov page lists Visa, Mastercard, JCB."
         },
         {
           "fact": "Registration works with a non-Chinese phone number",
           "status": "verified",
-          "note": "All sources agree."
+          "note": "Ant Group press release 2024-05: no local bank account or phone number needed. All guides agree."
+        },
+        {
+          "fact": "Card-adding path Me > Bank Cards > Add",
+          "status": "verified",
+          "note": "Beijing gov Payment Services: Me > Bank Cards > Add bank cards. Nantong gov FAQ: 我的 > 银行卡 > 立即绑定. The readyforchina demo GIF reaches the same page via Me > Settings > Bank Cards."
         }
       ],
       "related": [
@@ -197,11 +217,62 @@
         {
           "name": "Beijing Government: Payment Services for new arrivals",
           "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html"
+        },
+        {
+          "name": "Alipay+ · Pay in the Chinese mainland",
+          "url": "https://www.alipayplus.com/pay-in-the-chinese-mainland/"
         }
       ],
       "tags": [
         "payment",
         "setup"
+      ],
+      "media": [
+        {
+          "step": 1,
+          "file": "alipay/alipay_setup_before_flight/step1.gif",
+          "poster": "alipay/alipay_setup_before_flight/step1.png",
+          "alt": "App Store: search Alipay, install the app by Alipay (Hangzhou) Technology",
+          "source": {
+            "name": "readyforchina.com · AliPay setup guide (iOS)",
+            "url": "https://www.readyforchina.com/en/alipay"
+          },
+          "placeholder": true
+        },
+        {
+          "step": 2,
+          "file": "alipay/alipay_setup_before_flight/step2.gif",
+          "poster": "alipay/alipay_setup_before_flight/step2.png",
+          "alt": "Alipay sign-up: pick country code, enter your mobile number, enter the SMS code",
+          "source": {
+            "name": "readyforchina.com · AliPay setup guide (iOS)",
+            "url": "https://www.readyforchina.com/en/alipay"
+          },
+          "placeholder": true
+        },
+        {
+          "step": 3,
+          "file": "alipay/alipay_setup_before_flight/step3.gif",
+          "poster": "alipay/alipay_setup_before_flight/step3.png",
+          "alt": "Alipay: Me > Settings > Bank Cards > + to add an international card",
+          "source": {
+            "name": "readyforchina.com · AliPay setup guide (iOS)",
+            "url": "https://www.readyforchina.com/en/alipay"
+          },
+          "placeholder": true,
+          "note": "动图走的是 Me > Settings > Bank Cards 路径，与步骤文字里的 Me > Bank Cards 入口不同，正式版需自行截图"
+        },
+        {
+          "step": 4,
+          "file": "alipay/alipay_setup_before_flight/step4.gif",
+          "poster": "alipay/alipay_setup_before_flight/step4.png",
+          "alt": "Alipay: Me > Settings > Account & Security > Identity Verification, upload passport and selfie",
+          "source": {
+            "name": "readyforchina.com · AliPay setup guide (iOS)",
+            "url": "https://www.readyforchina.com/en/alipay"
+          },
+          "placeholder": true
+        }
       ]
     },
     {
@@ -211,9 +282,9 @@
       "why": "Alipay asks your bank to approve the card. Banks often block an unfamiliar Chinese merchant, and debit, prepaid and virtual cards fail more than mainstream credit cards.",
       "steps": [
         "Try a different card first: a credit card from a major bank on another network (Visa if Mastercard failed, or the reverse). Fintech cards such as Wise or Revolut succeed more often than traditional bank cards.",
-        "In your banking app turn on International transactions and Online purchases, wait 10 minutes, then add the card again. If it still fails, call the bank: say you are in China paying through Alipay and the merchant will show as Alipay or Ant Group.",
+        "In your banking app turn on International transactions and Online purchases, wait a few minutes, then add the card again. If it still fails, call the bank: say you are in China paying through Alipay and the merchant will show as Alipay or Ant Group.",
         "Make the name on the card, your passport and your Alipay profile match exactly, including middle names, then finish Identity Verification (Me > Settings > Account & Security) before adding the card again.",
-        "Still refused: set up Nihao China instead. It is the official inbound-visitor app, registers with email or Apple ID, links Visa, Mastercard and UnionPay, and does not depend on an Alipay card link."
+        "Still refused: set up Nihao China instead. It is the official inbound-visitor app, registers with an email address or Apple account, links UnionPay, Visa and Mastercard cards, and does not depend on an Alipay card link."
       ],
       "fallback": "Open TourCard inside Alipay as a prepaid wallet, or withdraw cash at a Bank of China ATM with your foreign card. Alipay English support: +86 571 2688 6000, daily 08:00-24:00.",
       "applies_to": [
@@ -222,6 +293,16 @@
       ],
       "scope": "global",
       "sources": [
+        {
+          "name": "Alipay+ · Pay in the Chinese mainland (official page; customer service +86 571 2688 6000, 08:00-24:00)",
+          "url": "https://www.alipayplus.com/pay-in-the-chinese-mainland/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "UnionPay International · Nihao China press release (register with email or Apple account; UnionPay, Visa, Mastercard cards)",
+          "url": "https://www.prnewswire.com/apac/news-releases/nihao-china-app-launches-as-an-all-in-one-solution-for-international-visitors-302649202.html",
+          "date": "2025-12-24"
+        },
         {
           "name": "PayInChinaGuide · Alipay 'Card Issuing Bank Declined' Error",
           "url": "https://www.payinchinaguide.com/blog/alipay-issuing-bank-declined-fix",
@@ -249,7 +330,7 @@
         {
           "fact": "Alipay English hotline +86 571 2688 6000, daily 08:00-24:00 China time",
           "status": "verified",
-          "note": "Beijing gov page and WaysChina agree."
+          "note": "Alipay+ official page: 0571-2688 6000 locally, +86 571 2688 6000 from overseas, Mon-Sun 08:00-24:00 GMT+8. Beijing gov page agrees."
         },
         {
           "fact": "Bank of China ATMs accept Visa/Mastercard/JCB/Amex, 3,000 RMB per withdrawal",
@@ -276,7 +357,7 @@
       "steps": [
         "Make sure the SIM that owns your registered number can receive texts: turn on roaming for that line, or switch it back on if you disabled it for an eSIM.",
         "On the code screen choose the voice-call option if offered. Alipay can read the code out in an automated call.",
-        "Wait 60 seconds before requesting again. Repeated taps can lock requests for a few minutes.",
+        "Wait about a minute before requesting again. Repeated taps can lock requests for a few minutes.",
         "Check your country code is correct on the login screen and that the number has no leading zero."
       ],
       "fallback": "If your home number cannot receive texts in China at all, you cannot log in until it can: turn roaming on for that line, or contact Alipay support at +86 571 2688 6000 to change the registered number.",
@@ -307,7 +388,9 @@
         }
       ],
       "related": [
-        "alipay_setup_before_flight"
+        "alipay_setup_before_flight",
+        "wechat_sms_code_not_received",
+        "didi_sms_code_not_received"
       ],
       "tags": [
         "payment",
@@ -352,6 +435,11 @@
           "name": "Beijing Government · Payment Services (cash must be accepted)",
           "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html",
           "date": "2024-08-30"
+        },
+        {
+          "name": "People's Bank of China · Xinhua report on measures for inbound visitors' mobile payment (single 5,000 USD, annual 50,000 USD; simplified identity verification)",
+          "url": "https://www.pbc.gov.cn/redianzhuanti/118742/5275415/5275421/5391688/index.html",
+          "date": "2024-03"
         }
       ],
       "verified_at": "2026-10-03",
@@ -359,8 +447,8 @@
       "facts": [
         {
           "fact": "Payments under 200 RMB are fee-free; above 200 RMB a 3% fee applies",
-          "status": "conflict",
-          "note": "PayInChinaGuide states this for Alipay. China Briefing confirms it as WeChat Pay's published rule. WaysChina says Alipay 'works out similarly' and to read the confirmation screen. Keep the wording 'expect a fee line' until Alipay's own page is found."
+          "status": "unverified",
+          "note": "No Alipay page states the fee. Trip.com's card guide and most third-party guides say fee-free up to 200 RMB and 3% above. Nantong gov FAQ states the same rule for WeChat Pay only. Body keeps 'expect a fee line'."
         },
         {
           "fact": "Minimum transaction 10 RMB",
@@ -370,7 +458,7 @@
         {
           "fact": "Verified users: 5,000 USD per transaction, 50,000 USD per year; unverified about 2,000 USD cumulative",
           "status": "verified",
-          "note": "WildChina, PayInChinaGuide and WaysChina agree; raised in March 2024 per PBOC."
+          "note": "PBOC (Xinhua report on pbc.gov.cn, March 2024): single limit raised from 1,000 to 5,000 USD, annual from 10,000 to 50,000 USD for inbound visitors. Unverified allowance about 2,000 USD comes from guides, not the PBOC text."
         },
         {
           "fact": "Foreign cards cannot pay personal collection codes, only merchant codes; there is no visual difference",
@@ -395,11 +483,11 @@
       "why": "Chinese rules let you spend a small total without ID. Past that, or for larger single payments, Alipay must verify your passport before it lets the payment through.",
       "steps": [
         "Tap Me > Settings > Account & Security > Identity Verification. When asked for region choose Non-Mainland China, then Passport. Choosing Mainland China asks for a Chinese ID number and fails.",
-        "Photograph the passport photo page flat, in daylight, no glare, all four corners visible. If offered, scan the passport's NFC chip instead by holding the phone on the back cover; it skips the photo check and succeeds more often.",
+        "Photograph the passport photo page flat, in daylight, no glare, all four corners visible. If the photo keeps failing, retry on a plain dark background with the flash off.",
         "Type your name exactly as the passport prints it, including middle names and suffixes, and make the linked card's name match. For the face check, face a window, remove glasses, hold still.",
-        "Wait. Most checks finish within minutes; manual reviews take up to 24 hours. After 3 to 5 failed attempts the flow locks for 24 hours, so stop retrying and wait."
+        "Wait. Most checks finish within minutes; a manual review can take a day or more. After 3 to 5 failed attempts the flow locks for 24 hours, so stop retrying and wait."
       ],
-      "fallback": "Still rejected after a day: contact Alipay support in the app (Me > Settings > Help Center) or call +86 571 2688 6000 for a manual review, which takes 1 to 3 working days. Meanwhile use Nihao China or cash.",
+      "fallback": "Still rejected after a day: contact Alipay support in the app (Me > Settings > Help Center) or call +86 571 2688 6000 for a manual review, which takes a few working days. Meanwhile use Nihao China or cash.",
       "applies_to": [
         "ios",
         "android"
@@ -425,6 +513,11 @@
           "name": "WildChina · Guide to Using Alipay in 2026 (Verification, FAQ)",
           "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/",
           "date": "2026-05-29"
+        },
+        {
+          "name": "People's Bank of China · Xinhua report on measures for inbound visitors' mobile payment (single 5,000 USD, annual 50,000 USD; simplified identity verification)",
+          "url": "https://www.pbc.gov.cn/redianzhuanti/118742/5275415/5275421/5391688/index.html",
+          "date": "2024-03"
         }
       ],
       "verified_at": "2026-10-03",
@@ -436,9 +529,9 @@
           "note": "WildChina states both thresholds (March 2024 rules); PayInChinaGuide confirms the 2,000 USD cap."
         },
         {
-          "fact": "Verification usually completes within an hour, up to 72 hours",
+          "fact": "Verification usually completes within an hour, manual review up to 72 hours; support manual review 1 to 3 working days",
           "status": "unverified",
-          "note": "WildChina only."
+          "note": "WildChina for the 72 hours; ChinaVigators for 1 to 3 working days. No official figure, so the body says \"a day or more\" and \"a few working days\"."
         },
         {
           "fact": "Passports with under 6 months validity are often rejected by verification",
@@ -463,13 +556,13 @@
     {
       "id": "alipay_tourcard",
       "stage": "anytime",
-      "title": "Use TourCard when your card won't link",
-      "why": "TourCard is a prepaid wallet inside Alipay issued by a Chinese bank. You top it up from your foreign card, so it works even when direct card linking is refused. It costs more per top-up.",
+      "title": "Use Tour Pass (TourCard) when your card won't link",
+      "why": "Tour Pass, often called TourCard, is a prepaid card inside Alipay issued by Bank of Shanghai. You top it up from your foreign card, so it works even when direct card linking is refused. Each top-up carries a 5% service charge.",
       "steps": [
-        "In Alipay, type TourCard in the top search bar and open the mini-program.",
+        "In Alipay, type Tour Pass or TourCard in the top search bar and open the mini-program.",
         "Register with your passport when prompted.",
-        "Top up from a Visa, Mastercard, JCB or Diners Club card. A service charge is added to each top-up; the exact rate is shown before you confirm.",
-        "Pay as usual with Pay/Receive or Scan. TourCard is for paying merchants only, not for sending money to people."
+        "Top up from a Visa, Mastercard, JCB or Diners Club card. A 5% service charge is added to each purchase or top-up and shown before you confirm.",
+        "Pay as usual with Pay/Receive or Scan. Tour Pass is for paying merchants only; transfers to people are not allowed. The card runs for 90 days and any unused balance is refunded to your card automatically."
       ],
       "fallback": "If TourCard also refuses your card, use cash from a Bank of China ATM, or check whether your home e-wallet is part of the Alipay+ network and can scan Chinese codes directly.",
       "applies_to": [
@@ -478,6 +571,16 @@
       ],
       "scope": "global",
       "sources": [
+        {
+          "name": "Bank of Shanghai · Prepaid card (Tour Pass / TourCard) service agreement hosted by Alipay (official, Chinese)",
+          "url": "https://render.alipay.com/p/c/k0mtcsgi/1572520436172.html",
+          "date": "2019-10-31"
+        },
+        {
+          "name": "Alipay · Tour Pass information technology service agreement (official, English)",
+          "url": "https://render.alipay.com/p/c/k2ffmmxp",
+          "date": "2026-10-03"
+        },
         {
           "name": "WildChina · Guide to Using Alipay in 2026 (Option 2: TourCard)",
           "url": "https://wildchina.com/2026/05/guide-to-using-alipay-2026/",
@@ -494,23 +597,28 @@
           "date": "2026"
         }
       ],
-      "verified_at": "2026-10-02",
+      "verified_at": "2026-10-03",
       "volatility": "high",
       "facts": [
         {
-          "fact": "TourCard validity 180 days, top-up cap 10,000 RMB, 5% fee per top-up",
-          "status": "conflict",
-          "note": "WildChina and PayInChinaGuide say 180 days / 10,000 RMB / 5%. A 2026 search summary cited 90 days. WaysChina says fees and caps vary between sources. Do not quote numbers to users until checked in the TourCard mini-program agreement."
+          "fact": "Validity 90 days from activation; unused balance converted at the card scheme rate and refunded to the original card automatically",
+          "status": "verified",
+          "note": "Bank of Shanghai prepaid card agreement hosted by Alipay (自您开通服务之日起90日; 剩余款项自动退还). Guides saying 180 days are outdated."
         },
         {
-          "fact": "TourCard accepts Visa, Mastercard, Diners Club, JCB; Amex not yet",
-          "status": "unverified",
-          "note": "WildChina only."
+          "fact": "Service fee 5% of each purchase or top-up amount, deducted from the international card",
+          "status": "verified",
+          "note": "Same agreement. Purchase and top-up caps are set by Bank of Shanghai and shown on the service page, so no cap is quoted here."
         },
         {
-          "fact": "PayInChinaGuide claims TourCard allows peer-to-peer transfers; WildChina says it does not",
-          "status": "conflict",
-          "note": "Entry says merchants only, the safer claim."
+          "fact": "Accepted cards: Visa, Mastercard, Diners Club, JCB",
+          "status": "verified",
+          "note": "Both agreements define International Card Organizations as these four. Amex is not listed."
+        },
+        {
+          "fact": "No transfers to own or other people's cards",
+          "status": "verified",
+          "note": "Agreement explicitly forbids using the card for transfers or remittance. PayInChinaGuide's claim of peer-to-peer transfer is wrong."
         }
       ],
       "related": [
@@ -519,6 +627,12 @@
       "tags": [
         "payment",
         "fallback"
+      ],
+      "reader_links": [
+        {
+          "name": "Alipay · Tour Pass service agreement",
+          "url": "https://render.alipay.com/p/c/k2ffmmxp"
+        }
       ]
     },
     {
@@ -528,7 +642,7 @@
       "why": "There are two directions: the cashier scans you, or you scan the shop's printed code. Small stalls usually have a printed code; chains and taxis scan you.",
       "steps": [
         "To be scanned: open Alipay, tap Pay/Receive at the top, hold the barcode and QR code to the scanner. Enter your 6-digit payment password if asked.",
-        "To scan them: tap Scan, point at the shop's printed QR code, type the amount the cashier tells you, confirm.",
+        "To scan them: tap Scan, point at the shop's printed QR code, type the amount the cashier tells you, confirm. Foreign cards can only pay registered merchant codes, so if a stall's code fails, ask them to scan yours instead.",
         "Check the confirmation screen for the amount and any fee line, then confirm.",
         "Online, choose Alipay at checkout; the site opens the app or shows a QR code for you to scan."
       ],
@@ -649,6 +763,11 @@
           "name": "TravelerLocal · Alipay Foreign Card Declined in China: What to Check",
           "url": "https://www.travelerlocal.com/payments/alipay-foreign-card-fails",
           "date": "2026-08-02"
+        },
+        {
+          "name": "Alipay+ · Pay in the Chinese mainland (official page; customer service +86 571 2688 6000, 08:00-24:00)",
+          "url": "https://www.alipayplus.com/pay-in-the-chinese-mainland/",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-03",
@@ -673,12 +792,12 @@
       "id": "alipay_nihao_china",
       "stage": "anytime",
       "title": "Use Nihao China when Alipay won't take your card",
-      "why": "Nihao China is the official app for inbound visitors, run by China UnionPay. It registers with email or Apple ID, needs no Chinese phone number, links Visa, Mastercard and UnionPay, and charges no platform fee on QR payments.",
+      "why": "Nihao China is the official app for inbound visitors, launched by China UnionPay in December 2025. It registers with an email address or Apple account, needs no Chinese phone number, and links UnionPay, Visa and Mastercard cards issued outside the mainland.",
       "steps": [
-        "Install Nihao China from the App Store or Google Play. Register with email, Apple ID or Google if SMS codes are not reaching you.",
+        "Install Nihao China from the App Store or Google Play. Register with an email address, Apple account or mobile number; email works when SMS codes are not reaching you.",
         "Complete identity verification with your passport when prompted.",
-        "Tap Profile > Tour Wallet > Bank Card > +. Enter the card details and pass your bank's one-time check; a 1 yuan pre-authorisation is taken and refunded.",
-        "Pay with Pay (show your code) or Scan (scan the shop's code), the same two ways as Alipay."
+        "Tap Tour Wallet, then + to add a card. Enter the card details and pass your bank's one-time check; a small pre-authorisation is taken and refunded.",
+        "Pay with Pay (show your code) or Scan (scan the shop's code), the same two ways as Alipay. Tour Balance can also be topped up from the card for payments that need a wallet balance."
       ],
       "fallback": "If Nihao China also refuses the card, top up its Tour Wallet from the card instead (small load fee), or use cash.",
       "applies_to": [
@@ -687,6 +806,21 @@
       ],
       "scope": "global",
       "sources": [
+        {
+          "name": "UnionPay International · Nihao China App (official product page: register with email or mobile, Tour Wallet, Pay / Scan)",
+          "url": "https://m.unionpayintl.com/ZT/en/NHCAPP/",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "China UnionPay · “Nihao China” APP正式上线 (official news, launched 2025-12-19)",
+          "url": "https://cn.unionpay.com/upowhtml/cn/templates/newInfo-nosub/7885004da382485e8bde5a0ba000fdd3/20251219164753.html",
+          "date": "2025-12-19"
+        },
+        {
+          "name": "UnionPay International · Nihao China press release (register with email or Apple account; UnionPay, Visa, Mastercard cards)",
+          "url": "https://www.prnewswire.com/apac/news-releases/nihao-china-app-launches-as-an-all-in-one-solution-for-international-visitors-302649202.html",
+          "date": "2025-12-24"
+        },
         {
           "name": "Trip.com · Nihao China App: Setup, Card Link & Payment Guide",
           "url": "https://www.trip.com/guide/info/nihao-china-app.html",
@@ -697,14 +831,19 @@
       "volatility": "high",
       "facts": [
         {
-          "fact": "Tour Wallet top-up fee about 0.5%",
-          "status": "unverified",
-          "note": "Single source (Trip.com guide)."
+          "fact": "Launched 2025-12-19 by China UnionPay at the China International Travel Mart; registration by email or Apple account; cards: UnionPay, Visa, Mastercard issued outside the mainland",
+          "status": "verified",
+          "note": "China UnionPay official news 2025-12-19 and UnionPay International press release 2025-12-24. Official product page adds mobile-number registration, Tour Wallet, Tour Balance, Pay and Scan."
         },
         {
-          "fact": "Launched December 2025 by China UnionPay",
+          "fact": "No platform fee on QR payments; Tour Wallet top-up fee about 0.5%",
           "status": "unverified",
-          "note": "Trip.com guide and search summary."
+          "note": "Trip.com guide only. Not stated on UnionPay's pages, so the body does not promise zero fees."
+        },
+        {
+          "fact": "A small pre-authorisation is taken when linking a card",
+          "status": "unverified",
+          "note": "Trip.com guide says 1 yuan; not on official pages, so the body says 'small'."
         }
       ],
       "related": [
@@ -715,6 +854,10 @@
         {
           "name": "Trip.com guide: Nihao China App setup",
           "url": "https://www.trip.com/guide/info/nihao-china-app.html"
+        },
+        {
+          "name": "UnionPay International · Nihao China App",
+          "url": "https://m.unionpayintl.com/ZT/en/NHCAPP/"
         }
       ],
       "tags": [

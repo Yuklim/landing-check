@@ -1,0 +1,46 @@
+{
+ "iosSteps": {
+  "step1": {
+   "title": "Download from App Store",
+   "description": "Install the official WeChat app from the iOS App Store - ensure it's by Tencent."
+  },
+  "step2": {
+   "title": "Register Account",
+   "description": "Launch WeChat, select 'Sign Up' and use your international mobile number. A friend with WeChat may need to verify you."
+  },
+  "step3": {
+   "title": "Complete Verification",
+   "description": "Navigate to 'Me' → 'Services' → 'Wallet'. Follow the prompts to upload passport photos and complete facial recognition."
+  },
+  "step4": {
+   "title": "Link Your Card",
+   "description": "After verification, go to 'Wallet' → 'Cards' → '+' to add your international credit or debit card."
+  },
+  "step5": {
+   "title": "Configure Security",
+   "description": "Set up a payment password and enable Touch ID or Face ID for secure and fast transactions."
+  }
+ },
+ "androidSteps": {
+  "step1": {
+   "title": "Download from Google Play",
+   "description": "Install the official WeChat app from the Google Play Store - search for 'WeChat' and look for the app by Tencent."
+  },
+  "step2": {
+   "title": "Create WeChat Account",
+   "description": "Open WeChat, tap 'Sign Up' and register using your international phone number. You might need a friend to verify you."
+  },
+  "step3": {
+   "title": "Verify Your Identity",
+   "description": "Go to 'Me' → 'Services' → 'Wallet'. You will be prompted to complete identity verification. Upload photos of your passport."
+  },
+  "step4": {
+   "title": "Add International Card",
+   "description": "Once verified, go to 'Me' → 'Services' → 'Wallet' → 'Cards' and tap 'Add a Card'. Link your international Visa/Mastercard."
+  },
+  "step5": {
+   "title": "Set Payment Password",
+   "description": "Create a 6-digit payment password and enable fingerprint authentication for security."
+  }
+ }
+}

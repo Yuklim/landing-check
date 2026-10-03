@@ -16,7 +16,8 @@ Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 
 | H5 原型，18 屏 | 可用 | 设计稿导出 + 点击绑定，手机浏览器可开，可添加到主屏幕 |
 | 后端接口 | 可用 | FastAPI：知识库、识别、模拟携程数据、规则引擎，38 个测试 |
 | "我卡住了"识别 | 可用 | DeepSeek `deepseek-flash` 看截图选条目，置信度分档，规则兜底 |
-| 知识库 | 4 个场景 | 支付宝 10、微信 8、滴滴 6、上网 6 共 30 条，含来源和核验日期；资料库 115 篇；64 张真实截图评测场景命中 94% |
+| 知识库 | 4 个场景 | 支付宝 10、微信 8、滴滴 6、上网 6 共 30 条，含来源和核验日期；资料库 115 篇 + Reddit 608 帖求助与解答；指南截图 64 张场景命中 94%，Reddit 真实失败截图 75 张场景命中 84% |
+| 图文教程屏 | 8 篇 | 条目加 `media` 字段即成为一步一图的教程，H5 运行时注入，静态模式也能看。支付宝、微信、滴滴、上网各 1 到 3 篇；配图多数是指南站扒来的占位图，Trip.com 指南和官方海报的图可直接用，正式版其余要换成自己截的 |
 | 公网后端（Render） | 已部署 | https://landing-check.onrender.com ，免费档首次访问需等约 30 秒唤醒 |
 | 离线包 / Service Worker | 未做 | 方案承诺项，初赛前完成 |
 | 多语言预翻译 | 未做 | 同上 |
@@ -37,6 +38,8 @@ lsof -iTCP:8000 -sTCP:LISTEN -t | xargs kill
 cd backend && python3 -m pytest -q tests
 ```
 
+图文教程：打开 `h5/?tutorial=<条目id>&step=<n>` 直接跳到某篇教程（嵌入 App 时按条目深链），或在右上角菜单的教程列表里点；「我卡住了」识别出带配图的条目时，步骤标题可点进图文版。给条目加图见 `知识库/entries/schema.md` 的 media 一节，加完跑一遍校验脚本即导出。
+
 首次运行先装依赖：`pip install -r backend/requirements.txt`，并复制 `backend/.env.example` 为 `.env` 填入 `DEEPSEEK_API_KEY`。
 
 ## 目录
@@ -51,6 +54,7 @@ backend/            FastAPI
   prompts/classify.txt  分类提示词
   mock/*.json         演示行程、机场数据（浦东 Wi-Fi 名、护照拍照登录、电信柜台、P2 网约车、25 号门出租车已按公开来源核验；标 verified:false 的仍待核验）、交通方案
   tests/              pytest
+  tutorials.json      校验脚本从带 media 的条目导出，教程屏的数据源；img/tutorial/ 放配图
 知识库/
   entries/            正式条目（JSON）+ schema.md 格式说明 + 校验脚本生成的 .md 预览
   raw/                抓取的原始资料 88 篇，按来源分目录，README.md 按场景索引
@@ -101,7 +105,7 @@ cd h5 && python3 build_h5.py
 
 ## 下一步
 
-1. 收集真实报错截图继续评测（上网场景只有 4 张）
+1. 按 Reddit 真实失败分布扩写条目：支付宝风控解封、实名验证三种失败形态、微信外卡不支持的三个场景
 2. 浦东现场复核：P2 车库是 B1 还是 B2、出租车是 25 还是 26 号门（来源冲突）；设计稿里的 Exit 9 文案要同步改
 3. 离线包 + Service Worker；预翻译
 4. 初赛材料：方案 PDF、演示视频

@@ -154,6 +154,11 @@
           "name": "Beijing Government · Get Connected & Essential Apps",
           "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html",
           "date": "2024-08-30"
+        },
+        {
+          "name": "Apple Support · About cellular data roaming options for iPhone and iPad",
+          "url": "https://support.apple.com/en-us/109037",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-03",
@@ -195,8 +200,8 @@
       "title": "eSIM installed but no internet after landing",
       "why": "Nine times out of ten the eSIM is fine and one switch is off: Data Roaming. Travel eSIMs count as roaming, so the phone refuses to use them until you allow it.",
       "steps": [
-        "Open Settings > Cellular (Mobile Data). Set Cellular Data to the eSIM line, then turn Data Roaming ON for that line.",
-        "Turn Airplane Mode on for 10 seconds and off again so the phone re-registers with the local tower.",
+        "Open Settings > Cellular (Mobile Data) on iPhone, or Settings > Network & internet > SIMs on Android. Set Cellular Data to the eSIM line, then turn Data Roaming ON for that line.",
+        "Turn Airplane Mode on for a few seconds and off again so the phone re-registers with the local tower.",
         "If it still says No Service, open the eSIM line's settings and enter the APN from the confirmation email, then restart the phone.",
         "Check the plan is activated: some eSIMs activate on first connection, others at a start date you chose."
       ],
@@ -207,6 +212,21 @@
       ],
       "scope": "global",
       "sources": [
+        {
+          "name": "Apple Support · View or change cellular data settings on iPhone (Settings > Cellular > Cellular Data Options > Data Roaming)",
+          "url": "https://support.apple.com/guide/iphone/view-or-change-cellular-data-settings-iph3dd5f213/ios",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Apple Support · About cellular data roaming options for iPhone and iPad",
+          "url": "https://support.apple.com/en-us/109037",
+          "date": "2026-10-03"
+        },
+        {
+          "name": "Google Pixel Help · Use dual SIMs on your Pixel (Settings > Network & internet > SIMs, Roaming toggle)",
+          "url": "https://support.google.com/pixelphone/answer/9449293",
+          "date": "2026-10-03"
+        },
         {
           "name": "Trip.com · Best China eSIM Guide (What should I do if my eSIM doesn't work)",
           "url": "https://in.trip.com/guide/phone/china-esim.html",
@@ -229,6 +249,42 @@
       "tags": [
         "connectivity",
         "error"
+      ],
+      "media": [
+        {
+          "step": 1,
+          "file": "connectivity/connectivity_esim_not_working/step1.png",
+          "alt": "iPhone Settings > Cellular > Cellular Data Options: Data Roaming switched on",
+          "source": {
+            "name": "Apple Support · iPhone cellular settings illustrations",
+            "url": "https://support.apple.com/guide/iphone/view-or-change-cellular-data-settings-iph3dd5f213/ios"
+          },
+          "placeholder": true,
+          "origin": "apple_cellular_3.png",
+          "note": "Apple 官方说明图，正式版应换成在中国落地后的真机截图"
+        },
+        {
+          "step": 2,
+          "file": "connectivity/connectivity_esim_not_working/step2.png",
+          "alt": "iPhone Control Center showing SOS only: toggle Airplane Mode on and off to re-register",
+          "source": {
+            "name": "Apple Support · iPhone cellular settings illustrations",
+            "url": "https://support.apple.com/guide/iphone/view-or-change-cellular-data-settings-iph3dd5f213/ios"
+          },
+          "placeholder": true,
+          "origin": "apple_cellular_2.png",
+          "note": "Apple 官方说明图，正式版应换成在中国落地后的真机截图"
+        }
+      ],
+      "reader_links": [
+        {
+          "name": "Apple Support · Cellular data settings",
+          "url": "https://support.apple.com/guide/iphone/view-or-change-cellular-data-settings-iph3dd5f213/ios"
+        },
+        {
+          "name": "Google Pixel Help · Dual SIMs",
+          "url": "https://support.google.com/pixelphone/answer/9449293"
+        }
       ]
     },
     {
@@ -240,7 +296,7 @@
         "Join the airport network: Pudong #AIRPORTPVG-FREE-WIFI, Beijing Capital AIRPORT-FREE-WIFI-NEW, Daxing BDIA-FREE-WIFI. The login page opens by itself; if not, open any website.",
         "Choose the overseas or international phone option, pick your country code, type your number and tap Get code (获得验证码). The SMS arrives on your roaming line even with data off.",
         "Enter the code and tap Login (登录). The session lasts a few hours; reconnect the same way if it drops.",
-        "No code after 60 seconds: do not keep tapping. All three airports' login pages have a Passport Login option where you photograph your passport instead; Beijing Capital also has passport kiosks."
+        "No code after a minute: do not keep tapping. All three airports' login pages have a Passport Login option where you photograph your passport instead; Beijing Capital also has passport kiosks."
       ],
       "fallback": "Airport information desks and the Payment Service Center in the arrivals hall help in person; ask for 免费WiFi.",
       "applies_to": [
@@ -276,7 +332,7 @@
         {
           "fact": "PVG Wi-Fi name is #AIRPORTPVG-FREE-WIFI and SMS login accepts foreign numbers from 220+ countries",
           "status": "verified",
-          "note": "ChinaAirlineTravel airport guide; name also in Chinese airport news. Not yet checked on site."
+          "note": "ChinaAirlineTravel airport guide and Chinese airport news both give this name; the H5 design was updated to it. Not yet checked on site, so re-check on the first real landing."
         },
         {
           "fact": "PVG login page offers passport-photo authentication for passengers without a Chinese SIM",
@@ -302,6 +358,20 @@
       "tags": [
         "connectivity",
         "airport"
+      ],
+      "media": [
+        {
+          "step": 2,
+          "file": "connectivity/connectivity_airport_wifi_sms/step2.jpg",
+          "alt": "Beijing Capital airport official Wi-Fi guide: choose AIRPORT-FREE-WIFI-NEW, enter mobile number, Get verification code, Login",
+          "source": {
+            "name": "Beijing Government · Get Connected (Beijing Capital airport Wi-Fi guide poster)",
+            "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html"
+          },
+          "placeholder": false,
+          "origin": "official_pek_wifi_guide.jpg",
+          "note": "官方海报，三种登录方式都在一张图上；浦东的登录页截图待补"
+        }
       ]
     },
     {
@@ -368,6 +438,19 @@
       "tags": [
         "connectivity",
         "airport"
+      ],
+      "media": [
+        {
+          "step": 2,
+          "file": "connectivity/connectivity_airport_wifi_passport/step2.jpg",
+          "alt": "Beijing Capital airport official Wi-Fi guide, method 2: get an account from the passport kiosk, method 3: Passport Login on the portal",
+          "source": {
+            "name": "Beijing Government · Get Connected (Beijing Capital airport Wi-Fi guide poster)",
+            "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html"
+          },
+          "placeholder": false,
+          "origin": "official_pek_wifi_guide.jpg"
+        }
       ]
     },
     {
@@ -469,6 +552,11 @@
           "name": "Beijing Government · Get Connected (map apps)",
           "url": "https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html",
           "date": "2024-08-30"
+        },
+        {
+          "name": "Apple Support · View or change cellular data settings on iPhone (Settings > Cellular > Cellular Data Options > Data Roaming)",
+          "url": "https://support.apple.com/guide/iphone/view-or-change-cellular-data-settings-iph3dd5f213/ios",
+          "date": "2026-10-03"
         }
       ],
       "verified_at": "2026-10-03",

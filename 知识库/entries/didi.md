@@ -24,14 +24,20 @@
 
 **依赖的事实**
 
-- [verified] DiDi-Greater China supports foreign mobile numbers, international credit cards, English interface and bilingual chat — TripChina citing official guidance (Sep 2026); Trip.com and WildChina agree.
-- [verified] Do not install DiDi Rider; it does not operate in mainland China — WildChina.
+- [verified] DiDi-Greater China supports foreign mobile numbers, international credit cards, English interface and bilingual chat — DiDi's own App Store description: English version, register with your mobile number, international bank cards, bilingual chat, 24/7 in-app English customer service. TripChina, Trip.com and WildChina agree.
+- [verified] DiDi China (滴滴出行, App Store subtitle "Ride in Chinese mainland, HK") is the app for mainland rides; DiDi-Rider is DiDi's app for its other markets — DiDi help centre says a Greater China account can also log into DiDi-Rider, but mainland rides are booked in DiDi China. WildChina says the same.
 
-**来源** [Trip.com · How to Use DiDi in China for Foreigners](https://www.trip.com/guide/transport/how-to-use-didi-in-china.html) 2026-05-14；[TripChina · How to Use DiDi in China: Before Your First Ride](https://tripchina.me/didi-guide-foreigners-china/) 2026-09-29；[WildChina · Guide to Using Didi in China 2025](https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/) 2025-11-10
+**来源** [DiDi · DiDi China: Ride Hailing, official App Store description (English version, register with your mobile number, international bank cards, bilingual chat, 24/7 English customer service)](https://apps.apple.com/us/app/didi-china-ride-hailing/id554499054) 2026-10-03；[DiDi Help Center · DiDi-Rider and DiDi Greater China accounts; international roaming needed for a foreign number](https://web.didiglobal.com/au/help-center/can-i-sign-into-didi-rider-with-my-didi-greater-china-account-details/) 2026-10-03；[Trip.com · How to Use DiDi in China for Foreigners](https://www.trip.com/guide/transport/how-to-use-didi-in-china.html) 2026-05-14；[TripChina · How to Use DiDi in China: Before Your First Ride](https://tripchina.me/didi-guide-foreigners-china/) 2026-09-29；[WildChina · Guide to Using Didi in China 2025](https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/) 2025-11-10
 
 **可推荐给用户** [Trip.com guide: How to use DiDi in China](https://www.trip.com/guide/transport/how-to-use-didi-in-china.html)
 
 相关：`alipay_didi_miniprogram`, `didi_payment_failed`
+
+**配图**
+
+- 第 1 步 `didi/didi_setup_before_flight/step1.png`（占位，演示用） — App Store search for didi: DiDi-Rider is the wrong app, install DiDi China Ride Hailing（tripchina.me · How to use DiDi in China）
+- 第 2 步 `didi/didi_setup_before_flight/step2.png`（占位，演示用） — DiDi Let's Get Started: country code defaults to +86, change it before typing your number（tripchina.me · How to use DiDi in China）
+- 第 3 步 `didi/didi_setup_before_flight/step3.png` — DiDi Account page: Wallet, then Payment Methods（Trip.com · How to use DiDi in China guide）
 
 ---
 
@@ -44,14 +50,18 @@
 **Do this now**
 1. Check the country code and number; DiDi defaults to +86.
 2. Turn on the SIM that owns that number and enable roaming for it, or re-enable it if you switched it off for an eSIM. Data-only eSIMs cannot receive SMS.
-3. Wait 60 seconds before requesting again; rapid requests get throttled.
+3. Wait about a minute before requesting again; rapid requests get throttled.
 4. Still nothing: book the ride inside Alipay instead (search DiDi), which uses your Alipay login and needs no new code.
 
 **Still stuck** Take the official taxi queue at the airport, or pre-book a Trip.com transfer so the ride does not depend on an unresolved app.
 
-**来源** [TripChina · How to Use DiDi in China (SMS troubleshooting)](https://tripchina.me/didi-guide-foreigners-china/) 2026-09-29；[WildChina · Guide to Using Didi in China 2025](https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/) 2025-11-10
+**依赖的事实**
 
-相关：`alipay_sms_code_not_received`, `alipay_didi_miniprogram`
+- [verified] A foreign number on a DiDi account needs international roaming enabled; otherwise use in-app messaging — DiDi Help Center page on DiDi-Rider / Greater China accounts.
+
+**来源** [DiDi Help Center · DiDi-Rider and DiDi Greater China accounts; international roaming needed for a foreign number](https://web.didiglobal.com/au/help-center/can-i-sign-into-didi-rider-with-my-didi-greater-china-account-details/) 2026-10-03；[TripChina · How to Use DiDi in China (SMS troubleshooting)](https://tripchina.me/didi-guide-foreigners-china/) 2026-09-29；[WildChina · Guide to Using Didi in China 2025](https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/) 2025-11-10
+
+相关：`alipay_sms_code_not_received`, `wechat_sms_code_not_received`, `alipay_didi_miniprogram`
 
 ---
 
@@ -74,7 +84,7 @@
 - [verified] DiDi accepts Alipay, WeChat Pay, credit/debit card and Apple Pay as payment methods — WildChina screenshots of the Payment Methods list; TripChina.
 - [verified] The Taxi ride type accepts cash — WildChina FAQ.
 
-**来源** [TripChina · How to Use DiDi in China (payment)](https://tripchina.me/didi-guide-foreigners-china/) 2026-09-29；[Trip.com · How to Get Didi Ride in China: Airport Booking, Payment Tips](https://in.trip.com/guide/transport/didi-china.html) 2026-07-07；[WildChina · Guide to Using Didi in China 2025 (FAQ)](https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/) 2025-11-10
+**来源** [DiDi · DiDi China: Ride Hailing, official App Store description (English version, register with your mobile number, international bank cards, bilingual chat, 24/7 English customer service)](https://apps.apple.com/us/app/didi-china-ride-hailing/id554499054) 2026-10-03；[TripChina · How to Use DiDi in China (payment)](https://tripchina.me/didi-guide-foreigners-china/) 2026-09-29；[Trip.com · How to Get Didi Ride in China: Airport Booking, Payment Tips](https://in.trip.com/guide/transport/didi-china.html) 2026-07-07；[WildChina · Guide to Using Didi in China 2025 (FAQ)](https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/) 2025-11-10
 
 相关：`alipay_card_bind_failed`, `alipay_didi_miniprogram`
 
@@ -88,17 +98,17 @@
 
 **Do this now**
 1. Collect your luggage first; do not book from the plane or the baggage hall.
-2. Follow the signs reading Online Car-hailing / 网约车 to the pickup zone. At Pudong T2 the signs say 网约车上车点请前往P2停车库: take the lift down into the P2 car park (level B1) and find a numbered waiting point (等候点). Ignore anyone offering a ride inside the terminal.
+2. Follow the signs reading Online Car-hailing / 网约车 to the pickup zone. At Pudong T2 the signs say 网约车上车点请前往P2停车库: take the lift down into the P2 car park and follow the 网约车 signs to a numbered waiting point (等候点). Ignore anyone offering a ride inside the terminal.
 3. Open DiDi at the zone. It auto-selects the airport pickup spot; if the pin is across the road, drag it to your bay and note the bay code (such as A1 or B3).
 4. Type the hotel name in English, pick Express or, with big luggage, the Airport Transfer car type, then confirm. Follow the in-app arrow to your bay.
 
-**Still stuck** If no cars are matching, walk to the official taxi queue (Pudong T2: take the escalator down to level 1 and go out through Door 25). A pre-booked Trip.com transfer avoids all of this: the driver waits at arrivals with your name.
+**Still stuck** If no cars are matching, walk to the official taxi queue: at Pudong T2 follow the 出租车 Taxi signs down to level 1. A pre-booked Trip.com transfer avoids all of this: the driver waits at arrivals with your name.
 
 **依赖的事实**
 
 - [verified] PVG ride-hailing pickup: P1 car park for T1, P2 car park for T2, 40 numbered waiting points — Official signage photographed by 京报网 (Feb 2024); Shanghai Tourism 2026 agrees.
-- [conflict] Pickup level inside P2 — 京报网 says B1; Shanghai Tourism says B2. Signs on site decide.
-- [conflict] PVG T2 taxi stand: level 1 via Door 25 — Shanghai local guides (bendibao, Ctrip airport page) say Door 25; one English guide says Door 26.
+- [conflict] Pickup level inside P2 — 京报网 says B1; Shanghai Tourism says B2. Body no longer names the level; signs on site decide.
+- [conflict] PVG T2 taxi stand: level 1 via Door 25 — Shanghai local guides (bendibao, Ctrip airport page) say Door 25; one English guide says Door 26. Body no longer names the door. The H5 design still shows Door 25 from the earlier check.
 - [verified] Order only once you reach the pickup zone to avoid waiting fees — Trip.com airport tips.
 
 **来源** [Trip.com · How to Get Didi Ride in China: Airport Booking, Payment Tips](https://in.trip.com/guide/transport/didi-china.html) 2026-07-07；[TripChina · How to Use DiDi in China (airport pickup)](https://tripchina.me/didi-guide-foreigners-china/) 2026-09-29；[京报网 · 实探上海浦东机场：出租车随到随走，新增“网约车上车点”标识](https://news.bjd.com.cn/2024/02/05/10695782.shtml) 2024-02-05；[Shanghai Tourism · Using Didi in Shanghai (2026)](https://www.shanghaitourism.org/using-didi-shanghai/) 2026-07-25
@@ -106,6 +116,11 @@
 **可推荐给用户** [Trip.com guide: DiDi airport booking](https://in.trip.com/guide/transport/didi-china.html)
 
 相关：`didi_find_driver`, `alipay_didi_miniprogram`
+
+**配图**
+
+- 第 3 步 `didi/didi_airport_pickup/step3.png` — DiDi fixed pickup point list at a station: choose the entrance that matches where you stand（Trip.com · How to use DiDi in China guide）
+- 第 4 步 `didi/didi_airport_pickup/step4.png` — DiDi ride types with prices: pick Express, then Confirm Request（Trip.com · How to use DiDi in China guide）
 
 ---
 
@@ -127,7 +142,7 @@
 
 - [verified] In-app chat auto-translates between English and Chinese — WildChina, Trip.com and TripChina all state it.
 
-**来源** [WildChina · Guide to Using Didi in China 2025](https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/) 2025-11-10；[Trip.com · How to Get Didi Ride in China (meet your driver)](https://in.trip.com/guide/transport/didi-china.html) 2026-07-07
+**来源** [WildChina · Guide to Using Didi in China 2025](https://wildchina.com/2025/10/a-guide-to-using-didi-in-china-2025/) 2025-11-10；[Trip.com · How to Get Didi Ride in China (meet your driver)](https://in.trip.com/guide/transport/didi-china.html) 2026-07-07；[DiDi · DiDi China: Ride Hailing, official App Store description (English version, register with your mobile number, international bank cards, bilingual chat, 24/7 English customer service)](https://apps.apple.com/us/app/didi-china-ride-hailing/id554499054) 2026-10-03
 
 相关：`didi_airport_pickup`, `didi_cancel_or_wrong_car`
 
@@ -140,7 +155,7 @@
 **Why** Cancelling after the driver is on the way can cost a small fee, and touts at airports try to get passengers into unlicensed cars. Both are easy to avoid once you know the rule.
 
 **Do this now**
-1. To cancel: open the trip, tap Cancel, pick a reason. Cancelling within the first minute or two is normally free; later a cancellation fee is shown before you confirm.
+1. To cancel: open the trip, tap Cancel, pick a reason. Cancelling right after booking is normally free; once a driver is on the way, any fee is shown before you confirm.
 2. Never get into a car whose plate does not match the app, even if the driver calls your name. Cancel and rebook.
 3. If you were charged a fee you think is wrong, go to Account > Trips, open the trip and tap Help to dispute it in English.
 4. At airports, ignore anyone approaching with 'taxi?' inside the terminal; licensed rides only come from the signed zone or the official queue.

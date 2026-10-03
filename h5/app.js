@@ -35,6 +35,90 @@
     else if (a.startsWith('then:')) { const [t, g] = a.slice(5).split('|'); toast(t); setTimeout(() => show(g.slice(3)), 800); }
     else if (a.startsWith('toast:')) toast(a.slice(6));
   }
+
+  // ---------- 图文教程屏（运行时注入；数据来自 h5/tutorials.json，后端可达时用接口里的翻译文案） ----------
+  const TUT = { all: null, e: null, i: 0 };
+  const BLUE = '#2C61FE', GREEN = '#1BA672', INK = '#1A1F2E', MUTED = '#6F7685', LINE = '#DADFE6', BG = '#F0F2F5';
+  const tut = document.createElement('div');
+  tut.className = 'screen'; tut.dataset.route = 'tutorial'; tut.setAttribute('data-pencil-name', 'Tutorial');
+  tut.style.cssText = `background:#fff;width:393px;height:852px;position:relative;margin:0 auto;box-sizing:border-box;font-family:Inter,-apple-system,"PingFang SC",sans-serif;color:${INK}`;
+  tut.innerHTML = `
+    <div style="padding:54px 20px 0;display:flex;align-items:center;gap:10px">
+      <div data-act="back" style="width:36px;height:36px;border-radius:18px;background:${BG};display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></div>
+      <div style="min-width:0"><div id="tutTitle" style="font:700 17px/1.25 Inter,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div><div id="tutSub" style="font:500 12px/1.3 Inter,sans-serif;color:${MUTED};margin-top:2px"></div></div>
+    </div>
+    <div id="tutBar" style="display:flex;gap:6px;padding:14px 20px 0"></div>
+    <div class="scroll" style="padding:14px 20px 0">
+      <div id="tutImgBox" style="width:353px;height:199px;border-radius:16px;overflow:hidden;background:${BG} center/cover no-repeat;border:1px solid ${LINE};position:relative;flex:none">
+        <img id="tutImg" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
+        <div id="tutAlt" style="position:absolute;left:0;right:0;bottom:0;padding:6px 10px;font:500 11px/1.3 Inter,sans-serif;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.55))"></div>
+      </div>
+      <div id="tutWhy" style="margin-top:14px;padding:12px 14px;border-radius:12px;background:#EEF3FF;font:400 13px/1.5 Inter,sans-serif;color:${INK}"></div>
+      <div style="display:flex;gap:12px;margin-top:16px;align-items:flex-start">
+        <div id="tutNum" style="width:28px;height:28px;border-radius:14px;background:${BLUE};color:#fff;font:700 14px/28px Inter,sans-serif;text-align:center;flex:none"></div>
+        <div id="tutStep" style="font:500 16px/1.5 Inter,sans-serif;flex:1"></div>
+      </div>
+      <div id="tutFb" style="margin-top:16px;padding:12px 14px;border-radius:12px;background:#FFF4E5;border:1px solid #F5D9B0;font:400 13px/1.5 Inter,sans-serif"></div>
+      <div id="tutSrc" style="margin:18px 0 20px;font:400 11px/1.4 Inter,sans-serif;color:${MUTED}"></div>
+    </div>
+    <div style="padding:10px 20px 28px;display:flex;gap:10px;border-top:1px solid ${LINE};background:#fff">
+      <div id="tutPrev" style="flex:1;height:48px;border-radius:24px;background:${BG};color:${INK};font:600 15px/48px Inter,sans-serif;text-align:center;cursor:pointer">Previous</div>
+      <div id="tutNext" style="flex:2;height:48px;border-radius:24px;background:${BLUE};color:#fff;font:600 15px/48px Inter,sans-serif;text-align:center;cursor:pointer">Next step</div>
+    </div>`;
+  const screens = document.querySelectorAll('#phone > .screen');
+  if (screens.length) screens[screens.length - 1].after(tut);
+  if (typeof order !== 'undefined' && !order.includes('tutorial')) order.push('tutorial');
+  const T = id => tut.querySelector('#' + id);
+  function tutRender() {
+    const e = TUT.e; if (!e) return;
+    const n = e.steps.length, i = TUT.i, last = i === n - 1;
+    const m = (e.media || []).find(x => x.step === i + 1);
+    txt(T('tutTitle'), e.title); txt(T('tutSub'), `Step ${i + 1} of ${n}` + (e.verified_at ? ` · verified ${e.verified_at}` : ''));
+    T('tutBar').innerHTML = e.steps.map((_, k) => `<div style="flex:1;height:4px;border-radius:2px;background:${k <= i ? BLUE : LINE}"></div>`).join('');
+    const box = T('tutImgBox'), img = T('tutImg');
+    if (m) { box.style.display = ''; box.style.backgroundImage = m.poster ? `url(img/tutorial/${m.poster})` : ''; img.style.objectFit = 'cover'; box.style.height = '199px'; img.src = 'img/tutorial/' + m.file; img.alt = m.alt || ''; txt(T('tutAlt'), m.alt || ''); }
+    else { box.style.display = 'none'; img.removeAttribute('src'); }
+    T('tutWhy').style.display = i === 0 ? '' : 'none'; txt(T('tutWhy'), e.why);
+    txt(T('tutNum'), String(i + 1)); txt(T('tutStep'), e.steps[i]);
+    T('tutFb').style.display = last ? '' : 'none'; txt(T('tutFb'), 'Still stuck? ' + e.fallback);
+    const imgSrc = m && m.source ? ` · Image: ${m.source.name.split('·')[0].trim()}${m.placeholder ? ' (placeholder, demo only)' : ''}` : '';
+    txt(T('tutSrc'), `Steps from ${e.sources && e.sources[0] ? e.sources[0].name.split('·')[0].trim() : 'Trip.com'}${imgSrc}`);
+    T('tutPrev').style.visibility = i === 0 ? 'hidden' : 'visible';
+    txt(T('tutNext'), last ? 'Done' : 'Next step'); T('tutNext').style.background = last ? GREEN : BLUE;
+    const sc = tut.querySelector('.scroll'); if (sc) sc.scrollTop = 0;
+  }
+  // 竖屏截图：按原比例完整显示，限高 400
+  T('tutImg').onload = function () { const portrait = this.naturalHeight > this.naturalWidth; const box = T('tutImgBox'); if (portrait) { this.style.objectFit = 'contain'; box.style.height = '400px'; box.style.backgroundImage = ''; } };
+  T('tutPrev').onclick = () => { if (TUT.i > 0) { TUT.i--; tutRender(); } };
+  T('tutNext').onclick = () => { if (TUT.i < TUT.e.steps.length - 1) { TUT.i++; tutRender(); } else back(); };
+  (() => { let x0 = 0; const box = T('tutImgBox'); box.addEventListener('touchstart', ev => { x0 = ev.touches[0].clientX; }, { passive: true }); box.addEventListener('touchend', ev => { const dx = ev.changedTouches[0].clientX - x0; if (dx < -40) T('tutNext').onclick(); else if (dx > 40) T('tutPrev').onclick(); }); })();
+  async function openTutorial(id, lang, step) {
+    if (!TUT.all) { try { TUT.all = (await fetch('tutorials.json').then(ok)).tutorials; } catch (e) { TUT.all = []; } }
+    let e = TUT.all.find(t => t.id === id);
+    if (!e) { toast('No tutorial for this step yet'); return; }
+    e = Object.assign({}, e);
+    if (API) { try { const r = await withTimeout(get(`/kb/entry/${id}?lang=${lang || 'en'}`), 4000); ['title', 'why', 'steps', 'fallback'].forEach(k => { if (r[k]) e[k] = r[k]; }); } catch (err) {} }
+    TUT.e = e; TUT.i = Math.min(Math.max((parseInt(step, 10) || 1) - 1, 0), e.steps.length - 1); tutRender(); show('tutorial');
+  }
+  window.lcTutorial = openTutorial;
+  // 深链：?tutorial=<条目id> 直接打开图文教程（嵌入 App 时按条目跳转）
+  const tutQ = qs.get('tutorial'); if (tutQ) setTimeout(() => openTutorial(tutQ, qs.get('lang'), qs.get('step')), 150);
+  window.lcHasTutorial = async id => { if (!TUT.all) { try { TUT.all = (await fetch('tutorials.json').then(ok)).tutorials; } catch (e) { TUT.all = []; } } return TUT.all.some(t => t.id === id); };
+  // 行前检查 · 支付宝一项下挂图文教程入口（样例：只给支付宝加，体现思路）
+  (() => {
+    const item = $$('preflight', 'Item Alipay payment'); if (!item) return;
+    const link = el('div', `display:flex;align-items:center;gap:6px;padding-left:38px;cursor:pointer;font:600 12px/1.3 Inter,system-ui,sans-serif;color:${BLUE}`);
+    link.setAttribute('data-pencil-name', 'Item Guide Link');
+    link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="${BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Step-by-step setup guide · 4 screenshots ›</span>`;
+    link.onclick = ev => { ev.stopPropagation(); openTutorial('alipay_setup_before_flight'); };
+    item.appendChild(link);
+  })();
+  const menuList = document.getElementById('list');
+  if (menuList) {
+    const sep = document.createElement('div'); sep.style.cssText = 'border-top:1px solid #DADFE6;margin:4px 0'; menuList.appendChild(sep);
+    fetch('tutorials.json').then(ok).then(d => { TUT.all = d.tutorials; d.tutorials.forEach(t => { const b = document.createElement('button'); b.textContent = '📖 ' + t.title; b.onclick = () => openTutorial(t.id); menuList.appendChild(b); }); }).catch(() => {});
+  }
+
   if (!API) { status('静态模式'); window.lcHandle = (act) => staticHandle(act); window.lcOnShow = () => {}; return; }
   get('/health').then(() => status('后端已连接 · ' + API.replace(/^https?:\/\//, ''), 'rgba(27,166,114,.85)')).catch(() => status('后端不可达，静态模式', 'rgba(232,137,12,.9)'));
 
@@ -115,6 +199,17 @@
     try { renderStuck(await withTimeout(post('/stuck/classify', fd, true), 15000)); }
     catch (e) { toast('Recognition unavailable, showing offline guidance'); renderStuck({ decision: 'unknown', mode: 'offline', scenario: 'unknown', advice: null, confidence: 0 }); }
   };
+  // 一步文字拆成标题 + 正文：按句末的 . : ; 切（后面跟空格或结尾，避免切到 Trip.com、0.05）
+  function splitStep(t) {
+    const m = /[.:;](?=\s|$)/.exec(t || '');
+    if (!m) return { title: t || '', desc: '' };
+    return { title: t.slice(0, m.index).trim(), desc: t.slice(m.index + 1).trim() };
+  }
+  function setStepRow(row, text) {
+    const { title, desc } = splitStep(text);
+    txt(row.querySelector('[data-pencil-name="Step Title"]'), title);
+    const d = row.querySelector('[data-pencil-name="Step Desc"]'); if (d) { d.textContent = desc; d.style.display = desc ? '' : 'none'; }
+  }
   function stepRows() {
     let rows = $all('stuck', 'Step 1').concat($all('stuck', 'Step 2'), $all('stuck', 'Step 3'));
     if (rows.length === 3 && !$$('stuck', 'Step 4')) { const r4 = rows[2].cloneNode(true); r4.setAttribute('data-pencil-name', 'Step 4'); const n = r4.querySelector('[data-pencil-name="Num Text"]'); if (n) n.textContent = '4'; rows[2].after(r4); }
@@ -125,12 +220,20 @@
     txt($$('stuck', 'Rec Label'), 'ANALYSING…'); txt($$('stuck', 'Shot Title'), 'Reading your screenshot'); txt($$('stuck', 'Shot Why'), 'Usually takes 1–2 seconds.');
     const img = $$('stuck', 'Thumb'); if (img && S.lastShot) { img.style.backgroundImage = `url(${URL.createObjectURL(S.lastShot)})`; img.style.backgroundSize = 'cover'; [...img.children].forEach(c => c.style.visibility = 'hidden'); }
   }
+  // 转人工卡片：导出稿里两行都是 nowrap 且父容器没 min-width，长文字会溢出；运行时改成可换行
+  const SUP = {};
+  function supCard(fallback) {
+    const t = $$('stuck', 'Sup Title'), sub = $$('stuck', 'Sup Sub'), box = $$('stuck', 'Sup Texts');
+    if (!SUP.init) { SUP.init = true; SUP.title = t ? t.textContent : ''; SUP.sub = sub ? sub.textContent : ''; if (box) box.style.minWidth = '0'; [t, sub].forEach(n => { if (n) { n.style.whiteSpace = 'normal'; n.style.width = '100%'; } }); if (sub) sub.style.lineHeight = '16px'; }
+    txt(t, SUP.title);
+    txt(sub, fallback ? fallback + ' · Or chat with Trip.com support in English, 24/7, with this screenshot attached.' : SUP.sub);
+  }
   function fillEntry(e) {
     S.entry = e.id;
     txt($$('stuck', 'Rec Label'), 'RECOGNIZED · ' + (e.scenario || '').toUpperCase()); txt($$('stuck', 'Shot Title'), e.title); txt($$('stuck', 'Shot Why'), e.why);
-    txt($$('stuck', 'Steps Title'), 'Do this now');
-    stepRows().forEach((row, i) => { row.style.display = e.steps[i] ? '' : 'none'; txt(row.querySelector('[data-pencil-name="Step Title"]'), e.steps[i] ? e.steps[i].split(/[.:]/)[0] : ''); txt(row.querySelector('[data-pencil-name="Step Desc"]'), e.steps[i] || ''); row.onclick = null; });
-    txt($$('stuck', 'Sup Title'), 'Still stuck? ' + e.fallback.slice(0, 60) + (e.fallback.length > 60 ? '…' : ''));
+    const stT = $$('stuck', 'Steps Title'); txt(stT, 'Do this now'); if (stT) { stT.style.cursor = ''; stT.onclick = null; window.lcHasTutorial(e.id).then(has => { if (!has || S.entry !== e.id) return; txt(stT, 'Do this now · See it step by step ›'); stT.style.cursor = 'pointer'; stT.onclick = () => window.lcTutorial(e.id); }); }
+    stepRows().forEach((row, i) => { row.style.display = e.steps[i] ? '' : 'none'; if (e.steps[i]) setStepRow(row, e.steps[i]); row.onclick = null; });
+    supCard(e.fallback);
     txt($$('stuck', 'Src Text'), `Steps from ${e.sources[0].name.split('·')[0].trim()} · verified ${e.verified_at}`);
   }
   function renderStuck(d) {
@@ -139,14 +242,14 @@
       S.entry = null;
       txt($$('stuck', 'Rec Label'), 'NOT SURE · ' + (d.scenario || '').toUpperCase()); txt($$('stuck', 'Shot Title'), 'Which of these is it?'); txt($$('stuck', 'Shot Why'), 'The screenshot could mean a few things. Tap the one that matches.');
       txt($$('stuck', 'Steps Title'), 'Tap one');
-      stepRows().forEach((row, i) => { const c = d.candidates[i]; row.style.display = c ? '' : 'none'; if (!c) return; txt(row.querySelector('[data-pencil-name="Step Title"]'), c.title); txt(row.querySelector('[data-pencil-name="Step Desc"]'), `Confidence ${c.confidence}`); row.style.cursor = 'pointer'; row.onclick = async () => fillEntry(await get(`/kb/entry/${c.entry_id}?lang=en`)); });
+      stepRows().forEach((row, i) => { const c = d.candidates[i]; row.style.display = c ? '' : 'none'; if (!c) return; txt(row.querySelector('[data-pencil-name="Step Title"]'), c.title); const cd = row.querySelector('[data-pencil-name="Step Desc"]'); if (cd) { cd.textContent = `Confidence ${c.confidence}`; cd.style.display = ''; } row.style.cursor = 'pointer'; row.onclick = async () => fillEntry(await get(`/kb/entry/${c.entry_id}?lang=en`)); });
       txt($$('stuck', 'Src Text'), `Confidence ${d.confidence} · ${d.mode}`); return;
     }
     S.entry = null;
     txt($$('stuck', 'Rec Label'), 'NOT COVERED YET'); txt($$('stuck', 'Shot Title'), "We don't have this one yet"); txt($$('stuck', 'Shot Why'), d.advice ? 'AI suggestion, not verified by us:' : 'Try the support chat below.');
     txt($$('stuck', 'Steps Title'), d.advice ? 'AI suggestion · unverified' : 'What you can do');
     const lines = d.advice ? d.advice.split(/(?<=[.!?])\s+/).slice(0, 3) : ['Show the screen to a staff member nearby.', 'Open the app\'s English support if it has one.', 'Chat with Trip.com support below.'];
-    stepRows().forEach((row, i) => { row.style.display = lines[i] ? '' : 'none'; txt(row.querySelector('[data-pencil-name="Step Title"]'), lines[i] ? lines[i].split(/[.:]/)[0] : ''); txt(row.querySelector('[data-pencil-name="Step Desc"]'), lines[i] || ''); row.onclick = null; });
+    stepRows().forEach((row, i) => { row.style.display = lines[i] ? '' : 'none'; if (lines[i]) setStepRow(row, lines[i]); row.onclick = null; });
     txt($$('stuck', 'Src Text'), 'Not from the knowledge base · ' + d.mode);
   }
   async function solved() { if (S.entry) { try { await post('/kb/feedback', { entry_id: S.entry, solved: true }); } catch (e) {} } S.entry = null; toast('Thanks, recorded'); back(); }
@@ -318,6 +421,7 @@
     const nb = mk('🌙 深夜落地模式：关', () => { S.night = !S.night; nb.textContent = '🌙 深夜落地模式：' + (S.night ? '开' : '关'); renderTransport(); toast(S.night ? '交通推荐按 23:40 落地计算' : '恢复 14:20 落地'); });
     mk('💳 模拟支付失败', async () => { try { const r = await post('/mock/pay-test?fail=1'); renderPayFail(r); show('payment'); } catch (e) { toast('后端不可达'); } });
   }
+  const stuckQ = qs.get('stuck'); if (stuckQ) get(`/kb/entry/${stuckQ}?lang=en`).then(e => { fillEntry(e); show('stuck'); }).catch(() => toast('No such entry'));
   snapStepStyles('step3'); captureIcons(); snapPay();
   renderPreflight();
   const cur = document.querySelector('.screen.on'); if (cur) window.lcOnShow(cur.dataset.route);

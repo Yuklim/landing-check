@@ -12,7 +12,11 @@ ENT = os.path.normpath(os.path.join(HERE, '..', 'entries'))
 REQ = ['id', 'stage', 'title', 'why', 'steps', 'fallback', 'applies_to', 'scope', 'sources', 'verified_at', 'volatility']
 STAGES = {'preflight', 'landing', 'anytime'}
 VOL = {'high', 'low'}
-READER_OK = ('trip.com', 'gov.cn', 'alipayplus.com', '12306.cn', 'alipay.com', 'weixin.qq.com', 'tencent.com')
+H5 = os.path.normpath(os.path.join(HERE, '..', '..', 'h5'))
+MEDIA_DIR = os.path.join(H5, 'img', 'tutorial')
+TUTORIALS = os.path.join(H5, 'tutorials.json')
+READER_OK = ('trip.com', 'gov.cn', 'alipayplus.com', '12306.cn', 'alipay.com', 'weixin.qq.com', 'tencent.com', 'antgroup.com',
+             'unionpayintl.com', 'unionpay.com', 'didiglobal.com', 'support.apple.com', 'support.google.com')
 
 
 def all_ids():
@@ -54,6 +58,25 @@ def check(path):
         bad = [w for w in ('vpn', 'wildchina', 'promo code') if w in body]
         if bad:
             errs.append('%s: 正文含禁用词 %s' % (e.get('id'), bad))
+        for m in e.get('media', []) or []:
+            eid = e.get('id')
+            n = len(e.get('steps', []))
+            if not isinstance(m.get('step'), int) or not (1 <= m['step'] <= n):
+                errs.append('%s: media.step 要在 1 到 %d 之间' % (eid, n))
+            for k in ('file', 'alt', 'source'):
+                if not m.get(k):
+                    errs.append('%s: media 缺 %s' % (eid, k))
+            if not (m.get('source') or {}).get('url'):
+                errs.append('%s: media.source 缺 url' % eid)
+            if m.get('file', '').lower().endswith('.gif') and not m.get('poster'):
+                errs.append('%s: GIF 配图要带 poster 静态首帧' % eid)
+            if os.path.isdir(MEDIA_DIR):
+                for k in ('file', 'poster'):
+                    if m.get(k) and not os.path.isfile(os.path.join(MEDIA_DIR, m[k])):
+                        errs.append('%s: media.%s 文件不存在 h5/img/tutorial/%s' % (eid, k, m[k]))
+        steps_with_img = [m.get('step') for m in e.get('media', []) or []]
+        if len(steps_with_img) != len(set(steps_with_img)):
+            errs.append('%s: 同一步配了多张图' % e.get('id'))
         try:
             datetime.date.fromisoformat(e.get('verified_at', ''))
         except Exception:
@@ -88,7 +111,30 @@ def render(d):
             L += ['**可推荐给用户** ' + '；'.join('[%s](%s)' % (r['name'], r['url']) for r in e['reader_links']), '']
         if e.get('related'):
             L += ['相关：' + ', '.join('`%s`' % r for r in e['related']), '']
+        if e.get('media'):
+            L += ['**配图**', '']
+            L += ['- 第 %d 步 `%s`%s — %s（%s）' % (m['step'], m['file'], '（占位，演示用）' if m.get('placeholder') else '', m['alt'], m['source']['name']) for m in e['media']]
+            L.append('')
     return '\n'.join(L)
+
+
+TUT_FIELDS = ('id', 'stage', 'title', 'why', 'steps', 'fallback', 'applies_to', 'media', 'sources', 'verified_at')
+
+
+def export_tutorials():
+    """把带 media 的条目导出到 h5/tutorials.json，H5 在静态模式下也能展示图文教程。"""
+    out = []
+    for f in sorted(glob.glob(os.path.join(ENT, '*.json'))):
+        d = json.load(open(f, encoding='utf-8'))
+        for e in d.get('entries', []):
+            if e.get('media'):
+                t = {k: e[k] for k in TUT_FIELDS if k in e}
+                t['scenario'] = d['scenario']
+                out.append(t)
+    if not os.path.isdir(H5):
+        return 0
+    json.dump({'generated': datetime.date.today().isoformat(), 'tutorials': out}, open(TUTORIALS, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    return len(out)
 
 
 if __name__ == '__main__':
@@ -106,4 +152,6 @@ if __name__ == '__main__':
             print('%s: %d 条，通过' % (os.path.basename(f), n))
         open(f[:-5] + '.md', 'w', encoding='utf-8').write(render(d) + '\n')
     print('合计 %d 条，%d 个文件有问题' % (total, bad))
+    if not bad:
+        print('导出 %d 篇图文教程到 h5/tutorials.json' % export_tutorials())
     sys.exit(1 if bad else 0)

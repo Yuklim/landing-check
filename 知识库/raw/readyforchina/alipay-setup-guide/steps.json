@@ -1,0 +1,54 @@
+{
+ "iosSteps": {
+  "step1": {
+   "title": "Download from App Store",
+   "description": "Install the official AliPay app from the iOS App Store - ensure it's by Alipay (Hangzhou) Technology Co., Ltd."
+  },
+  "step2": {
+   "title": "Sign Up with Mobile",
+   "description": "Tap 'Register' and use your international mobile number for account creation."
+  },
+  "step3": {
+   "title": "Verify Identity",
+   "description": "Navigate to 'Account' → 'Settings' (the gear icon) → 'Account and Security' → 'Identity Verification' and upload your passport photo and a selfie."
+  },
+  "step4": {
+   "title": "Await Verification",
+   "description": "Verification usually takes a few minutes, you can check if its completed by 'Account' → 'Settings' (the gear icon) → 'Account and Security' → 'Identity Information'"
+  },
+  "step5": {
+   "title": "Link Your Card",
+   "description": "Navigate to 'Account' → 'Settings' → 'Bank Cards' → '+' to add your international credit/debit card."
+  },
+  "step6": {
+   "title": "Test your Payment",
+   "description": "To make sure your AliPay is working, you can test it by clicking the button below."
+  }
+ },
+ "androidSteps": {
+  "step1": {
+   "title": "Download from Google Play",
+   "description": "Install the official AliPay app from the Google Play Store - search for 'AliPay' and look for the official app by Alipay (Hangzhou) Technology Co., Ltd."
+  },
+  "step2": {
+   "title": "Create Account with Phone",
+   "description": "Open AliPay and tap 'Sign Up'. Use your international phone number to create an account."
+  },
+  "step3": {
+   "title": "Add International Card",
+   "description": "Go to 'Cards & Banks' → 'Add Card' and link your international Visa/Mastercard."
+  },
+  "step4": {
+   "title": "Complete ID Verification",
+   "description": "Upload photos of your passport and take a selfie for identity verification."
+  },
+  "step5": {
+   "title": "Set Up Payment PIN",
+   "description": "Create a 6-digit payment PIN and enable fingerprint/face unlock for faster payments."
+  },
+  "step6": {
+   "title": "Enable Overseas Features",
+   "description": "In Settings → Payment Settings, enable 'Overseas Payment' for international card usage."
+  }
+ }
+}

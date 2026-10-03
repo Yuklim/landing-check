@@ -37,8 +37,26 @@
 | `volatility` | 是 | `high` 数字和规则常变，季度复核；`low` 一年不动 |
 | `facts` | 否 | 条目依赖的具体数字，单独列出便于复核：`{"fact":"...", "status":"verified|conflict|unverified", "note":"..."}` |
 | `related` | 否 | 相关条目 id |
-| `reader_links` | 否 | 可直接推荐给用户阅读的外链（只允许 Trip.com 和官方来源） |
+| `reader_links` | 否 | 可直接推荐给用户阅读的外链。只允许 Trip.com 和官方来源：政府网、支付宝/Alipay+/蚂蚁集团、微信/腾讯、银联、滴滴、Apple 与 Google 的支持页，白名单在校验脚本 `READER_OK` |
 | `tags` | 否 | 自由标签 |
+| `media` | 否 | 图文教程配图，列表。每项 `{"step": 1, "file": "...", "poster": "...", "alt": "...", "source": {"name","url"}, "placeholder": true, "note": "..."}`，见下文 |
+
+## media：图文教程配图
+
+有 `media` 的条目会被导出成 H5 的图文教程（`h5/tutorials.json`），一步一图，配到 `steps` 的第几步由 `step` 指定。
+
+| 字段 | 必填 | 说明 |
+|---|---|---|
+| `step` | 是 | 1 到 `steps` 的长度，配到哪一步 |
+| `file` | 是 | 相对 `h5/img/tutorial/` 的路径，按 `场景/条目id/stepN.<ext>` 放。GIF、PNG、JPG、WebP 都可以；竖屏截图教程屏会按原比例完整显示 |
+| `poster` | 否 | 静态首帧 PNG，弱网先显示；GIF 必须配 |
+| `alt` | 是 | 一句话说明图里是什么，英文，给读屏和图片加载失败时用 |
+| `source` | 是 | `{"name","url"}`，图从哪来 |
+| `placeholder` | 否 | `true` 表示第三方站点扒来的图，只能演示用，正式版要换成自己截的或 Trip.com 自家的图 |
+| `note` | 否 | 内部备注，比如图和文字路径不完全一致 |
+| `origin` | 否 | 图在 `知识库/samples/` 里的原文件名，便于回溯 |
+
+规则：一步最多一张图；`placeholder: true` 的图不得出现在正式版里；图里不能有第三方站点水印以外的推广信息。
 
 ## 写作规则
 
@@ -52,4 +70,5 @@
 
 ```bash
 python3 知识库/tools/validate_entries.py          # 检查全部文件并生成同名 .md 预览
+# 同时把带 media 的条目导出到 h5/tutorials.json，供 H5 教程屏使用
 ```

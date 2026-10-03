@@ -27,7 +27,7 @@
 - [verified] Travel eSIMs and international roaming reach international services because traffic exits through overseas gateways; local physical SIMs do not — Trip.com and WildChina agree.
 - [verified] Data-only eSIMs cannot receive SMS — TripChina DiDi guide.
 
-**来源** [Trip.com · Best China eSIM Guide: No VPN Needed for Foreigners](https://in.trip.com/guide/phone/china-esim.html) 2026-04-02；[WildChina · Staying Connected in China (Internet)](https://wildchina.com/trip-to-china-pre-departure-guide/#internet) 2026-09-24；[Beijing Government · Get Connected & Essential Apps](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html) 2024-08-30
+**来源** [Trip.com · Best China eSIM Guide: No VPN Needed for Foreigners](https://in.trip.com/guide/phone/china-esim.html) 2026-04-02；[WildChina · Staying Connected in China (Internet)](https://wildchina.com/trip-to-china-pre-departure-guide/#internet) 2026-09-24；[Beijing Government · Get Connected & Essential Apps](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html) 2024-08-30；[Apple Support · About cellular data roaming options for iPhone and iPad](https://support.apple.com/en-us/109037) 2026-10-03
 
 **可推荐给用户** [Trip.com guide: China eSIM](https://in.trip.com/guide/phone/china-esim.html)；[Beijing Government: Get Connected & Essential Apps](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html)
 
@@ -42,8 +42,8 @@
 **Why** Nine times out of ten the eSIM is fine and one switch is off: Data Roaming. Travel eSIMs count as roaming, so the phone refuses to use them until you allow it.
 
 **Do this now**
-1. Open Settings > Cellular (Mobile Data). Set Cellular Data to the eSIM line, then turn Data Roaming ON for that line.
-2. Turn Airplane Mode on for 10 seconds and off again so the phone re-registers with the local tower.
+1. Open Settings > Cellular (Mobile Data) on iPhone, or Settings > Network & internet > SIMs on Android. Set Cellular Data to the eSIM line, then turn Data Roaming ON for that line.
+2. Turn Airplane Mode on for a few seconds and off again so the phone re-registers with the local tower.
 3. If it still says No Service, open the eSIM line's settings and enter the APN from the confirmation email, then restart the phone.
 4. Check the plan is activated: some eSIMs activate on first connection, others at a start date you chose.
 
@@ -53,9 +53,16 @@
 
 - [verified] Data Roaming off is the number one cause of eSIM 'not working' reports — Trip.com guide; consistent with how travel eSIMs work.
 
-**来源** [Trip.com · Best China eSIM Guide (What should I do if my eSIM doesn't work)](https://in.trip.com/guide/phone/china-esim.html) 2026-04-02
+**来源** [Apple Support · View or change cellular data settings on iPhone (Settings > Cellular > Cellular Data Options > Data Roaming)](https://support.apple.com/guide/iphone/view-or-change-cellular-data-settings-iph3dd5f213/ios) 2026-10-03；[Apple Support · About cellular data roaming options for iPhone and iPad](https://support.apple.com/en-us/109037) 2026-10-03；[Google Pixel Help · Use dual SIMs on your Pixel (Settings > Network & internet > SIMs, Roaming toggle)](https://support.google.com/pixelphone/answer/9449293) 2026-10-03；[Trip.com · Best China eSIM Guide (What should I do if my eSIM doesn't work)](https://in.trip.com/guide/phone/china-esim.html) 2026-04-02
+
+**可推荐给用户** [Apple Support · Cellular data settings](https://support.apple.com/guide/iphone/view-or-change-cellular-data-settings-iph3dd5f213/ios)；[Google Pixel Help · Dual SIMs](https://support.google.com/pixelphone/answer/9449293)
 
 相关：`connectivity_airport_wifi_sms`, `connectivity_buy_sim_at_airport`
+
+**配图**
+
+- 第 1 步 `connectivity/connectivity_esim_not_working/step1.png`（占位，演示用） — iPhone Settings > Cellular > Cellular Data Options: Data Roaming switched on（Apple Support · iPhone cellular settings illustrations）
+- 第 2 步 `connectivity/connectivity_esim_not_working/step2.png`（占位，演示用） — iPhone Control Center showing SOS only: toggle Airplane Mode on and off to re-register（Apple Support · iPhone cellular settings illustrations）
 
 ---
 
@@ -69,13 +76,13 @@
 1. Join the airport network: Pudong #AIRPORTPVG-FREE-WIFI, Beijing Capital AIRPORT-FREE-WIFI-NEW, Daxing BDIA-FREE-WIFI. The login page opens by itself; if not, open any website.
 2. Choose the overseas or international phone option, pick your country code, type your number and tap Get code (获得验证码). The SMS arrives on your roaming line even with data off.
 3. Enter the code and tap Login (登录). The session lasts a few hours; reconnect the same way if it drops.
-4. No code after 60 seconds: do not keep tapping. All three airports' login pages have a Passport Login option where you photograph your passport instead; Beijing Capital also has passport kiosks.
+4. No code after a minute: do not keep tapping. All three airports' login pages have a Passport Login option where you photograph your passport instead; Beijing Capital also has passport kiosks.
 
 **Still stuck** Airport information desks and the Payment Service Center in the arrivals hall help in person; ask for 免费WiFi.
 
 **依赖的事实**
 
-- [verified] PVG Wi-Fi name is #AIRPORTPVG-FREE-WIFI and SMS login accepts foreign numbers from 220+ countries — ChinaAirlineTravel airport guide; name also in Chinese airport news. Not yet checked on site.
+- [verified] PVG Wi-Fi name is #AIRPORTPVG-FREE-WIFI and SMS login accepts foreign numbers from 220+ countries — ChinaAirlineTravel airport guide and Chinese airport news both give this name; the H5 design was updated to it. Not yet checked on site, so re-check on the first real landing.
 - [verified] PVG login page offers passport-photo authentication for passengers without a Chinese SIM — Shanghai Airport Authority news 2026-05-28 (Wi-Fi易认证).
 - [verified] Beijing Capital SSID AIRPORT-FREE-WIFI-NEW, Daxing Green Airport / BDIA-FREE-WIFI — Beijing government pages (2024 and Dec 2025); Daxing has two names in two official pages, both listed.
 
@@ -84,6 +91,10 @@
 **可推荐给用户** [Beijing Government: how to connect to airport Wi-Fi](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html)
 
 相关：`connectivity_airport_wifi_passport`, `connectivity_esim_not_working`
+
+**配图**
+
+- 第 2 步 `connectivity/connectivity_airport_wifi_sms/step2.jpg` — Beijing Capital airport official Wi-Fi guide: choose AIRPORT-FREE-WIFI-NEW, enter mobile number, Get verification code, Login（Beijing Government · Get Connected (Beijing Capital airport Wi-Fi guide poster)）
 
 ---
 
@@ -109,6 +120,10 @@
 **来源** [Beijing Government · Get Connected (Authentication via passport kiosk)](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html) 2024-08-30；[Beijing Government · Free Wi-Fi at Daxing Airport with passport login](https://english.beijing.gov.cn/latest/news/202512/t20251205_4322494.html) 2025-12-05；[MyChinaCompass · Free Wi-Fi in China (airport kiosks)](https://mychinacompass.com/free-wifi/) 2026-05-17；[Shanghai Airport Authority · 浦东机场打造高效便捷的“1+2+N”入境服务链](https://www.shanghaiairport.com/xwg/info_itemid_44442.html) 2026-05-28；[ChinaAirlineTravel · Shanghai Pudong Airport Wi-Fi guide](https://www.chinaairlinetravel.com/airport-guide/shanghai-airport/pudong-airport-wifi.html) 2026
 
 相关：`connectivity_airport_wifi_sms`
+
+**配图**
+
+- 第 2 步 `connectivity/connectivity_airport_wifi_passport/step2.jpg` — Beijing Capital airport official Wi-Fi guide, method 2: get an account from the passport kiosk, method 3: Passport Login on the portal（Beijing Government · Get Connected (Beijing Capital airport Wi-Fi guide poster)）
 
 ---
 
@@ -152,7 +167,7 @@
 
 **Still stuck** Buy a Trip.com eSIM from the airport Wi-Fi if you do not have one; it activates in minutes and restores access to your usual apps.
 
-**来源** [Trip.com · Best China eSIM Guide (why you need an eSIM)](https://in.trip.com/guide/phone/china-esim.html) 2026-04-02；[WildChina · Staying Connected in China (international roaming)](https://wildchina.com/trip-to-china-pre-departure-guide/#internet) 2026-09-24；[Beijing Government · Get Connected (map apps)](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html) 2024-08-30
+**来源** [Trip.com · Best China eSIM Guide (why you need an eSIM)](https://in.trip.com/guide/phone/china-esim.html) 2026-04-02；[WildChina · Staying Connected in China (international roaming)](https://wildchina.com/trip-to-china-pre-departure-guide/#internet) 2026-09-24；[Beijing Government · Get Connected (map apps)](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/getconnected/202408/t20240830_3785643.html) 2024-08-30；[Apple Support · View or change cellular data settings on iPhone (Settings > Cellular > Cellular Data Options > Data Roaming)](https://support.apple.com/guide/iphone/view-or-change-cellular-data-settings-iph3dd5f213/ios) 2026-10-03
 
 相关：`connectivity_esim_before_flight`, `connectivity_buy_sim_at_airport`
 

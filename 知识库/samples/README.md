@@ -11,6 +11,7 @@ cd backend && python3 tools/eval_samples.py from_guides      # 需要 DEEPSEEK_A
 | 目录 | 张数 | 来源 | 说明 |
 |---|---|---|---|
 | `from_guides/` | 221 张，其中 64 张已打标签（含 20 张从指南拼图裁出的单屏、3 张 Apple 官方蜂窝设置截图、1 张首都机场官方 Wi-Fi 指南海报） | WildChina、Trip.com、payinchinaguide、chinavigators 等指南正文里的截图 | 真实 App 界面。只有 2 张是报错页（微信"存在风险"弹窗、支付宝添加银行卡页），其余是正常步骤页 |
+| `from_reddit/` | 278 张（只在本地，不进仓库），75 张已打标签：38 张真实报错页、27 张正常页、10 张负样本 | 登录态浏览器抓 Reddit 搜索与评论接口，r/travelchina、r/chinatravel、r/chinalife 等，23 组关键词 | 真实用户的失败截图，manifest 里每条带帖子链接和日期，可按链接重新下载；配套 `知识库/raw/reddit/README.md` 有 608 帖的求助原文与高赞回答 |
 | `readyforchina/` | 6 个 GIF | readyforchina.com 的设置教程动图 | 支付宝六步、微信五步，无报错页 |
 
 ## 2026-10-03 基线评测（40 张，只有支付宝条目）
@@ -53,6 +54,38 @@ cd backend && python3 tools/eval_samples.py from_guides      # 需要 DEEPSEEK_A
 加入 24 张新样本后先跌到 73%：滴滴的正常订车页模型都选对了条目，但置信度只给 0.30 到 0.35，卡在"让用户选"门槛 0.40 之下被判未知。改动：模型置信度低于门槛时也跑一次关键词兜底，若关键词场景与模型一致，抬到 0.5 以内的"让用户选"档，绝不抬到"直接答"；场景不一致则不动（`backend/stuck.py`，有测试）。同时给滴滴补了订车页关键词（Enter Destination、Discount Express、我的钱包 等）。
 
 上网场景 4 张全部命中（Apple 蜂窝设置页、SOS 状态、首都机场海报）。剩余 4 张场景错例：微信通用页面 2 张、微信绑卡页被归到支付宝 1 张、微信里的滴滴顺风车小程序被归到滴滴 1 张（这张两边都说得通）。条目级错例集中在"设置前"与"机场上客 / 验证码"之间，都是 ask，用户点一下即可。
+
+## 2026-10-03 第五轮：Reddit 真实失败截图（75 张，独立评测）
+
+| 指标 | 结果 |
+|---|---|
+| 场景命中 | 63/75 = 84% |
+| 条目命中 | 49/65 = 75% |
+| 判定分布 | 直接答 37 · 让用户选 24 · 未知 14 |
+
+38 张真实报错页按条目分布，这是目前最接近"用户真的会卡在哪"的数据：
+
+| 条目 | 张数 |
+|---|---|
+| `alipay_account_locked` | 13 |
+| `alipay_identity_verification` | 9 |
+| `wechat_card_unsupported` | 6 |
+| `alipay_card_bind_failed` | 3 |
+| `connectivity_esim_not_working` | 2 |
+| `alipay_payment_declined` | 2 |
+| `didi_setup_before_flight` | 1 |
+| `alipay_tourcard` | 1 |
+| `wechat_risk_control` | 1 |
+| `wechat_miniprogram_needs_chinese_number` | 1 |
+
+两个和原先假设不一样的发现：
+
+1. 最常见的不是绑卡失败，是账户风控。支付宝 "Account Restrictions / Transaction Termination / Restricting main account functions / restricted payment status, call 0571-26886000" 一类占了报错截图的三分之一，触发原因多是刚绑外卡就连续小额交易或换设备登录。`alipay_account_locked` 条目要扩写：解封路径（Appeal / Upload Proof / 热线）、等待时长、哪些情况 "cannot be resolved through appeal"。
+2. 实名验证失败的具体形态：护照读取失败（Reading failed）、认证未完成（certification not completed / Query timed out）、以及被要求 "Verify Chinese Mainland bank card"。最后一种是用户误入了大陆用户流程，解法是重选 Non-Mainland，这一点条目里已有但要放到第一步。
+
+微信侧的真实报错集中在 "current transaction does not support international bank cards"（付款、转账、充值都有）和 "Weixin Security Alert"。上网类只抓到 eSIM 安装卡住两张；滴滴只有一张 "Failed to activate"。
+
+评测里 4 张在 12 秒左右返回未知且置信度 0，是模型两次都没返回合法 JSON（都是带 Google Lens 翻译浮层的图），要再查。负样本 10 张里 2 张被误判为有场景（Hypergryph 客服聊天、美团登录页）。
 
 ## 样本的局限
 
