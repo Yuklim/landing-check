@@ -95,6 +95,7 @@ cd h5 && python3 build_h5.py
 
 - 服务根目录 `backend/`，启动命令 `uvicorn app:app --host 0.0.0.0 --port $PORT`，环境变量 `DEEPSEEK_API_KEY`。
 - 免费档 15 分钟无访问会休眠，唤醒约 30 秒。路演前先打开一次。
+- 自动部署靠 Render 的 GitHub App（仓库 Settings → Installed GitHub Apps 里要有 Render）。服务 Root Directory 是 `backend/`，只改 `知识库/` 或文档的提交会被 Render 跳过，不会上线；要么同时改一下 `backend/` 下的文件，要么在 Settings → Build & Deploy → Build Filters 把 `知识库/**` 加进 Included Paths。
 - 推送后确认是否部署成功：打开 `/health`，`commit` 应等于 GitHub 最新提交前 7 位，`kb_scenarios` 应列出 4 个场景。不一致就去 Render 控制台 Events 看部署是否触发或失败；Settings → Build & Deploy 里 Auto-Deploy 要是 On Commit，分支 main；也可以 Manual Deploy → Deploy latest commit。
 - 模拟数据在内存里，服务重启或休眠唤醒后归零；页面菜单里的"重置演示数据"同样效果。
 
