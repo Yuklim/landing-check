@@ -42,7 +42,9 @@ def test_page():
 
 @app.get('/health')
 def health():
-    return {'ok': True}
+    # Render 会注入 RENDER_GIT_COMMIT，用来确认线上跑的是哪次提交
+    return {'ok': True, 'commit': (os.environ.get('RENDER_GIT_COMMIT') or os.environ.get('GIT_COMMIT') or '')[:7] or None,
+            'kb_scenarios': sorted(kb.scenarios)}
 
 
 # ---------------- A 知识库 ----------------
