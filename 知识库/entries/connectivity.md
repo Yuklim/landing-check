@@ -209,5 +209,5 @@
 
 **来源** [Reddit r/travelchina · Just came back from China: what needs a Chinese number (↑1285)](https://www.reddit.com/r/travelchina/comments/1s6pq82/just_came_back_from_china_here_is_some_of_my/) 2026-10-03；[Reddit r/chinatravel · Ordering food as a foreigner (↑7)](https://www.reddit.com/r/chinatravel/comments/1u3u40e/ordering_food_in_china_as_a_foreigner_off_meituan/) 2026-10-03；[Reddit r/travelchina · Foreign number to use China apps (↑6)](https://www.reddit.com/r/travelchina/comments/1vefw1n/foreign_number_to_use_china_apps/) 2026-10-03；[Reddit r/chinatravel · Struggling with apps, no Chinese number (↑13)](https://www.reddit.com/r/chinatravel/comments/1wnz9u8/struggling_with_apps_big_time_no_chinese_number/) 2026-10-03
 
-相关：`wechat_miniprogram_needs_chinese_number`, `connectivity_buy_sim_at_airport`, `alipay_didi_miniprogram`
+相关：`wechat_miniprogram_needs_chinese_number`, `connectivity_buy_sim_at_airport`, `alipay_didi_miniprogram`, `tenpaygo_setup_before_flight`
 

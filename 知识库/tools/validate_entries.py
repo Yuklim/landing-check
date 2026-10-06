@@ -16,7 +16,8 @@ H5 = os.path.normpath(os.path.join(HERE, '..', '..', 'h5'))
 MEDIA_DIR = os.path.join(H5, 'img', 'tutorial')
 TUTORIALS = os.path.join(H5, 'tutorials.json')
 READER_OK = ('trip.com', 'gov.cn', 'alipayplus.com', '12306.cn', 'alipay.com', 'weixin.qq.com', 'tencent.com', 'antgroup.com',
-             'unionpayintl.com', 'unionpay.com', 'didiglobal.com', 'support.apple.com', 'support.google.com')
+             'unionpayintl.com', 'unionpay.com', 'didiglobal.com', 'support.apple.com', 'support.google.com',
+             'wechatpay.cn', 'tenpaygo.com', 'apps.apple.com/', 'play.google.com/store/apps/')
 
 
 def all_ids():
@@ -133,7 +134,7 @@ def export_tutorials():
                 out.append(t)
     if not os.path.isdir(H5):
         return 0
-    json.dump({'generated': datetime.date.today().isoformat(), 'tutorials': out}, open(TUTORIALS, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    json.dump({'generated': datetime.date.today().isoformat(), 'tutorials': out}, open(TUTORIALS, 'w', encoding='utf-8', newline='\n'), ensure_ascii=False, indent=1)
     return len(out)
 
 
@@ -150,7 +151,7 @@ if __name__ == '__main__':
             for e in errs: print('   -', e)
         else:
             print('%s: %d 条，通过' % (os.path.basename(f), n))
-        open(f[:-5] + '.md', 'w', encoding='utf-8').write(render(d) + '\n')
+        open(f[:-5] + '.md', 'w', encoding='utf-8', newline='\n').write(render(d) + '\n')
     print('合计 %d 条，%d 个文件有问题' % (total, bad))
     if not bad:
         print('导出 %d 篇图文教程到 h5/tutorials.json' % export_tutorials())

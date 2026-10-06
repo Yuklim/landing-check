@@ -35,7 +35,7 @@
 
 **可推荐给用户** [Trip.com guide: How to use Alipay in China](https://www.trip.com/guide/phone/how-to-use-alipay.html)；[Beijing Government: Payment Services for new arrivals](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html)；[Alipay+ · Pay in the Chinese mainland](https://www.alipayplus.com/pay-in-the-chinese-mainland/)
 
-相关：`alipay_not_authenticated`, `alipay_card_bind_failed`, `alipay_identity_verification`, `alipay_account_locked`
+相关：`alipay_not_authenticated`, `alipay_card_bind_failed`, `alipay_identity_verification`, `alipay_account_locked`, `tenpaygo_setup_before_flight`
 
 **配图**
 
@@ -70,7 +70,7 @@
 
 **来源** [Alipay+ · Pay in the Chinese mainland (official page; customer service +86 571 2688 6000, 08:00-24:00)](https://www.alipayplus.com/pay-in-the-chinese-mainland/) 2026-10-03；[UnionPay International · Nihao China press release (register with email or Apple account; UnionPay, Visa, Mastercard cards)](https://www.prnewswire.com/apac/news-releases/nihao-china-app-launches-as-an-all-in-one-solution-for-international-visitors-302649202.html) 2025-12-24；[PayInChinaGuide · Alipay 'Card Issuing Bank Declined' Error](https://www.payinchinaguide.com/blog/alipay-issuing-bank-declined-fix) 2026-03；[Trip.com · Alipay Not Working in China? Common Causes and How to Fix It](https://www.trip.com/guide/payments/alipay-not-working-in-china.html) 2026-07-02；[WaysChina · How to Use Alipay with Foreign Cards: Setup, Fees and Fixes](https://wayschina.com/en/articles/how-to-use-alipay-with-foreign-cards) 2026-08；[Trip.com · Nihao China App: Setup, Card Link & Payment Guide](https://www.trip.com/guide/info/nihao-china-app.html) 2026-06-12；[Reddit r/transferwiser · AliPay Merchant Services Pte. Ltd debit card verification on Wise (↑5)](https://www.reddit.com/r/transferwiser/comments/1s2ji2j/alipay_merchant_services_pte_ltd/) 2026-10-03；[Reddit r/travelchina · Calm my nerves about digital payments (↑0, No need for Tour Card ↑10; 3% fee is real ↑6)](https://www.reddit.com/r/travelchina/comments/1e9mxnj/calm_my_nerves_about_digital_payments/) 2026-10-03
 
-相关：`alipay_not_authenticated`, `alipay_identity_verification`, `alipay_tourcard`, `alipay_nihao_china`, `alipay_account_locked`, `wechat_card_unsupported`
+相关：`alipay_not_authenticated`, `alipay_identity_verification`, `alipay_tourcard`, `alipay_nihao_china`, `alipay_account_locked`, `wechat_card_unsupported`, `tenpaygo_card_bind_failed`
 
 ---
 

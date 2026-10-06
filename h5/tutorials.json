@@ -1,5 +1,5 @@
 {
- "generated": "2026-10-03",
+ "generated": "2026-10-06",
  "tutorials": [
   {
    "id": "alipay_setup_before_flight",
@@ -466,6 +466,149 @@
    ],
    "verified_at": "2026-10-03",
    "scenario": "didi"
+  },
+  {
+   "id": "tenpaygo_setup_before_flight",
+   "stage": "preflight",
+   "title": "Set up TenPayGo before you fly",
+   "why": "TenPayGo is WeChat Pay's own app for visitors. You sign up with an email address, with no Chinese phone number and no WeChat account, and it pays at shops that take WeChat Pay. Set it up at home so your bank's checks reach you on your usual number.",
+   "steps": [
+    "Install TenPayGo from the App Store or Google Play; the developer is Tencent Technology (Shenzhen). Sign up with your email, type the code it sends and set a password.",
+    "On the Pay tab, add a way to pay: a Bank Card issued outside mainland China (Visa, Mastercard, American Express, JCB, Discover, Diners Club or UnionPay), Apple Pay on iPhone, or a supported E-Wallet.",
+    "Approve any check your bank sends: a code, an email or an in-app prompt. The card must be in your own name, with the billing address your bank has on file.",
+    "Learn the two ways to pay: scan the shop's green WeChat Pay code, or open your payment code and let the cashier scan it."
+   ],
+   "fallback": "If sign-up or the card fails, set up Alipay instead; it also books DiDi rides and buys metro tickets, which TenPayGo cannot. Keep some cash either way.",
+   "applies_to": [
+    "ios",
+    "android"
+   ],
+   "media": [
+    {
+     "step": 2,
+     "file": "tenpaygo/tenpaygo_setup_before_flight/step2.png",
+     "alt": "TenPayGo Pay tab: Bank Card, Apple Pay and E-Wallet, with Supported Payment Methods below",
+     "source": {
+      "name": "Apple App Store · TenPayGo screenshots (Tencent)",
+      "url": "https://apps.apple.com/us/app/tenpaygo/id6778755338"
+     },
+     "placeholder": true,
+     "origin": "samples/tenpaygo_appstore",
+     "note": "Cropped phone area of Tencent's own App Store screenshot; replace with our own capture before release."
+    },
+    {
+     "step": 4,
+     "file": "tenpaygo/tenpaygo_setup_before_flight/step4.png",
+     "alt": "Scan to pay: scan the merchant's WeChat Pay code, check the amount and confirm",
+     "source": {
+      "name": "Apple App Store · TenPayGo screenshots (Tencent)",
+      "url": "https://apps.apple.com/us/app/tenpaygo/id6778755338"
+     },
+     "placeholder": true,
+     "origin": "samples/tenpaygo_appstore",
+     "note": "Cropped phone area of Tencent's own App Store screenshot; replace with our own capture before release."
+    }
+   ],
+   "sources": [
+    {
+     "name": "Cailian Press via Sohu · Tencent officially launches TenPay Go, seven card networks, about 60 overseas wallets",
+     "url": "https://www.sohu.com/a/1080344858_121019331",
+     "date": "2026-09-24"
+    },
+    {
+     "name": "OlaChina · TenPayGo: WeChat Pay Without WeChat (quotes WeChat Pay's official launch guide)",
+     "url": "https://olachina.org/tenpaygo",
+     "date": "2026-09-24"
+    },
+    {
+     "name": "Tenpay · TenPayGo Payment User Service Agreement (EN, 2026-06-11 version): quota, fees, mainland-only, hotline 95017",
+     "url": "https://gtimg.wechatpay.cn/resource/xres/wego/account/TenPayGo%E6%94%AF%E4%BB%98%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE-20260611-EN.html",
+     "date": "2026-06-11"
+    },
+    {
+     "name": "Apple App Store · TenPayGo listing (Tencent Technology (Shenzhen), v1.1.2, 3.1 from 63 ratings, screenshots)",
+     "url": "https://apps.apple.com/us/app/tenpaygo/id6778755338",
+     "date": "2026-09-24"
+    },
+    {
+     "name": "Google Play · TenPayGo listing (com.tencent.wxpai, updated 2026-09-24)",
+     "url": "https://play.google.com/store/apps/details?id=com.tencent.wxpai",
+     "date": "2026-09-24"
+    },
+    {
+     "name": "TripChina · TenPayGo Review 2026 (updated after public launch)",
+     "url": "https://tripchina.me/tenpaygo-payment-guide/",
+     "date": "2026-10-05"
+    },
+    {
+     "name": "Reddit r/travelchina · TenpayGo is a much better user experience than WeChat Pay (↑36; Gmail sign-up, Apple Pay, fee reports, mini-program codes)",
+     "url": "https://www.reddit.com/r/travelchina/comments/1ukolqw/tencents_new_payment_app_tenpaygo_is_a_much/",
+     "date": "2026-07-01"
+    }
+   ],
+   "verified_at": "2026-10-06",
+   "scenario": "tenpaygo"
+  },
+  {
+   "id": "tenpaygo_how_to_pay",
+   "stage": "landing",
+   "title": "How to pay at a shop with TenPayGo",
+   "why": "TenPayGo pays wherever WeChat Pay is accepted. Stalls and small shops show a QR code that you scan; supermarkets and chains scan a code on your phone.",
+   "steps": [
+    "At a stall or small shop: tap the scan button, scan their green WeChat Pay code, type the amount and confirm.",
+    "At a supermarket or chain: open your payment code and let the cashier scan it, then confirm on your phone if asked.",
+    "Before you confirm, check the shop name, the amount and any service fee shown on the last screen."
+   ],
+   "fallback": "If the code opens a menu or a mini-program instead of a payment page, TenPayGo cannot use it: ask to pay at the counter, or use Alipay.",
+   "applies_to": [
+    "ios",
+    "android"
+   ],
+   "media": [
+    {
+     "step": 1,
+     "file": "tenpaygo/tenpaygo_how_to_pay/step1.png",
+     "alt": "Scan to pay: tap scan, scan the merchant's WeChat Pay code, check the amount and confirm",
+     "source": {
+      "name": "Apple App Store · TenPayGo screenshots (Tencent)",
+      "url": "https://apps.apple.com/us/app/tenpaygo/id6778755338"
+     },
+     "placeholder": true,
+     "origin": "samples/tenpaygo_appstore",
+     "note": "Cropped phone area of Tencent's own App Store screenshot; replace with our own capture before release."
+    },
+    {
+     "step": 2,
+     "file": "tenpaygo/tenpaygo_how_to_pay/step2.png",
+     "alt": "Show payment code: let the cashier scan your Pay code, then confirm on your phone",
+     "source": {
+      "name": "Apple App Store · TenPayGo screenshots (Tencent)",
+      "url": "https://apps.apple.com/us/app/tenpaygo/id6778755338"
+     },
+     "placeholder": true,
+     "origin": "samples/tenpaygo_appstore",
+     "note": "Cropped phone area of Tencent's own App Store screenshot; replace with our own capture before release."
+    }
+   ],
+   "sources": [
+    {
+     "name": "Apple App Store · TenPayGo listing (Tencent Technology (Shenzhen), v1.1.2, 3.1 from 63 ratings, screenshots)",
+     "url": "https://apps.apple.com/us/app/tenpaygo/id6778755338",
+     "date": "2026-09-24"
+    },
+    {
+     "name": "OlaChina · TenPayGo: WeChat Pay Without WeChat (quotes WeChat Pay's official launch guide)",
+     "url": "https://olachina.org/tenpaygo",
+     "date": "2026-09-24"
+    },
+    {
+     "name": "TripChina · TenPayGo Review 2026 (updated after public launch)",
+     "url": "https://tripchina.me/tenpaygo-payment-guide/",
+     "date": "2026-10-05"
+    }
+   ],
+   "verified_at": "2026-10-06",
+   "scenario": "tenpaygo"
   },
   {
    "id": "wechat_setup_before_flight",
