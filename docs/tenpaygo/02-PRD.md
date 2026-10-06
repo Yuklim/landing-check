@@ -141,7 +141,7 @@ v1 · 2026-10-06 · 依据 `01-需求调研.md` · §2 的四项决策已由需�
 
 | 错误码 | 标题 / 原因 | 第一步 | 第二步 |
 |---|---|---|---|
-| ISSUER_DECLINED | Your bank refused the charge / TenPayGo shows "The bank did not approve this transaction". The block is at your bank, not TenPayGo. | Allow international online payments / Turn it on in your bank app, or call the number on the card, then retry in a few minutes. | Or switch on Apple Pay / On iPhone, Apple Pay inside TenPayGo is a separate route and often passes when a typed card fails. |
+| ISSUER_DECLINED | Your bank refused the charge / TenPayGo shows "The bank did not approve this transaction". The block is at your bank, not TenPayGo. | Allow international online payments / Turn it on in your bank app, or call the number on the card, then retry in a few minutes. | Or switch on Apple Pay / On iPhone, Apple Pay in TenPayGo is a separate option that uses the card already in your Wallet. |
 | AUTH_FAILED | Your bank's check was not completed / Your bank sent a 3-D Secure code or an in-app approval and it was not confirmed in time. | Keep your bank reachable / The code goes to the phone number or banking app your bank has on file. | Retry once, not five times / Repeated attempts in a short time can trigger a block. |
 | REGION_UNAVAILABLE | TenPayGo only charges inside mainland China / Its terms limit the service to the Chinese mainland, so a test from abroad can be refused even when the card is fine. | Keep the card linked / Run the ¥1 test again after you land. | Verify Alipay now / Alipay can be tested before you fly, so you leave with one method confirmed. |
 
