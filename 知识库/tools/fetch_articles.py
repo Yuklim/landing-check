@@ -169,12 +169,12 @@ def run(source, urls):
         fm = '---\ntitle: "%s"\nsource: %s\npublished: %s\nmodified: %s\nfetched: %s\nsite: %s\n---\n\n' % (
             title.replace('"', "'"), url, pub, mod, datetime.date.today().isoformat(), source)
         name = slug(url) + '.md'
-        open(os.path.join(out, name), 'w', encoding='utf-8').write(fm + '# ' + title + '\n\n' + md + '\n')
+        open(os.path.join(out, name), 'w', encoding='utf-8', newline='\n').write(fm + '# ' + title + '\n\n' + md + '\n')
         heads = re.findall(r'^#{2,3} (.+)$', md, re.M)
         index[name] = {'title': title, 'url': url, 'published': pub, 'modified': mod, 'chars': len(md), 'headings': heads[:30]}
         print('%6d chars  %-10s  %s' % (len(md), (mod or pub or '')[:10], title[:70]))
         time.sleep(0.6)
-    json.dump(index, open(ip, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    json.dump(index, open(ip, 'w', encoding='utf-8', newline='\n'), ensure_ascii=False, indent=1)
 
 
 if __name__ == '__main__':
