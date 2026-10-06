@@ -2,6 +2,7 @@
 """规则引擎：行前检查项状态、交通推荐。纯函数，输入输出都是 dict，便于测试。"""
 import os, json
 from datetime import datetime, date
+from mock import PAY_METHODS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 TRANSPORT = json.load(open(os.path.join(HERE, 'mock', 'transport.json'), encoding='utf-8'))
@@ -10,18 +11,18 @@ AIRPORTS = json.load(open(os.path.join(HERE, 'mock', 'airports.json'), encoding=
 
 # ---------------- 行前检查 ----------------
 def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
-    """六项必查 + 两项可选。状态：done / todo / optional / pending。"""
+    """六项必查 + 两项可选。状态：done / todo / optional / pending。
+    支付是一组两项（支付宝 / TenPayGo），任一个验证即算这一项完成，另一个变成备用（optional）。"""
     today = today or date.today()
     p = trip.get('permissions', {})
-    pay = trip.get('payment', {})
     esim = trip.get('esim', {})
     pack = trip.get('offline_pack', {})
     tickets = trip.get('tickets', [])
     passport = trip.get('passport', {})
     items = []
 
-    def add(id_, title, status, desc, action=None, entry=None):
-        items.append({'id': id_, 'title': title, 'status': status, 'desc': desc, 'action': action, 'entry': entry})
+    def add(id_, title, status, desc, action=None, entry=None, **extra):
+        items.append({'id': id_, 'title': title, 'status': status, 'desc': desc, 'action': action, 'entry': entry, **extra})
 
     perm_ok = p.get('location') in ('always', 'while_using') and p.get('notifications') is True
     add('permissions', 'Location & notifications', 'done' if perm_ok else 'todo',
@@ -31,10 +32,8 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
     add('data', 'Mobile data in China', 'done' if data_ok else 'todo',
         'eSIM ready · activates when you land' if data_ok else 'No eSIM or roaming plan found', None if data_ok else 'buy_esim')
 
-    pay_ok = pay.get('status') == 'verified' or 'alipay' in done
-    add('alipay', 'Alipay payment', 'done' if pay_ok else 'todo',
-        (('Verified · ¥1 test on %s, refunded' % pay['verified_at'][:10]) if pay.get('verified_at') else 'Verified before you flew · ¥1 test, refunded') if pay_ok else 'Installed · not verified yet · ¥1 test, refunded in 24 h',
-        None if pay_ok else 'verify_payment', 'alipay_setup_before_flight')
+    pays = _payments(trip, done)
+    _add_payment_group(add, pays, trip.get('payment_apps', {}))
 
     add('transfer', 'Ride from the airport · optional', 'done' if trip.get('transfer_booked') else 'optional',
         'Driver will wait at arrivals' if trip.get('transfer_booked') else _transfer_hint(trip), None if trip.get('transfer_booked') else 'book_transfer')
@@ -61,13 +60,59 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
     add('pack', 'Offline landing pack', 'done' if pack_ok else 'todo',
         ('Downloaded · %s · %s MB · %s' % (pack.get('airport'), pack.get('size_mb'), pack.get('date'))) if pack_ok else 'Download before you fly', None if pack_ok else 'download_pack')
 
-    required = [i for i in items if i['status'] in ('done', 'todo')]
-    ndone = sum(1 for i in required if i['status'] == 'done')
-    return {'items': items, 'ready': ndone, 'required': len(required),
-            'optional_open': sum(1 for i in items if i['status'] == 'optional'),
-            'pct': int(round(100 * ndone / len(required))) if required else 100,
-            'summary': ('You\'re ready for Shanghai · %d of %d ready' % (ndone, len(required))) if required and ndone == len(required) else
-                       '%d of %d ready · %d to do · %d optional' % (ndone, len(required), len(required) - ndone, sum(1 for i in items if i['status'] == 'optional'))}
+    # 组内（支付宝 / TenPayGo）只算一项：任一个 done 即 done；组内的备用项不计入 optional 数
+    plain = [i for i in items if not i.get('group')]
+    grouped = [i for i in items if i.get('group')]
+    groups = sorted({i['group'] for i in grouped})
+    required = len([i for i in plain if i['status'] in ('done', 'todo')]) + len(groups)
+    ndone = sum(1 for i in plain if i['status'] == 'done') + sum(1 for g in groups if any(i['status'] == 'done' for i in grouped if i['group'] == g))
+    optional_open = sum(1 for i in plain if i['status'] == 'optional')
+    return {'items': items, 'ready': ndone, 'required': required,
+            'optional_open': optional_open,
+            'backup_open': sum(1 for i in grouped if i['status'] == 'optional'),
+            'payment': _payment_summary(pays),
+            'pct': int(round(100 * ndone / required)) if required else 100,
+            'summary': ('You\'re ready for Shanghai · %d of %d ready' % (ndone, required)) if required and ndone == required else
+                       '%d of %d ready · %d to do · %d optional' % (ndone, required, required - ndone, optional_open)}
+
+
+# ---------------- 支付组 ----------------
+PAY_ITEM = {
+    'alipay': {'title': 'Alipay payment', 'entry': 'alipay_setup_before_flight', 'pitch': '¥1 test, refunded in 24 h',
+               'backup': 'Backup · not verified · for shops that only take Alipay'},
+    'tenpaygo': {'title': 'TenPayGo payment', 'entry': 'tenpaygo_setup_before_flight', 'pitch': 'email sign-up, no Chinese number',
+                 'backup': 'Backup · not verified · pays wherever WeChat Pay works'},
+}
+
+
+def _payments(trip: dict, done) -> dict:
+    """每种方式的验证状态。旧调用方只给 trip['payment']（单个支付宝），按支付宝处理。"""
+    pays = trip.get('payments') or {'alipay': trip.get('payment') or {}}
+    return {m: {**(pays.get(m) or {}), 'ok': (pays.get(m) or {}).get('status') == 'verified' or m in done} for m in PAY_METHODS}
+
+
+def _add_payment_group(add, pays: dict, apps: dict):
+    group_ok = any(p['ok'] for p in pays.values())
+    for m, p in pays.items():
+        c = PAY_ITEM[m]
+        installed = (apps.get(m) or {}).get('installed', m == 'alipay')
+        if p['ok']:
+            status, desc = 'done', ('Verified · ¥1 test on %s, refunded' % p['verified_at'][:10]) if p.get('verified_at') else 'Verified before you flew · ¥1 test, refunded'
+        elif group_ok:
+            status, desc = 'optional', c['backup']
+        elif m == 'alipay':
+            status, desc = 'todo', ('Installed · not verified yet · ' if installed else 'Not installed · either one is enough · ') + c['pitch']
+        else:
+            status, desc = 'todo', ('Installed · not verified yet · either one is enough' if installed else 'Not installed · either one is enough · ' + c['pitch'])
+        add(m, c['title'], status, desc, None if p['ok'] else 'verify_payment', c['entry'], group='payment', method=m)
+
+
+def _payment_summary(pays: dict) -> dict:
+    order = list(PAY_METHODS)
+    verified = [m for m in order if pays[m]['ok']]
+    primary = min(verified, key=lambda m: (pays[m].get('verified_at') or '', order.index(m))) if verified else None
+    return {'ready': bool(verified), 'primary': primary, 'primary_name': PAY_METHODS.get(primary),
+            'verified': verified, 'verified_at': pays[primary].get('verified_at') if primary else None, 'methods': order}
 
 
 def _transfer_hint(trip):

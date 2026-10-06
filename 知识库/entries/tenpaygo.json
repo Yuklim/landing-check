@@ -63,6 +63,9 @@
       ],
       "tenpaygo_qr_not_supported": [
         "not supported",
+        "code is not supported",
+        "unsupported code",
+        "can't pay this",
         "unable to recognize",
         "invalid",
         "mini program",
