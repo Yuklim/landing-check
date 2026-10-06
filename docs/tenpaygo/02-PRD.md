@@ -46,12 +46,16 @@ v1 · 2026-10-06 · 依据 `01-需求调研.md` · §2 的四项决策已由需�
 
 ## 5. 功能需求与验收标准
 
-### FR-1 行前检查：TenPayGo 行
+### FR-1 行前检查：Payment in China 板块
 
-- 位置：支付宝行正下方，样式与支付宝行一致。
-- 标题 `TenPayGo payment`；按钮 `Verify ¥1`；下方挂 `Step-by-step setup guide · 2 screenshots ›`，打开 TenPayGo 图文教程。
-- 说明文字按状态（文案见 §6）。
-- **验收**：初始状态两行都是橙色 ✕，摘要不变；验证任一方式后，该行变绿 ✓，另一行变灰色备用图标，摘要变"5 of 6 ready"，另一行按钮仍可点。
+（2026-10-06 按需求方反馈修订：原为支付宝、TenPayGo 两行，现合成一个"境内支付"板块；教程入口不强调动画或截图数量。）
+
+- 设计稿的支付宝一行改为 `Payment in China`，不再单列 TenPayGo 行。
+- 状态：任一种验证过为 done（绿 ✓），否则 todo（橙 ✕）。必查项仍为 6 项。
+- 按钮：都没验证时 `Verify ¥1`，弹出选择层（支付宝 / TenPayGo / Not now）；已验证一种时 `Add backup`，直接验证另一种；两种都验证后隐藏。
+- 下方一行 `Setup guide · Alipay › · TenPayGo ›`，分别打开两篇设置教程。
+- 说明文字按状态（文案见 §6），由后端 `payment.desc` 给出。
+- **验收**：初始只有一个支付板块，摘要不变；选 TenPayGo 验证后板块变绿、按钮变 Add backup，摘要变"5 of 6 ready"；再点 Add backup 直接验证支付宝，按钮隐藏。
 
 ### FR-2 TenPayGo ¥1 验证
 
@@ -128,13 +132,15 @@ v1 · 2026-10-06 · 依据 `01-需求调研.md` · §2 的四项决策已由需�
 
 ## 6. 文案
 
-### 行前检查 · 说明文字
+### 行前检查 · Payment in China 说明文字
 
-| 状态 | 支付宝行 | TenPayGo 行 |
-|---|---|---|
-| 组未就绪 | Installed · not verified yet · ¥1 test, refunded in 24 h | Not installed · either one is enough · email sign-up, no Chinese number |
-| 本行已验证 | Verified · ¥1 test on {date}, refunded | Verified · ¥1 test on {date}, refunded |
-| 本行为备用 | Backup · not verified · for shops that only take Alipay | Backup · not verified · pays wherever WeChat Pay works |
+| 状态 | 文案 |
+|---|---|
+| 都没验证 | Alipay or TenPayGo · either one is enough · ¥1 test, refunded in 24 h |
+| 已验证一种 | {方式} verified · ¥1 test on {date}, refunded · {另一种} is an optional backup |
+| 两种都验证 | Alipay and TenPayGo verified · ¥1 tests refunded |
+
+接口里 `alipay`、`tenpaygo` 两项及其各自的说明文字保留，供旧客户端和其他调用方使用。
 
 ### 验证结果页（TenPayGo）
 

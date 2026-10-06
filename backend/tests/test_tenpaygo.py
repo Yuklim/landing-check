@@ -48,7 +48,8 @@ def test_initial_state_keeps_summary_and_both_rows_todo():
     assert r['summary'] == '4 of 6 ready · 2 to do · 2 optional'            # 与设计稿、exports 一致
     assert r['required'] == 6 and r['backup_open'] == 0
     assert r['payment'] == {'ready': False, 'primary': None, 'primary_name': None, 'verified': [], 'verified_at': None,
-                            'methods': ['alipay', 'tenpaygo']}
+                            'methods': ['alipay', 'tenpaygo'], 'title': 'Payment in China', 'backup': None,
+                            'desc': 'Alipay or TenPayGo · either one is enough · ¥1 test, refunded in 24 h'}
     assert b['alipay']['desc'] == 'Installed · not verified yet · ¥1 test, refunded in 24 h'
     assert b['tenpaygo']['desc'] == 'Not installed · either one is enough · email sign-up, no Chinese number'
     assert b['tenpaygo']['group'] == 'payment' and b['tenpaygo']['entry'] == 'tenpaygo_setup_before_flight'
@@ -66,6 +67,16 @@ def test_payment_group_matrix(verified, primary):
     assert r['backup_open'] == 2 - len(verified)
     assert r['payment']['ready'] is True and r['payment']['primary'] == primary
     assert r['payment']['primary_name'] == PAY_METHODS[primary] and r['payment']['verified'] == verified
+
+
+@pytest.mark.parametrize('verified, backup, desc', [
+    (['alipay'], 'tenpaygo', 'Alipay verified · ¥1 test on 2026-10-10, refunded · TenPayGo is an optional backup'),
+    (['tenpaygo'], 'alipay', 'TenPayGo verified · ¥1 test on 2026-10-10, refunded · Alipay is an optional backup'),
+    (['alipay', 'tenpaygo'], None, 'Alipay and TenPayGo verified · ¥1 tests refunded'),
+])
+def test_payment_block_summary_for_the_merged_h5_row(verified, backup, desc):
+    p = rules.preflight(with_payments(verified), today=D)['payment']
+    assert p['title'] == 'Payment in China' and p['backup'] == backup and p['desc'] == desc
 
 
 def test_backup_rows_explain_which_shops_they_cover():

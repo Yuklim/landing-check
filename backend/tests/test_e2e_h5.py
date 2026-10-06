@@ -85,24 +85,44 @@ def wait_text(pg, route, name, pattern, i=0):
                          arg=[route, name, i, pattern], timeout=8000)
 
 
+def pay_block(pg):
+    """行前检查的 Payment in China 板块（沿用设计稿节点名 Item Alipay payment）。"""
+    return node(pg, 'preflight', 'Item Alipay payment')
+
+
+def pick(pg, method):
+    """点板块的 Verify ¥1，在选择层里选一种。"""
+    pay_block(pg).locator('[data-pencil-name="Item Button"]').click()
+    ch = pg.locator('[data-pencil-name="Pay Chooser"]')
+    ch.wait_for(state='visible')
+    assert ch.locator('[data-role="title"]').text_content() == 'Which app will you pay with?'
+    ch.locator('[data-pay="%s"]' % method).click()
+
+
+def block_label(pg):
+    return pay_block(pg).locator('[data-pencil-name="Item Button Label"]').text_content()
+
+
 # ---------------- FR-1 行前检查 ----------------
-def test_preflight_has_tenpaygo_row_under_alipay(page, base):
+def test_preflight_has_one_payment_in_china_block(page, base):
     open_app(page, base, 'preflight'); go(page, 'preflight')
     wait_text(page, 'preflight', 'Progress Label', '4 of 6 ready · 2 to do · 2 optional')
-    order = page.evaluate('() => [...document.querySelectorAll(\'.screen[data-route="preflight"] [data-pencil-name^="Item "][data-pencil-name$=" payment"]\')].map(e => e.getAttribute("data-pencil-name"))')
-    assert order == ['Item Alipay payment', 'Item TenPayGo payment']
-    row = node(page, 'preflight', 'Item TenPayGo payment')
-    assert row.locator('[data-pencil-name="Item Title"]').text_content() == 'TenPayGo payment'
-    assert row.locator('[data-pencil-name="Item Desc"]').text_content() == 'Not installed · either one is enough · email sign-up, no Chinese number'
-    assert row.locator('[data-pencil-name="Item Button"]').get_attribute('data-act') == 'api:paytpg'
-    assert row.get_attribute('data-pencil-id') is None
-    assert 'setup guide' in row.locator('[data-pencil-name="Item Guide Link"]').text_content()
+    rows = page.evaluate("""() => [...document.querySelectorAll('.screen[data-route="preflight"] [data-pencil-name$=" payment"]')].map(e => e.getAttribute('data-pencil-name'))""")
+    assert rows == ['Item Alipay payment']                      # 只有一个支付板块，没有单独的 TenPayGo 行
+    row = pay_block(page)
+    assert row.locator('[data-pencil-name="Item Title"]').text_content() == 'Payment in China'
+    assert row.locator('[data-pencil-name="Item Desc"]').text_content() == 'Alipay or TenPayGo · either one is enough · ¥1 test, refunded in 24 h'
+    assert row.locator('[data-pencil-name="Item Button"]').get_attribute('data-act') == 'api:paypick'
+    assert block_label(page) == 'Verify ¥1'
+    guide = row.locator('[data-pencil-name="Item Guide Link"]').text_content()
+    assert 'Alipay ›' in guide and 'TenPayGo ›' in guide
+    assert 'animation' not in guide and 'screenshot' not in guide
 
 
 # ---------------- FR-2 TenPayGo 验证成功；FR-10 支付宝文案恢复 ----------------
-def test_verify_tenpaygo_then_alipay_copy_does_not_leak(page, base):
+def test_verify_tenpaygo_then_add_alipay_as_backup(page, base):
     open_app(page, base, 'preflight'); go(page, 'preflight')
-    node(page, 'preflight', 'Item TenPayGo payment').locator('[data-pencil-name="Item Button"]').click()
+    pick(page, 'tenpaygo')
     wait_text(page, 'payment', 'Result Title', 'Your TenPayGo works in China')
     assert 'via TenPayGo at' in text(page, 'payment', 'Result Sub')
     assert text(page, 'payment', 'How Item Title', 1) == 'TenPayGo is linked to that card on this phone'
@@ -110,19 +130,24 @@ def test_verify_tenpaygo_then_alipay_copy_does_not_leak(page, base):
     assert 'VERIFIED' in text(page, 'payment', 'Chip Label')
     node(page, 'payment', 'Done Button').click()
     wait_text(page, 'preflight', 'Progress Label', '5 of 6 ready · 1 to do · 2 optional')
-    assert node(page, 'preflight', 'Item TenPayGo payment').locator('[data-pencil-name="Item Desc"]').text_content().startswith('Verified · ¥1 test on')
-    assert node(page, 'preflight', 'Item Alipay payment').locator('[data-pencil-name="Item Desc"]').text_content() == 'Backup · not verified · for shops that only take Alipay'
-    node(page, 'preflight', 'Item Alipay payment').locator('[data-pencil-name="Item Button"]').click()
+    page.wait_for_function("""() => /Add backup/.test(document.querySelector('.screen[data-route="preflight"] [data-pencil-name="Item Alipay payment"] [data-pencil-name="Item Button Label"]').textContent)""")
+    desc = pay_block(page).locator('[data-pencil-name="Item Desc"]').text_content()
+    assert desc.startswith('TenPayGo verified · ¥1 test on') and desc.endswith('Alipay is an optional backup')
+    pay_block(page).locator('[data-pencil-name="Item Button"]').click()    # Add backup：直接验证支付宝，不弹选择层
     wait_text(page, 'payment', 'Result Title', 'Your Alipay works in China')
+    assert not page.locator('[data-pencil-name="Pay Chooser"]').is_visible()
     assert text(page, 'payment', 'How Item Title', 1) == 'Alipay is linked to that card on this phone'
     assert "Alipay checkout" in text(page, 'payment', 'Source')
+    node(page, 'payment', 'Done Button').click()
+    page.wait_for_function("""() => getComputedStyle(document.querySelector('.screen[data-route="preflight"] [data-pencil-name="Item Alipay payment"] [data-pencil-name="Item Button"]')).visibility === 'hidden'""")
+    assert pay_block(page).locator('[data-pencil-name="Item Desc"]').text_content() == 'Alipay and TenPayGo verified · ¥1 tests refunded'
 
 
 # ---------------- FR-2/FR-3 失败与切换 ----------------
 def test_tenpaygo_failure_explains_code_and_switches_to_alipay(page, base):
     open_app(page, base, 'preflight'); go(page, 'preflight')
     page.route('**/mock/pay-test?method=tenpaygo', lambda r: r.fulfill(json={'method': 'tenpaygo', 'status': 'failed', 'error_code': 'ISSUER_DECLINED', 'hint': 'The bank did not approve this transaction.', 'entry_id': 'tenpaygo_card_bind_failed'}))
-    node(page, 'preflight', 'Item TenPayGo payment').locator('[data-pencil-name="Item Button"]').click()
+    pick(page, 'tenpaygo')
     wait_text(page, 'payment', 'Result Title', 'Payment test failed')
     assert text(page, 'payment', 'Chip Label') == 'NOT VERIFIED · ISSUER_DECLINED'
     assert text(page, 'payment', 'How Item Title', 0) == 'Your bank refused the charge'
@@ -197,9 +222,13 @@ def test_tutorial_step1_plays_the_download_animation(page, base):
     assert page.evaluate('() => document.querySelector("#tutVid").paused')
 
 
-def test_guide_link_counts_animation_and_screenshots(page, base):
+def test_guide_links_open_each_setup_tutorial(page, base):
     open_app(page, base, 'preflight'); go(page, 'preflight')
-    page.wait_for_function("""() => /1 animation · 2 screenshots/.test(document.querySelector('.screen[data-route="preflight"] [data-pencil-name="Item TenPayGo payment"] [data-pencil-name="Item Guide Link"]').textContent)""")
+    pay_block(page).locator('[data-guide="tenpaygo_setup_before_flight"]').click()
+    page.wait_for_function('() => document.querySelector("#tutTitle").textContent === "Set up TenPayGo before you fly"')
+    go(page, 'preflight')
+    pay_block(page).locator('[data-guide="alipay_setup_before_flight"]').click()
+    page.wait_for_function('() => document.querySelector("#tutTitle").textContent === "Set up Alipay before you fly"')
 
 
 # ---------------- FR-10 静态模式（github.io，无后端） ----------------
@@ -213,10 +242,10 @@ def test_static_mode_shows_both_methods(page):
     page.route('https://yuklim.github.io/**', local)
     page.goto('https://yuklim.github.io/landing-check/h5/index.html#preflight')
     page.wait_for_function('() => /静态模式/.test(document.querySelector("#lcdot").textContent)')
-    node(page, 'preflight', 'Item TenPayGo payment').locator('[data-pencil-name="Item Button"]').click()
+    pick(page, 'tenpaygo')
     wait_text(page, 'payment', 'Result Title', 'Your TenPayGo works in China')
     go(page, 'preflight')
-    node(page, 'preflight', 'Item Alipay payment').locator('[data-pencil-name="Item Button"]').click()
+    pick(page, 'alipay')
     wait_text(page, 'payment', 'Result Title', 'Your Alipay works in China')
     assert text(page, 'payment', 'How Item Title', 1) == 'Alipay is linked to that card on this phone'
 
@@ -232,7 +261,8 @@ def test_failure_when_other_method_already_verified_does_not_offer_a_second_char
     _client().post('/mock/pay-test?method=alipay')
     open_app(page, base, 'preflight'); go(page, 'preflight')
     page.route('**/mock/pay-test?method=tenpaygo', lambda r: r.fulfill(json={'method': 'tenpaygo', 'status': 'failed', 'error_code': 'AUTH_FAILED', 'hint': 'x', 'entry_id': 'tenpaygo_payment_declined'}))
-    node(page, 'preflight', 'Item TenPayGo payment').locator('[data-pencil-name="Item Button"]').click()
+    page.wait_for_function("""() => /Add backup/.test(document.querySelector('.screen[data-route="preflight"] [data-pencil-name="Item Alipay payment"] [data-pencil-name="Item Button Label"]').textContent)""")
+    pay_block(page).locator('[data-pencil-name="Item Button"]').click()
     wait_text(page, 'payment', 'Result Title', 'Payment test failed')
     sw = node(page, 'payment', 'Pay Switch')
     assert sw.text_content() == 'Alipay is already verified · you can pay ›' and sw.get_attribute('data-act') == 'go:preflight'
@@ -241,7 +271,7 @@ def test_failure_when_other_method_already_verified_does_not_offer_a_second_char
 def test_network_failure_shows_this_methods_failure_not_a_stale_success(page, base):
     open_app(page, base, 'preflight'); go(page, 'preflight')
     page.route('**/mock/pay-test?method=tenpaygo', lambda r: r.abort())
-    node(page, 'preflight', 'Item TenPayGo payment').locator('[data-pencil-name="Item Button"]').click()
+    pick(page, 'tenpaygo')
     wait_text(page, 'payment', 'Result Title', 'Payment test failed')
     assert text(page, 'payment', 'Chip Label') == 'NOT VERIFIED · NO_CONNECTION'
     assert text(page, 'payment', 'How Item Title', 0) == 'The test payment did not go through'   # 不能残留"TenPayGo is linked…"

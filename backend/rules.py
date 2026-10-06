@@ -116,8 +116,18 @@ def _payment_summary(pays: dict) -> dict:
     verified = [m for m in order if pays[m]['ok']]
     # 真做过 ¥1 测试的（有 verified_at）排在只被标记完成的前面，再按时间先后
     primary = min(verified, key=lambda m: (not pays[m].get('verified_at'), pays[m].get('verified_at') or '', order.index(m))) if verified else None
+    # H5 行前检查把两种方式合成一个"Payment in China"板块，标题和说明由这里给
+    backup = next((m for m in order if m not in verified), None) if verified else None
+    if not verified:
+        desc = 'Alipay or TenPayGo · either one is enough · ¥1 test, refunded in 24 h'
+    elif backup is None:
+        desc = '%s verified · ¥1 tests refunded' % ' and '.join(PAY_METHODS[m] for m in order)
+    else:
+        at = pays[primary].get('verified_at')
+        desc = '%s verified · %s · %s is an optional backup' % (PAY_METHODS[primary], ('¥1 test on %s, refunded' % at[:10]) if at else '¥1 test, refunded', PAY_METHODS[backup])
     return {'ready': bool(verified), 'primary': primary, 'primary_name': PAY_METHODS.get(primary),
-            'verified': verified, 'verified_at': pays[primary].get('verified_at') if primary else None, 'methods': order}
+            'verified': verified, 'verified_at': pays[primary].get('verified_at') if primary else None, 'methods': order,
+            'title': 'Payment in China', 'desc': desc, 'backup': backup}
 
 
 def _transfer_hint(trip):

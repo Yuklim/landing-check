@@ -119,38 +119,31 @@
   // 深链：?tutorial=<条目id> 直接打开图文教程（嵌入 App 时按条目跳转）
   const tutQ = qs.get('tutorial'); if (tutQ) setTimeout(() => openTutorial(tutQ, qs.get('lang'), qs.get('step')), 150);
   window.lcHasTutorial = async id => (await loadTutorials()).some(t => t.id === id);
-  // 行前检查 · 支付项下挂图文教程入口；截图张数从 tutorials.json 读
-  function guideLink(id) {
-    const link = el('div', `display:flex;align-items:center;gap:6px;padding-left:38px;cursor:pointer;font:600 12px/1.3 Inter,system-ui,sans-serif;color:${BLUE}`);
-    link.setAttribute('data-pencil-name', 'Item Guide Link');
-    link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="${BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span></span>`;
-    const label = link.lastChild; label.textContent = 'Step-by-step setup guide ›';
-    loadTutorials().then(list => {
-      const media = (list.find(t => t.id === id) || {}).media || [], v = media.filter(m => /\.(mp4|webm)$/i.test(m.file)).length, s = media.length - v;
-      const parts = [v && `${v} animation${v > 1 ? 's' : ''}`, s && `${s} screenshot${s > 1 ? 's' : ''}`].filter(Boolean);
-      if (parts.length) label.textContent = `Step-by-step setup guide · ${parts.join(' · ')} ›`;
-    });
-    link.onclick = ev => { ev.stopPropagation(); openTutorial(id); };
-    return link;
-  }
-  (() => { const item = $$('preflight', 'Item Alipay payment'); if (item) item.appendChild(guideLink('alipay_setup_before_flight')); })();
-
   // ---------- 支付方式：支付宝 / TenPayGo 并列，任一个 ¥1 验证即就绪（运行时注入，静态模式也可用） ----------
   const PAY_NAME = { alipay: 'Alipay', tenpaygo: 'TenPayGo' };
   const OTHER = { alipay: 'tenpaygo', tenpaygo: 'alipay' };
-  // 行前检查 · 克隆支付宝一行，放在它正下方。克隆前去掉设计稿 id，按钮改挂 TenPayGo 的动作
+  // 板块下方的教程入口：一行里两个链接，分别打开两篇设置教程
+  function guideLinks(items) {
+    const link = el('div', `display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding-left:38px;font:600 12px/1.3 Inter,system-ui,sans-serif;color:${BLUE}`);
+    link.setAttribute('data-pencil-name', 'Item Guide Link');
+    link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="${BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
+    link.append(el('span', `color:${MUTED};font-weight:500`, 'Setup guide'));
+    items.forEach(([name, id]) => {
+      link.append(el('span', `color:${MUTED}`, '·'));
+      const a = el('span', 'cursor:pointer', name + ' ›'); a.setAttribute('data-guide', id);
+      a.onclick = ev => { ev.stopPropagation(); openTutorial(id); }; link.append(a);
+    });
+    return link;
+  }
+  // 行前检查 · 设计稿里的支付宝一行改成"Payment in China"一个板块（节点名保留 Item Alipay payment，绑定不用改）。
+  // 按钮弹选择层任选其一；已验证一种后按钮变成 Add backup，直接验证另一种
   (() => {
-    const ali = $$('preflight', 'Item Alipay payment'); if (!ali || $$('preflight', 'Item TenPayGo payment')) return;
-    const row = ali.cloneNode(true);
-    row.setAttribute('data-pencil-name', 'Item TenPayGo payment');
-    [row, ...row.querySelectorAll('[data-pencil-id]')].forEach(n => n.removeAttribute('data-pencil-id'));
-    row.querySelectorAll('[data-pencil-name="Item Guide Link"]').forEach(n => n.remove());
-    txt(row.querySelector('[data-pencil-name="Item Title"]'), 'TenPayGo payment');
-    // 静态模式下的默认文案（同设计稿里其他行一样是演示值）；接后端时 renderPreflight 用 /rules/preflight 的 desc 覆盖
-    txt(row.querySelector('[data-pencil-name="Item Desc"]'), 'Not installed · either one is enough · email sign-up, no Chinese number');
-    const btn = row.querySelector('[data-pencil-name="Item Button"]'); if (btn) btn.dataset.act = 'api:paytpg';
-    row.appendChild(guideLink('tenpaygo_setup_before_flight'));
-    ali.after(row);
+    const row = $$('preflight', 'Item Alipay payment'); if (!row) return;
+    txt(row.querySelector('[data-pencil-name="Item Title"]'), 'Payment in China');
+    // 静态模式下的默认文案；接后端时 renderPreflight 用 /rules/preflight 的 payment.desc 覆盖
+    txt(row.querySelector('[data-pencil-name="Item Desc"]'), 'Alipay or TenPayGo · either one is enough · ¥1 test, refunded in 24 h');
+    const btn = row.querySelector('[data-pencil-name="Item Button"]'); if (btn) btn.dataset.act = 'api:paypick';
+    row.appendChild(guideLinks([['Alipay', 'alipay_setup_before_flight'], ['TenPayGo', 'tenpaygo_setup_before_flight']]));
   })();
 
   // 验证结果页：设计稿是支付宝版本。先快照原文，再按方式和结果覆盖
@@ -245,24 +238,26 @@
   chooser.setAttribute('data-pencil-name', 'Pay Chooser');
   const opt = (m, title, sub) => `<div data-pay="${m}" class="tap" style="display:flex;align-items:center;gap:12px;padding:14px;border:1px solid ${LINE};border-radius:12px;margin-top:10px;cursor:pointer"><div style="flex:1;min-width:0"><div style="font:700 15px/1.3 Inter,system-ui,sans-serif;color:${INK}">${title}</div><div style="font:400 12px/1.4 Inter,system-ui,sans-serif;color:${MUTED};margin-top:2px">${sub}</div></div><div style="flex:none;border:1px solid ${BLUE};color:${BLUE};border-radius:4px;padding:6px 10px;font:700 12px Inter,system-ui,sans-serif">Verify ¥1</div></div>`;
   chooser.innerHTML = `<div style="background:#fff;border-radius:16px 16px 0 0;padding:20px 20px 30px;box-sizing:border-box">
-      <div style="font:700 17px/1.3 Inter,system-ui,sans-serif;color:${INK}">Verify payment first</div>
+      <div data-role="title" style="font:700 17px/1.3 Inter,system-ui,sans-serif;color:${INK}">Verify payment first</div>
       <div style="font:400 13px/1.45 Inter,system-ui,sans-serif;color:${MUTED};margin-top:4px">A ¥1 test, refunded. Either one is enough.</div>
       ${opt('alipay', 'Alipay', 'Also books DiDi rides and buys metro tickets')}
       ${opt('tenpaygo', 'TenPayGo', 'Email sign-up · pays wherever WeChat Pay works')}
       <div data-pay="" style="text-align:center;padding:16px 0 0;font:600 14px Inter,system-ui,sans-serif;color:${MUTED};cursor:pointer">Not now</div>
     </div>`;
   (document.getElementById('phone') || document.body).appendChild(chooser);
-  function choosePay() {
+  function choosePay(title) {
     return new Promise(res => {
+      txt(chooser.querySelector('[data-role="title"]'), title || 'Verify payment first');
       chooser.style.display = 'flex';
       chooser.onclick = ev => { const b = ev.target.closest('[data-pay]'); if (!b && ev.target !== chooser) return; chooser.style.display = 'none'; res(b ? (b.dataset.pay || null) : null); };
     });
   }
+  const PICK_TITLE = 'Which app will you pay with?';
   // 静态模式：不调接口，直接显示对应方式的成功页
   function staticPay(m) { renderPayOk(m); show('payment'); }
   window.lcPayStatic = act => {
     if (act === 'pay') { staticPay('alipay'); return true; }
-    if (act === 'paytpg') { staticPay('tenpaygo'); return true; }
+    if (act === 'paypick') { choosePay(PICK_TITLE).then(m => { if (m) staticPay(m); }); return true; }
     if (act.startsWith('payretry:')) { staticPay(act.slice(9)); return true; }
     if (act === 'pay2') { choosePay().then(m => { if (m) staticPay(m); }); return true; }
     return false;
@@ -300,27 +295,30 @@
     ICONS.done = done && done.querySelector('[data-pencil-name="State"]').outerHTML;
     ICONS.todo = todo && todo.querySelector('[data-pencil-name="State"]').outerHTML;
     ICONS.optional = opt && opt.querySelector('[data-pencil-name="State"]').outerHTML;
-    // 支付组里的备用项：沿用"可选"的灰色底，图标换成银行卡（可选项原图标是车，放在支付行会误导）
-    if (ICONS.optional) {
-      const t = document.createElement('div'); t.innerHTML = ICONS.optional; const s = t.firstElementChild, svg = s.querySelector('svg');
-      if (svg) { svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'none'); svg.innerHTML = '<rect x="3" y="6" width="18" height="13" rx="2" stroke="#6F7685" stroke-width="2"/><path d="M3 10.5h18" stroke="#6F7685" stroke-width="2"/>'; }
-      ICONS.backup = s.outerHTML;
-    }
   }
-  const ITEM_NODE = { permissions: 'Item Location & notifications', data: 'Item Mobile data in China', alipay: 'Item Alipay payment', tenpaygo: 'Item TenPayGo payment', transfer: 'Item Ride from the airport', car: 'Item Car rental', tickets: 'Item Palace Museum reservation', passport: 'Item Passport', pack: 'Item Offline landing pack' };
+  const ITEM_NODE = { permissions: 'Item Location & notifications', data: 'Item Mobile data in China', alipay: 'Item Alipay payment', transfer: 'Item Ride from the airport', car: 'Item Car rental', tickets: 'Item Palace Museum reservation', passport: 'Item Passport', pack: 'Item Offline landing pack' };
   async function renderPreflight() {
     let d; try { d = await get('/rules/preflight'); } catch (e) { return; }
     if (!ICONS.done) captureIcons();
     txt($$('preflight', 'Progress Label'), d.summary); txt($$('preflight', 'Progress Pct'), d.pct + '%');
     const fill = $$('preflight', 'Fill'); if (fill) fill.style.width = Math.round(337 * d.pct / 100) + 'px';
-    d.items.forEach(it => {
-      const node = $$('preflight', ITEM_NODE[it.id]); if (!node) return;
-      txt(node.querySelector('[data-pencil-name="Item Desc"]'), it.desc);
+    const setRow = (node, status, desc) => {
+      txt(node.querySelector('[data-pencil-name="Item Desc"]'), desc);
       const st = node.querySelector('[data-pencil-name="State"]');
-      const icon = it.group && it.status === 'optional' ? ICONS.backup : ICONS[it.status];
-      if (st && icon) { const t = document.createElement('div'); t.innerHTML = icon; st.replaceWith(t.firstElementChild); }
+      if (st && ICONS[status]) { const t = document.createElement('div'); t.innerHTML = ICONS[status]; st.replaceWith(t.firstElementChild); }
+    };
+    d.items.forEach(it => {
+      if (it.group && d.payment) return;                       // 支付宝 / TenPayGo 两项合在下面的板块里
+      const node = $$('preflight', ITEM_NODE[it.id]); if (!node) return;
+      setRow(node, it.status, it.desc);
       const btn = node.querySelector('[data-pencil-name="Item Button"]'); if (btn) btn.style.visibility = it.status === 'done' ? 'hidden' : 'visible';
     });
+    const p = d.payment, row = $$('preflight', 'Item Alipay payment');
+    if (p && row) {
+      setRow(row, p.ready ? 'done' : 'todo', p.desc);
+      const btn = row.querySelector('[data-pencil-name="Item Button"]');
+      if (btn) { btn.style.visibility = p.ready && !p.backup ? 'hidden' : 'visible'; txt(btn.querySelector('[data-pencil-name="Item Button Label"]'), p.ready ? 'Add backup' : 'Verify ¥1'); }
+    }
   }
 
   // ---------- 支付验证（文案切换见前面"支付方式"一节） ----------
@@ -341,6 +339,13 @@
   }
   async function otherVerified(method) {
     try { const pf = await get('/rules/preflight'); return !!(pf.payment && pf.payment.verified.includes(OTHER[method])); } catch (e) { return false; }
+  }
+  // 行前检查的境内支付板块：还没验证 → 选择层；已验证一种 → 直接验证另一种作为备用
+  async function payPick() {
+    S.payReturn = null;
+    let p = null; try { p = (await get('/rules/preflight')).payment; } catch (e) {}
+    if (p && p.ready && p.backup) { pay(p.backup); return; }
+    const m = await choosePay(PICK_TITLE); if (m) pay(m);
   }
   // 落地流程里支付未就绪：先选方式再验证，成功后回到第三步
   async function payFirst() { const m = await choosePay(); if (!m) return; S.payReturn = 'step3'; pay(m); }
@@ -496,8 +501,8 @@
 
   // ---------- 动作分发 ----------
   window.lcHandle = (act, el) => {
-    if (act === 'pay') { S.payReturn = null; pay('alipay'); }              // 行前检查里的两个 Verify ¥1
-    else if (act === 'paytpg') { S.payReturn = null; pay('tenpaygo'); }
+    if (act === 'pay') { S.payReturn = null; pay('alipay'); }
+    else if (act === 'paypick') payPick();                              // 行前检查"Payment in China"的按钮
     else if (act.startsWith('payretry:')) pay(act.slice(9));             // 失败页：重试或改用另一种，保留回到第三步
     else if (act === 'pay2') payFirst();
     else if (act === 'landing') landingEntry();
