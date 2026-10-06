@@ -2,7 +2,7 @@
 
 Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 创新」
 
-在 Trip.com App 内新增「落地检查」：外国散客落地中国机场那一刻，先检测自己的数据能否上网，再按顺序解决上网、支付、到酒店三件事，一次只给一个任务。支付在起飞前用一笔 1 元真实交易验证，接机和租车在起飞前预订。卡住了拍一张截图，AI 认出场景，答案来自人工核验的知识库。
+在 Trip.com App 内新增「落地检查」：外国散客落地中国机场那一刻，先检测自己的数据能否上网，再按顺序解决上网、支付、到酒店三件事，一次只给一个任务。支付在起飞前用一笔 1 元真实交易验证，支付宝或 TenPayGo 任一个通过即可，接机和租车在起飞前预订。卡住了拍一张截图，AI 认出场景，答案来自人工核验的知识库。
 
 **在线演示（接 Render 后端，手机可用）** https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com
 **静态版（不依赖后端）** https://yuklim.github.io/landing-check/h5/
@@ -14,10 +14,11 @@ Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 
 | 部分 | 状态 | 说明 |
 |---|---|---|
 | H5 原型，18 屏 | 可用 | 设计稿导出 + 点击绑定，手机浏览器可开，可添加到主屏幕 |
-| 后端接口 | 可用 | FastAPI：知识库、识别、模拟携程数据、规则引擎，38 个测试 |
+| 后端接口 | 可用 | FastAPI：知识库、识别、模拟携程数据、规则引擎，75 个测试 + 11 个 H5 端到端测试 |
+| TenPayGo 并列支付 | 可用 | 行前检查里支付宝和 TenPayGo 两行，任一个 ¥1 验证即就绪；失败页可改用另一种；落地后各页显示已验证的方式。调研、PRD、技术方案、测试报告在 `docs/tenpaygo/` |
 | "我卡住了"识别 | 可用 | DeepSeek `deepseek-flash` 看截图选条目，置信度分档，规则兜底 |
-| 知识库 | 4 个场景 | 支付宝 12、微信 9、滴滴 6、上网 7 共 34 条，含来源和核验日期；资料库 115 篇 + Reddit 608 帖求助与解答；指南截图 64 张场景命中 94%，Reddit 真实失败截图 75 张场景命中 84% |
-| 图文教程屏 | 8 篇 | 条目加 `media` 字段即成为一步一图的教程，H5 运行时注入，静态模式也能看。支付宝、微信、滴滴、上网各 1 到 3 篇；配图多数是指南站扒来的占位图，Trip.com 指南和官方海报的图可直接用，正式版其余要换成自己截的 |
+| 知识库 | 5 个场景 | 支付宝 12、微信 9、滴滴 6、上网 7、TenPayGo 7 共 41 条，含来源和核验日期；资料库 115 篇 + TenPayGo 8 篇 + Reddit 608 帖求助与解答；指南截图 64 张场景命中 94%，Reddit 真实失败截图 75 张场景命中 84%（TenPayGo 场景尚未评测） |
+| 图文教程屏 | 10 篇 | 条目加 `media` 字段即成为一步一图的教程，H5 运行时注入，静态模式也能看。支付宝、微信、滴滴、上网、TenPayGo 各 1 到 3 篇；配图多数是指南站扒来的占位图，Trip.com 指南和官方海报的图可直接用，正式版其余要换成自己截的 |
 | 公网后端（Render） | 已部署 | https://landing-check.onrender.com ，免费档首次访问需等约 30 秒唤醒 |
 | 离线包 / Service Worker | 未做 | 方案承诺项，初赛前完成 |
 | 多语言预翻译 | 未做 | 同上 |
@@ -36,6 +37,9 @@ lsof -iTCP:8000 -sTCP:LISTEN -t | xargs kill
 
 # 测试
 cd backend && python3 -m pytest -q tests
+
+# H5 端到端（需要 pip install playwright && python3 -m playwright install chromium）
+cd backend && E2E=1 python3 -m pytest -q tests/test_e2e_h5.py
 ```
 
 图文教程：打开 `h5/?tutorial=<条目id>&step=<n>` 直接跳到某篇教程（嵌入 App 时按条目深链），或在右上角菜单的教程列表里点；「我卡住了」识别出带配图的条目时，步骤标题可点进图文版。给条目加图见 `知识库/entries/schema.md` 的 media 一节，加完跑一遍校验脚本即导出。
@@ -59,7 +63,8 @@ backend/            FastAPI
   entries/            正式条目（JSON）+ schema.md 格式说明 + 校验脚本生成的 .md 预览
   raw/                抓取的原始资料 88 篇，按来源分目录，README.md 按场景索引
   tools/              抓取与校验脚本
-exports/            19 屏 PNG（18 屏设计稿 + 支付宝图文教程 4 步截图）和总览图
+docs/tenpaygo/      TenPayGo 接入：需求调研、PRD、技术方案、测试报告、设计说明（运行时注入的界面如何补进设计稿）
+exports/            19 屏 PNG（18 屏设计稿 + 支付宝图文教程 4 步截图）和总览图；尚未包含 TenPayGo 界面
 demo/flow.html      带讲解词的流程演示（引用 exports）
 appearance.pen      设计源文件（pen.dev）
 携程Hackathon-落地助手方案.md   产品方案
@@ -75,7 +80,7 @@ appearance.pen      设计源文件（pen.dev）
 | `POST /stuck/classify` | 上传截图或一句话，返回 `decision`（answer / ask / unknown）、条目或候选、置信度、`mode`（model / rules） |
 | `GET /rules/preflight` `POST /rules/preflight/done` | 行前检查项状态 |
 | `GET /rules/transport?landed_at=HH:MM&bags=&adults=` | 交通推荐，带上客点和理由 |
-| `GET /mock/trip` `GET /mock/flight` `POST /mock/flight/land` `POST /mock/pay-test?fail=1` `POST /mock/event` `GET /mock/timeline` `POST /mock/reset` | 模拟携程数据与演示开关 |
+| `GET /mock/trip` `GET /mock/flight` `POST /mock/flight/land` `POST /mock/pay-test?method=alipay\|tenpaygo&fail=1` `POST /mock/event` `GET /mock/timeline` `POST /mock/reset` | 模拟携程数据与演示开关；`method` 缺省为 alipay |
 | `POST /kb/feedback` `POST /feedback/hardest` | 用户反馈 |
 
 设计原则：模型只返回知识库里存在的条目 id，答案文字全部来自条目；只有判为未知时才生成建议并标 `unverified`。
@@ -109,3 +114,4 @@ cd h5 && python3 build_h5.py
 2. 浦东现场复核：P2 车库是 B1 还是 B2、出租车是 25 还是 26 号门（来源冲突）；设计稿里的 Exit 9 文案要同步改
 3. 离线包 + Service Worker；预翻译
 4. 初赛材料：方案 PDF、演示视频（脚本 `demo/视频脚本.md`，配音稿、字幕、参考声轨、提示词包在 `demo/video/`）
+5. TenPayGo：收集真实失败截图做识别评测（重点看会不会被认成微信）；把 `docs/tenpaygo/05-设计说明.md` 里的界面补进 `appearance.pen`；教程配图换成自己截的；确认行前 ¥1 测试在境外能否完成、Trip.com 收银台能否调起 TenPayGo（PRD §9）
