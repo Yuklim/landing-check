@@ -13,6 +13,7 @@ cd backend && python3 tools/eval_samples.py from_guides      # 需要 DEEPSEEK_A
 | `from_guides/` | 221 张，其中 64 张已打标签（含 20 张从指南拼图裁出的单屏、3 张 Apple 官方蜂窝设置截图、1 张首都机场官方 Wi-Fi 指南海报） | WildChina、Trip.com、payinchinaguide、chinavigators 等指南正文里的截图 | 真实 App 界面。只有 2 张是报错页（微信"存在风险"弹窗、支付宝添加银行卡页），其余是正常步骤页 |
 | `from_reddit/` | 278 张（只在本地，不进仓库），75 张已打标签：38 张真实报错页、27 张正常页、10 张负样本 | 登录态浏览器抓 Reddit 搜索与评论接口，r/travelchina、r/chinatravel、r/chinalife 等，23 组关键词 | 真实用户的失败截图，manifest 里每条带帖子链接和日期，可按链接重新下载；配套 `知识库/raw/reddit/README.md` 有 608 帖的求助原文与高赞回答 |
 | `readyforchina/` | 6 个 GIF | readyforchina.com 的设置教程动图 | 支付宝六步、微信五步，无报错页 |
+| `tenpaygo_appstore/` | 4 张，3 张已打标签、1 张负样本 | App Store 上 TenPayGo 的官方截图（Tencent），2026-10-06 下载 | 带营销标题条的正常页，没有报错页。图文教程的占位配图从这里裁出 |
 
 ## 2026-10-03 基线评测（40 张，只有支付宝条目）
 
