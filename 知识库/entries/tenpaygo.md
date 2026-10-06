@@ -1,8 +1,8 @@
 # TenPayGo（微信支付旅客版） / TenPayGo · 知识库条目预览
 
-识别关键词（中）：财付通、深圳通
+识别关键词（中）：
 
-识别关键词（英）：TenPayGo, TenPay Go, Tenpay, E-Wallet, Supported Payment Methods, Show payment code, Scan to pay, Under Internal Testing, Pay code, Circle for instant explanation
+识别关键词（英）：TenPayGo, TenPay Go, E-Wallet, Supported Payment Methods, Show payment code, Scan to pay, Under Internal Testing, Pay code, Circle for instant explanation
 
 界面特征：Standalone TenPayGo app, English only, green accents. The Pay tab is three white cards titled Bank Card, Apple Pay and E-Wallet with a 'Supported Payment Methods' link; the bottom bar has only two tabs, Pay and Go, plus a round scan button. Bottom sheets titled 'Scan to pay' or 'Show payment code' with a green Next or Got it button. There are no Chats, Contacts, Discover or Me tabs, which is how it differs from WeChat.
 

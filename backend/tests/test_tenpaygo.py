@@ -9,7 +9,8 @@ import rules
 import stuck
 import mock
 from app import app, kb, trip
-from mock import MockTrip, PAY_ERRORS, PAY_METHODS
+from mock import MockTrip, PAY_ERRORS
+from rules import PAY_METHODS
 
 c = TestClient(app)
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -93,9 +94,42 @@ def test_legacy_caller_with_single_payment_field():
     assert r['payment']['primary'] == 'alipay'
 
 
+def test_primary_prefers_a_real_test_over_a_done_mark():
+    r = rules.preflight(with_payments(['tenpaygo'], at={'alipay': None, 'tenpaygo': '2026-10-10 08:00:00'}), done={'alipay'}, today=D)
+    assert r['payment']['verified'] == ['alipay', 'tenpaygo']
+    assert r['payment']['primary'] == 'tenpaygo' and r['payment']['verified_at'] == '2026-10-10 08:00:00'
+
+
 def test_done_marks_count_as_verified():
     r = rules.preflight(copy.deepcopy(TRIP), done={'tenpaygo'}, today=D)
     assert by_id(r)['tenpaygo']['status'] == 'done' and r['payment']['primary'] == 'tenpaygo'
+
+
+# ---------------- 交通：只验证了 TenPayGo 时提示需要支付宝的方式 ----------------
+def test_transport_flags_alipay_only_routes_when_only_tenpaygo_verified():
+    light = copy.deepcopy(TRIP); light['flight']['checked_bags'] = 0
+    r = rules.transport(light, landed_at='14:00', paid=['tenpaygo'])
+    assert r['recommended']['id'] == 'metro' and 'cash' in r['recommended']['pay_note'] and 'Alipay' in r['recommended']['pay_note']
+    didi = [a for a in r['alternatives'] if a['id'] == 'didi'][0]
+    assert didi['pay_note'].startswith('Needs Alipay')
+    assert all('pay_note' not in a for a in r['alternatives'] if a['id'] == 'taxi')
+
+
+@pytest.mark.parametrize('paid', [['alipay'], ['alipay', 'tenpaygo'], None])
+def test_transport_no_note_with_alipay_or_old_callers(paid):
+    light = copy.deepcopy(TRIP); light['flight']['checked_bags'] = 0
+    r = rules.transport(light, landed_at='14:00', paid=paid)
+    assert 'pay_note' not in r['recommended'] and all('pay_note' not in a for a in r['alternatives'])
+    assert all('needs_alipay' not in a for a in r['alternatives'] + [r['recommended']])
+
+
+def test_http_transport_uses_verified_methods():
+    c.post('/mock/pay-test?method=tenpaygo')
+    r = c.get('/rules/transport?landed_at=14:00').json()
+    assert [a for a in r['alternatives'] if a['id'] == 'didi'][0]['pay_note'].startswith('Needs Alipay')
+    c.post('/mock/pay-test?method=alipay')
+    r = c.get('/rules/transport?landed_at=14:00').json()
+    assert all('pay_note' not in a for a in r['alternatives'])
 
 
 # ---------------- 接口 ----------------
@@ -194,6 +228,24 @@ def test_rules_tenpaygo_card_error():
 def test_rules_wechat_error_sentence_alone_stays_wechat():
     r = stuck.classify_with_rules(kb, 'The bank did not Approve this Transaction')
     assert r['scenario'] == 'wechat'
+
+
+@pytest.mark.parametrize('text', ['财付通 微信支付 交易账单', '深圳通 乘车码', 'Tenpay transaction record'])
+def test_rules_company_and_transit_words_do_not_mean_tenpaygo(text):
+    assert stuck.classify_with_rules(kb, text)['scenario'] != 'tenpaygo'
+
+
+def test_prompt_shared_error_sentence_prefers_wechat_like_rules():
+    assert 'prefer the "wechat" entry' in stuck.PROMPT
+
+
+def test_reader_links_are_checked_by_host_not_substring():
+    from validate_entries import reader_ok
+    assert reader_ok('https://apps.apple.com/us/app/tenpaygo/id6778755338')
+    assert reader_ok('https://au.trip.com/guide/info/alipay-china.html')
+    assert not reader_ok('https://apps.apple.com/us/app/some-other-app/id1')
+    assert not reader_ok('https://evil.example/?apps.apple.com/')
+    assert not reader_ok('https://evil.example/?trip.com')
 
 
 def test_rules_tenpaygo_home_screen():

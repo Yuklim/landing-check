@@ -198,3 +198,36 @@ def test_static_mode_shows_both_methods(page):
     node(page, 'preflight', 'Item Alipay payment').locator('[data-pencil-name="Item Button"]').click()
     wait_text(page, 'payment', 'Result Title', 'Your Alipay works in China')
     assert text(page, 'payment', 'How Item Title', 1) == 'Alipay is linked to that card on this phone'
+
+
+# ---------------- 评审后补充：另一种已验证、网络失败、只有 TenPayGo 时的交通提示 ----------------
+def _client():
+    from fastapi.testclient import TestClient
+    from app import app
+    return TestClient(app)
+
+
+def test_failure_when_other_method_already_verified_does_not_offer_a_second_charge(page, base):
+    _client().post('/mock/pay-test?method=alipay')
+    open_app(page, base, 'preflight'); go(page, 'preflight')
+    page.route('**/mock/pay-test?method=tenpaygo', lambda r: r.fulfill(json={'method': 'tenpaygo', 'status': 'failed', 'error_code': 'AUTH_FAILED', 'hint': 'x', 'entry_id': 'tenpaygo_payment_declined'}))
+    node(page, 'preflight', 'Item TenPayGo payment').locator('[data-pencil-name="Item Button"]').click()
+    wait_text(page, 'payment', 'Result Title', 'Payment test failed')
+    sw = node(page, 'payment', 'Pay Switch')
+    assert sw.text_content() == 'Alipay is already verified · you can pay ›' and sw.get_attribute('data-act') == 'go:preflight'
+
+
+def test_network_failure_shows_this_methods_failure_not_a_stale_success(page, base):
+    open_app(page, base, 'preflight'); go(page, 'preflight')
+    page.route('**/mock/pay-test?method=tenpaygo', lambda r: r.abort())
+    node(page, 'preflight', 'Item TenPayGo payment').locator('[data-pencil-name="Item Button"]').click()
+    wait_text(page, 'payment', 'Result Title', 'Payment test failed')
+    assert text(page, 'payment', 'Chip Label') == 'NOT VERIFIED · NO_CONNECTION'
+    assert text(page, 'payment', 'How Item Title', 0) == 'The test payment did not go through'   # 不能残留"TenPayGo is linked…"
+    assert 'TenPayGo pays' in text(page, 'payment', 'Source')
+
+
+def test_step3_flags_alipay_only_routes_after_tenpaygo(page, base):
+    c = _client(); c.post('/mock/pay-test?method=tenpaygo'); c.post('/mock/flight/land')
+    open_app(page, base, 'step3'); go(page, 'step3')
+    page.wait_for_function('() => { const o = document.querySelector(\'.screen[data-route="step3"] .lc-otherways\'); return o && /Needs Alipay/.test(o.textContent); }')

@@ -5,14 +5,10 @@
     "zh": "TenPayGo（微信支付旅客版）"
   },
   "detect": {
-    "keywords_zh": [
-      "财付通",
-      "深圳通"
-    ],
+    "keywords_zh": [],
     "keywords_en": [
       "TenPayGo",
       "TenPay Go",
-      "Tenpay",
       "E-Wallet",
       "Supported Payment Methods",
       "Show payment code",

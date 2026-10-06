@@ -5,7 +5,7 @@ from datetime import datetime, timezone, timedelta
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CST = timezone(timedelta(hours=8))
-PAY_METHODS = {'alipay': 'Alipay', 'tenpaygo': 'TenPayGo'}     # 支付组：任一个验证通过即就绪
+from rules import PAY_METHODS
 
 # 模拟失败：错误码 -> (提示, 对应知识库条目)。支付宝三种沿用原来的，TenPayGo 三种见 docs/tenpaygo/02-PRD.md §6
 PAY_ERRORS = {

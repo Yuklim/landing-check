@@ -117,6 +117,15 @@ v1 · 2026-10-06 · 依据 `01-需求调研.md` · §2 的四项决策已由需�
 - 全部 `volatility: high`；手续费、额度、实名放进 facts，正文不写数字。
 - `alipay_card_bind_failed`、`wechat_card_unsupported`、`connectivity_chinese_number_needed` 的 related 加 TenPayGo 对应条目。
 
+### FR-12 到酒店：只验证了 TenPayGo 时提示依赖支付宝的方式（评审补充）
+
+- 支付组就绪不等于每种交通方式都能付：支付宝里的滴滴只能用支付宝，地铁售票机收支付宝或现金。
+- 已验证方式里没有支付宝时，第三步的推荐和"Other ways"里这两种方式各带一行橙色提示：
+  - 滴滴：`Needs Alipay: DiDi opens inside Alipay, and TenPayGo can't book rides.`
+  - 地铁：`No Alipay verified: have some cash for the ticket machine.`
+- 不改推荐顺序（推荐本身不依赖支付方式：出租车可付现金，地铁可付现金）。
+- **验收**：只验证 TenPayGo 后，第三步滴滴一行出现 Needs Alipay；再验证支付宝后提示消失。
+
 ## 6. 文案
 
 ### 行前检查 · 说明文字

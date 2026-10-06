@@ -2,9 +2,9 @@
 """规则引擎：行前检查项状态、交通推荐。纯函数，输入输出都是 dict，便于测试。"""
 import os, json
 from datetime import datetime, date
-from mock import PAY_METHODS
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+PAY_METHODS = {'alipay': 'Alipay', 'tenpaygo': 'TenPayGo'}     # 支付组：任一个 ¥1 验证通过即就绪
 TRANSPORT = json.load(open(os.path.join(HERE, 'mock', 'transport.json'), encoding='utf-8'))
 AIRPORTS = json.load(open(os.path.join(HERE, 'mock', 'airports.json'), encoding='utf-8'))
 
@@ -91,6 +91,10 @@ def _payments(trip: dict, done) -> dict:
     return {m: {**(pays.get(m) or {}), 'ok': (pays.get(m) or {}).get('status') == 'verified' or m in done} for m in PAY_METHODS}
 
 
+def verified_methods(trip: dict, done=frozenset()) -> list:
+    return [m for m, p in _payments(trip, done).items() if p['ok']]
+
+
 def _add_payment_group(add, pays: dict, apps: dict):
     group_ok = any(p['ok'] for p in pays.values())
     for m, p in pays.items():
@@ -110,7 +114,8 @@ def _add_payment_group(add, pays: dict, apps: dict):
 def _payment_summary(pays: dict) -> dict:
     order = list(PAY_METHODS)
     verified = [m for m in order if pays[m]['ok']]
-    primary = min(verified, key=lambda m: (pays[m].get('verified_at') or '', order.index(m))) if verified else None
+    # 真做过 ¥1 测试的（有 verified_at）排在只被标记完成的前面，再按时间先后
+    primary = min(verified, key=lambda m: (not pays[m].get('verified_at'), pays[m].get('verified_at') or '', order.index(m))) if verified else None
     return {'ready': bool(verified), 'primary': primary, 'primary_name': PAY_METHODS.get(primary),
             'verified': verified, 'verified_at': pays[primary].get('verified_at') if primary else None, 'methods': order}
 
@@ -134,8 +139,9 @@ def _is_night(hhmm: str, metro: dict = None) -> bool:
     return t >= last or t < first
 
 
-def transport(trip: dict, landed_at: str = None, airport: str = 'PVG', weather: str = 'clear') -> dict:
-    """返回 recommended + alternatives，每个带 reason。landed_at 'HH:MM' 覆盖航班时间，便于演示。"""
+def transport(trip: dict, landed_at: str = None, airport: str = 'PVG', weather: str = 'clear', paid=None) -> dict:
+    """返回 recommended + alternatives，每个带 reason。landed_at 'HH:MM' 覆盖航班时间，便于演示。
+    paid：已验证的支付方式列表。没有支付宝时，依赖支付宝的方式（支付宝里的滴滴、地铁售票机）带 pay_note；不传则不提示。"""
     f, h = trip.get('flight', {}), trip.get('hotel', {})
     if airport not in TRANSPORT:
         airport = 'PVG'
@@ -164,6 +170,9 @@ def transport(trip: dict, landed_at: str = None, airport: str = 'PVG', weather: 
         o = dict(opts[oid]); o['recommended'] = is_rec
         o.setdefault('go_to', {'title': o['title'], 'where': o.get('where', ''), 'verified': False})
         lo, hi = o['price_cny']; o['price'] = '¥%d' % lo if lo == hi else '¥%d–%d' % (lo, hi)
+        note = o.pop('needs_alipay', None)
+        if note and paid is not None and 'alipay' not in paid:
+            o['pay_note'] = note
         return o
 
     return {'airport': airport, 'landed_at': when, 'night': night, 'facts': facts,

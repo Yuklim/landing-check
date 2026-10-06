@@ -43,6 +43,7 @@
       "where": "Follow Metro signs from Arrivals",
       "action": "transit",
       "transfers": 1,
+      "needs_alipay": "No Alipay verified: have some cash for the ticket machine.",
       "go_to": {
         "title": "Metro Line 2 station",
         "where": "Follow the Metro / 地铁 signs from Arrivals. Buy a ticket at the machine with Alipay or cash.",
@@ -59,6 +60,7 @@
       ],
       "where": "P2 car park, follow 网约车 signs",
       "action": "didi",
+      "needs_alipay": "Needs Alipay: DiDi opens inside Alipay, and TenPayGo can't book rides.",
       "go_to": {
         "title": "Ride-hailing pickup point",
         "where": "Follow the Online Car-hailing / 网约车 signs into the P2 car park (level B1). Order only once you are at a numbered waiting point and tell the driver its number.",

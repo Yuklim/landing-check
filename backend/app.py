@@ -13,7 +13,8 @@ from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel
 
 from kb import KnowledgeBase
-from mock import MockTrip, PAY_METHODS
+from mock import MockTrip
+from rules import PAY_METHODS
 import stuck
 import rules
 
@@ -223,4 +224,4 @@ def rules_transport(landed_at: Optional[str] = None, bags: Optional[int] = None,
         t['flight']['adults'] = adults
     if landed_at is None and trip.landed_at:
         landed_at = trip.landed_at[11:16]
-    return rules.transport(t, landed_at=landed_at, airport=airport, weather=weather)
+    return rules.transport(t, landed_at=landed_at, airport=airport, weather=weather, paid=rules.verified_methods(t, trip.done_items))

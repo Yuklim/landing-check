@@ -95,9 +95,10 @@
   T('tutPrev').onclick = () => { if (TUT.i > 0) { TUT.i--; tutRender(); } };
   T('tutNext').onclick = () => { if (TUT.i < TUT.e.steps.length - 1) { TUT.i++; tutRender(); } else back(); };
   (() => { let x0 = 0; const box = T('tutImgBox'); box.addEventListener('touchstart', ev => { x0 = ev.touches[0].clientX; }, { passive: true }); box.addEventListener('touchend', ev => { const dx = ev.changedTouches[0].clientX - x0; if (dx < -40) T('tutNext').onclick(); else if (dx > 40) T('tutPrev').onclick(); }); })();
+  // tutorials.json 只取一次，教程屏、识别结果页、行前检查入口、菜单共用
+  const loadTutorials = () => TUT.p || (TUT.p = fetch('tutorials.json').then(ok).then(d => d.tutorials).catch(() => []).then(list => (TUT.all = list)));
   async function openTutorial(id, lang, step) {
-    if (!TUT.all) { try { TUT.all = (await fetch('tutorials.json').then(ok)).tutorials; } catch (e) { TUT.all = []; } }
-    let e = TUT.all.find(t => t.id === id);
+    let e = (await loadTutorials()).find(t => t.id === id);
     if (!e) { toast('No tutorial for this step yet'); return; }
     e = Object.assign({}, e);
     if (API) { try { const r = await withTimeout(get(`/kb/entry/${id}?lang=${lang || 'en'}`), 4000); ['title', 'why', 'steps', 'fallback'].forEach(k => { if (r[k]) e[k] = r[k]; }); } catch (err) {} }
@@ -106,22 +107,22 @@
   window.lcTutorial = openTutorial;
   // 深链：?tutorial=<条目id> 直接打开图文教程（嵌入 App 时按条目跳转）
   const tutQ = qs.get('tutorial'); if (tutQ) setTimeout(() => openTutorial(tutQ, qs.get('lang'), qs.get('step')), 150);
-  window.lcHasTutorial = async id => { if (!TUT.all) { try { TUT.all = (await fetch('tutorials.json').then(ok)).tutorials; } catch (e) { TUT.all = []; } } return TUT.all.some(t => t.id === id); };
-  // 行前检查 · 支付项下挂图文教程入口
-  function guideLink(id, label) {
+  window.lcHasTutorial = async id => (await loadTutorials()).some(t => t.id === id);
+  // 行前检查 · 支付项下挂图文教程入口；截图张数从 tutorials.json 读
+  function guideLink(id) {
     const link = el('div', `display:flex;align-items:center;gap:6px;padding-left:38px;cursor:pointer;font:600 12px/1.3 Inter,system-ui,sans-serif;color:${BLUE}`);
     link.setAttribute('data-pencil-name', 'Item Guide Link');
     link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="${BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span></span>`;
-    link.lastChild.textContent = label;
+    const label = link.lastChild; label.textContent = 'Step-by-step setup guide ›';
+    loadTutorials().then(list => { const n = ((list.find(t => t.id === id) || {}).media || []).length; if (n) label.textContent = `Step-by-step setup guide · ${n} screenshot${n > 1 ? 's' : ''} ›`; });
     link.onclick = ev => { ev.stopPropagation(); openTutorial(id); };
     return link;
   }
-  (() => { const item = $$('preflight', 'Item Alipay payment'); if (item) item.appendChild(guideLink('alipay_setup_before_flight', 'Step-by-step setup guide · 4 screenshots ›')); })();
+  (() => { const item = $$('preflight', 'Item Alipay payment'); if (item) item.appendChild(guideLink('alipay_setup_before_flight')); })();
 
   // ---------- 支付方式：支付宝 / TenPayGo 并列，任一个 ¥1 验证即就绪（运行时注入，静态模式也可用） ----------
   const PAY_NAME = { alipay: 'Alipay', tenpaygo: 'TenPayGo' };
   const OTHER = { alipay: 'tenpaygo', tenpaygo: 'alipay' };
-  const PAY_ACT = { alipay: 'pay', tenpaygo: 'paytpg' };
   // 行前检查 · 克隆支付宝一行，放在它正下方。克隆前去掉设计稿 id，按钮改挂 TenPayGo 的动作
   (() => {
     const ali = $$('preflight', 'Item Alipay payment'); if (!ali || $$('preflight', 'Item TenPayGo payment')) return;
@@ -130,9 +131,10 @@
     [row, ...row.querySelectorAll('[data-pencil-id]')].forEach(n => n.removeAttribute('data-pencil-id'));
     row.querySelectorAll('[data-pencil-name="Item Guide Link"]').forEach(n => n.remove());
     txt(row.querySelector('[data-pencil-name="Item Title"]'), 'TenPayGo payment');
+    // 静态模式下的默认文案（同设计稿里其他行一样是演示值）；接后端时 renderPreflight 用 /rules/preflight 的 desc 覆盖
     txt(row.querySelector('[data-pencil-name="Item Desc"]'), 'Not installed · either one is enough · email sign-up, no Chinese number');
     const btn = row.querySelector('[data-pencil-name="Item Button"]'); if (btn) btn.dataset.act = 'api:paytpg';
-    row.appendChild(guideLink('tenpaygo_setup_before_flight', 'Step-by-step setup guide · 2 screenshots ›'));
+    row.appendChild(guideLink('tenpaygo_setup_before_flight'));
     ali.after(row);
   })();
 
@@ -196,7 +198,7 @@
       txt($$('payment', 'Fail Title'), c['Fail Title']); multiline('Fail Desc', c['Fail Desc']); txt($$('payment', 'Source'), c['Source']);
     }
     const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'go:preflight';
-    paySwitch.style.display = 'none'; S.payMethod = method;
+    paySwitch.style.display = 'none';
   }
   function renderPayOk(method, r) {
     applyPayCopy(method); setPayTone(false);
@@ -205,16 +207,22 @@
       txt($$('payment', 'Chip Label'), 'VERIFIED · ' + r.verified_at.slice(5, 10).replace('-', '/'));
     }
   }
-  function renderPayFail(method, r) {
-    applyPayCopy(method); setPayTone(true); S.entry = r.entry_id;
+  // otherVerified：另一种方式已经验证过时，不再引导去重复验证（会再扣一次 ¥1）
+  function renderPayFail(method, r, otherVerified) {
+    applyPayCopy(method); setPayTone(true); S.entry = r.entry_id || null;
+    const other = PAY_NAME[OTHER[method]];
     txt($$('payment', 'Result Title'), 'Payment test failed');
-    multiline('Result Sub', `${PAY_NAME[method]} returned ${r.error_code}.\n${r.hint}`);
+    multiline('Result Sub', r.error_code === 'NO_CONNECTION' ? r.hint : `${PAY_NAME[method]} returned ${r.error_code}.\n${r.hint}`);
     txt($$('payment', 'Chip Label'), 'NOT VERIFIED · ' + r.error_code);
     txt($$('payment', 'How Title'), 'What this error means');
-    const meaning = (PAY_MEANING[method] || {})[r.error_code] || [];
+    // 客户端不认识的错误码也要换掉"What we just tested"的成功文案
+    const meaning = (PAY_MEANING[method] || {})[r.error_code] || ['The test payment did not go through', r.hint || 'No money was taken.', 'Try again in a few minutes', 'Check your connection and that the card is still linked.',
+      otherVerified ? `${other} is already verified` : `Or verify ${other} instead`, otherVerified ? 'You can already pay; this one is only a backup.' : 'Either one is enough to get you ready.'];
     $all('payment', 'How Item Title').forEach((e, i) => txt(e, meaning[i * 2])); $all('payment', 'How Item Desc').forEach((e, i) => txt(e, meaning[i * 2 + 1]));
     txt($$('payment', 'Done Label'), 'Try again'); const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'api:payretry:' + method;
-    paySwitch.textContent = `Use ${PAY_NAME[OTHER[method]]} instead ›`; paySwitch.dataset.act = 'api:payretry:' + OTHER[method]; paySwitch.style.display = '';
+    if (otherVerified) { paySwitch.textContent = `${other} is already verified · you can pay ›`; paySwitch.dataset.act = 'go:preflight'; }
+    else { paySwitch.textContent = `Use ${other} instead ›`; paySwitch.dataset.act = 'api:payretry:' + OTHER[method]; }
+    paySwitch.style.display = '';
   }
 
   // 落地流程里"先验证支付"：底部选择层，选支付宝或 TenPayGo
@@ -247,7 +255,7 @@
   const menuList = document.getElementById('list');
   if (menuList) {
     const sep = document.createElement('div'); sep.style.cssText = 'border-top:1px solid #DADFE6;margin:4px 0'; menuList.appendChild(sep);
-    fetch('tutorials.json').then(ok).then(d => { TUT.all = d.tutorials; d.tutorials.forEach(t => { const b = document.createElement('button'); b.textContent = '📖 ' + t.title; b.onclick = () => openTutorial(t.id); menuList.appendChild(b); }); }).catch(() => {});
+    loadTutorials().then(list => list.forEach(t => { const b = document.createElement('button'); b.textContent = '📖 ' + t.title; b.onclick = () => openTutorial(t.id); menuList.appendChild(b); }));
   }
 
   if (!API) { status('静态模式'); window.lcHandle = (act) => staticHandle(act); window.lcOnShow = () => {}; return; }
@@ -309,8 +317,15 @@
       if (r.status === 'verified') {
         renderPayOk(method, r); show('payment'); renderPreflight();
         if (S.payReturn) { const to = S.payReturn; S.payReturn = null; const btn = $$('payment', 'Done Button'); if (btn) { btn.dataset.act = 'go:' + to; txt($$('payment', 'Done Label'), 'Continue to step 3 · Get to your hotel'); } }
-      } else { renderPayFail(method, r); show('payment'); }
-    } catch (e) { toast('后端不可达'); show('payment'); }
+      } else { renderPayFail(method, r, await otherVerified(method)); show('payment'); }
+    } catch (e) {
+      // 请求没发出去：显示本次方式的"连不上"，不能留着上一次（可能是另一种方式的成功页）
+      toast('后端不可达');
+      renderPayFail(method, { error_code: 'NO_CONNECTION', hint: 'We could not reach Trip.com. Check your connection and try again.' }, false); show('payment');
+    }
+  }
+  async function otherVerified(method) {
+    try { const pf = await get('/rules/preflight'); return !!(pf.payment && pf.payment.verified.includes(OTHER[method])); } catch (e) { return false; }
   }
   // 落地流程里支付未就绪：先选方式再验证，成功后回到第三步
   async function payFirst() { const m = await choosePay(); if (!m) return; S.payReturn = 'step3'; pay(m); }
@@ -394,6 +409,8 @@
   async function solved() { if (S.entry) { try { await post('/kb/feedback', { entry_id: S.entry, solved: true }); } catch (e) {} } S.entry = null; toast('Thanks, recorded'); back(); }
 
   // ---------- 第三步交通 ----------
+  // 只验证了 TenPayGo 时，依赖支付宝的方式（支付宝里的滴滴、地铁售票机）带一行提示（后端 rules.transport 给 pay_note）
+  const payNote = t => el('div', 'font-size:12px;line-height:1.35;color:#B25E00;margin-top:6px', t);
   async function renderTransport() {
     let d; try { d = await get('/rules/transport' + (S.night ? '?landed_at=23:40' : '')); } catch (e) { return; }
     const r = d.recommended;
@@ -407,7 +424,7 @@
     const cur = $$('step3', 'Current Task');
     let go = cur && cur.querySelector('.lc-goto');
     if (cur && !go) { go = el('div', 'width:100%;background:#EAF0FF;border-radius:10px;padding:14px 16px;box-sizing:border-box;font-family:Inter,system-ui,sans-serif'); go.className = 'lc-goto'; cur.insertBefore(go, $$('step3', 'Primary Button')); }
-    if (go) { go.replaceChildren(el('div', 'font-size:11px;font-weight:700;letter-spacing:.06em;color:#2C61FE', 'WHERE TO GO'), el('div', 'font-size:18px;font-weight:700;color:#121826;margin:4px 0 6px', g.title || r.title), el('div', 'font-size:14px;line-height:1.4;color:#121826', g.where || r.where)); if (g.verified === false) go.appendChild(el('div', 'font-size:11px;color:#8592A6;margin-top:6px', 'Location to be verified on site')); }
+    if (go) { go.replaceChildren(el('div', 'font-size:11px;font-weight:700;letter-spacing:.06em;color:#2C61FE', 'WHERE TO GO'), el('div', 'font-size:18px;font-weight:700;color:#121826;margin:4px 0 6px', g.title || r.title), el('div', 'font-size:14px;line-height:1.4;color:#121826', g.where || r.where)); if (g.verified === false) go.appendChild(el('div', 'font-size:11px;color:#8592A6;margin-top:6px', 'Location to be verified on site')); if (r.pay_note) go.appendChild(payNote(r.pay_note)); }
     const alt = $$('step3', 'Alt Options'); if (alt) alt.style.display = 'none';
     const sl = $$('step3', 'Step List');
     if (sl) {
@@ -419,6 +436,7 @@
         row.dataset.act = a.action === 'transit' ? 'go:transit' : a.action === 'transfer' ? 'go:transfers' : 'toast:Demo：打开支付宝里的滴滴小程序';
         const left = el('div', 'flex:1;min-width:0');
         left.append(el('div', 'font-size:15px;font-weight:700;color:#121826', a.title), el('div', 'font-size:13px;color:#6F7685;margin-top:2px', `${a.price} · ${a.min} min`), el('div', 'font-size:13px;color:#121826;margin-top:4px;line-height:1.35', (a.go_to && a.go_to.where) || a.where));
+        if (a.pay_note) left.append(payNote(a.pay_note));
         row.append(left, el('div', 'flex-shrink:0;border:1px solid #2C61FE;color:#2C61FE;border-radius:4px;padding:7px 12px;font-size:12px;font-weight:700', a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'));
         ow.appendChild(row);
       });
@@ -570,8 +588,9 @@
     const mk = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; list.appendChild(b); return b; };
     mk('🔄 重置演示数据', async () => { try { await post('/mock/reset'); Object.assign(S, S0()); toast('已重置'); setTimeout(() => location.reload(), 400); } catch (e) { toast('后端不可达'); } });
     const nb = mk('🌙 深夜落地模式：关', () => { S.night = !S.night; nb.textContent = '🌙 深夜落地模式：' + (S.night ? '开' : '关'); renderTransport(); toast(S.night ? '交通推荐按 23:40 落地计算' : '恢复 14:20 落地'); });
-    mk('💳 模拟支付失败（支付宝）', async () => { try { const r = await post('/mock/pay-test?fail=1&method=alipay'); renderPayFail('alipay', r); show('payment'); } catch (e) { toast('后端不可达'); } });
-    mk('💳 模拟支付失败（TenPayGo）', async () => { try { const r = await post('/mock/pay-test?fail=1&method=tenpaygo'); renderPayFail('tenpaygo', r); show('payment'); } catch (e) { toast('后端不可达'); } });
+    const failSim = m => async () => { try { const r = await post('/mock/pay-test?fail=1&method=' + m); renderPayFail(m, r, await otherVerified(m)); show('payment'); } catch (e) { toast('后端不可达'); } };
+    mk('💳 模拟支付失败（支付宝）', failSim('alipay'));
+    mk('💳 模拟支付失败（TenPayGo）', failSim('tenpaygo'));
   }
   const stuckQ = qs.get('stuck'); if (stuckQ) get(`/kb/entry/${stuckQ}?lang=en`).then(e => { fillEntry(e); show('stuck'); }).catch(() => toast('No such entry'));
   snapStepStyles('step3'); captureIcons(); snapPay();

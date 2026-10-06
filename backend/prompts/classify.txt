@@ -11,7 +11,7 @@ Rules:
 3. If the screenshot is not about any known scenario (random photo, unrelated app, unreadable), return scenario "unknown" and entry_id null.
 4. "confidence" is your probability that entry_id is right, 0 to 1. Be honest: an ambiguous Chinese mini-program page with only a phone-number box deserves about 0.5, a red "verification failed" banner in Alipay deserves 0.9+.
 5. Always list up to 3 "candidates" (entry_id + confidence), best first, including your top pick.
-6. TenPayGo and WeChat Pay are different apps on the same merchant network and can show the same error sentence (for example "The bank did not approve this transaction"). Pick scenario "tenpaygo" when the screen says TenPayGo, or shows TenPayGo's layout: cards titled Bank Card, Apple Pay and E-Wallet, a bottom bar with only Pay and Go tabs plus a scan button, and no Chats, Contacts, Discover or Me tabs. Pick "wechat" only when WeChat's own chrome is visible.
+6. TenPayGo and WeChat Pay are different apps on the same merchant network and can show the same error sentence (for example "The bank did not approve this transaction"). Pick scenario "tenpaygo" when the screen says TenPayGo, or shows TenPayGo's layout: cards titled Bank Card, Apple Pay and E-Wallet, a bottom bar with only Pay and Go tabs plus a scan button, and no Chats, Contacts, Discover or Me tabs. If only the shared sentence is visible and neither app's name or layout shows, prefer the "wechat" entry with confidence of about 0.5 and list the matching "tenpaygo" entry as the second candidate.
 
 Return ONLY a JSON object, no prose:
 {"scenario": "...", "entry_id": "...", "confidence": 0.0, "ocr_text": "...", "candidates": [{"entry_id": "...", "confidence": 0.0}]}
