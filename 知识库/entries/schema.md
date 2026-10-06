@@ -48,8 +48,8 @@
 | 字段 | 必填 | 说明 |
 |---|---|---|
 | `step` | 是 | 1 到 `steps` 的长度，配到哪一步 |
-| `file` | 是 | 相对 `h5/img/tutorial/` 的路径，按 `场景/条目id/stepN.<ext>` 放。GIF、PNG、JPG、WebP 都可以；竖屏截图教程屏会按原比例完整显示 |
-| `poster` | 否 | 静态首帧 PNG，弱网先显示；GIF 必须配 |
+| `file` | 是 | 相对 `h5/img/tutorial/` 的路径，按 `场景/条目id/stepN.<ext>` 放。GIF、PNG、JPG、WebP 都可以；也可以是静音循环的 MP4 / WebM 动画（教程屏用 `<video muted loop autoplay playsinline>` 播放）。竖屏素材教程屏会按原比例完整显示 |
+| `poster` | 否 | 静态首帧 PNG，弱网先显示；GIF 和视频必须配 |
 | `alt` | 是 | 一句话说明图里是什么，英文，给读屏和图片加载失败时用 |
 | `source` | 是 | `{"name","url"}`，图从哪来 |
 | `placeholder` | 否 | `true` 表示第三方站点扒来的图，只能演示用，正式版要换成自己截的或 Trip.com 自家的图 |

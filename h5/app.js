@@ -52,6 +52,7 @@
     <div class="scroll" style="padding:14px 20px 0">
       <div id="tutImgBox" style="width:353px;height:199px;border-radius:16px;overflow:hidden;background:${BG} center/cover no-repeat;border:1px solid ${LINE};position:relative;flex:none">
         <img id="tutImg" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
+        <video id="tutVid" muted loop playsinline autoplay preload="metadata" style="width:100%;height:100%;object-fit:contain;display:none"></video>
         <div id="tutAlt" style="position:absolute;left:0;right:0;bottom:0;padding:6px 10px;font:500 11px/1.3 Inter,sans-serif;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.55))"></div>
       </div>
       <div id="tutWhy" style="margin-top:14px;padding:12px 14px;border-radius:12px;background:#EEF3FF;font:400 13px/1.5 Inter,sans-serif;color:${INK}"></div>
@@ -78,13 +79,20 @@
     const m = (e.media || []).find(x => x.step === i + 1);
     txt(T('tutTitle'), e.title); txt(T('tutSub'), `Step ${i + 1} of ${n}` + (e.verified_at ? ` · verified ${e.verified_at}` : ''));
     T('tutBar').innerHTML = e.steps.map((_, k) => `<div style="flex:1;height:4px;border-radius:2px;background:${k <= i ? BLUE : LINE}"></div>`).join('');
-    const box = T('tutImgBox'), img = T('tutImg');
-    if (m) { box.style.display = ''; box.style.backgroundImage = m.poster ? `url(img/tutorial/${m.poster})` : ''; img.style.objectFit = 'cover'; box.style.height = '199px'; img.src = 'img/tutorial/' + m.file; img.alt = m.alt || ''; txt(T('tutAlt'), m.alt || ''); }
-    else { box.style.display = 'none'; img.removeAttribute('src'); }
+    const box = T('tutImgBox'), img = T('tutImg'), vid = T('tutVid');
+    const isVid = !!m && /\.(mp4|webm)$/i.test(m.file);
+    // 视频配图（自制动画）：静音循环自动播放，poster 先占位；图片配图照旧
+    if (isVid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
+    if (m) {
+      box.style.display = ''; box.style.backgroundImage = m.poster && !isVid ? `url(img/tutorial/${m.poster})` : ''; box.style.height = '199px'; txt(T('tutAlt'), m.alt || '');
+      if (isVid) { img.style.display = 'none'; img.removeAttribute('src'); vid.style.display = 'block'; vid.poster = m.poster ? 'img/tutorial/' + m.poster : ''; vid.setAttribute('aria-label', m.alt || ''); vid.src = 'img/tutorial/' + m.file; const p = vid.play(); if (p && p.catch) p.catch(() => {}); }
+      else { vid.pause(); vid.style.display = 'none'; vid.removeAttribute('src'); img.style.display = 'block'; img.style.objectFit = 'cover'; img.src = 'img/tutorial/' + m.file; img.alt = m.alt || ''; }
+    }
+    else { box.style.display = 'none'; img.removeAttribute('src'); vid.pause(); vid.removeAttribute('src'); }
     T('tutWhy').style.display = i === 0 ? '' : 'none'; txt(T('tutWhy'), e.why);
     txt(T('tutNum'), String(i + 1)); txt(T('tutStep'), e.steps[i]);
     T('tutFb').style.display = last ? '' : 'none'; txt(T('tutFb'), 'Still stuck? ' + e.fallback);
-    const imgSrc = m && m.source ? ` · Image: ${m.source.name.split('·')[0].trim()}${m.placeholder ? ' (placeholder, demo only)' : ''}` : '';
+    const imgSrc = m && m.source ? ` · ${isVid ? 'Animation' : 'Image'}: ${m.source.name.split('·')[0].trim()}${m.placeholder ? ' (placeholder, demo only)' : ''}` : '';
     txt(T('tutSrc'), `Steps from ${e.sources && e.sources[0] ? e.sources[0].name.split('·')[0].trim() : 'Trip.com'}${imgSrc}`);
     T('tutPrev').style.visibility = i === 0 ? 'hidden' : 'visible';
     txt(T('tutNext'), last ? 'Done' : 'Next step'); T('tutNext').style.background = last ? GREEN : BLUE;
@@ -92,6 +100,9 @@
   }
   // 竖屏截图：按原比例完整显示，限高 400
   T('tutImg').onload = function () { const portrait = this.naturalHeight > this.naturalWidth; const box = T('tutImgBox'); if (portrait) { this.style.objectFit = 'contain'; box.style.height = '400px'; box.style.backgroundImage = ''; } };
+  T('tutVid').onloadedmetadata = function () { if (this.videoHeight > this.videoWidth) T('tutImgBox').style.height = '400px'; };
+  // 离开教程屏时停掉动画，省电
+  window.addEventListener('hashchange', () => { if (location.hash !== '#tutorial') T('tutVid').pause(); });
   T('tutPrev').onclick = () => { if (TUT.i > 0) { TUT.i--; tutRender(); } };
   T('tutNext').onclick = () => { if (TUT.i < TUT.e.steps.length - 1) { TUT.i++; tutRender(); } else back(); };
   (() => { let x0 = 0; const box = T('tutImgBox'); box.addEventListener('touchstart', ev => { x0 = ev.touches[0].clientX; }, { passive: true }); box.addEventListener('touchend', ev => { const dx = ev.changedTouches[0].clientX - x0; if (dx < -40) T('tutNext').onclick(); else if (dx > 40) T('tutPrev').onclick(); }); })();
@@ -114,7 +125,11 @@
     link.setAttribute('data-pencil-name', 'Item Guide Link');
     link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="${BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span></span>`;
     const label = link.lastChild; label.textContent = 'Step-by-step setup guide ›';
-    loadTutorials().then(list => { const n = ((list.find(t => t.id === id) || {}).media || []).length; if (n) label.textContent = `Step-by-step setup guide · ${n} screenshot${n > 1 ? 's' : ''} ›`; });
+    loadTutorials().then(list => {
+      const media = (list.find(t => t.id === id) || {}).media || [], v = media.filter(m => /\.(mp4|webm)$/i.test(m.file)).length, s = media.length - v;
+      const parts = [v && `${v} animation${v > 1 ? 's' : ''}`, s && `${s} screenshot${s > 1 ? 's' : ''}`].filter(Boolean);
+      if (parts.length) label.textContent = `Step-by-step setup guide · ${parts.join(' · ')} ›`;
+    });
     link.onclick = ev => { ev.stopPropagation(); openTutorial(id); };
     return link;
   }

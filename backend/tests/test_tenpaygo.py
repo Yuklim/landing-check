@@ -210,8 +210,20 @@ def test_tutorials_export_includes_tenpaygo_with_images():
     for eid in ('tenpaygo_setup_before_flight', 'tenpaygo_how_to_pay'):
         assert eid in tuts
         for m in tuts[eid]['media']:
-            assert m['placeholder'] is True and os.path.isfile(os.path.join(H5, 'img', 'tutorial', m['file']))
-            assert os.path.getsize(os.path.join(H5, 'img', 'tutorial', m['file'])) <= 200 * 1024
+            files = [m['file']] + ([m['poster']] if m.get('poster') else [])
+            for f in files:
+                assert os.path.isfile(os.path.join(H5, 'img', 'tutorial', f))
+                assert os.path.getsize(os.path.join(H5, 'img', 'tutorial', f)) <= 200 * 1024
+            if m['file'].endswith('.mp4'):
+                assert m['placeholder'] is False and m.get('poster')     # 自制动画，不是占位图
+            else:
+                assert m['placeholder'] is True                           # App Store 截图裁出的占位图
+
+
+def test_setup_tutorial_step1_is_our_own_animation():
+    tut = [t for t in json.load(open(os.path.join(H5, 'tutorials.json'), encoding='utf-8'))['tutorials'] if t['id'] == 'tenpaygo_setup_before_flight'][0]
+    m = [x for x in tut['media'] if x['step'] == 1][0]
+    assert m['file'].endswith('step1.mp4') and m['poster'].endswith('step1.png') and 'own animation' in m['source']['name']
 
 
 # ---------------- 识别 ----------------

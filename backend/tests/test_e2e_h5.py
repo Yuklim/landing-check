@@ -179,6 +179,27 @@ def test_tutorial_deep_link(page, base):
     assert page.locator('#tutTitle').text_content() == 'Set up TenPayGo before you fly'
     page.wait_for_function('() => document.querySelector("#tutImg").naturalWidth > 0')
     assert page.locator('#tutImg').get_attribute('src').endswith('tenpaygo/tenpaygo_setup_before_flight/step2.png')
+    assert not page.locator('#tutVid').is_visible()
+
+
+def test_tutorial_step1_plays_the_download_animation(page, base):
+    page.goto(base + '/app/index.html?tutorial=tenpaygo_setup_before_flight&step=1')
+    page.wait_for_function('() => document.querySelector(".screen.on") && document.querySelector(".screen.on").dataset.route === "tutorial"')
+    vid = page.locator('#tutVid')
+    assert vid.is_visible() and not page.locator('#tutImg').is_visible()
+    assert vid.get_attribute('src').endswith('tenpaygo_setup_before_flight/step1.mp4')
+    assert page.evaluate('() => document.querySelector("#tutVid").poster').endswith('tenpaygo_setup_before_flight/step1.png')
+    page.wait_for_function('() => { const v = document.querySelector("#tutVid"); return v.videoWidth === 720 && v.currentTime > 0.3 && !v.paused; }', timeout=8000)
+    assert page.evaluate('() => document.querySelector("#tutVid").muted && document.querySelector("#tutVid").loop')
+    assert page.evaluate('() => document.querySelector("#tutImgBox").style.height') == '400px'
+    page.locator('#tutNext').click()                                   # 下一步换回图片，视频停
+    page.wait_for_function('() => document.querySelector("#tutImg").naturalWidth > 0')
+    assert page.evaluate('() => document.querySelector("#tutVid").paused')
+
+
+def test_guide_link_counts_animation_and_screenshots(page, base):
+    open_app(page, base, 'preflight'); go(page, 'preflight')
+    page.wait_for_function("""() => /1 animation · 2 screenshots/.test(document.querySelector('.screen[data-route="preflight"] [data-pencil-name="Item TenPayGo payment"] [data-pencil-name="Item Guide Link"]').textContent)""")
 
 
 # ---------------- FR-10 静态模式（github.io，无后端） ----------------

@@ -40,6 +40,7 @@
 
 **配图**
 
+- 第 1 步 `tenpaygo/tenpaygo_setup_before_flight/step1.mp4` — Animation: in the App Store search for TenPayGo, tap Get, wait for the ring to fill, then Open（Landing Check · own animation (HyperFrames)）
 - 第 2 步 `tenpaygo/tenpaygo_setup_before_flight/step2.png`（占位，演示用） — TenPayGo Pay tab: Bank Card, Apple Pay and E-Wallet, with Supported Payment Methods below（Apple App Store · TenPayGo screenshots (Tencent)）
 - 第 4 步 `tenpaygo/tenpaygo_setup_before_flight/step4.png`（占位，演示用） — Scan to pay: scan the merchant's WeChat Pay code, check the amount and confirm（Apple App Store · TenPayGo screenshots (Tencent)）
 

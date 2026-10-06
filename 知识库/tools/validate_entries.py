@@ -80,8 +80,8 @@ def check(path):
                     errs.append('%s: media 缺 %s' % (eid, k))
             if not (m.get('source') or {}).get('url'):
                 errs.append('%s: media.source 缺 url' % eid)
-            if m.get('file', '').lower().endswith('.gif') and not m.get('poster'):
-                errs.append('%s: GIF 配图要带 poster 静态首帧' % eid)
+            if m.get('file', '').lower().endswith(('.gif', '.mp4', '.webm')) and not m.get('poster'):
+                errs.append('%s: GIF 和视频配图要带 poster 静态首帧' % eid)
             if os.path.isdir(MEDIA_DIR):
                 for k in ('file', 'poster'):
                     if m.get(k) and not os.path.isfile(os.path.join(MEDIA_DIR, m[k])):
