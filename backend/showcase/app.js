@@ -22,10 +22,11 @@
     prototypeScreens:'Product prototype screens',prototypeTag:'Interactive prototype',visualNote:'Prepare before takeoff. Get help when it matters.',
     stripFor:'WHO IT’S FOR',stripAudience:'First visit · independent · prepared',stripForm:'PRODUCT FORM',stripShape:'A feature designed for Trip.com',stripStatus:'Now: H5 + API demo',
     contents:'THE PROJECT STORY',sectionNeeds:'Problem & need',sectionProduct:'The experience',sectionBuild:'How we built it',sectionChallenges:'Challenges',sectionHighlights:'Highlights',sectionLearned:'What we learned',sectionNext:'What’s next',sidebarNote:'Connect preparation to the next real-world action.',
-    needsTitle:'Read the guides. Still not sure.',needsDescription:'They can book flights, plan routes and find the right apps. The question is whether they are ready—and what to do when a particular step fails.',
-    filterNeeds:'Filter by traveler need',clickEvidence:'Select a card for the original and its context',evidenceFoot:'Qualitative signals from public discussions. Quotes are excerpts; Chinese is paraphrased. Scores are recorded snapshots, not demand rates.',allEvidence:'Explore the evidence',
-    beforeFlight:'BEFORE TAKEOFF',onArrival:'ON ARRIVAL',whenStuck:'WHEN STUCK',need1Title:'What am I still missing?',need1Body:'A checklist, preparation states and backups connect app setup to knowing how to use it.',need2Title:'Just the next relevant step.',need2Body:'Confirm connectivity, then connect payment and transport. Move on from steps already completed.',need3Title:'Understand it. Act on it.',need3Body:'Match a screenshot to actionable guidance, with alternatives and official help when needed.',
-    methodTitle:'Why the first hour? What the research can and cannot tell us',methodBody:'Arrival is when preparation meets real use. “The first hour” is a product focus, not a promise to reach the hotel within 60 minutes. These discussions support testing the concept; they do not establish a universal top pain point or prove improved outcomes.',methodSources:'Core sources: the 2026-10-07 evidence review and revised PRD background. Additional checks cover an eSIM device constraint and Shanghai Airport’s passport Wi-Fi guidance. Historical X records are kept in the research appendix.',researchDoc:'Original evidence review (Chinese)',backgroundDoc:'Revised PRD background (Chinese)',supplementDoc:'Supplemental research notes (Chinese)',
+    needsTitle:'Read the guides. Still not sure.',needsDescription:'After watching travel guides and installing apps, travelers still ask: when do I activate the eSIM? Is this account ready? How do I make my first payment? We focus on the gap between preparing and using the tools.',
+    filterNeeds:'Filter by traveler need',clickEvidence:'Select a card for the original and its context',evidenceFoot:'Headlines paraphrase public posts and comments. Open a card for the situation, follow-up and source.',allEvidence:'Explore the sources',
+    guideContextTitle:'Where preparation begins',guideContextBody:'Travel creators on Instagram explain which apps to prepare. Their guides provide context; the traveler questions above show what can still be unclear.',
+    beforeFlight:'BEFORE TAKEOFF',onArrival:'ON ARRIVAL',whenStuck:'WHEN STUCK',need1Title:'Know what readiness means.',need1Body:'Explain when to activate, what to check and which conditions apply to the traveler.',need2Title:'Complete the task in front of you.',need2Body:'Connect data, payment and the first ride with relevant steps. Continue past tasks already completed.',need3Title:'Understand the prompt. Find a way forward.',need3Body:'Start with the current situation, then offer sourced steps, alternatives and official help.',
+    methodTitle:'From these questions to the product',methodBody:'The clearest need is help moving from preparation to real use. Landing Check explores bringing that help into Trip.com, alongside the trip. “The first hour” keeps the design focused; it is not a 60-minute deadline.',methodSources:'Guides, community replies and airport staff already help visitors. Our prototype explores reducing the effort of finding an applicable next step. Whether the connected flow and screenshot help improve real tasks still needs user testing.',researchDoc:'Read the demand assessment (Chinese)',sourceRecords:'Source and follow-up records',
     productTitle:'One connected arrival journey.',productDescription:'Preparation starts before the flight. On arrival, guidance follows the task in front of you, with a way forward when something goes wrong.',productFlow:'Product journey',
     videoTitle:'Prototype walkthrough',videoDescription:'About 38 seconds · Chinese / English captions · Simulated payment and trip data',videoPending:'The demo film is coming. Explore the full interactive prototype in the meantime.',openFullDemo:'Open the interactive demo',prototypeBoundary:'The recording shows the development prototype with TenPayGo; the live demo link retains the currently deployed version. Payment verification, flights and trip data are simulated. Production app integration, real payments and automatic notifications are not connected. Screenshots retain the prototype’s English interface.',
     buildTitle:'AI identifies the problem. The knowledge base supplies the steps.',buildDescription:'Separate scenario recognition, sourced content and task rules so the guidance has a clear basis.',
@@ -34,7 +35,7 @@
     aiProcessTitle:'People frame the problem. AI helps iterate.',aiProcessBody:'The project owner defines scope, presentation and key trade-offs. AI helps organize research, implement APIs and frontend behavior, and turn feedback into regression checks. DeepSeek classifies screenshots and text in the product; development assistance and product inference serve different roles.',aiProcessNote:'Repository commits include Claude collaboration markers. Codex assisted with this showcase page. WildChina is one knowledge source.',
     collaborationKicker:'ONE CONCRETE ITERATION',collaborationTitle:'Two payment methods. One preparation task.',collaborationBody:'Alipay and TenPayGo initially occupied separate rows. Feedback brought them into one Payment in China section: verifying either method marks the task ready, while the other remains a backup. AI helped synchronize the state summary, interface copy and tests; human feedback shaped the final product expression.',collaborationExperience:'AI can help coordinate changes across files; its output still needs review. Shared error messages, stale success copy after payment failure, and unnecessary repeat-verification prompts were corrected during review and covered by regression checks.',collaborationCommit:'View the iteration commit',collaborationReview:'View the review and fixes',
     challengesTitle:'The hard part starts when the happy path ends.',highlightsTitle:'Put help inside the step that needs it.',highlightsDescription:'Focus on arrival tasks, making existing tools easier to use when they matter.',
-    validationEntries:'Knowledge entries',validationScenarios:'Covered scenarios',validationTutorials:'Visual tutorials',validationNote:'Counts reflect the development version with TenPayGo. Next: validate completion rates, time and requests for help with target users.',
+    validationNote:'Next: compare real task completion, time and requests for help against existing guides and support.',
     learnedTitle:'Design for uncertainty.',nextTitle:'From a working demo to real-world help.',nextDescription:'Improve reliability, then connect production capabilities. Give each step a clear validation goal.',ctaTitle:'Start with your first step after landing.',footerNote:'Trip Hackathon 2026 · An exploration in inbound travel',viewSource:'View source code',
     altPreflight:'Preflight preparation checklist screen',altLanding:'First arrival step: get online',altDriver:'Chinese hotel address card for a driver'
   };
@@ -140,16 +141,30 @@
   function renderFilters() {
     document.getElementById('evidenceFilters').innerHTML = topics.map(([id,label]) => `<button type="button" data-topic="${id}" aria-pressed="${topic === id}">${escape(pick(label))}</button>`).join('');
   }
-  function scoreLabel(item) {
-    if (item.score == null) return pick(pair('未记录票分','Score not recorded'));
-    if (item.type === 'likes') return `${item.score.toLocaleString(language === 'zh' ? 'zh-CN':'en-US')} ${pick(pair('历史 likes','historical likes'))}`;
-    return `+${item.score} ${pick(pair(item.type === 'comment' ? '评论票分':'整帖票分',item.type === 'comment' ? 'comment score':'post score'))}`;
-  }
+  const sourceKinds = {
+    question:pair('游客追问','Traveler question'),
+    experience:pair('亲历自述','Personal account'),
+    guide:pair('创作者攻略','Creator guide'),
+    positive:pair('正向反馈','Positive account')
+  };
+  const kindLabel = item => pick(sourceKinds[item.kind] || sourceKinds.question);
+  const platformMark = platform => {
+    const marks = {
+      YouTube:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 6 3-6 3Z"/></svg>',
+      Instagram:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8"/></svg>',
+      X:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 12 18h4L8 3ZM20 3 4 21"/></svg>',
+      Reddit:'<span aria-hidden="true">r</span>'
+    };
+    return `<span class="social-avatar platform-${platform.toLowerCase()}" aria-hidden="true">${marks[platform] || ''}</span>`;
+  };
   function renderCloud() {
     let cards;
     if (topic === 'all') cards = content.filter(item => item.core);
-    else cards = content.filter(item => item.topic === topic && !item.history);
-    document.getElementById('socialCloud').innerHTML = cards.map((item,i) => `<button type="button" class="social-card" data-evidence="${item.id}" style="--i:${i}" aria-label="${escape(pick(pair('查看来源：','View source: ')) + pick([item.zh,item.en]))}"><span class="social-card-head"><span class="social-avatar" aria-hidden="true">r</span><span><span class="platform">${escape(item.platform)}</span><span class="context">${escape(pick(item.context))}</span></span><span class="social-category">${escape(labelFor(item.topic))}</span></span><blockquote>${escape(pick([item.zh,item.en]))}</blockquote><span class="original-excerpt" lang="en">“${escape(item.quote)}”</span><span class="social-card-bottom"><span>${escape(scoreLabel(item))}</span><span>${escape(item.date || pick(pair('日期未复核','Date not verified')))}</span></span></button>`).join('') + `<div class="cloud-summary"><strong>${pick(pair('准备好了，真的能用吗？','Set up. But ready to use?'))}</strong><span>${pick(pair('来自旅行者的真实疑问','Questions from travelers'))}</span></div>`;
+    else cards = content.filter(item => item.topic === topic && !['guide','positive'].includes(item.kind));
+    document.getElementById('socialCloud').innerHTML = cards.map((item,i) => `<button type="button" class="social-card" data-evidence="${item.id}" style="--i:${i}" aria-label="${escape(pick(pair('查看来源：','View source: ')) + pick([item.zh,item.en]))}"><span class="social-card-head">${platformMark(item.platform)}<span class="social-card-origin"><span class="platform">${escape(item.platform)}</span><span class="context">${escape(pick(item.context))}</span></span><span class="social-category">${escape(labelFor(item.topic))}</span></span><blockquote>${escape(pick([item.zh,item.en]))}</blockquote>${item.quote ? `<span class="original-excerpt" lang="en">“${escape(item.quote)}”</span>`:''}<span class="social-card-bottom"><span>${escape(kindLabel(item))}</span><span>${pick(pair('查看原帖','View source'))} ↗</span></span></button>`).join('') + `<div class="cloud-summary"><strong>${pick(pair('准备之后，还需要下一步。','Prepared. What’s the next step?'))}</strong><span>${pick(pair('游客的追问与亲历','Traveler questions and experiences'))}</span></div>`;
+  }
+  function renderGuideContext() {
+    document.getElementById('guideSources').innerHTML = content.filter(item => item.kind === 'guide').map(item => `<button type="button" class="guide-source" data-evidence="${item.id}">${platformMark(item.platform)}<span><span class="guide-source-label">Instagram · ${escape(kindLabel(item))}</span><strong>${escape(pick([item.zh,item.en]))}</strong><span class="guide-source-author">${escape(item.author)}</span></span><span class="guide-source-arrow" aria-hidden="true">↗</span></button>`).join('');
   }
   function renderProduct(restoreFocus=false) {
     const stage = stages[stageIndex];
@@ -165,11 +180,10 @@
     document.getElementById('highlightGrid').innerHTML=highlights.map(([title,body],i)=>`<article class="highlight-card"><span class="highlight-number">0${i+1}</span><h3>${escape(pick(title))}</h3><p>${escape(pick(body))}</p></article>`).join('');
     document.getElementById('learningList').innerHTML=learnings.map(([category,title,body])=>`<article class="learning-row"><span>${escape(pick(category))}</span><div><h3>${escape(pick(title))}</h3><p>${escape(pick(body))}</p></div></article>`).join('');
     document.getElementById('roadmap').innerHTML=roadmap.map(([category,items])=>`<div class="roadmap-group"><span class="roadmap-label">${escape(pick(category))}</span><div class="roadmap-items">${items.map(([title,body])=>`<article class="roadmap-item"><h3>${escape(pick(title))}</h3><p>${escape(pick(body))}</p></article>`).join('')}</div></div>`).join('');
-    document.querySelector('.count-badge').textContent=content.length;
   }
   function renderEvidence(item) {
     const fromArchive=openedFromArchive;
-    dialogContent.innerHTML=`${fromArchive ? `<button class="archive-back" type="button" id="backToArchive">${pick(pair('‹ 返回研究证据','‹ Back to evidence'))}</button>`:''}<h2 id="dialogTitle">${escape(pick([item.zh,item.en]))}</h2><div class="source-meta"><span>${escape(item.id)} · ${escape(item.platform)}</span><span>${escape(item.date || pick(pair('绝对发表日期未复核','Absolute publication date not verified')))}</span><span>${escape(scoreLabel(item))}</span></div><blockquote lang="${item.platform === 'X' && item.id === 'X02' ? 'ja':'en'}">“${escape(item.quote)}”</blockquote><p class="translation">${escape(pick(pair('中文释义：','English paraphrase: ')))}${escape(pick([item.zh,item.en]))}</p><div class="evidence-detail-block"><h3>${pick(pair('这个情境支持什么需求','The need this supports'))}</h3><p>${escape(pick(item.need))}</p></div><div class="evidence-detail-block"><h3>${pick(pair('Landing Check 如何回应','The product response'))}</h3><p>${escape(pick(item.response))}</p></div><div class="evidence-detail-block"><h3>${pick(pair('上下文与可信度','Context and evidence limits'))}</h3><p>${escape(pick(item.boundary))}</p><p>${pick(pair('热度来自 2026-10-07 整理的记录快照，非实时点赞人数；不同平台数值不作比较。','Engagement reflects the records reviewed on 2026-10-07, not live likes. Different platform metrics are not compared.'))}</p></div><a class="dialog-source" href="${escape(item.url)}" target="_blank" rel="noopener">${pick(pair('阅读原帖 / 评论','Read the original post / comment'))} ↗</a>${item.official ? `<br><a class="dialog-source" href="${escape(item.official)}" target="_blank" rel="noopener">${pick(pair('交叉核对：上海机场官方说明','Cross-check: Shanghai Airport’s official guidance'))} ↗</a>`:''}`;
+    dialogContent.innerHTML=`${fromArchive ? `<button class="archive-back" type="button" id="backToArchive">${pick(pair('‹ 返回来源索引','‹ Back to sources'))}</button>`:''}<h2 id="dialogTitle">${escape(pick([item.zh,item.en]))}</h2><div class="source-meta"><span>${escape(item.platform)} · ${escape(kindLabel(item))}</span>${item.author ? `<span>${escape(item.author)}</span>`:''}${item.date ? `<span>${escape(pick(item.dateLabel))} ${escape(item.date)}</span>`:''}</div>${item.creator ? `<p class="source-context">${pick(pair('留言所在频道：','Comment on: '))}${escape(item.creator)}</p>`:''}${item.quote ? `<blockquote lang="en">“${escape(item.quote)}”</blockquote>`:''}<div class="evidence-detail-block"><h3>${pick(item.kind === 'guide' ? pair('攻略讲了什么','What the guide covers'):pair('发生了什么','What happened'))}</h3><p>${escape(pick(item.story))}</p></div><div class="evidence-detail-block"><h3>${pick(item.kind === 'guide' ? pair('它提供的背景','The context it provides'):pair('这个情境说明什么','What this suggests'))}</h3><p>${escape(pick(item.need))}</p></div><div class="evidence-detail-block"><h3>${pick(pair('对应的产品设计','The proposed product response'))}</h3><p>${escape(pick(item.response))}</p></div><div class="evidence-detail-block"><h3>${pick(pair('后续与上下文','Follow-up and context'))}</h3><p>${escape(pick(item.boundary))}</p></div><a class="dialog-source" href="${escape(item.url)}" target="_blank" rel="noopener">${pick(item.kind === 'guide' ? pair('阅读原攻略','Read the original guide'):pair('阅读原帖 / 评论','Read the original post / comment'))} ↗</a><p class="source-verification">${item.dateNote ? `${escape(pick(item.dateNote))} `:''}${pick(pair('公开来源核对于','Public source checked on'))} ${escape(item.verifiedAt)}${language === 'zh' ? '。':'.'}</p>`;
   }
   function openEvidence(id, fromArchive=false) {
     const item=content.find(entry=>entry.id===id);
@@ -182,8 +196,7 @@
     document.getElementById('closeDialog').focus({preventScroll:true});
   }
   function renderArchive() {
-    const ordered=[...content].sort((a,b)=>Number(Boolean(a.history))-Number(Boolean(b.history)));
-    dialogContent.innerHTML=`<h2 id="dialogTitle">${pick(pair('需求研究 · 证据索引','Demand research · evidence index'))}</h2><p class="archive-intro">${pick(pair('原调研 14 条，交通补充 1 条，新增检索 2 条。先展示相关的公开讨论，末尾保留待复核的 X 历史记录。同一讨论的多条记录不算独立样本。','14 original records, one transport addition and two supplemental findings. Relevant public discussions come first; historical X records awaiting rechecks appear last. Multiple records from one thread are not independent samples.'))}</p><div class="archive-list">${ordered.map(item=>`<button class="archive-card" type="button" data-archive-evidence="${item.id}"><span class="archive-card-top"><span>${escape(item.id)} · ${escape(item.platform)}${item.history ? ` · ${pick(pair('历史待复核','Historical / recheck'))}`:''}</span><span>${escape(scoreLabel(item))}</span></span><h3>${escape(pick([item.zh,item.en]))}</h3><p>${escape(pick(item.context))} · ${escape(item.date || pick(pair('日期未复核','Date not verified')))}</p></button>`).join('')}</div>`;
+    dialogContent.innerHTML=`<h2 id="dialogTitle">${pick(pair('需求研究 · 来源索引','Demand research · sources'))}</h2><p class="archive-intro">${pick(pair('游客追问、亲历反馈与旅行攻略。每条保留具体情境、已知后续和原始链接；攻略提供准备背景，正向体验也一并保留。','Traveler questions, personal accounts and travel guides. Each entry includes its situation, known follow-up and original link. Guides provide preparation context; positive experiences are included too.'))}</p><div class="archive-list">${content.map(item=>`<button class="archive-card" type="button" data-archive-evidence="${item.id}"><span class="archive-card-top"><span>${escape(item.platform)}</span><span>${escape(kindLabel(item))}</span></span><h3>${escape(pick([item.zh,item.en]))}</h3><p>${escape(item.author || pick(item.context))}${item.creator ? ` · ${escape(item.creator)}`:''}</p></button>`).join('')}</div>`;
   }
   function openArchive() {
     dialogState='archive';
@@ -205,7 +218,7 @@
     switcher.querySelector('.language-current').textContent=language==='zh'?'中':'EN';
     switcher.querySelector('.language-other').textContent=language==='zh'?'EN':'中';
     switcher.setAttribute('aria-label',language==='zh'?'Switch to English':'切换到中文');
-    renderFilters();renderCloud();renderProduct();renderSections();
+    renderFilters();renderCloud();renderGuideContext();renderProduct();renderSections();
     updateCaptions();
     if(dialog.open){if(dialogState==='archive') renderArchive();else renderEvidence(content.find(item=>item.id===dialogState));}
   }
@@ -215,7 +228,7 @@
     topic=button.dataset.topic;renderFilters();renderCloud();
     document.querySelector(`[data-topic="${topic}"]`).focus({preventScroll:true});
   });
-  document.getElementById('socialCloud').addEventListener('click',event=>{const card=event.target.closest('[data-evidence]');if(card)openEvidence(card.dataset.evidence);});
+  document.getElementById('needs').addEventListener('click',event=>{const card=event.target.closest('[data-evidence]');if(card)openEvidence(card.dataset.evidence);});
   document.getElementById('openArchive').addEventListener('click',openArchive);
   document.getElementById('closeDialog').addEventListener('click',()=>dialog.close());
   dialog.addEventListener('close',()=>{document.documentElement.classList.remove('modal-open');dialogState=null;});

@@ -82,6 +82,14 @@ appearance.pen      设计源文件（pen.dev）
 
 设计原则：模型只返回知识库里存在的条目 id，答案文字全部来自条目；只有判为未知时才生成建议并标 `unverified`。
 
+## 产品展示页
+
+产品展示页位于 `backend/showcase/`，GitHub Pages 根入口跳转至此；FastAPI 提供 `/showcase/`。页面默认中文，可切换英文。
+
+需求模块保留游客追问、亲历反馈、已知解决结果与原始链接，不展示票分或点赞。Instagram 攻略单独标为准备背景，未在线复核的缓存留言不进入展示卡片。`evidence.js` 是页面使用的精选来源，`research/demand-review-2026-10-07.md` 与同名 JSON 保存需求判断和来源记录；旧版研究文档保留作历史资料。
+
+本地预览可运行 `python -m http.server 8012 --bind 127.0.0.1 --directory backend/showcase`，再运行 `python backend/tools/check_showcase.py --url http://127.0.0.1:8012/` 检查中英文、来源弹窗、视频字幕及手机布局。
+
 ## 更新 H5
 
 在 pen.dev 修改 `appearance.pen` 后，导出 `html-css` 到 `h5/screens-css.html`，然后：

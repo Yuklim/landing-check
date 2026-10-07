@@ -35,7 +35,34 @@
 .video-heading>span { font-size: 11px; color: var(--muted); }
 .video-heading+.video-panel { margin-top: 12px; }
 .video-panel video::cue { font-family: var(--font); font-size: 16px; background: rgba(8,18,38,.84); color: white; }
+.social-card-head { flex-wrap: wrap; align-items: flex-start; }
+.social-card-origin { flex: 1; min-width: 65px; }
+.social-category { margin-left: auto; }
+.social-avatar { flex: 0 0 26px; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 8px; }
+.social-avatar svg { width: 19px; height: 19px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+.platform-youtube { background: #fff0ef; color: #d73532; }
+.platform-youtube svg rect { fill: currentColor; stroke: none; }
+.platform-youtube svg path { fill: #fff; stroke: none; }
+.platform-instagram { background: #fff0f6; color: #b53676; }
+.platform-x { background: #edf0f4; color: #202938; }
+.platform-reddit { background: #fff2eb; color: #d45122; font-weight: 700; }
+.guide-context { margin-top: 23px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: #fafcff; }
+.guide-context-heading h3 { font-size: 14px; }
+.guide-context-heading p { margin-top: 5px; font-size: 12px; line-height: 1.8; color: var(--muted); }
+.guide-sources { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 13px; }
+.guide-source { display: flex; align-items: flex-start; gap: 10px; min-width: 0; text-align: left; padding: 13px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
+.guide-source:hover { border-color: #b3c5f7; background: #f7f9ff; }
+.guide-source>span:nth-child(2) { flex: 1; min-width: 0; }
+.guide-source-label, .guide-source-author { display: block; font-size: 10px; line-height: 1.6; color: var(--muted); overflow-wrap: anywhere; }
+.guide-source strong { display: block; margin: 4px 0; font-size: 12px; line-height: 1.8; }
+.guide-source-arrow { color: var(--blue); }
+.source-context, .source-verification { font-size: 11px; line-height: 1.8; color: var(--muted); margin-top: 10px; }
+.validation-note { margin-top: 17px; }
 @media (max-width: 600px) {
+  .guide-sources { grid-template-columns: 1fr; }
+  .guide-context { padding: 14px; }
+  .social-card-origin { min-width: 54px; }
+  .social-card-head .social-category { margin-left: 0; }
   .social-card blockquote { font-size: 14px; }
   .social-card .original-excerpt { font-size: 11px; }
   .social-card-head .platform, .social-card-head .context { font-size: 10px; }
