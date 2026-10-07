@@ -1,0 +1,6 @@
+[
+  {"file": "appstore_pay_easily_in_china.jpg", "scenario": "tenpaygo", "expected_entry": "tenpaygo_setup_before_flight", "kind": "normal", "note": "首页：Bank Card / Apple Pay / E-Wallet，底部 Pay 与 Go 标签。带营销标题条"},
+  {"file": "appstore_scan_to_pay.jpg", "scenario": "tenpaygo", "expected_entry": "tenpaygo_how_to_pay", "kind": "normal", "note": "Scan to pay 引导弹层"},
+  {"file": "appstore_show_code_to_pay.jpg", "scenario": "tenpaygo", "expected_entry": "tenpaygo_how_to_pay", "kind": "normal", "note": "Show payment code 引导弹层"},
+  {"file": "appstore_show_code_to_pay_1.jpg", "scenario": "unknown", "expected_entry": null, "kind": "negative", "note": "Circle for Explain：拍照识物，不是支付问题"}
+]

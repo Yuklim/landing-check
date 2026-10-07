@@ -15,7 +15,8 @@
     ├── tripcom/              14 篇，Trip.com 自家指南
     ├── official/             12 篇，北京市政府英文站、Alipay+、12306、China Briefing
     ├── chinahighlights/       4 篇
-    └── blogs/                30 篇，2026 年独立攻略站
+    ├── blogs/                30 篇，2026 年独立攻略站
+    └── tenpaygo/              8 篇，TenPayGo 官方协议、发布新闻、公测后指南（2026-10-06 抓取，索引见 raw/tenpaygo/README.md）
 ```
 
 ## 一、能不能直接给用户看
@@ -46,6 +47,13 @@
 - 主读：`wildchina/wechat-pay-in-2026.md`、`official/202005-t20200516-1899230.md`（北京政府，2026 年 3 月更新，支持卡组织清单）
 - 核验：`official/news-wechat-enables-foreigners-to-pay-with-overseas-cards-in-china.md`（限额和手续费：200 元以下免费、以上 3%、新用户 60 天内千元以下免手续费）、`blogs/wechat-pay-limits-guide.md`、`blogs/blog-wechat-pay-foreigners.md`
 - 关键差异：没有中国手机号时微信小程序可能用不了，滴滴请走支付宝里的小程序。
+
+### TenPayGo：微信支付的旅客版 App
+
+- 主读：`tenpaygo/official-user-service-agreement-20260611.md`（财付通官方协议：额度、手续费原则、仅限中国大陆、客服 95017）、`tenpaygo/tenpaygo.md`（引官方发布指南：邮箱注册、两种付款方式、不含小程序和转账）
+- 核验：`tenpaygo/tenpaygo-payment-guide.md`（公测后现状，2026-10-05 更新）、`tenpaygo/news-sohu-20260924.md`（7 大卡组织、近 60 个钱包、深圳乘车码）；Reddit 见 `reddit/README.md` 的 1wp1prm、1ukolqw
+- 关键差异：只能付微信支付商户的码，不能叫滴滴、不能过深圳以外的地铁闸机；手续费说法冲突，正文不写数字
+- 可推荐给用户：App Store 与 Google Play 的 TenPayGo 应用页（官网 tenpaygo.com 本次抓取不可达）
 
 ### 滴滴叫车
 

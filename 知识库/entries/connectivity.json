@@ -743,7 +743,8 @@
       "related": [
         "wechat_miniprogram_needs_chinese_number",
         "connectivity_buy_sim_at_airport",
-        "alipay_didi_miniprogram"
+        "alipay_didi_miniprogram",
+        "tenpaygo_setup_before_flight"
       ],
       "tags": [
         "phone-number"

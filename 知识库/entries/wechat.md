@@ -94,7 +94,7 @@
 
 **来源** [PayInChinaGuide · WeChat Pay 'Unsupported Card' Error: 5 Proven Fixes](https://www.payinchinaguide.com/tool/specific-error/wechat-pay-unsupported-card) 2026；[PayInChinaGuide · WeChat Pay Card Declined? Fix Guide](https://www.payinchinaguide.com/blog/wechat-pay-card-declined-fix) 2026；[Beijing Government · Payment Services: Alipay and Weixin Pay card-adding paths, accepted networks, cash must be accepted, hotlines](https://english.beijing.gov.cn/latest/specials/essentialtipsfornewarrivals/paymentservices/202408/t20240830_3785647.html) 2024-08-30；[Reddit r/chinalife · Tencent released a new payment app for foreigners (↑255, cards blocked by issuing bank ↑88)](https://www.reddit.com/r/chinalife/comments/1wp1prm/tencent_released_a_new_payment_app_for_foreigners/) 2026-10-03；[Reddit r/travelchina · WeChat Pay for foreigners (↑21, issuer security, complete ID verification ↑15)](https://www.reddit.com/r/travelchina/comments/1q0ocjw/wechat_pay_for_foreigners/) 2026-10-03
 
-相关：`wechat_setup_before_flight`, `alipay_card_bind_failed`, `alipay_nihao_china`
+相关：`wechat_setup_before_flight`, `alipay_card_bind_failed`, `alipay_nihao_china`, `tenpaygo_card_bind_failed`
 
 ---
 

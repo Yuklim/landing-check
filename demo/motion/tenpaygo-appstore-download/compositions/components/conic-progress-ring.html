@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<!--
+  conic-progress-ring: HyperFrames video primitive (data / prove / demonstrate)
+
+  Concept: one registered percentage moves the hard frontier of a conic
+  gradient while a radial mask cuts out the center. The center value is
+  derived from that same percentage on every GSAP update, so fill and count
+  cannot drift apart.
+
+  Compiled-from evidence: hyperframes-research-css-gems.md, section 10,
+  "Registered conic progress ring". The finding specifies a typed percentage
+  as the seek handle for a conic-gradient frontier and a radial mask for the
+  ring cutout.
+
+  Use when: a scene needs to prove completion, attainment, or a measured
+  result with one immediately legible data mark.
+
+  Variables:
+    progress  number  0 to 100  default 100  target angular fill
+    thickness number  4 to 30   default 12   ring stroke as a percent
+    label     string            default "100" center count target
+
+  Envelope:
+    IN   1.40s fixed fill and synchronized count, power2.out
+    HOLD elastic and deliberately still after the result settles
+    OUT  0.50s fixed opacity release, power2.in
+    For durations shorter than 1.90s, IN and OUT scale together. HOLD is the
+    only elastic phase. The timeline is never time-scaled.
+
+  Sync point:
+    progress-settled at the end of IN, always outside the elastic HOLD
+
+  Sound cues: none. A data proof should not claim an audio event for its host.
+
+  Mount contract: this file is a template-wrapped sub-composition. The host
+  owns dimensions. #root fills that box with inset:0 and has no data-width or
+  data-height. The hardcoded composition id matches the root and timeline key.
+
+  CUSTOMIZED IN PLACE for tenpaygo-appstore-download (shot-plan.json ->
+  content.customize["conic-progress-ring"]): the iOS App Store download ring.
+    - .ring-stage fills the host slot (width 100%) so the ring is the full
+      76px slot; thickness 21% of the radius = an 8px stroke.
+    - the centre count is removed; a 22x22 r4 "stop" square sits in the
+      centre instead (the iOS download stop glyph).
+    - the single 1.4s power2.out fill is replaced by mount-local keyframes:
+      fade in 0-0.16; fill 0/16/40/63/86/100% at 0.16/0.40/0.72/1.04/1.38/
+      1.66 (each segment power1.inOut = chunked download stalls); hold
+      1.66-1.74; fade out 1.74-1.86 (power2.in). Ring and stop fade together.
+    - GSAP is provided by the host page (vendored locally), so this file no
+      longer pulls it from a CDN at render time.
+    - paint comes from the host's --brand / --surface tokens (blue on grey).
+-->
+<html lang="en" data-composition-variables="[
+    { &quot;id&quot;: &quot;progress&quot;, &quot;type&quot;: &quot;number&quot;, &quot;role&quot;: &quot;content&quot;, &quot;label&quot;: &quot;Progress&quot;, &quot;description&quot;: &quot;Target angular fill from 0 to 100.&quot;, &quot;default&quot;: 100, &quot;min&quot;: 0, &quot;max&quot;: 100, &quot;step&quot;: 1, &quot;unit&quot;: &quot;%&quot; },
+    { &quot;id&quot;: &quot;thickness&quot;, &quot;type&quot;: &quot;number&quot;, &quot;role&quot;: &quot;layout&quot;, &quot;label&quot;: &quot;Thickness&quot;, &quot;description&quot;: &quot;Ring stroke thickness as a percent of the ring radius.&quot;, &quot;default&quot;: 12, &quot;min&quot;: 4, &quot;max&quot;: 30, &quot;step&quot;: 1, &quot;unit&quot;: &quot;%&quot; },
+    { &quot;id&quot;: &quot;label&quot;, &quot;type&quot;: &quot;string&quot;, &quot;role&quot;: &quot;content&quot;, &quot;label&quot;: &quot;Center label&quot;, &quot;description&quot;: &quot;Numeric target shown in the center and counted in sync with the fill.&quot;, &quot;default&quot;: &quot;100&quot; }
+  ]">
+  <head>
+    <meta charset="UTF-8">
+    <title>Conic Progress Ring</title>
+  </head>
+  <body>
+    <template>
+      <div data-hf-id="hf-q3s0" id="root" data-composition-id="conic-progress-ring" data-duration="1.9" data-fps="30">
+        <style>
+          /* The registration must live in this document-level stylesheet.
+             Registrations inside shadow roots are ignored by the platform. */
+          @property --ring-progress {
+            syntax: "<percentage>";
+            inherits: false;
+            initial-value: 0%;
+          }
+
+          *,
+          *::before,
+          *::after {
+            box-sizing: border-box;
+          }
+
+          /* INVARIANT: #root is the mount contract owner. The host owns the
+             box, and every internal measurement is relative to that box. */
+          #root {
+            position: absolute;
+            inset: 0;
+            container-type: size;
+            isolation: isolate;
+            overflow: hidden;
+            color: var(--fg, #f4f7fb);
+            font-family: var(--font-display, Inter, system-ui, sans-serif);
+          }
+
+          .ring-clip {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+          }
+
+          /* CUSTOMIZED: the ring fills the host slot (was min(68cqw, 68cqh)). */
+          .ring-stage {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+          }
+
+          /* EDIT ZONE: --ring-thickness is the only geometry control.
+             --ring-progress is the only registered animation scalar. Paint
+             comes only from the host theme's surface and brand tokens. */
+          .ring {
+            --ring-thickness: 12%;
+            --ring-progress: 0%;
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            /* CUSTOMIZED: start at 12 o'clock like the iOS download ring
+               (was from -90deg, which starts at 9 o'clock). */
+            background: conic-gradient(
+              from 0deg,
+              var(--brand, #35d6a0) 0 var(--ring-progress),
+              var(--surface, #1b2938) var(--ring-progress) 100%
+            );
+            -webkit-mask: radial-gradient(
+              farthest-side,
+              transparent calc(100% - var(--ring-thickness)),
+              var(--fg, #f4f7fb) 0
+            );
+            mask: radial-gradient(
+              farthest-side,
+              transparent calc(100% - var(--ring-thickness)),
+              var(--fg, #f4f7fb) 0
+            );
+          }
+
+          /* CUSTOMIZED: the centre count is replaced by the iOS download
+             "stop" square: 22x22 r4 in a 76px ring (28.95% of the slot),
+             centred, painted with the same brand token as the fill. */
+          .ring-stop {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 28.95%;
+            height: 28.95%;
+            margin-left: -14.475%;
+            margin-top: -14.475%;
+            border-radius: 18.2%;
+            background: var(--brand, #35d6a0);
+          }
+        </style>
+
+        <div data-hf-id="hf-8shv" id="conic-progress-ring-clip" class="ring-clip clip" data-start="0" data-duration="1.9" data-track-index="0">
+          <div data-hf-id="hf-dfqn" class="ring-stage">
+            <div data-hf-id="hf-m7km" class="ring" role="progressbar" aria-label="Download progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+            <div data-hf-id="hf-7jh4" class="ring-stop" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <script>
+          (function () {
+            "use strict";
+
+            var root = document.getElementById("root");
+            var compositionId = "conic-progress-ring";
+            var stage = root.querySelector(".ring-stage");
+            var ring = root.querySelector(".ring");
+            var vars =
+              window.__hyperframes && window.__hyperframes.getVariables
+                ? window.__hyperframes.getVariables()
+                : {};
+
+            /* INVARIANT: zero is a valid progress value, so missing and zero
+               are handled separately. Both numeric controls clamp to their
+               declared ranges before they reach layout or animation. */
+            var progressValue = Number(vars.progress);
+            var targetProgress = Number.isFinite(progressValue)
+              ? Math.max(0, Math.min(100, progressValue))
+              : 100;
+            var thicknessValue = Number(vars.thickness);
+            var thickness = Number.isFinite(thicknessValue)
+              ? Math.max(4, Math.min(30, thicknessValue))
+              : 12;
+
+            ring.style.setProperty("--ring-thickness", thickness + "%");
+            ring.setAttribute("aria-valuenow", String(Math.round(targetProgress)));
+
+            /* CUSTOMIZED: chunked download keyframes (mount-local seconds).
+               Each step is a fraction of the target progress, so the
+               "progress" variable still sets where the ring ends. Absolute
+               times on the 8s shot = mount data-start 4.46 + t. */
+            var FADE_IN = { at: 0, dur: 0.16 };
+            var STEPS = [
+              { t: 0.16, f: 0.0 },
+              { t: 0.4, f: 0.16 },
+              { t: 0.72, f: 0.4 },
+              { t: 1.04, f: 0.63 },
+              { t: 1.38, f: 0.86 },
+              { t: 1.66, f: 1.0 },
+            ];
+            var FADE_OUT = { at: 1.74, dur: 0.12 }; // hold 1.66-1.74, gone by 1.86
+
+            var tl = gsap.timeline({ paused: true });
+
+            // Ring + stop square fade in together (the stage carries both).
+            tl.fromTo(
+              stage,
+              { opacity: 0 },
+              { opacity: 1, duration: FADE_IN.dur, ease: "power1.out" },
+              FADE_IN.at,
+            );
+            // Baseline: empty ring from the first frame of the mount.
+            tl.fromTo(
+              ring,
+              { "--ring-progress": "0%" },
+              { "--ring-progress": "0%", duration: STEPS[0].t, ease: "none" },
+              0,
+            );
+            for (var i = 1; i < STEPS.length; i += 1) {
+              var a = STEPS[i - 1];
+              var b = STEPS[i];
+              tl.fromTo(
+                ring,
+                { "--ring-progress": targetProgress * a.f + "%" },
+                {
+                  "--ring-progress": targetProgress * b.f + "%",
+                  duration: b.t - a.t,
+                  ease: "power1.inOut",
+                  immediateRender: false,
+                },
+                a.t,
+              );
+            }
+            tl.fromTo(
+              stage,
+              { opacity: 1 },
+              { opacity: 0, duration: FADE_OUT.dur, ease: "power2.in", immediateRender: false },
+              FADE_OUT.at,
+            );
+
+            tl.seek(0);
+
+            window.__timelines = window.__timelines || {};
+            window.__timelines[compositionId] = tl;
+          })();
+        </script>
+      </div>
+    </template>
+  </body>
+</html>

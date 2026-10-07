@@ -4,24 +4,25 @@ import os, json
 from datetime import datetime, date
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+PAY_METHODS = {'alipay': 'Alipay', 'tenpaygo': 'TenPayGo'}     # 支付组：任一个 ¥1 验证通过即就绪
 TRANSPORT = json.load(open(os.path.join(HERE, 'mock', 'transport.json'), encoding='utf-8'))
 AIRPORTS = json.load(open(os.path.join(HERE, 'mock', 'airports.json'), encoding='utf-8'))
 
 
 # ---------------- 行前检查 ----------------
 def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
-    """六项必查 + 两项可选。状态：done / todo / optional / pending。"""
+    """六项必查 + 两项可选。状态：done / todo / optional / pending。
+    支付是一组两项（支付宝 / TenPayGo），任一个验证即算这一项完成，另一个变成备用（optional）。"""
     today = today or date.today()
     p = trip.get('permissions', {})
-    pay = trip.get('payment', {})
     esim = trip.get('esim', {})
     pack = trip.get('offline_pack', {})
     tickets = trip.get('tickets', [])
     passport = trip.get('passport', {})
     items = []
 
-    def add(id_, title, status, desc, action=None, entry=None):
-        items.append({'id': id_, 'title': title, 'status': status, 'desc': desc, 'action': action, 'entry': entry})
+    def add(id_, title, status, desc, action=None, entry=None, **extra):
+        items.append({'id': id_, 'title': title, 'status': status, 'desc': desc, 'action': action, 'entry': entry, **extra})
 
     perm_ok = p.get('location') in ('always', 'while_using') and p.get('notifications') is True
     add('permissions', 'Location & notifications', 'done' if perm_ok else 'todo',
@@ -31,10 +32,8 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
     add('data', 'Mobile data in China', 'done' if data_ok else 'todo',
         'eSIM ready · activates when you land' if data_ok else 'No eSIM or roaming plan found', None if data_ok else 'buy_esim')
 
-    pay_ok = pay.get('status') == 'verified' or 'alipay' in done
-    add('alipay', 'Alipay payment', 'done' if pay_ok else 'todo',
-        (('Verified · ¥1 test on %s, refunded' % pay['verified_at'][:10]) if pay.get('verified_at') else 'Verified before you flew · ¥1 test, refunded') if pay_ok else 'Installed · not verified yet · ¥1 test, refunded in 24 h',
-        None if pay_ok else 'verify_payment', 'alipay_setup_before_flight')
+    pays = _payments(trip, done)
+    _add_payment_group(add, pays, trip.get('payment_apps', {}))
 
     add('transfer', 'Ride from the airport · optional', 'done' if trip.get('transfer_booked') else 'optional',
         'Driver will wait at arrivals' if trip.get('transfer_booked') else _transfer_hint(trip), None if trip.get('transfer_booked') else 'book_transfer')
@@ -61,13 +60,74 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
     add('pack', 'Offline landing pack', 'done' if pack_ok else 'todo',
         ('Downloaded · %s · %s MB · %s' % (pack.get('airport'), pack.get('size_mb'), pack.get('date'))) if pack_ok else 'Download before you fly', None if pack_ok else 'download_pack')
 
-    required = [i for i in items if i['status'] in ('done', 'todo')]
-    ndone = sum(1 for i in required if i['status'] == 'done')
-    return {'items': items, 'ready': ndone, 'required': len(required),
-            'optional_open': sum(1 for i in items if i['status'] == 'optional'),
-            'pct': int(round(100 * ndone / len(required))) if required else 100,
-            'summary': ('You\'re ready for Shanghai · %d of %d ready' % (ndone, len(required))) if required and ndone == len(required) else
-                       '%d of %d ready · %d to do · %d optional' % (ndone, len(required), len(required) - ndone, sum(1 for i in items if i['status'] == 'optional'))}
+    # 组内（支付宝 / TenPayGo）只算一项：任一个 done 即 done；组内的备用项不计入 optional 数
+    plain = [i for i in items if not i.get('group')]
+    grouped = [i for i in items if i.get('group')]
+    groups = sorted({i['group'] for i in grouped})
+    required = len([i for i in plain if i['status'] in ('done', 'todo')]) + len(groups)
+    ndone = sum(1 for i in plain if i['status'] == 'done') + sum(1 for g in groups if any(i['status'] == 'done' for i in grouped if i['group'] == g))
+    optional_open = sum(1 for i in plain if i['status'] == 'optional')
+    return {'items': items, 'ready': ndone, 'required': required,
+            'optional_open': optional_open,
+            'backup_open': sum(1 for i in grouped if i['status'] == 'optional'),
+            'payment': _payment_summary(pays),
+            'pct': int(round(100 * ndone / required)) if required else 100,
+            'summary': ('You\'re ready for Shanghai · %d of %d ready' % (ndone, required)) if required and ndone == required else
+                       '%d of %d ready · %d to do · %d optional' % (ndone, required, required - ndone, optional_open)}
+
+
+# ---------------- 支付组 ----------------
+PAY_ITEM = {
+    'alipay': {'title': 'Alipay payment', 'entry': 'alipay_setup_before_flight', 'pitch': '¥1 test, refunded in 24 h',
+               'backup': 'Backup · not verified · for shops that only take Alipay'},
+    'tenpaygo': {'title': 'TenPayGo payment', 'entry': 'tenpaygo_setup_before_flight', 'pitch': 'email sign-up, no Chinese number',
+                 'backup': 'Backup · not verified · pays wherever WeChat Pay works'},
+}
+
+
+def _payments(trip: dict, done) -> dict:
+    """每种方式的验证状态。旧调用方只给 trip['payment']（单个支付宝），按支付宝处理。"""
+    pays = trip.get('payments') or {'alipay': trip.get('payment') or {}}
+    return {m: {**(pays.get(m) or {}), 'ok': (pays.get(m) or {}).get('status') == 'verified' or m in done} for m in PAY_METHODS}
+
+
+def verified_methods(trip: dict, done=frozenset()) -> list:
+    return [m for m, p in _payments(trip, done).items() if p['ok']]
+
+
+def _add_payment_group(add, pays: dict, apps: dict):
+    group_ok = any(p['ok'] for p in pays.values())
+    for m, p in pays.items():
+        c = PAY_ITEM[m]
+        installed = (apps.get(m) or {}).get('installed', m == 'alipay')
+        if p['ok']:
+            status, desc = 'done', ('Verified · ¥1 test on %s, refunded' % p['verified_at'][:10]) if p.get('verified_at') else 'Verified before you flew · ¥1 test, refunded'
+        elif group_ok:
+            status, desc = 'optional', c['backup']
+        elif m == 'alipay':
+            status, desc = 'todo', ('Installed · not verified yet · ' if installed else 'Not installed · either one is enough · ') + c['pitch']
+        else:
+            status, desc = 'todo', ('Installed · not verified yet · either one is enough' if installed else 'Not installed · either one is enough · ' + c['pitch'])
+        add(m, c['title'], status, desc, None if p['ok'] else 'verify_payment', c['entry'], group='payment', method=m)
+
+
+def _payment_summary(pays: dict) -> dict:
+    order = list(PAY_METHODS)
+    verified = [m for m in order if pays[m]['ok']]
+    # 真做过 ¥1 测试的（有 verified_at）排在只被标记完成的前面，再按时间先后
+    primary = min(verified, key=lambda m: (not pays[m].get('verified_at'), pays[m].get('verified_at') or '', order.index(m))) if verified else None
+    # H5 行前检查把两种方式合成一个"Payment in China"板块，标题和说明由这里给
+    backup = next((m for m in order if m not in verified), None) if verified else None
+    if not verified:
+        desc = 'Alipay or TenPayGo · either one is enough · ¥1 test, refunded in 24 h'
+    elif backup is None:
+        desc = '%s verified · ¥1 tests refunded' % ' and '.join(PAY_METHODS[m] for m in order)
+    else:
+        at = pays[primary].get('verified_at')
+        desc = '%s verified · %s · %s is an optional backup' % (PAY_METHODS[primary], ('¥1 test on %s, refunded' % at[:10]) if at else '¥1 test, refunded', PAY_METHODS[backup])
+    return {'ready': bool(verified), 'primary': primary, 'primary_name': PAY_METHODS.get(primary),
+            'verified': verified, 'verified_at': pays[primary].get('verified_at') if primary else None, 'methods': order,
+            'title': 'Payment in China', 'desc': desc, 'backup': backup}
 
 
 def _transfer_hint(trip):
@@ -89,8 +149,9 @@ def _is_night(hhmm: str, metro: dict = None) -> bool:
     return t >= last or t < first
 
 
-def transport(trip: dict, landed_at: str = None, airport: str = 'PVG', weather: str = 'clear') -> dict:
-    """返回 recommended + alternatives，每个带 reason。landed_at 'HH:MM' 覆盖航班时间，便于演示。"""
+def transport(trip: dict, landed_at: str = None, airport: str = 'PVG', weather: str = 'clear', paid=None) -> dict:
+    """返回 recommended + alternatives，每个带 reason。landed_at 'HH:MM' 覆盖航班时间，便于演示。
+    paid：已验证的支付方式列表。没有支付宝时，依赖支付宝的方式（支付宝里的滴滴、地铁售票机）带 pay_note；不传则不提示。"""
     f, h = trip.get('flight', {}), trip.get('hotel', {})
     if airport not in TRANSPORT:
         airport = 'PVG'
@@ -119,6 +180,9 @@ def transport(trip: dict, landed_at: str = None, airport: str = 'PVG', weather: 
         o = dict(opts[oid]); o['recommended'] = is_rec
         o.setdefault('go_to', {'title': o['title'], 'where': o.get('where', ''), 'verified': False})
         lo, hi = o['price_cny']; o['price'] = '¥%d' % lo if lo == hi else '¥%d–%d' % (lo, hi)
+        note = o.pop('needs_alipay', None)
+        if note and paid is not None and 'alipay' not in paid:
+            o['pay_note'] = note
         return o
 
     return {'airport': airport, 'landed_at': when, 'night': night, 'facts': facts,

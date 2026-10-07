@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<!--
+  TenPayGo App Store download - root composition (720x816, 8s, 30fps, seamless loop).
+
+  Thin orchestrator. The drawn store UI and its single paused timeline live in
+  compositions/index.html (composition id "tenpaygo-store"). This file owns:
+    - the ONE palette block (every colour token the shot and the mounted
+      components use; no hex anywhere else),
+    - local Inter 400/700 (@font-face -> assets/fonts) and locally vendored
+      GSAP 3.14.2, so a render needs no network,
+    - the registry component mounts, kept at the root so the two
+      touch-indicator instances get their own runtime ids and per-instance
+      variables:
+        touch-indicator  x2  (tap 1 on the search field, tap 2 on Get)
+        conic-progress-ring  (download ring in the Get slot, 568,363 76x76)
+  Times come from shot-plan.json. Touch-down = mount data-start + 4/60 s.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=720, height=816">
+    <title>TenPayGo Store Download</title>
+    <script src="assets/vendor/gsap-3.14.2.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/inter-400.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Inter";
+        src: url("assets/fonts/inter-700.woff2") format("woff2");
+        font-weight: 700;
+        font-style: normal;
+        font-display: block;
+      }
+
+      /* PALETTE - the single source of colour for the whole shot
+         (shot-plan.json palette, in order, plus three alpha tints). */
+      :root {
+        --tpg-bg: #ffffff;
+        --tpg-ink: #1c1c1e;
+        --tpg-muted: #88888c; /* plan #8A8A8E, one step darker: 3:1 on the field */
+        --tpg-field: #efeff0;
+        --tpg-field-pressed: #e4e4e8;
+        --tpg-separator: #e5e5ea;
+        --tpg-ring-track: #e3e3e8;
+        --tpg-clear: #aeaeb2;
+        --tpg-blue: #007aff;
+        --tpg-green: #2dcb7e;
+        --tpg-green-deep: #0ea864;
+        --tpg-card: #f2f2f7;
+        --tpg-card-line: #d9dce3;
+        --tpg-on-accent: #ffffff;
+        --tpg-wallet-back: rgba(255, 255, 255, 0.75);
+        --tpg-hairline: rgba(0, 0, 0, 0.06);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 720px;
+        height: 816px;
+        overflow: hidden;
+        background: var(--tpg-bg);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--tpg-bg);
+        font-family: "Inter", system-ui, sans-serif;
+      }
+
+      /* The drawn store screen: full frame, bottom layer. */
+      #el-store {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+
+      /* Download ring slot: the Get pill's circle footprint (centre 606,401).
+         Theme tokens for the ring component: blue progress on a grey track. */
+      .tpg-ring-slot {
+        position: absolute;
+        left: 568px;
+        top: 363px;
+        width: 76px;
+        height: 76px;
+        z-index: 20;
+        pointer-events: none;
+        --brand: var(--tpg-blue);
+        --surface: var(--tpg-ring-track);
+        --fg: var(--tpg-blue);
+      }
+      #el-ring {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* Touch discs: full-stage host boxes on top of everything, so the
+         component's clamp(46px, 18cqw, 111px) disc resolves to 111px. */
+      .tpg-touch-mount {
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-hf-id="hf-xe8b" id="root" data-composition-id="main" data-start="0" data-duration="8" data-fps="30" data-width="720" data-height="816">
+      <!-- The whole drawn App Store-style search screen + its timeline. -->
+      <div data-hf-id="hf-1ob3" id="el-store" class="clip" data-composition-id="tenpaygo-store" data-composition-src="compositions/index.html" data-start="0" data-duration="8" data-track-index="0" data-width="720" data-height="816"></div>
+
+      <!-- conic-progress-ring: 4.46-6.36 (fill 4.62 -> 6.12, out by 6.32). -->
+      <div data-hf-id="hf-pliv" class="tpg-ring-slot">
+        <div data-hf-id="hf-773x" id="el-ring" class="clip" data-composition-id="conic-progress-ring" data-composition-src="compositions/components/conic-progress-ring.html" data-variable-values="{&quot;progress&quot;:100,&quot;thickness&quot;:21,&quot;label&quot;:&quot;&quot;}" data-start="4.46" data-duration="1.9" data-track-index="1" data-width="76" data-height="76"></div>
+      </div>
+
+      <!-- touch-indicator, tap 1: search field at (320,208). Touch-down 0.70. -->
+      <div data-hf-id="hf-8cn0" id="el-tap-1" class="clip tpg-touch-mount" data-composition-id="touch-indicator" data-composition-src="compositions/components/touch-indicator.html" data-variable-values="{&quot;gesture&quot;:&quot;tap&quot;,&quot;polarity&quot;:&quot;dark&quot;,&quot;targetX&quot;:44.44,&quot;targetY&quot;:25.49}" data-start="0.6333" data-duration="0.5" data-track-index="2" data-width="720" data-height="816"></div>
+
+      <!-- touch-indicator, tap 2: Get pill centre (606,401). Touch-down 4.00. -->
+      <div data-hf-id="hf-5tdf" id="el-tap-2" class="clip tpg-touch-mount" data-composition-id="touch-indicator" data-composition-src="compositions/components/touch-indicator.html" data-variable-values="{&quot;gesture&quot;:&quot;tap&quot;,&quot;polarity&quot;:&quot;dark&quot;,&quot;targetX&quot;:84.17,&quot;targetY&quot;:49.14}" data-start="3.9333" data-duration="0.5" data-track-index="2" data-width="720" data-height="816"></div>
+    </div>
+
+    <script>
+      // Root timeline stays empty: the shot and each mounted component
+      // register their own paused timelines, which the runtime seeks.
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

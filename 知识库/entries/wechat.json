@@ -415,7 +415,8 @@
       "related": [
         "wechat_setup_before_flight",
         "alipay_card_bind_failed",
-        "alipay_nihao_china"
+        "alipay_nihao_china",
+        "tenpaygo_card_bind_failed"
       ],
       "tags": [
         "payment",

@@ -6,6 +6,7 @@ python3 validate_entries.py          # 全部
 python3 validate_entries.py alipay   # 单个场景
 """
 import os, sys, json, glob, datetime
+from urllib.parse import urlparse
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ENT = os.path.normpath(os.path.join(HERE, '..', 'entries'))
@@ -16,7 +17,18 @@ H5 = os.path.normpath(os.path.join(HERE, '..', '..', 'h5'))
 MEDIA_DIR = os.path.join(H5, 'img', 'tutorial')
 TUTORIALS = os.path.join(H5, 'tutorials.json')
 READER_OK = ('trip.com', 'gov.cn', 'alipayplus.com', '12306.cn', 'alipay.com', 'weixin.qq.com', 'tencent.com', 'antgroup.com',
-             'unionpayintl.com', 'unionpay.com', 'didiglobal.com', 'support.apple.com', 'support.google.com')
+             'unionpayintl.com', 'unionpay.com', 'didiglobal.com', 'support.apple.com', 'support.google.com',
+             'wechatpay.cn', 'tenpaygo.com')
+# 应用商店只放行具体的官方 App 页面，不放行整个商店域名
+READER_PAGES = ('https://apps.apple.com/us/app/tenpaygo/id6778755338', 'https://play.google.com/store/apps/details?id=com.tencent.wxpai')
+
+
+def reader_ok(url):
+    """按域名判断（子域名也算），不按子串：避免 evil.com/?trip.com 这类地址混过去。"""
+    if url.startswith(READER_PAGES):
+        return True
+    host = urlparse(url).hostname or ''
+    return urlparse(url).scheme in ('http', 'https') and any(host == d or host.endswith('.' + d) for d in READER_OK)
 
 
 def all_ids():
@@ -52,7 +64,7 @@ def check(path):
             if not s.get('url'):
                 errs.append('%s: source 缺 url' % e.get('id'))
         for r in e.get('reader_links', []) or []:
-            if not any(h in r.get('url', '') for h in READER_OK):
+            if not reader_ok(r.get('url', '')):
                 errs.append('%s: reader_links 只能放 Trip.com 或官方来源：%s' % (e.get('id'), r.get('url')))
         body = ' '.join([e.get('title', ''), e.get('why', ''), ' '.join(e.get('steps', [])), e.get('fallback', '')]).lower()
         bad = [w for w in ('vpn', 'wildchina', 'promo code') if w in body]
@@ -68,8 +80,8 @@ def check(path):
                     errs.append('%s: media 缺 %s' % (eid, k))
             if not (m.get('source') or {}).get('url'):
                 errs.append('%s: media.source 缺 url' % eid)
-            if m.get('file', '').lower().endswith('.gif') and not m.get('poster'):
-                errs.append('%s: GIF 配图要带 poster 静态首帧' % eid)
+            if m.get('file', '').lower().endswith(('.gif', '.mp4', '.webm')) and not m.get('poster'):
+                errs.append('%s: GIF 和视频配图要带 poster 静态首帧' % eid)
             if os.path.isdir(MEDIA_DIR):
                 for k in ('file', 'poster'):
                     if m.get(k) and not os.path.isfile(os.path.join(MEDIA_DIR, m[k])):
@@ -133,7 +145,7 @@ def export_tutorials():
                 out.append(t)
     if not os.path.isdir(H5):
         return 0
-    json.dump({'generated': datetime.date.today().isoformat(), 'tutorials': out}, open(TUTORIALS, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    json.dump({'generated': datetime.date.today().isoformat(), 'tutorials': out}, open(TUTORIALS, 'w', encoding='utf-8', newline='\n'), ensure_ascii=False, indent=1)
     return len(out)
 
 
@@ -150,7 +162,7 @@ if __name__ == '__main__':
             for e in errs: print('   -', e)
         else:
             print('%s: %d 条，通过' % (os.path.basename(f), n))
-        open(f[:-5] + '.md', 'w', encoding='utf-8').write(render(d) + '\n')
+        open(f[:-5] + '.md', 'w', encoding='utf-8', newline='\n').write(render(d) + '\n')
     print('合计 %d 条，%d 个文件有问题' % (total, bad))
     if not bad:
         print('导出 %d 篇图文教程到 h5/tutorials.json' % export_tutorials())

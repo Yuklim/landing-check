@@ -27,8 +27,9 @@
   dot.id = 'lcdot'; dot.style.cssText = 'position:fixed;left:10px;bottom:10px;z-index:200;font:600 11px Inter,sans-serif;color:#fff;background:rgba(0,0,0,.45);padding:4px 8px;border-radius:10px;pointer-events:none;transition:opacity .6s';
   document.body.appendChild(dot);
   function status(t, color) { dot.textContent = t; dot.style.background = color || 'rgba(0,0,0,.45)'; dot.style.opacity = 1; clearTimeout(dot._t); dot._t = setTimeout(() => dot.style.opacity = 0, 4000); }
-  const STATIC = { landing: 'go:step1', pay: 'go:payment', pay2: 'go:payment', stuck: 'go:stuck', solved: 'back', incar: 'go:done', land: 'island', esim: 'then:eSIM added (demo)|go:preflight', transfer: 'then:Transfer booked (demo)|go:preflight' };
+  const STATIC = { landing: 'go:step1', stuck: 'go:stuck', solved: 'back', incar: 'go:done', land: 'island', esim: 'then:eSIM added (demo)|go:preflight', transfer: 'then:Transfer booked (demo)|go:preflight' };
   function staticHandle(act) {
+    if (window.lcPayStatic && window.lcPayStatic(act)) return;      // 支付宝 / TenPayGo 验证，见"支付方式"一节
     const a = STATIC[act.split(':')[0]] || (act.startsWith('fb:') ? 'toast:Thanks, recorded (demo)' : null);
     if (!a) { toast('Demo'); return; }
     if (a.startsWith('go:')) show(a.slice(3)); else if (a === 'back') back(); else if (a === 'island') island();
@@ -51,6 +52,7 @@
     <div class="scroll" style="padding:14px 20px 0">
       <div id="tutImgBox" style="width:353px;height:199px;border-radius:16px;overflow:hidden;background:${BG} center/cover no-repeat;border:1px solid ${LINE};position:relative;flex:none">
         <img id="tutImg" alt="" style="width:100%;height:100%;object-fit:cover;display:block">
+        <video id="tutVid" muted loop playsinline autoplay preload="metadata" style="width:100%;height:100%;object-fit:contain;display:none"></video>
         <div id="tutAlt" style="position:absolute;left:0;right:0;bottom:0;padding:6px 10px;font:500 11px/1.3 Inter,sans-serif;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.55))"></div>
       </div>
       <div id="tutWhy" style="margin-top:14px;padding:12px 14px;border-radius:12px;background:#EEF3FF;font:400 13px/1.5 Inter,sans-serif;color:${INK}"></div>
@@ -77,13 +79,20 @@
     const m = (e.media || []).find(x => x.step === i + 1);
     txt(T('tutTitle'), e.title); txt(T('tutSub'), `Step ${i + 1} of ${n}` + (e.verified_at ? ` · verified ${e.verified_at}` : ''));
     T('tutBar').innerHTML = e.steps.map((_, k) => `<div style="flex:1;height:4px;border-radius:2px;background:${k <= i ? BLUE : LINE}"></div>`).join('');
-    const box = T('tutImgBox'), img = T('tutImg');
-    if (m) { box.style.display = ''; box.style.backgroundImage = m.poster ? `url(img/tutorial/${m.poster})` : ''; img.style.objectFit = 'cover'; box.style.height = '199px'; img.src = 'img/tutorial/' + m.file; img.alt = m.alt || ''; txt(T('tutAlt'), m.alt || ''); }
-    else { box.style.display = 'none'; img.removeAttribute('src'); }
+    const box = T('tutImgBox'), img = T('tutImg'), vid = T('tutVid');
+    const isVid = !!m && /\.(mp4|webm)$/i.test(m.file);
+    // 视频配图（自制动画）：静音循环自动播放，poster 先占位；图片配图照旧
+    if (isVid) { vid.pause(); vid.removeAttribute('src'); vid.load(); }
+    if (m) {
+      box.style.display = ''; box.style.backgroundImage = m.poster && !isVid ? `url(img/tutorial/${m.poster})` : ''; box.style.height = '199px'; txt(T('tutAlt'), m.alt || '');
+      if (isVid) { img.style.display = 'none'; img.removeAttribute('src'); vid.style.display = 'block'; vid.poster = m.poster ? 'img/tutorial/' + m.poster : ''; vid.setAttribute('aria-label', m.alt || ''); vid.src = 'img/tutorial/' + m.file; const p = vid.play(); if (p && p.catch) p.catch(() => {}); }
+      else { vid.pause(); vid.style.display = 'none'; vid.removeAttribute('src'); img.style.display = 'block'; img.style.objectFit = 'cover'; img.src = 'img/tutorial/' + m.file; img.alt = m.alt || ''; }
+    }
+    else { box.style.display = 'none'; img.removeAttribute('src'); vid.pause(); vid.removeAttribute('src'); }
     T('tutWhy').style.display = i === 0 ? '' : 'none'; txt(T('tutWhy'), e.why);
     txt(T('tutNum'), String(i + 1)); txt(T('tutStep'), e.steps[i]);
     T('tutFb').style.display = last ? '' : 'none'; txt(T('tutFb'), 'Still stuck? ' + e.fallback);
-    const imgSrc = m && m.source ? ` · Image: ${m.source.name.split('·')[0].trim()}${m.placeholder ? ' (placeholder, demo only)' : ''}` : '';
+    const imgSrc = m && m.source ? ` · ${isVid ? 'Animation' : 'Image'}: ${m.source.name.split('·')[0].trim()}${m.placeholder ? ' (placeholder, demo only)' : ''}` : '';
     txt(T('tutSrc'), `Steps from ${e.sources && e.sources[0] ? e.sources[0].name.split('·')[0].trim() : 'Trip.com'}${imgSrc}`);
     T('tutPrev').style.visibility = i === 0 ? 'hidden' : 'visible';
     txt(T('tutNext'), last ? 'Done' : 'Next step'); T('tutNext').style.background = last ? GREEN : BLUE;
@@ -91,12 +100,16 @@
   }
   // 竖屏截图：按原比例完整显示，限高 400
   T('tutImg').onload = function () { const portrait = this.naturalHeight > this.naturalWidth; const box = T('tutImgBox'); if (portrait) { this.style.objectFit = 'contain'; box.style.height = '400px'; box.style.backgroundImage = ''; } };
+  T('tutVid').onloadedmetadata = function () { if (this.videoHeight > this.videoWidth) T('tutImgBox').style.height = '400px'; };
+  // 离开教程屏时停掉动画，省电
+  window.addEventListener('hashchange', () => { if (location.hash !== '#tutorial') T('tutVid').pause(); });
   T('tutPrev').onclick = () => { if (TUT.i > 0) { TUT.i--; tutRender(); } };
   T('tutNext').onclick = () => { if (TUT.i < TUT.e.steps.length - 1) { TUT.i++; tutRender(); } else back(); };
   (() => { let x0 = 0; const box = T('tutImgBox'); box.addEventListener('touchstart', ev => { x0 = ev.touches[0].clientX; }, { passive: true }); box.addEventListener('touchend', ev => { const dx = ev.changedTouches[0].clientX - x0; if (dx < -40) T('tutNext').onclick(); else if (dx > 40) T('tutPrev').onclick(); }); })();
+  // tutorials.json 只取一次，教程屏、识别结果页、行前检查入口、菜单共用
+  const loadTutorials = () => TUT.p || (TUT.p = fetch('tutorials.json').then(ok).then(d => d.tutorials).catch(() => []).then(list => (TUT.all = list)));
   async function openTutorial(id, lang, step) {
-    if (!TUT.all) { try { TUT.all = (await fetch('tutorials.json').then(ok)).tutorials; } catch (e) { TUT.all = []; } }
-    let e = TUT.all.find(t => t.id === id);
+    let e = (await loadTutorials()).find(t => t.id === id);
     if (!e) { toast('No tutorial for this step yet'); return; }
     e = Object.assign({}, e);
     if (API) { try { const r = await withTimeout(get(`/kb/entry/${id}?lang=${lang || 'en'}`), 4000); ['title', 'why', 'steps', 'fallback'].forEach(k => { if (r[k]) e[k] = r[k]; }); } catch (err) {} }
@@ -105,20 +118,154 @@
   window.lcTutorial = openTutorial;
   // 深链：?tutorial=<条目id> 直接打开图文教程（嵌入 App 时按条目跳转）
   const tutQ = qs.get('tutorial'); if (tutQ) setTimeout(() => openTutorial(tutQ, qs.get('lang'), qs.get('step')), 150);
-  window.lcHasTutorial = async id => { if (!TUT.all) { try { TUT.all = (await fetch('tutorials.json').then(ok)).tutorials; } catch (e) { TUT.all = []; } } return TUT.all.some(t => t.id === id); };
-  // 行前检查 · 支付宝一项下挂图文教程入口（样例：只给支付宝加，体现思路）
-  (() => {
-    const item = $$('preflight', 'Item Alipay payment'); if (!item) return;
-    const link = el('div', `display:flex;align-items:center;gap:6px;padding-left:38px;cursor:pointer;font:600 12px/1.3 Inter,system-ui,sans-serif;color:${BLUE}`);
+  window.lcHasTutorial = async id => (await loadTutorials()).some(t => t.id === id);
+  // ---------- 支付方式：支付宝 / TenPayGo 并列，任一个 ¥1 验证即就绪（运行时注入，静态模式也可用） ----------
+  const PAY_NAME = { alipay: 'Alipay', tenpaygo: 'TenPayGo' };
+  const OTHER = { alipay: 'tenpaygo', tenpaygo: 'alipay' };
+  // 板块下方的教程入口：一行里两个链接，分别打开两篇设置教程
+  function guideLinks(items) {
+    const link = el('div', `display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding-left:38px;font:600 12px/1.3 Inter,system-ui,sans-serif;color:${BLUE}`);
     link.setAttribute('data-pencil-name', 'Item Guide Link');
-    link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="${BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Step-by-step setup guide · 4 screenshots ›</span>`;
-    link.onclick = ev => { ev.stopPropagation(); openTutorial('alipay_setup_before_flight'); };
-    item.appendChild(link);
+    link.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="${BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
+    link.append(el('span', `color:${MUTED};font-weight:500`, 'Setup guide'));
+    items.forEach(([name, id]) => {
+      link.append(el('span', `color:${MUTED}`, '·'));
+      const a = el('span', 'cursor:pointer', name + ' ›'); a.setAttribute('data-guide', id);
+      a.onclick = ev => { ev.stopPropagation(); openTutorial(id); }; link.append(a);
+    });
+    return link;
+  }
+  // 行前检查 · 设计稿里的支付宝一行改成"Payment in China"一个板块（节点名保留 Item Alipay payment，绑定不用改）。
+  // 按钮弹选择层任选其一；已验证一种后按钮变成 Add backup，直接验证另一种
+  (() => {
+    const row = $$('preflight', 'Item Alipay payment'); if (!row) return;
+    txt(row.querySelector('[data-pencil-name="Item Title"]'), 'Payment in China');
+    // 静态模式下的默认文案；接后端时 renderPreflight 用 /rules/preflight 的 payment.desc 覆盖
+    txt(row.querySelector('[data-pencil-name="Item Desc"]'), 'Alipay or TenPayGo · either one is enough · ¥1 test, refunded in 24 h');
+    const btn = row.querySelector('[data-pencil-name="Item Button"]'); if (btn) btn.dataset.act = 'api:paypick';
+    row.appendChild(guideLinks([['Alipay', 'alipay_setup_before_flight'], ['TenPayGo', 'tenpaygo_setup_before_flight']]));
   })();
+
+  // 验证结果页：设计稿是支付宝版本。先快照原文，再按方式和结果覆盖
+  const PAY_BASE = { html: {}, how: [] };
+  const PAY_NODES = ['Result Title', 'Result Sub', 'Chip Label', 'How Title', 'Fail Title', 'Fail Desc', 'Source', 'Done Label'];
+  function snapPay() {
+    if (PAY_BASE.done) return;
+    PAY_NODES.forEach(n => { const e = $$('payment', n); PAY_BASE.html[n] = e ? e.innerHTML : ''; });
+    PAY_BASE.how = $all('payment', 'How Item Title').concat($all('payment', 'How Item Desc')).map(e => e.innerHTML);
+    const card = $$('payment', 'Result Card'); PAY_BASE.stroke = card ? card.style.outlineColor : '';   // 设计稿用 outline 画描边
+    const ok = $$('payment', 'OK Circle'); PAY_BASE.circle = ok ? ok.style.backgroundColor : '';
+    const icon = $$('payment', 'OK Icon'); PAY_BASE.iconHTML = icon ? icon.outerHTML : '';
+    PAY_BASE.done = true;
+  }
+  snapPay();
+  const PAY_COPY = {
+    tenpaygo: {
+      'Result Title': 'Your TenPayGo works in China',
+      'Result Sub': '¥1.00 charged via TenPayGo at 08:31 · Visa ••4471\nRefund issued · back on your card in 1–3 days',
+      how2: ['TenPayGo is linked to that card on this phone', 'Installed is not enough. This proves the link is live.'],
+      'Fail Title': "If the test fails, we read TenPayGo's error for you",
+      'Fail Desc': "ISSUER_DECLINED → allow international online payments in your bank app\nAUTH_FAILED → approve your bank's 3-D Secure check\nREGION_UNAVAILABLE → retest after landing, or verify Alipay now",
+      'Source': 'Test uses a Trip.com WeChat Pay code that TenPayGo pays · no new permissions',
+    },
+  };
+  // 失败原因：错误码 -> [标题, 原因, 第一步, 说明, 第二步, 说明]，填进"What we just tested"的三行
+  const PAY_MEANING = {
+    alipay: {
+      CARD_NOT_SUPPORTED: ['Your card network is not accepted', 'Alipay accepts Visa, Mastercard, JCB, Discover, Diners Club and UnionPay. Amex and most prepaid or virtual cards fail.', 'Try another card', 'A credit card from a major bank on a different network fixes most cases.', 'Still failing', 'Open TourCard inside Alipay as a prepaid wallet, or pay cash from a Bank of China ATM.'],
+      RISK_REJECT: ['Your bank blocked the charge', 'Banks often block an unfamiliar Chinese merchant on the first attempt.', 'Retry in 10 minutes', 'Turn off any VPN-like network tool first; verification calls go to your bank and time out through them.', 'Call your bank', 'Ask them to allow international online transactions and confirm 3-D Secure is on.'],
+      LIMIT_EXCEEDED: ['You hit the unverified allowance', 'Alipay lets you spend a small total before it needs your passport.', 'Complete Identity Verification', 'Me > Settings > Account & Security > Identity Verification. Usually done within the hour.', 'Then retry', 'Run the ¥1 test again from the pre-flight check.'],
+    },
+    tenpaygo: {
+      ISSUER_DECLINED: ['Your bank refused the charge', 'TenPayGo shows "The bank did not approve this transaction". The block is at your bank, not TenPayGo.', 'Allow international online payments', 'Turn it on in your bank app, or call the number on the card, then retry in a few minutes.', 'Or switch on Apple Pay', 'On iPhone, Apple Pay in TenPayGo is a separate option that uses the card already in your Wallet.'],
+      AUTH_FAILED: ["Your bank's check was not completed", 'Your bank sent a 3-D Secure code or an in-app approval and it was not confirmed in time.', 'Keep your bank reachable', 'The code goes to the phone number or banking app your bank has on file.', 'Retry once, not five times', 'Repeated attempts in a short time can trigger a block.'],
+      REGION_UNAVAILABLE: ['TenPayGo only charges inside mainland China', 'Its terms limit the service to the Chinese mainland, so a test from abroad can be refused even when the card is fine.', 'Keep the card linked', 'Run the ¥1 test again after you land.', 'Verify Alipay now', 'Alipay can be tested before you fly, so you leave with one method confirmed.'],
+    },
+  };
+  const X_SVG = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#E8890C" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  function setPayTone(fail) {
+    const card = $$('payment', 'Result Card'); if (card) card.style.outlineColor = fail ? '#E8890C' : PAY_BASE.stroke;
+    const ok = $$('payment', 'OK Circle'); if (ok) { ok.style.backgroundColor = fail ? '#FFF4E5' : PAY_BASE.circle; const icon = ok.querySelector('[data-pencil-name="OK Icon"]'); if (icon && PAY_BASE.iconHTML) { const t = document.createElement('div'); t.innerHTML = fail ? X_SVG : PAY_BASE.iconHTML; const n = t.firstElementChild; n.setAttribute('data-pencil-name', 'OK Icon'); icon.replaceWith(n); } }
+    const chip = $$('payment', 'Verified Chip'); if (chip) chip.style.backgroundColor = fail ? '#FFF4E5' : '#E6F7F0';
+    const ci = $$('payment', 'Chip Icon'); if (ci) ci.style.display = fail ? 'none' : '';
+    const cl = $$('payment', 'Chip Label'); if (cl) cl.style.color = fail ? '#E8890C' : '#1BA672';
+  }
+  // 失败时在结果卡片里给"改用另一种"的入口（结果页底栏是横排，放不下第二个按钮）
+  const paySwitch = el('div', `display:none;margin-top:12px;font:600 13px/1.3 Inter,system-ui,sans-serif;color:${BLUE};cursor:pointer;text-align:center`);
+  paySwitch.setAttribute('data-pencil-name', 'Pay Switch'); paySwitch.className = 'tap';
+  (() => { const card = $$('payment', 'Result Card'); if (card) card.appendChild(paySwitch); })();
+  const multiline = (n, v) => { const e = $$('payment', n); if (e) { e.textContent = v; e.style.whiteSpace = 'pre-line'; } };
+  // 恢复设计稿原文（支付宝），method 为 tenpaygo 时覆盖成 TenPayGo 文案
+  function applyPayCopy(method) {
+    PAY_NODES.forEach(n => { const e = $$('payment', n); if (e) { e.innerHTML = PAY_BASE.html[n]; e.style.whiteSpace = ''; } });
+    $all('payment', 'How Item Title').concat($all('payment', 'How Item Desc')).forEach((e, i) => { e.innerHTML = PAY_BASE.how[i]; });
+    const c = PAY_COPY[method];
+    if (c) {
+      txt($$('payment', 'Result Title'), c['Result Title']); multiline('Result Sub', c['Result Sub']);
+      txt($all('payment', 'How Item Title')[1], c.how2[0]); txt($all('payment', 'How Item Desc')[1], c.how2[1]);
+      txt($$('payment', 'Fail Title'), c['Fail Title']); multiline('Fail Desc', c['Fail Desc']); txt($$('payment', 'Source'), c['Source']);
+    }
+    const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'go:preflight';
+    paySwitch.style.display = 'none';
+  }
+  function renderPayOk(method, r) {
+    applyPayCopy(method); setPayTone(false);
+    if (r && r.verified_at) {
+      multiline('Result Sub', `¥1.00 charged via ${PAY_NAME[method]} at ${r.verified_at.slice(11, 16)} · ${r.card}\nRefund issued · back on your card in 1–3 days`);
+      txt($$('payment', 'Chip Label'), 'VERIFIED · ' + r.verified_at.slice(5, 10).replace('-', '/'));
+    }
+  }
+  // otherVerified：另一种方式已经验证过时，不再引导去重复验证（会再扣一次 ¥1）
+  function renderPayFail(method, r, otherVerified) {
+    applyPayCopy(method); setPayTone(true); S.entry = r.entry_id || null;
+    const other = PAY_NAME[OTHER[method]];
+    txt($$('payment', 'Result Title'), 'Payment test failed');
+    multiline('Result Sub', r.error_code === 'NO_CONNECTION' ? r.hint : `${PAY_NAME[method]} returned ${r.error_code}.\n${r.hint}`);
+    txt($$('payment', 'Chip Label'), 'NOT VERIFIED · ' + r.error_code);
+    txt($$('payment', 'How Title'), 'What this error means');
+    // 客户端不认识的错误码也要换掉"What we just tested"的成功文案
+    const meaning = (PAY_MEANING[method] || {})[r.error_code] || ['The test payment did not go through', r.hint || 'No money was taken.', 'Try again in a few minutes', 'Check your connection and that the card is still linked.',
+      otherVerified ? `${other} is already verified` : `Or verify ${other} instead`, otherVerified ? 'You can already pay; this one is only a backup.' : 'Either one is enough to get you ready.'];
+    $all('payment', 'How Item Title').forEach((e, i) => txt(e, meaning[i * 2])); $all('payment', 'How Item Desc').forEach((e, i) => txt(e, meaning[i * 2 + 1]));
+    txt($$('payment', 'Done Label'), 'Try again'); const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'api:payretry:' + method;
+    if (otherVerified) { paySwitch.textContent = `${other} is already verified · you can pay ›`; paySwitch.dataset.act = 'go:preflight'; }
+    else { paySwitch.textContent = `Use ${other} instead ›`; paySwitch.dataset.act = 'api:payretry:' + OTHER[method]; }
+    paySwitch.style.display = '';
+  }
+
+  // 落地流程里"先验证支付"：底部选择层，选支付宝或 TenPayGo
+  const chooser = el('div', 'position:absolute;inset:0;z-index:70;display:none;flex-direction:column;justify-content:flex-end;background:rgba(18,24,38,.45)');
+  chooser.setAttribute('data-pencil-name', 'Pay Chooser');
+  const opt = (m, title, sub) => `<div data-pay="${m}" class="tap" style="display:flex;align-items:center;gap:12px;padding:14px;border:1px solid ${LINE};border-radius:12px;margin-top:10px;cursor:pointer"><div style="flex:1;min-width:0"><div style="font:700 15px/1.3 Inter,system-ui,sans-serif;color:${INK}">${title}</div><div style="font:400 12px/1.4 Inter,system-ui,sans-serif;color:${MUTED};margin-top:2px">${sub}</div></div><div style="flex:none;border:1px solid ${BLUE};color:${BLUE};border-radius:4px;padding:6px 10px;font:700 12px Inter,system-ui,sans-serif">Verify ¥1</div></div>`;
+  chooser.innerHTML = `<div style="background:#fff;border-radius:16px 16px 0 0;padding:20px 20px 30px;box-sizing:border-box">
+      <div data-role="title" style="font:700 17px/1.3 Inter,system-ui,sans-serif;color:${INK}">Verify payment first</div>
+      <div style="font:400 13px/1.45 Inter,system-ui,sans-serif;color:${MUTED};margin-top:4px">A ¥1 test, refunded. Either one is enough.</div>
+      ${opt('alipay', 'Alipay', 'Also books DiDi rides and buys metro tickets')}
+      ${opt('tenpaygo', 'TenPayGo', 'Email sign-up · pays wherever WeChat Pay works')}
+      <div data-pay="" style="text-align:center;padding:16px 0 0;font:600 14px Inter,system-ui,sans-serif;color:${MUTED};cursor:pointer">Not now</div>
+    </div>`;
+  (document.getElementById('phone') || document.body).appendChild(chooser);
+  function choosePay(title) {
+    return new Promise(res => {
+      txt(chooser.querySelector('[data-role="title"]'), title || 'Verify payment first');
+      chooser.style.display = 'flex';
+      chooser.onclick = ev => { const b = ev.target.closest('[data-pay]'); if (!b && ev.target !== chooser) return; chooser.style.display = 'none'; res(b ? (b.dataset.pay || null) : null); };
+    });
+  }
+  const PICK_TITLE = 'Which app will you pay with?';
+  // 静态模式：不调接口，直接显示对应方式的成功页
+  function staticPay(m) { renderPayOk(m); show('payment'); }
+  window.lcPayStatic = act => {
+    if (act === 'pay') { staticPay('alipay'); return true; }
+    if (act === 'paypick') { choosePay(PICK_TITLE).then(m => { if (m) staticPay(m); }); return true; }
+    if (act.startsWith('payretry:')) { staticPay(act.slice(9)); return true; }
+    if (act === 'pay2') { choosePay().then(m => { if (m) staticPay(m); }); return true; }
+    return false;
+  };
   const menuList = document.getElementById('list');
   if (menuList) {
     const sep = document.createElement('div'); sep.style.cssText = 'border-top:1px solid #DADFE6;margin:4px 0'; menuList.appendChild(sep);
-    fetch('tutorials.json').then(ok).then(d => { TUT.all = d.tutorials; d.tutorials.forEach(t => { const b = document.createElement('button'); b.textContent = '📖 ' + t.title; b.onclick = () => openTutorial(t.id); menuList.appendChild(b); }); }).catch(() => {});
+    loadTutorials().then(list => list.forEach(t => { const b = document.createElement('button'); b.textContent = '📖 ' + t.title; b.onclick = () => openTutorial(t.id); menuList.appendChild(b); }));
   }
 
   if (!API) { status('静态模式'); window.lcHandle = (act) => staticHandle(act); window.lcOnShow = () => {}; return; }
@@ -155,50 +302,58 @@
     if (!ICONS.done) captureIcons();
     txt($$('preflight', 'Progress Label'), d.summary); txt($$('preflight', 'Progress Pct'), d.pct + '%');
     const fill = $$('preflight', 'Fill'); if (fill) fill.style.width = Math.round(337 * d.pct / 100) + 'px';
-    d.items.forEach(it => {
-      const node = $$('preflight', ITEM_NODE[it.id]); if (!node) return;
-      txt(node.querySelector('[data-pencil-name="Item Desc"]'), it.desc);
+    const setRow = (node, status, desc) => {
+      txt(node.querySelector('[data-pencil-name="Item Desc"]'), desc);
       const st = node.querySelector('[data-pencil-name="State"]');
-      if (st && ICONS[it.status]) { const t = document.createElement('div'); t.innerHTML = ICONS[it.status]; st.replaceWith(t.firstElementChild); }
+      if (st && ICONS[status]) { const t = document.createElement('div'); t.innerHTML = ICONS[status]; st.replaceWith(t.firstElementChild); }
+    };
+    d.items.forEach(it => {
+      if (it.group && d.payment) return;                       // 支付宝 / TenPayGo 两项合在下面的板块里
+      const node = $$('preflight', ITEM_NODE[it.id]); if (!node) return;
+      setRow(node, it.status, it.desc);
       const btn = node.querySelector('[data-pencil-name="Item Button"]'); if (btn) btn.style.visibility = it.status === 'done' ? 'hidden' : 'visible';
     });
+    const p = d.payment, row = $$('preflight', 'Item Alipay payment');
+    if (p && row) {
+      setRow(row, p.ready ? 'done' : 'todo', p.desc);
+      const btn = row.querySelector('[data-pencil-name="Item Button"]');
+      if (btn) { btn.style.visibility = p.ready && !p.backup ? 'hidden' : 'visible'; txt(btn.querySelector('[data-pencil-name="Item Button Label"]'), p.ready ? 'Add backup' : 'Verify ¥1'); }
+    }
   }
 
-  // ---------- 支付验证 ----------
-  async function pay() {
-    toast('Charging ¥1 via Alipay…');
+  // ---------- 支付验证（文案切换见前面"支付方式"一节） ----------
+  async function pay(method) {
+    method = PAY_NAME[method] ? method : 'alipay';
+    toast(`Charging ¥1 via ${PAY_NAME[method]}…`);
     try {
-      const r = await post('/mock/pay-test');
+      const r = await post('/mock/pay-test?method=' + method);
       if (r.status === 'verified') {
-        txt($$('payment', 'Result Sub'), `¥1.00 charged via Alipay at ${r.verified_at.slice(11, 16)} · ${r.card}\nRefund issued · back on your card in 1–3 days`);
-        txt($$('payment', 'Chip Label'), 'VERIFIED · ' + r.verified_at.slice(5, 10).replace('-', '/'));
-        renderPayOk(); show('payment'); renderPreflight();
+        renderPayOk(method, r); show('payment'); renderPreflight();
         if (S.payReturn) { const to = S.payReturn; S.payReturn = null; const btn = $$('payment', 'Done Button'); if (btn) { btn.dataset.act = 'go:' + to; txt($$('payment', 'Done Label'), 'Continue to step 3 · Get to your hotel'); } }
-      } else { renderPayFail(r); show('payment'); }
-    } catch (e) { toast('后端不可达'); show('payment'); }
+      } else { renderPayFail(method, r, await otherVerified(method)); show('payment'); }
+    } catch (e) {
+      // 请求没发出去：显示本次方式的"连不上"，不能留着上一次（可能是另一种方式的成功页）
+      toast('后端不可达');
+      renderPayFail(method, { error_code: 'NO_CONNECTION', hint: 'We could not reach Trip.com. Check your connection and try again.' }, false); show('payment');
+    }
   }
-  const PAY_OK = {};
-  function snapPay() { if (PAY_OK.done) return; ['Result Title', 'Result Sub', 'Chip Label', 'How Title', 'Done Label'].forEach(n => { const el = $$('payment', n); PAY_OK[n] = el ? el.textContent : ''; }); const card = $$('payment', 'Result Card'); PAY_OK.stroke = card ? card.style.borderColor : ''; const ok = $$('payment', 'OK Circle'); PAY_OK.circle = ok ? ok.style.backgroundColor : ''; PAY_OK.done = true; }
-  function renderPayOk() { snapPay(); setPayTone(false); txt($$('payment', 'Result Title'), PAY_OK['Result Title']); txt($$('payment', 'How Title'), PAY_OK['How Title']); txt($$('payment', 'Done Label'), PAY_OK['Done Label']); const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'go:preflight'; }
-  const X_SVG = '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#E8890C" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
-  function setPayTone(fail) {
-    const card = $$('payment', 'Result Card'); if (card) card.style.borderColor = fail ? '#E8890C' : PAY_OK.stroke;
-    const ok = $$('payment', 'OK Circle'); if (ok) { ok.style.backgroundColor = fail ? '#FFF4E5' : PAY_OK.circle; const icon = ok.querySelector('[data-pencil-name="OK Icon"]'); if (icon) { if (!PAY_OK.iconHTML) PAY_OK.iconHTML = icon.outerHTML; const t = document.createElement('div'); t.innerHTML = fail ? X_SVG : PAY_OK.iconHTML; const n = t.firstElementChild; n.setAttribute('data-pencil-name', 'OK Icon'); icon.replaceWith(n); } }
-    const chip = $$('payment', 'Verified Chip'); if (chip) chip.style.backgroundColor = fail ? '#FFF4E5' : '#E6F7F0';
-    const ci = $$('payment', 'Chip Icon'); if (ci) ci.style.display = fail ? 'none' : '';
-    const cl = $$('payment', 'Chip Label'); if (cl) cl.style.color = fail ? '#E8890C' : '#1BA672';
+  async function otherVerified(method) {
+    try { const pf = await get('/rules/preflight'); return !!(pf.payment && pf.payment.verified.includes(OTHER[method])); } catch (e) { return false; }
   }
-  function renderPayFail(r) {
-    snapPay(); S.entry = r.entry_id; setPayTone(true);
-    txt($$('payment', 'Result Title'), 'Payment test failed');
-    txt($$('payment', 'Result Sub'), `Alipay returned ${r.error_code}.\n${r.hint}`);
-    txt($$('payment', 'Chip Label'), 'NOT VERIFIED · ' + r.error_code);
-    txt($$('payment', 'How Title'), 'What this error means');
-    const meaning = { CARD_NOT_SUPPORTED: ['Your card network is not accepted', 'Alipay accepts Visa, Mastercard, JCB, Discover, Diners Club and UnionPay. Amex and most prepaid or virtual cards fail.', 'Try another card', 'A credit card from a major bank on a different network fixes most cases.', 'Still failing', 'Open TourCard inside Alipay as a prepaid wallet, or pay cash from a Bank of China ATM.'],
-                      RISK_REJECT: ['Your bank blocked the charge', 'Banks often block an unfamiliar Chinese merchant on the first attempt.', 'Retry in 10 minutes', 'Turn off any VPN-like network tool first; verification calls go to your bank and time out through them.', 'Call your bank', 'Ask them to allow international online transactions and confirm 3-D Secure is on.'],
-                      LIMIT_EXCEEDED: ['You hit the unverified allowance', 'Alipay lets you spend a small total before it needs your passport.', 'Complete Identity Verification', 'Me > Settings > Account & Security > Identity Verification. Usually done within the hour.', 'Then retry', 'Run the ¥1 test again from the pre-flight check.'] }[r.error_code] || [];
-    $all('payment', 'How Item Title').forEach((el, i) => txt(el, meaning[i * 2])); $all('payment', 'How Item Desc').forEach((el, i) => txt(el, meaning[i * 2 + 1]));
-    txt($$('payment', 'Done Label'), 'Try again'); const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'api:pay';
+  // 行前检查的境内支付板块：还没验证 → 选择层；已验证一种 → 直接验证另一种作为备用
+  async function payPick() {
+    S.payReturn = null;
+    let p = null; try { p = (await get('/rules/preflight')).payment; } catch (e) {}
+    if (p && p.ready && p.backup) { pay(p.backup); return; }
+    const m = await choosePay(PICK_TITLE); if (m) pay(m);
+  }
+  // 落地流程里支付未就绪：先选方式再验证，成功后回到第三步
+  async function payFirst() { const m = await choosePay(); if (!m) return; S.payReturn = 'step3'; pay(m); }
+  // 支付组状态；旧后端没有 payment 字段时只看支付宝
+  function payState(pf) {
+    if (pf && pf.payment) return { ready: !!pf.payment.ready, method: pf.payment.primary, name: pf.payment.primary_name, at: pf.payment.verified_at };
+    const a = pf && pf.items.find(i => i.id === 'alipay'), okA = !!a && a.status === 'done';
+    return { ready: okA, method: okA ? 'alipay' : null, name: okA ? 'Alipay' : null, at: null };
   }
 
   // ---------- 航班落地 ----------
@@ -274,6 +429,8 @@
   async function solved() { if (S.entry) { try { await post('/kb/feedback', { entry_id: S.entry, solved: true }); } catch (e) {} } S.entry = null; toast('Thanks, recorded'); back(); }
 
   // ---------- 第三步交通 ----------
+  // 只验证了 TenPayGo 时，依赖支付宝的方式（支付宝里的滴滴、地铁售票机）带一行提示（后端 rules.transport 给 pay_note）
+  const payNote = t => el('div', 'font-size:12px;line-height:1.35;color:#B25E00;margin-top:6px', t);
   async function renderTransport() {
     let d; try { d = await get('/rules/transport' + (S.night ? '?landed_at=23:40' : '')); } catch (e) { return; }
     const r = d.recommended;
@@ -287,7 +444,7 @@
     const cur = $$('step3', 'Current Task');
     let go = cur && cur.querySelector('.lc-goto');
     if (cur && !go) { go = el('div', 'width:100%;background:#EAF0FF;border-radius:10px;padding:14px 16px;box-sizing:border-box;font-family:Inter,system-ui,sans-serif'); go.className = 'lc-goto'; cur.insertBefore(go, $$('step3', 'Primary Button')); }
-    if (go) { go.replaceChildren(el('div', 'font-size:11px;font-weight:700;letter-spacing:.06em;color:#2C61FE', 'WHERE TO GO'), el('div', 'font-size:18px;font-weight:700;color:#121826;margin:4px 0 6px', g.title || r.title), el('div', 'font-size:14px;line-height:1.4;color:#121826', g.where || r.where)); if (g.verified === false) go.appendChild(el('div', 'font-size:11px;color:#8592A6;margin-top:6px', 'Location to be verified on site')); }
+    if (go) { go.replaceChildren(el('div', 'font-size:11px;font-weight:700;letter-spacing:.06em;color:#2C61FE', 'WHERE TO GO'), el('div', 'font-size:18px;font-weight:700;color:#121826;margin:4px 0 6px', g.title || r.title), el('div', 'font-size:14px;line-height:1.4;color:#121826', g.where || r.where)); if (g.verified === false) go.appendChild(el('div', 'font-size:11px;color:#8592A6;margin-top:6px', 'Location to be verified on site')); if (r.pay_note) go.appendChild(payNote(r.pay_note)); }
     const alt = $$('step3', 'Alt Options'); if (alt) alt.style.display = 'none';
     const sl = $$('step3', 'Step List');
     if (sl) {
@@ -299,13 +456,14 @@
         row.dataset.act = a.action === 'transit' ? 'go:transit' : a.action === 'transfer' ? 'go:transfers' : 'toast:Demo：打开支付宝里的滴滴小程序';
         const left = el('div', 'flex:1;min-width:0');
         left.append(el('div', 'font-size:15px;font-weight:700;color:#121826', a.title), el('div', 'font-size:13px;color:#6F7685;margin-top:2px', `${a.price} · ${a.min} min`), el('div', 'font-size:13px;color:#121826;margin-top:4px;line-height:1.35', (a.go_to && a.go_to.where) || a.where));
+        if (a.pay_note) left.append(payNote(a.pay_note));
         row.append(left, el('div', 'flex-shrink:0;border:1px solid #2C61FE;color:#2C61FE;border-radius:4px;padding:7px 12px;font-size:12px;font-weight:700', a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'));
         ow.appendChild(row);
       });
     }
     const pb = $$('step3', 'Primary Button'); if (pb) pb.dataset.act = r.id === 'metro' || r.id === 'maglev' ? 'go:transit' : 'go:driver';
     txt($$('step3', 'Primary Label'), r.id === 'transfer' ? 'Show my booking to the driver' : r.id === 'metro' || r.id === 'maglev' ? 'Open the route' : 'Show address to driver');
-    try { const pf = await get('/rules/preflight'); const pay = pf.items.find(i => i.id === 'alipay'); if (pay && pay.status !== 'done' && pb) { pb.dataset.act = 'api:pay2'; txt($$('step3', 'Primary Label'), 'Verify payment first · ¥1 test'); } } catch (e) {}
+    try { const pf = await get('/rules/preflight'); if (!payState(pf).ready && pb) { pb.dataset.act = 'api:pay2'; txt($$('step3', 'Primary Label'), 'Verify payment first · ¥1 test'); } } catch (e) {}
   }
   async function incar() { try { await post('/mock/event', { event: 'in_car' }); } catch (e) {} show('done'); }
 
@@ -317,7 +475,16 @@
     const landed = fl.landed_at || at('landed') || (tl[0] && tl[0].at), online = at('online'), car = at('in_car');
     const evt = (name, v) => { const n = $$('done', name); if (n && v) txt(n.querySelector('[data-pencil-name="Event Time"]'), v); };
     evt('Event Landed at PVG T2', hhmm(landed)); evt('Event Online · PVG free Wi-Fi', hhmm(online)); evt('Event In the car · detected automatically', hhmm(car));
-    try { const pf = await get('/rules/preflight'); const pay = pf.items.find(i => i.id === 'alipay'); const prow = $$('done', 'Event Payment verified before flight'); if (prow && pay) { txt(prow.querySelector('[data-pencil-name="Event Title"]'), pay.status === 'done' ? 'Payment verified before flight' : 'Payment not verified'); const payAt = at('payment'); const sameDay = payAt && landed && payAt.slice(0, 10) === landed.slice(0, 10); txt(prow.querySelector('[data-pencil-name="Event Title"]'), pay.status !== 'done' ? 'Payment not verified' : sameDay ? 'Payment verified · ¥1 test' : 'Payment verified before flight'); txt(prow.querySelector('[data-pencil-name="Event Time"]'), pay.status === 'done' ? (sameDay ? hhmm(payAt) : 'before flight') : '—'); const sp = $$('share', 'TL Paid'); if (sp) txt(sp.querySelector('[data-pencil-name="TL Time"]'), pay.status === 'done' ? (sameDay ? hhmm(payAt) : 'pre-flight') : '—'); } } catch (e) {}
+    try {
+      const ps = payState(await get('/rules/preflight')); const prow = $$('done', 'Event Payment verified before flight');
+      if (prow) {
+        const payAt = ps.at || (tl.find(x => x.event === 'payment' && (!x.method || x.method === ps.method)) || {}).at;
+        const sameDay = payAt && landed && payAt.slice(0, 10) === landed.slice(0, 10);
+        txt(prow.querySelector('[data-pencil-name="Event Title"]'), !ps.ready ? 'Payment not verified' : sameDay ? `${ps.name} verified · ¥1 test` : `${ps.name} verified before flight`);
+        txt(prow.querySelector('[data-pencil-name="Event Time"]'), ps.ready ? (sameDay ? hhmm(payAt) : 'before flight') : '—');
+        const sp = $$('share', 'TL Paid'); if (sp) txt(sp.querySelector('[data-pencil-name="TL Time"]'), ps.ready ? (sameDay ? hhmm(payAt) : 'pre-flight') : '—');
+      }
+    } catch (e) {}
     const tl2 = (name, v) => { const n = $$('share', name); if (n && v) txt(n.querySelector('[data-pencil-name="TL Time"]'), v); };
     tl2('TL Landed', hhmm(landed)); tl2('TL Online', hhmm(online)); tl2('TL In car', hhmm(car));
     if (landed) { const d = new Date(landed.replace(' ', 'T')); txt($$('share', 'Foot Date'), d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) + ' · trip.com/landing'); }
@@ -334,8 +501,10 @@
 
   // ---------- 动作分发 ----------
   window.lcHandle = (act, el) => {
-    if (act === 'pay') pay();
-    else if (act === 'pay2') { S.payReturn = 'step3'; pay(); }
+    if (act === 'pay') { S.payReturn = null; pay('alipay'); }
+    else if (act === 'paypick') payPick();                              // 行前检查"Payment in China"的按钮
+    else if (act.startsWith('payretry:')) pay(act.slice(9));             // 失败页：重试或改用另一种，保留回到第三步
+    else if (act === 'pay2') payFirst();
     else if (act === 'landing') landingEntry();
     else if (act === 'land') land();
     else if (act === 'stuck') stuckPick();
@@ -356,7 +525,7 @@
     const [pf, fl, tl] = await Promise.all([get('/rules/preflight'), get('/mock/flight'), get('/mock/timeline')]);
     const by = Object.fromEntries(pf.items.map(i => [i.id, i]));
     const at = ev => (tl.find(x => x.event === ev) || {}).at;
-    return { pf, by, fl, landed: hh(fl.landed_at), online: hh(at('online')), car: hh(at('in_car')), paid: pf.items.find(i => i.id === 'alipay') };
+    return { pf, by, fl, landed: hh(fl.landed_at), online: hh(at('online')), car: hh(at('in_car')), paid: payState(pf), landedDay: (fl.landed_at || '').slice(0, 10) };
   }
   function stepList(route) {
     const rows = ['Step Get online', 'Step Pay like a local', 'Step Get to your hotel'].map(n => $$(route, n));
@@ -381,15 +550,15 @@
   async function renderSteps(route) {
     let S0; try { S0 = await loadState(); } catch (e) { return; }
     snapStepStyles(route);
-    const payOk0 = S0.paid && S0.paid.status === 'done';
+    const payOk0 = S0.paid.ready;
     if (route === 'wifi') { const ob = $$('wifi', 'Open Settings'); if (ob) { ob.dataset.act = payOk0 ? 'go:step3' : 'api:pay2'; txt($$('wifi', 'Open Label'), payOk0 ? "I'm online · continue to step 3" : "I'm online · verify payment next"); } return S0; }
     const rows = stepList(route); if (!rows) return;
     const onlineDone = route === 'step3' || route === 'online' || !!S0.online;
     const dataOk = route === 'online' || (S0.by.data && S0.by.data.status === 'done');
     applyStep(rows[0], onlineDone ? 'done' : 'now',
       onlineDone ? (dataOk ? 'Passed automatically · own data works' : `Done${S0.online ? ' ' + S0.online : ''} · PVG free Wi-Fi`) : 'Checking own data first · Wi-Fi only if needed', '1');
-    const payOk = S0.paid && S0.paid.status === 'done';
-    applyStep(rows[1], payOk ? 'done' : 'now', payOk ? 'Verified before you flew · ¥1 test refunded' : 'Not verified yet · run the ¥1 test in Before you fly', '2');
+    const payOk = S0.paid.ready, paidToday = payOk && S0.paid.at && S0.landedDay && S0.paid.at.slice(0, 10) === S0.landedDay;
+    applyStep(rows[1], payOk ? 'done' : 'now', payOk ? (paidToday ? `${S0.paid.name} verified at ${hh(S0.paid.at)} · ¥1 test refunded` : `${S0.paid.name} verified before you flew · ¥1 test refunded`) : 'Not verified yet · ¥1 test with Alipay or TenPayGo', '2');
     const carState = route === 'step3' ? 'now' : 'next';
     applyStep(rows[2], carState, route === 'step3' ? 'In progress · tap “I\'m in the car” when moving' : 'Up next · we\'ll recommend a ride once you\'re online', '3');
     const landedTxt = S0.landed ? `Landed at PVG T2 · ${S0.landed} local` : 'Not landed yet · preview';
@@ -410,7 +579,8 @@
     let d; try { d = await get('/rules/preflight'); } catch (e) { return; }
     if (!PILL.todo) { const w = $$('trips', 'Pill Wi-Fi'), a = $$('trips', 'Pill Alipay'); if (!w || !a) return; PILL.todo = w.outerHTML; PILL.done = a.outerHTML; }
     const by = Object.fromEntries(d.items.map(i => [i.id, i]));
-    const states = { 'Pill Wi-Fi': { ok: by.data && by.data.status === 'done', label: 'Wi-Fi' }, 'Pill Alipay': { ok: by.alipay && by.alipay.status === 'done', label: 'Alipay' }, 'Pill Hotel': { ok: true, label: 'Hotel' } };
+    const ps = payState(d);
+    const states = { 'Pill Wi-Fi': { ok: by.data && by.data.status === 'done', label: 'Wi-Fi' }, 'Pill Alipay': { ok: ps.ready, label: ps.ready ? ps.name : 'Payment' }, 'Pill Hotel': { ok: true, label: 'Hotel' } };
     let open = 0;
     Object.entries(states).forEach(([name, st]) => {
       const el = $$('trips', name); if (!el) return;
@@ -438,7 +608,9 @@
     const mk = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; list.appendChild(b); return b; };
     mk('🔄 重置演示数据', async () => { try { await post('/mock/reset'); Object.assign(S, S0()); toast('已重置'); setTimeout(() => location.reload(), 400); } catch (e) { toast('后端不可达'); } });
     const nb = mk('🌙 深夜落地模式：关', () => { S.night = !S.night; nb.textContent = '🌙 深夜落地模式：' + (S.night ? '开' : '关'); renderTransport(); toast(S.night ? '交通推荐按 23:40 落地计算' : '恢复 14:20 落地'); });
-    mk('💳 模拟支付失败', async () => { try { const r = await post('/mock/pay-test?fail=1'); renderPayFail(r); show('payment'); } catch (e) { toast('后端不可达'); } });
+    const failSim = m => async () => { try { const r = await post('/mock/pay-test?fail=1&method=' + m); renderPayFail(m, r, await otherVerified(m)); show('payment'); } catch (e) { toast('后端不可达'); } };
+    mk('💳 模拟支付失败（支付宝）', failSim('alipay'));
+    mk('💳 模拟支付失败（TenPayGo）', failSim('tenpaygo'));
   }
   const stuckQ = qs.get('stuck'); if (stuckQ) get(`/kb/entry/${stuckQ}?lang=en`).then(e => { fillEntry(e); show('stuck'); }).catch(() => toast('No such entry'));
   snapStepStyles('step3'); captureIcons(); snapPay();

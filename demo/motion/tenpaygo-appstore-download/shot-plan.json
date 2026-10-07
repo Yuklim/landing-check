@@ -1,0 +1,228 @@
+{
+  "category": "webpage",
+  "category_rationale": "UI-animation intent (tap, type, result reveal, button state) is exactly the webpage category's vocabulary (cursor/tap + click-ripple, spotlight/dim, UI reveal). The webpage module normally requires a captured page; that requirement is waived here because the user explicitly asked us to make the UI ourselves and forbade screenshots and Apple artwork, so the drawn UI is the deliverable rather than an invented copy of a real page. No form category fits (not text-hero, stat, chart, logo or lower-third). Lane: drawn-ui, asset-free.",
+  "duration_s": 8,
+  "fps": 30,
+  "canvas": { "w": 720, "h": 816, "aspect": "720:816" },
+  "canvas_rationale": "The canvas matches the H5 tutorial media box (353x400, object-fit: contain), so the frame fills the box at 353px wide (scale about 0.49). The earlier 720x1560 rendered only about 185px wide (scale 0.256). The frame reads as the top of a phone screen: compact status bar at top, decorative preview cards bleeding off the bottom edge.",
+  "style": "Calm iOS-style product tutorial for a tired traveller: one action at a time. A generic store look drawn in code: white page, compact iOS status bar (9:41), bold 'Search' title, grey rounded search field with a magnifier, blue #007AFF pills and links, and a green TenPayGo icon we draw ourselves. No Apple logo, no App Store wordmark or tab-bar artwork, no screenshots or downloaded images. The only actor is the iOS 'Show Touches' contact disc plus one blue ripple ring per tap. Supporting motif: a spotlight that dims what is not being acted on. The result row is the visual centre of the frame. No camera moves: the result row spans x 36-684 (648px), so any push above 1.11x would crop the icon or the button. Motion is calm (power2/power3 out, gentle back.out on the pill only). The loop is seamless: the frame at t=8.0 is identical to t=0.",
+  "palette": ["#FFFFFF", "#1C1C1E", "#8A8A8E", "#EFEFF0", "#E4E4E8", "#E5E5EA", "#E3E3E8", "#AEAEB2", "#007AFF", "#2DCB7E", "#0EA864", "#F2F2F7", "#D9DCE3"],
+  "font": "Inter",
+  "beats": [0.70, 1.00, 1.96, 2.40, 4.00, 4.62, 6.12, 6.48],
+  "export": "mp4",
+
+  "asset_needs": [],
+
+  "block": "touch-indicator",
+  "customize": {
+    "touch-indicator": {
+      "mount": "twice, as two host clips (per-instance data-variable-values); host box = the full 720x816 stage at 0,0, top z-index, so the disc resolves to its 111px cap (clamp(46px,18cqw,111px)), about 54px on screen",
+      "variables_tap1": { "gesture": "tap", "polarity": "dark", "targetX": 44.44, "targetY": 25.49 },
+      "variables_tap2": { "gesture": "tap", "polarity": "dark", "targetX": 84.17, "targetY": 49.14 },
+      "edit_in_place": "buildTouchIndicator(tl, root, { at: 0, elasticity: 1.5 }) -> contact hold q(0.18)=0.1833s, so the disc stays visible about 0.45s in total",
+      "mount_timing": "tap1 data-start 0.6333 (frame 19), data-duration 0.5 -> touch-down 0.70; tap2 data-start 3.9333 (frame 118), data-duration 0.5 -> touch-down 4.00. Per the component contract, the host puts the target's reaction at mount start + 0.0667s"
+    },
+    "conic-progress-ring": {
+      "mount": "once, as a host clip, data-start 4.46, data-duration 1.90 (ends 6.36). Host box = the ring slot at x 568, y 363, 76x76 (centre 606,401)",
+      "variables": { "progress": 100, "thickness": 21, "label": "" },
+      "tokens": { "--brand": "#007AFF", "--surface": "#E3E3E8" },
+      "edit_in_place": [
+        ".ring-stage width: 100% (not min(68cqw,68cqh)) so the ring fills the 76px slot; ring outer diameter 76, stroke about 8px",
+        "remove the centre count text; add a .ring-stop square, 22x22 with radius 4, fill #007AFF, centred (the iOS download stop glyph)",
+        "replace the single 1.4s power2.out fill with keyframes (mount-local; absolute in content.ring): fade in 0-0.16; fill 0.16->1.66 at 0/16/40/63/86/100% (each segment power1.inOut, which reads as chunked download stalls); hold 1.66-1.74; OUT opacity fade 1.74-1.86 (power2.in). Ring and stop square fade together",
+        "keep the @property --ring-progress registration in the cloned document stylesheet. If the proof snapshot at 5.2s shows no partial fill, fall back to the svg-path-draw ring (measured getTotalLength, rotate -90deg) with the same keyframes"
+      ]
+    },
+    "borrowed_recipes_not_mounted": {
+      "gesture-tap": "press/release constants only (its mount is a self-contained dark phone scene, which doesn't fit here): press scale 0.93 power4.in, release back.out(~1.5), response pulse ring 0.5s power2.out on release",
+      "morph-swap (reshape register) / card-morph-anchor": "pill<->circle morph rides paint/clip only, never width/height tweens. Implement with clipPath inset(0 Xpx round 38px)",
+      "ui-focus-zoom": "considered for a push onto the result row and rejected: at 1.3x the visible width is 554px, but the row needs 648px"
+    }
+  },
+
+  "content": {
+    "lane": "drawn-ui (asset-free; no capture)",
+    "url": null,
+    "capture": "none - every element is drawn in HTML/CSS/inline SVG in the composition",
+    "highlights": [
+      { "region": [36, 160, 648, 96], "label": "search field (tap 1, typing target)" },
+      { "region": [528, 363, 156, 76], "label": "Get -> progress ring -> Open (tap 2, payoff)" }
+    ],
+
+    "shot_brief": "We open on the top of a calm iOS-style App Store Search screen with a bold 'Search' title, an empty grey search field and a short blue Discover list. A fingertip disc touches the field and the Discover list dims. 'TenPayGo' types letter by letter behind a blue caret. Results replace the suggestions: one row at the centre of the frame (green wallet icon, 'TenPayGo', 'Tencent Technology (Shenzhen)', a blue Get pill), with three faint screenshot cards peeking up from the bottom edge. The rest of the page dims, the disc taps Get, a ripple goes out, and the pill condenses into a blue progress ring that fills in uneven download steps. The ring blooms back into an 'Open' pill with one soft pulse and holds. Then everything quietly rewinds to the empty Search screen, so the loop restarts seamlessly. Dominant motif: touch, and the touched control answers.",
+
+    "reuse": {
+      "blueprint": "prompt-type-submit-generate (Adapt; sub-shape C 'instant-result surface', search skin). The query types into a product search field and the store answers with a finished result. Camera locked, per that blueprint's 'frame is LOCKED' guidance.",
+      "components": ["touch-indicator (x2)", "conic-progress-ring (x1)"],
+      "rules": [
+        "discrete-text-sequence (typing schedule as {t,text} states; reverse-search in onUpdate; no per-char tween)",
+        "context-sensitive-cursor (caret driven from tl.time(); solid while focused; deterministic)",
+        "cursor-click-ripple (single-ring variation, ripple from the contact point, rings live in DOM from t=0 at scale/opacity 0, immediateRender:false)",
+        "press-release-spring / physics-press-reaction (Get press dip 0.93 then release)",
+        "spring-pop-entrance (Get pill arrival only, back.out(1.6))",
+        "stat-bars-and-fills (ring fill + clipPath tweens instead of width/height)",
+        "scale-swap-transition / card-morph-anchor (Get->ring->Open state handoff at one shared centre)"
+      ],
+      "catalog_queries": {
+        "tap click ripple": ["ripple-waves (shader transition, no)", "press-ripple (desktop arrow cursor, no)", "gesture-tap (own phone scene; borrow timings)", "touch-indicator (CHOSEN)"],
+        "touch tap mobile": ["touch-indicator (CHOSEN)", "gesture-tap", "soft-blob-touch"],
+        "typing text cursor": ["vfx-text-cursor (no)", "code-typing (1920x1080 code editor block, no)", "typing-indicator (chat dots, no)"],
+        "type text into search field": ["no fitting item -> hand-author via discrete-text-sequence + context-sensitive-cursor"],
+        "circular progress ring fill": ["conic-progress-ring (CHOSEN)", "mk-progress-stat (no)", "star-rating-fill (no)"],
+        "download progress button": ["conic-progress-ring (CHOSEN)", "signup-flow (no)"],
+        "button morph": ["menu-morph", "icon-morph-beat", "morph-swap (borrow reshape recipe)"],
+        "ui card reveal": ["ui-3d-reveal (3D, too loud)", "panel-reveal (height expand, no)"],
+        "list row reveal search result": ["mk-specs-list (no)", "ui-3d-reveal (no)"],
+        "mobile app store install": ["store-badge-lockup (uses App Store badge artwork - excluded by brief)", "gesture-tap"],
+        "camera push zoom to region": ["ui-focus-zoom (geometry does not fit, see customize)"],
+        "phone ui mock app screen": ["ios26-liquid-glass / app-showcase / parallax-device-dive (3D devices, 16:9, off-brief)"],
+        "ios status bar": ["no fitting item -> hand-author"],
+        "seamless loop reset": ["no fitting item -> hand-author (state at 8.0 == state at 0)"]
+      },
+      "hand_authored_gaps": ["the whole drawn store UI (status bar, title, field, Discover list, result row, icon, preview cards)", "typing + caret", "single ripple ring", "spotlight dims", "Get pill press + clipPath morphs + Open pulse", "loop reset"]
+    },
+
+    "layout": {
+      "coordinate_system": "px on the 720x816 stage, origin top-left; boxes are [x, y, w, h]. These are the hero-frame truth. After layout, measure the drawn elements (getBoundingClientRect, stage-local) and anchor the tap discs, ripples and ring slot to the measured centres; never eyeball them.",
+      "margins": "content column x 36-684 (36px sides). The bottom 40px (y 776-816) holds only the decorative preview cards bleeding off the edge. The stage has overflow:hidden; mark the cards with data-layout-allow-overflow.",
+      "background": "#FFFFFF full bleed",
+      "status_bar": {
+        "box": [0, 0, 720, 60],
+        "time": { "text": "9:41", "font": "700 28px Inter", "color": "#1C1C1E", "box": [44, 16, 70, 32], "center_y": 32 },
+        "signal": { "box": [560, 23, 28, 18], "bars": "4 bars, w 5, heights 7/10/14/18, gap 2.7, bottom-aligned, #1C1C1E" },
+        "wifi": { "box": [598, 21, 28, 21], "shape": "3 nested arcs + dot, #1C1C1E" },
+        "battery": { "body": [636, 22, 42, 20], "radius": 6, "stroke": "2.5px #1C1C1E", "fill_inset": "3px, 80% level, #1C1C1E", "cap": [680, 28, 4, 8] }
+      },
+      "title": { "text": "Search", "font": "700 64px Inter", "letter_spacing": "-0.02em", "color": "#1C1C1E", "box": [36, 72, 648, 72], "baseline_y": 124 },
+      "search_field": {
+        "box": [36, 160, 648, 96], "radius": 24, "fill": "#EFEFF0", "pressed_fill": "#E4E4E8", "center_y": 208,
+        "magnifier": { "box": [60, 190, 36, 36], "stroke": "4.5px #8A8A8E", "shape": "circle r12 + 45deg handle 11px, round caps" },
+        "placeholder": { "text": "Apps and Games", "font": "400 46px Inter", "color": "#8A8A8E", "box": [112, 180, 440, 56], "center_y": 208 },
+        "typed_text": { "font": "400 46px Inter", "color": "#1C1C1E", "box": [112, 180, 440, 56], "center_y": 208, "final": "TenPayGo" },
+        "caret": { "size": [4, 52], "radius": 2, "color": "#007AFF", "x": "typed_text right edge + 3px", "center_y": 208 },
+        "clear_button": { "box": [629, 189, 38, 38], "center": [648, 208], "fill": "#AEAEB2", "glyph": "white x, stroke 4px, 15px, round caps" }
+      },
+      "discover_list": {
+        "region": [36, 292, 648, 274],
+        "header": { "text": "Discover", "font": "700 40px Inter", "color": "#1C1C1E", "box": [36, 292, 648, 48] },
+        "rows": [
+          { "text": "translate", "box": [36, 348, 648, 72], "center_y": 384 },
+          { "text": "maps", "box": [36, 420, 648, 72], "center_y": 456 },
+          { "text": "metro", "box": [36, 492, 648, 72], "center_y": 528 }
+        ],
+        "row_style": "text 400 38px Inter #007AFF at x 36, vertically centred in the row; 2px #E5E5EA separator at each row bottom (y 420/492/564) from x 36 to 684"
+      },
+      "result_row": {
+        "region": [36, 316, 648, 170],
+        "icon": {
+          "box": [36, 326, 150, 150], "center": [111, 401], "radius": 34,
+          "fill": "linear-gradient(180deg, #2DCB7E, #0EA864)",
+          "glyph": "drawn white wallet, local coords in the 150 box: back card rect (33,40,66,18) r9 fill rgba(255,255,255,0.75); wallet body rect (33,48,84,62) r14 #FFFFFF; clasp tab rect (88,68,29,22) r11 #0EA864; clasp dot circle (99,79) r5 #FFFFFF. Not Tencent's real icon.",
+          "shadow": "0 0 0 1px rgba(0,0,0,0.06) hairline only"
+        },
+        "title": { "text": "TenPayGo", "font": "700 58px Inter", "color": "#1C1C1E", "box": [210, 333, 302, 64], "rule": "never truncate; measured width about 282px; if it exceeds 302px, step down to 56px (floor 54)" },
+        "subtitle": { "lines": ["Tencent Technology", "(Shenzhen)"], "font": "400 30px Inter", "line_height": 36, "color": "#8A8A8E", "box": [210, 399, 302, 72], "rule": "line 1 measures about 277px; if it exceeds 302px, step down to 29px (floor 28); do not ellipsize" },
+        "get_pill": { "box": [528, 363, 156, 76], "center": [606, 401], "radius": 38, "fill": "#007AFF", "label": "Get", "label_font": "700 40px Inter", "label_color": "#FFFFFF" },
+        "ring_slot": { "box": [568, 363, 76, 76], "center": [606, 401], "outer_diameter": 76, "stroke": 8, "track": "#E3E3E8", "progress": "#007AFF", "stop_square": { "box": [595, 390, 22, 22], "radius": 4, "fill": "#007AFF" } },
+        "open_pill": { "box": [528, 363, 156, 76], "fill": "#007AFF", "label": "Open", "label_font": "700 40px Inter", "label_color": "#FFFFFF", "note": "same element as get_pill; Get/Open are two stacked labels crossfaded by opacity (seek-safe), never innerText swaps" },
+        "circle_clip": "pill clipPath inset(0px 0px round 38px) <-> inset(0px 40px round 38px) = a 76px circle at the same centre"
+      },
+      "preview_cards": {
+        "region_visible": [36, 508, 648, 308],
+        "boxes": [[36, 508, 204, 442], [258, 508, 204, 442], [480, 508, 204, 442]],
+        "visible_part": "only the top 308px of each card (y 508-816); the rest bleeds off the bottom edge on purpose, reading as more content below",
+        "radius": 22, "fill": "#F2F2F7",
+        "content": "abstract, low-contrast placeholders we draw (not screenshots), kept inside the visible top 290px (local coords): card 1 'pay' = top band 0-120 #2DCB7E with a white rounded card 112x70 at (46,26), 3 grey #D9DCE3 lines (h14 r7) at y 150/182/214, a green pill 132x36 at y 252; card 2 'scan' = white 120x120 square at (42,36) with a fixed #D9DCE3 block pattern (3 corner squares 30x30 + 6 small squares), 2 lines at y 190/222; card 3 'done' = #2DCB7E circle d88 centred (102,100) with a white check stroke 8, 3 lines at y 176/208/240. Visual weight stays well below the result row."
+      },
+      "dim_regions": {
+        "s2_field_focus": { "group": "discover_list", "region": [36, 292, 648, 274], "opacity": 0.35 },
+        "s5_row_focus": [
+          { "group": "title + search_field", "region": [36, 72, 648, 184], "opacity": 0.5 },
+          { "group": "preview_cards", "region": [36, 508, 648, 308], "opacity": 0.4 },
+          { "group": "result_row", "region": [36, 316, 648, 170], "opacity": 1, "note": "the lit element; contains tap 2 (606,401) and the ring slot" }
+        ],
+        "alignment_check": "tap 1 (320,208) sits inside the lit search field [36,160,648,96]; the dimmed Discover list starts at y 292, below the field. Tap 2 (606,401) sits inside the lit result row [36,316,648,170] and on the Get pill centre; the dimmed groups (y 72-256 and y 508+) never overlap the row."
+      },
+      "z_order": "background < status bar/title/field/discover/result/cards < spotlight dims (applied as opacity on groups, not an overlay) < ripple rings < touch-indicator mounts (top)"
+    },
+
+    "tap_indicator": {
+      "actor": "touch-indicator component: translucent contact disc d111 (rgba(0,0,0,0.22) fill, 1px rgba(0,0,0,0.45) edge; polarity 'dark' on a light UI)",
+      "path_law": "contact-never-hover: the disc never travels or hovers between taps. Each tap appears in place at its contact point, holds, and fades as it lifts. The 'path' is the ordered list of contact points below.",
+      "path": [
+        { "tap": 1, "target": "search field (over the placeholder, right of the magnifier)", "contact_center": [320, 208], "percent_of_stage": [44.44, 25.49], "mount_start": 0.6333, "touch_down": 0.70, "lift": 0.8833, "gone": 1.0833 },
+        { "tap": 2, "target": "Get pill centre", "contact_center": [606, 401], "percent_of_stage": [84.17, 49.14], "mount_start": 3.9333, "touch_down": 4.00, "lift": 4.1833, "gone": 4.3833 }
+      ],
+      "ripple": "host-authored, one ring per tap (cursor-click-ripple single-ring variation): starts d111 centred on the contact point, border 5px #007AFF, opacity 0.55 -> 0, scale 1 -> 2.0 (max d222, lowered from 2.3 for the shorter frame), 0.55s power2.out, starting at touch-down. Tap 1: 0.70-1.25. Tap 2: 4.00-4.55. In the DOM from t=0 at scale 1, opacity 0, with immediateRender:false."
+    },
+
+    "typing": {
+      "method": "discrete-text-sequence states rendered in one onUpdate via reverse search on tl.time(); the caret is an inline-block right after the text span, so it follows the text end with no measuring",
+      "states": [
+        { "t": 0.00, "text": "" },
+        { "t": 1.00, "text": "T" },
+        { "t": 1.12, "text": "Te" },
+        { "t": 1.24, "text": "Ten" },
+        { "t": 1.42, "text": "TenP" },
+        { "t": 1.54, "text": "TenPa" },
+        { "t": 1.66, "text": "TenPay" },
+        { "t": 1.84, "text": "TenPayG" },
+        { "t": 1.96, "text": "TenPayGo" }
+      ],
+      "rhythm_note": "0.12s per keystroke, plus 0.06s extra before each capital (shift) for a human cadence",
+      "caret": "opacity 1 from 0.72 (field focus) through typing; hidden at 2.30 (submit). Typed text and clear button fade at 7.45-7.62 during the reset; placeholder returns 7.58-7.80"
+    },
+
+    "ring": {
+      "mount_window": [4.46, 6.36],
+      "absolute_keyframes": [
+        { "t": 4.46, "event": "ring + stop square start fading in (opacity 0->1 over 0.16s) as the blue circle fades out" },
+        { "t": 4.62, "progress": 0 },
+        { "t": 4.86, "progress": 16 },
+        { "t": 5.18, "progress": 40 },
+        { "t": 5.50, "progress": 63 },
+        { "t": 5.84, "progress": 86 },
+        { "t": 6.12, "progress": 100 },
+        { "t": 6.20, "event": "ring + stop square fade out over 0.12s (power2.in), ending at 6.32" }
+      ],
+      "segment_ease": "power1.inOut"
+    },
+
+    "scenes": [
+      { "id": "s1-idle", "start": 0.00, "end": 0.70, "what": "Search screen at rest: status bar, title, empty field with placeholder, Discover list (3 rows) at full opacity. Static (loop entry; identical to the frame at 8.0)." },
+      { "id": "s2-focus", "start": 0.70, "end": 1.00, "what": "Tap 1 on the field at (320,208). Field fill dips to #E4E4E8 (0.70-0.78) and recovers (0.78-0.98, power2.out); placeholder fades out 0.70-0.80; caret appears at 0.72; ripple ring 0.70-1.25; spotlight: Discover list [36,292,648,274] fades to 0.35 over 0.70-1.00 (power2.out)." },
+      { "id": "s3-typing", "start": 1.00, "end": 2.30, "what": "'TenPayGo' types per content.typing.states; clear button fades in 1.00-1.10; caret solid; hold on the full word 1.96-2.30." },
+      { "id": "s4-results", "start": 2.30, "end": 3.66, "what": "Submit: caret hides at 2.30; Discover list fades 0.35->0 (2.30-2.50, power1.in). Result row reveals (each fromTo y+32->0, opacity 0->1, 0.45s power3.out): icon at 2.40, title + subtitle at 2.48; Get pill spring-pops at 2.56 (scale 0.85->1, opacity 0->1, 0.45s back.out(1.6)). Preview cards rise at 2.62 / 2.68 / 2.74 (y+40->0, opacity 0->1, 0.5s power3.out). Everything settled by 3.24; read hold until 3.66." },
+      { "id": "s5-get-tap", "start": 3.66, "end": 4.62, "what": "Spotlight shifts to the result row 3.66-3.96 (power2.out): title + field [36,72,648,184] opacity ->0.5, preview cards [36,508,648,308] ->0.4, result row [36,316,648,170] stays 1. Tap 2 touch-down at 4.00 on (606,401): Get pill press scale 1->0.93 (4.00-4.12, power4.in); ripple ring 4.00-4.55. Release at 4.18: 'Get' label opacity ->0 (4.18-4.26); pill scale ->1 (0.28s back.out(1.4)) while clipPath inset(0 0 round 38px) -> inset(0 40px round 38px) (4.18-4.46, power2.inOut) condenses it to a 76px blue circle. 4.46-4.62: blue circle opacity ->0 as the ring mount fades in." },
+      { "id": "s6-download", "start": 4.62, "end": 6.20, "what": "Ring fills 0->100% in uneven download steps (content.ring), with the stop square centred. Full ring holds 6.12-6.20." },
+      { "id": "s7-open", "start": 6.20, "end": 7.30, "what": "Ring + stop fade out 6.20-6.32. The blue circle (still clipped to 40px) fades in 6.20-6.30 and blooms back to the full pill: clipPath -> inset(0 0 round 38px), 6.24-6.48, power2.out. 'Open' label opacity 0->1 (6.36-6.48). One response pulse: a pill-shaped outline (156x76, r38, border 4px #007AFF, centred 606,401) at 6.48, scale 1->1.22 and opacity 0.5->0 over 0.5s (power2.out). Hold on 'Open' 6.48-7.30 (0.82s, fully still)." },
+      { "id": "s8-reset", "start": 7.30, "end": 8.00, "what": "Quiet rewind to the s1 state. Result row + preview cards opacity ->0 (7.30-7.60, power2.in); title + field opacity ->1 (7.30-7.60, power2.inOut); typed text + clear button ->0 (7.45-7.62); placeholder ->1 (7.58-7.80); Discover list 0->1 (7.60-7.95, power2.out). Reset hidden internal state at their own times (pill clip back to full, Get label 1, Open label 0) while the row is invisible, using explicit fromTo/set. Static 7.95-8.00, so frame 239 (7.967s) == frame 0." }
+    ],
+
+    "loop": {
+      "seam": "t=8.0 == t=0 (empty field + placeholder, Discover at opacity 1, result group opacity 0, no disc/ripple). The restart reads as a fresh start because of about 0.75s of combined stillness across the seam (7.95-8.00 + 0.00-0.70).",
+      "invariant": "every tween is a registered timeline fromTo/to with explicit endpoints. No CSS animations, Math.random, Date.now or repeat:-1. The caret and all states derive from tl.time()."
+    },
+
+    "legibility_check": {
+      "display_scale": 0.49,
+      "effective_px_on_screen": { "status time 28": 13.7, "Search title 64": 31.4, "field text 46": 22.5, "Discover header 40": 19.6, "Discover rows 38": 18.6, "result title 58": 28.4, "subtitle 30": 14.7, "Get/Open label 40": 19.6, "icon 150": 73.5, "touch disc 111": 54.4, "ripple at max 222": 108.8 },
+      "targets_met": "result title >= 26 on screen (28.4); Get/Open >= 18 (19.6); subtitle >= 14 (14.7); icon >= 140 canvas (150); sides >= 32 (36); nothing important in y 776-816",
+      "hold_times": { "typed word": "1.96-3.66 (1.7s)", "result row before tap": "about 1.3s", "Open": "0.82s still + visible through the 7.30-7.60 fade" }
+    },
+
+    "poster": { "suggested_time_s": 3.50, "why": "result row + Get pill fully settled, before the spotlight dim; best single still for the <video poster> PNG" },
+
+    "embed_notes": "Canvas 720x816 has the same aspect as the H5 portrait media box (353x400, #tutVid object-fit: contain), so the video fills the box with no letterboxing at about 0.49 scale. h5/app.js only switches the box to 400px tall when videoHeight > videoWidth; 816 > 720, so that branch still fires.",
+
+    "builder_notes": [
+      "Inter only (bundled weights 400 and 700). Inter is the bundled SF-Pro analogue; the 'banned monoculture' guidance targets designed pieces, not an iOS system-UI replica.",
+      "All colours come from the palette tokens in one :root block / palette object. The touch-disc rgba values stay as the component ships them.",
+      "Stage #stage is position:relative; 720x816; overflow:hidden. Elements are positioned to the layout coordinates. Preview cards intentionally bleed off the bottom edge: mark them data-layout-allow-overflow.",
+      "No home indicator: the frame is the top of a phone screen, and a home bar would contradict the bottom crop.",
+      "Morphs ride clipPath / opacity / scale only; never tween width or height.",
+      "Two touch-indicator mounts + one conic-progress-ring mount are sub-composition clips; do not add their timelines to the root timeline (the runtime seeks them).",
+      "Proof snapshot times: 0.0 (idle), 0.75 (tap 1 disc + ripple), 1.60 (mid-typing 'TenPay'), 3.50 (result row / poster), 4.05 (tap 2 on Get), 5.20 (ring about 40%), 6.70 (Open + pulse), 7.70 (mid-reset), 7.966 (should equal 0.0)."
+    ]
+  }
+}

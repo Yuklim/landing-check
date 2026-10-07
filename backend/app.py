@@ -14,6 +14,7 @@ from pydantic import BaseModel
 
 from kb import KnowledgeBase
 from mock import MockTrip
+from rules import PAY_METHODS
 import stuck
 import rules
 
@@ -48,7 +49,7 @@ def test_page():
 @app.get('/health')
 def health():
     # Render 会注入 RENDER_GIT_COMMIT，用来确认线上跑的是哪次提交
-    return {'ok': True, 'build': '2026-10-03b', 'commit': (os.environ.get('RENDER_GIT_COMMIT') or os.environ.get('GIT_COMMIT') or '')[:7] or None,
+    return {'ok': True, 'build': '2026-10-06-tenpaygo', 'commit': (os.environ.get('RENDER_GIT_COMMIT') or os.environ.get('GIT_COMMIT') or '')[:7] or None,
             'kb_scenarios': sorted(kb.scenarios)}
 
 
@@ -147,8 +148,10 @@ def mock_reset():
 
 
 @app.post('/mock/pay-test')
-def mock_pay_test(fail: bool = False):
-    return trip.pay_test(fail=fail)
+def mock_pay_test(fail: bool = False, method: str = 'alipay'):
+    if method not in PAY_METHODS:
+        raise HTTPException(400, 'method must be %s' % ' | '.join(PAY_METHODS))
+    return trip.pay_test(fail=fail, method=method)
 
 
 @app.post('/mock/event')
@@ -208,7 +211,7 @@ class DoneItem(BaseModel):
 
 @app.post('/rules/preflight/done')
 def rules_preflight_done(d: DoneItem):
-    if d.item not in ('esim', 'alipay', 'transfer', 'car', 'permissions', 'pack'):
+    if d.item not in ('esim', 'alipay', 'tenpaygo', 'transfer', 'car', 'permissions', 'pack'):
         raise HTTPException(400, 'unknown item %s' % d.item)
     trip.mark_done(d.item)
     return rules.preflight(_trip_with_done(), trip.done_items)
@@ -226,4 +229,4 @@ def rules_transport(landed_at: Optional[str] = None, bags: Optional[int] = None,
         t['flight']['adults'] = adults
     if landed_at is None and trip.landed_at:
         landed_at = trip.landed_at[11:16]
-    return rules.transport(t, landed_at=landed_at, airport=airport, weather=weather)
+    return rules.transport(t, landed_at=landed_at, airport=airport, weather=weather, paid=rules.verified_methods(t, trip.done_items))

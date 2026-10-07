@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<!--
+  tenpaygo-store - the drawn App Store-style search screen (720x816, 8s).
+  Mounted by ../index.html (host "tenpaygo-store", data-start 0), so every time
+  here is absolute shot time. All UI is drawn in HTML/CSS/inline SVG: no
+  images, no Apple logo, no App Store wordmark/badge, no Tencent icon artwork.
+  Colours: only var(--tpg-*) tokens, defined once in ../index.html :root.
+  Layout: shot-plan.json content.layout boxes ([x,y,w,h] px on the stage).
+  Timeline: one paused GSAP timeline, window.__timelines["tenpaygo-store"].
+  Every tween is a fromTo with explicit endpoints; the earliest tween per
+  element keeps immediateRender (its from-state equals the CSS state), every
+  later one sets immediateRender:false. No callback drives a visual: typing is
+  per-letter display sets generated from TYPE_SEQ, so each frame is a pure
+  function of t on every seek path. Loop: 7.95-8.00 == frame 0.
+  The touch discs and the download ring are registry components mounted by
+  the root; this file owns the target reactions at touch-down 0.70 and 4.00.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>TenPayGo store screen</title>
+  </head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; overflow: hidden; background: var(--tpg-bg); color: var(--tpg-ink); font-family: "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+        #root *, #root *::before, #root *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        .tpg-ink-fill { fill: var(--tpg-ink); }
+        .tpg-ink-stroke { fill: none; stroke: var(--tpg-ink); stroke-width: 3; stroke-linecap: round; }
+
+        /* Status bar [0,0,720,60]: time box [44,16,70,32]; icons x 560-684, y 21-42 */
+        .tpg-status { position: absolute; left: 0; top: 0; width: 720px; height: 60px; }
+        .tpg-status__time { position: absolute; left: 44px; top: 16px; width: 70px; height: 32px; font-size: 28px; font-weight: 700; line-height: 32px; letter-spacing: -0.01em; text-align: center; font-variant-numeric: tabular-nums; }
+        .tpg-status__icons { position: absolute; left: 560px; top: 21px; width: 124px; height: 21px; display: block; overflow: visible; }
+        .tpg-battery-body { fill: none; stroke: var(--tpg-ink); stroke-width: 2.5; }
+
+        /* Title [36,72,648,72] + field [36,160,648,96]: one band, dimmed together */
+        .tpg-top { position: absolute; left: 36px; top: 72px; width: 648px; display: flex; flex-direction: column; gap: 16px; }
+        .tpg-title { height: 72px; font-size: 64px; font-weight: 700; line-height: 72px; letter-spacing: -0.02em; white-space: nowrap; }
+        .tpg-field { position: relative; height: 96px; border-radius: 24px; background: var(--tpg-field); display: flex; align-items: center; padding-left: 24px; }
+        .tpg-field > * { position: relative; z-index: 1; }
+        .tpg-field > .tpg-field__press { position: absolute; inset: 0; z-index: 0; border-radius: 24px; background: var(--tpg-field-pressed); opacity: 0; }
+        .tpg-field__glass { flex: none; display: block; width: 36px; height: 36px; margin-right: 16px; fill: none; stroke: var(--tpg-muted); stroke-width: 4.5; stroke-linecap: round; }
+        .tpg-field__text { flex: none; width: 440px; height: 56px; }
+        .tpg-field__placeholder, .tpg-field__line { position: absolute; left: 0; top: 0; width: 440px; height: 56px; font-size: 46px; font-weight: 400; line-height: 56px; white-space: pre; }
+        .tpg-field__placeholder { color: var(--tpg-muted); }
+        .tpg-field__line { display: flex; align-items: center; color: var(--tpg-ink); }
+        .tpg-field__typed { display: block; height: 56px; line-height: 56px; white-space: pre; }
+        .tpg-ch { display: none; }
+        .tpg-field__caret { display: block; flex: none; width: 4px; height: 52px; margin-left: 3px; border-radius: 2px; background: var(--tpg-blue); opacity: 0; visibility: hidden; }
+        .tpg-field > .tpg-field__clear { position: absolute; right: 17px; top: 29px; width: 38px; height: 38px; opacity: 0; visibility: hidden; }
+        .tpg-field__clear svg { display: block; width: 38px; height: 38px; }
+        .tpg-clear-disc { fill: var(--tpg-clear); }
+        .tpg-clear-x { fill: none; stroke: var(--tpg-on-accent); stroke-width: 4; stroke-linecap: round; }
+
+        /* Discover list [36,292,648,274]: header 48, rows 72 from y 348 */
+        .tpg-discover { position: absolute; left: 36px; top: 292px; width: 648px; }
+        .tpg-discover__head { height: 48px; font-size: 40px; font-weight: 700; line-height: 48px; letter-spacing: -0.01em; }
+        .tpg-discover__rows { margin-top: 8px; }
+        .tpg-discover__row { height: 72px; display: flex; align-items: center; border-bottom: 2px solid var(--tpg-separator); font-size: 38px; font-weight: 400; color: var(--tpg-blue); white-space: nowrap; }
+
+        /* Result row [36,316,648,170]: icon 150 | 24 | text 302 | 16 | pill 156 */
+        .tpg-result { position: absolute; left: 36px; top: 316px; width: 648px; height: 170px; display: flex; align-items: center; }
+        .tpg-icon { flex: none; width: 150px; height: 150px; border-radius: 34px; overflow: hidden; background: linear-gradient(180deg, var(--tpg-green), var(--tpg-green-deep)); box-shadow: 0 0 0 1px var(--tpg-hairline); opacity: 0; visibility: hidden; }
+        .tpg-icon svg { display: block; width: 150px; height: 150px; }
+        .tpg-wallet-back { fill: var(--tpg-wallet-back); }
+        .tpg-wallet-body, .tpg-wallet-dot { fill: var(--tpg-on-accent); }
+        .tpg-wallet-clasp { fill: var(--tpg-green-deep); }
+        .tpg-result__text { flex: none; align-self: flex-start; width: 302px; margin: 17px 16px 0 24px; opacity: 0; visibility: hidden; }
+        .tpg-result__title { height: 64px; margin-bottom: 2px; font-size: 58px; font-weight: 700; line-height: 64px; letter-spacing: -0.02em; white-space: nowrap; }
+        .tpg-result__sub { font-size: 30px; font-weight: 400; line-height: 36px; color: var(--tpg-muted); white-space: nowrap; }
+        .tpg-result__sub span { display: block; }
+        .tpg-pill { flex: none; position: relative; width: 156px; height: 76px; opacity: 0; visibility: hidden; }
+        .tpg-pill__body { position: absolute; inset: 0; border-radius: 38px; background: var(--tpg-blue); clip-path: inset(0px 0px 0px 0px round 38px); }
+        .tpg-pill__label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 700; line-height: 76px; color: var(--tpg-on-accent); white-space: nowrap; }
+        .tpg-pill__label--open { opacity: 0; }
+        .tpg-pill__pulse { position: absolute; inset: 0; border-radius: 38px; border: 4px solid var(--tpg-blue); opacity: 0; pointer-events: none; }
+
+        /* Preview cards: 3 x [204,442] from y 508 (36/258/480), bleeding off the bottom */
+        .tpg-cards { position: absolute; left: 36px; top: 508px; width: 648px; height: 442px; display: flex; gap: 18px; }
+        .tpg-card { position: relative; flex: none; width: 204px; height: 442px; border-radius: 22px; overflow: hidden; background: var(--tpg-card); opacity: 0; visibility: hidden; }
+        .tpg-card > div { position: absolute; }
+        .tpg-c-line { left: 24px; height: 14px; border-radius: 7px; background: var(--tpg-card-line); }
+        .tpg-c1-band { left: 0; top: 0; width: 204px; height: 120px; background: var(--tpg-green); }
+        .tpg-c1-paycard { left: 46px; top: 26px; width: 112px; height: 70px; border-radius: 12px; background: var(--tpg-on-accent); }
+        .tpg-c1-pill { left: 36px; top: 252px; width: 132px; height: 36px; border-radius: 18px; background: var(--tpg-green); }
+        .tpg-c2-code { left: 42px; top: 36px; width: 120px; height: 120px; border-radius: 14px; background: var(--tpg-on-accent); }
+        .tpg-c2-code > i { position: absolute; display: block; background: var(--tpg-card-line); }
+        .tpg-c2-corner { width: 30px; height: 30px; border-radius: 6px; }
+        .tpg-c2-dot { width: 12px; height: 12px; border-radius: 3px; }
+        .tpg-c3-done { left: 58px; top: 56px; width: 88px; height: 88px; border-radius: 50%; background: var(--tpg-green); }
+        .tpg-c3-done svg { display: block; width: 88px; height: 88px; fill: none; stroke: var(--tpg-on-accent); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* Tap ripples: d111 centred on the contact points (320,208) and (606,401) */
+        .tpg-ripple { position: absolute; z-index: 10; width: 111px; height: 111px; border-radius: 50%; border: 5px solid var(--tpg-blue); opacity: 0; pointer-events: none; }
+        #tpg-ripple-1 { left: 264.5px; top: 152.5px; }
+        #tpg-ripple-2 { left: 550.5px; top: 345.5px; }
+      </style>
+
+      <div data-hf-id="hf-y59d" id="root" data-composition-id="tenpaygo-store" data-width="720" data-height="816" data-duration="8">
+        <div data-hf-id="hf-hh3m" id="tpg-status" class="tpg-status">
+          <div data-hf-id="hf-v09z" class="tpg-status__time">9:41</div>
+          <svg data-hf-id="hf-6ovt" class="tpg-status__icons" viewBox="0 0 124 21" aria-hidden="true">
+            <g data-hf-id="hf-um0k" class="tpg-ink-fill">
+              <rect data-hf-id="hf-ab7m" x="0" y="13" width="5" height="7" rx="1.2" />
+              <rect data-hf-id="hf-evt3" x="7.7" y="10" width="5" height="10" rx="1.2" />
+              <rect data-hf-id="hf-g1is" x="15.4" y="6" width="5" height="14" rx="1.2" />
+              <rect data-hf-id="hf-me8y" x="23.1" y="2" width="5" height="18" rx="1.2" />
+            </g>
+            <g data-hf-id="hf-zzgm" transform="translate(38 0)">
+              <path data-hf-id="hf-8vbs" class="tpg-ink-stroke" d="M9.05 14.05 A7 7 0 0 1 18.95 14.05" />
+              <path data-hf-id="hf-2ujf" class="tpg-ink-stroke" d="M5.51 10.51 A12 12 0 0 1 22.49 10.51" />
+              <path data-hf-id="hf-x6pn" class="tpg-ink-stroke" d="M1.98 6.98 A17 17 0 0 1 26.02 6.98" />
+              <circle data-hf-id="hf-5o9h" class="tpg-ink-fill" cx="14" cy="18.6" r="2.4" />
+            </g>
+            <rect data-hf-id="hf-lnne" class="tpg-battery-body" x="77.25" y="2.25" width="39.5" height="17.5" rx="4.8" />
+            <rect data-hf-id="hf-7gv5" class="tpg-ink-fill" x="80" y="5" width="27.2" height="12" rx="2.4" />
+            <rect data-hf-id="hf-em3q" class="tpg-ink-fill" x="120" y="7" width="4" height="8" rx="1.5" />
+          </svg>
+        </div>
+
+        <div data-hf-id="hf-4ams" id="tpg-top" class="tpg-top">
+          <div data-hf-id="hf-0lwa" id="tpg-title" class="tpg-title">Search</div>
+          <div data-hf-id="hf-4nw2" id="tpg-field" class="tpg-field">
+            <div data-hf-id="hf-riuh" id="tpg-field-press" class="tpg-field__press"></div>
+            <svg data-hf-id="hf-1izv" class="tpg-field__glass" viewBox="0 0 36 36" aria-hidden="true">
+              <circle data-hf-id="hf-x0pb" cx="14.5" cy="14.5" r="12" />
+              <line data-hf-id="hf-gwg2" x1="23.2" y1="23.2" x2="31" y2="31" />
+            </svg>
+            <div data-hf-id="hf-u8xr" class="tpg-field__text">
+              <div data-hf-id="hf-t6rs" id="tpg-placeholder" class="tpg-field__placeholder">Apps and Games</div>
+              <div data-hf-id="hf-in78" class="tpg-field__line">
+                <span data-hf-id="hf-bjaz" id="tpg-typed" class="tpg-field__typed"><span data-hf-id="hf-k2ws" class="tpg-ch">T</span><span data-hf-id="hf-dbpb" class="tpg-ch">e</span><span data-hf-id="hf-9qy2" class="tpg-ch">n</span><span data-hf-id="hf-lo4w" class="tpg-ch">P</span><span data-hf-id="hf-ewxf" class="tpg-ch">a</span><span data-hf-id="hf-5dkr" class="tpg-ch">y</span><span data-hf-id="hf-p8w5" class="tpg-ch">G</span><span data-hf-id="hf-9cn1" class="tpg-ch">o</span></span><span data-hf-id="hf-mhl1" id="tpg-caret" class="tpg-field__caret"></span>
+              </div>
+            </div>
+            <div data-hf-id="hf-vzy6" id="tpg-clear" class="tpg-field__clear">
+              <svg data-hf-id="hf-ekei" viewBox="0 0 38 38" aria-hidden="true">
+                <circle data-hf-id="hf-6f5u" class="tpg-clear-disc" cx="19" cy="19" r="19" />
+                <path data-hf-id="hf-u7kx" class="tpg-clear-x" d="M11.5 11.5 L26.5 26.5 M26.5 11.5 L11.5 26.5" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-ayee" id="tpg-discover" class="tpg-discover">
+          <div data-hf-id="hf-8t8u" class="tpg-discover__head">Discover</div>
+          <div data-hf-id="hf-zlk4" class="tpg-discover__rows">
+            <div data-hf-id="hf-gggd" class="tpg-discover__row">translate</div>
+            <div data-hf-id="hf-7sny" class="tpg-discover__row">maps</div>
+            <div data-hf-id="hf-5ftu" class="tpg-discover__row">metro</div>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-ewle" id="tpg-result" class="tpg-result">
+          <!-- our own icon: green rounded square, white wallet glyph -->
+          <div data-hf-id="hf-bfrm" id="tpg-icon" class="tpg-icon">
+            <svg data-hf-id="hf-twb4" viewBox="0 0 150 150" aria-hidden="true">
+              <rect data-hf-id="hf-1lkj" class="tpg-wallet-back" x="33" y="40" width="66" height="18" rx="9" />
+              <rect data-hf-id="hf-358f" class="tpg-wallet-body" x="33" y="48" width="84" height="62" rx="14" />
+              <rect data-hf-id="hf-dc10" class="tpg-wallet-clasp" x="88" y="68" width="29" height="22" rx="11" />
+              <circle data-hf-id="hf-zz1l" class="tpg-wallet-dot" cx="99" cy="79" r="5" />
+            </svg>
+          </div>
+          <div data-hf-id="hf-vku7" id="tpg-result-text" class="tpg-result__text">
+            <div data-hf-id="hf-nx78" class="tpg-result__title">TenPayGo</div>
+            <div data-hf-id="hf-wset" class="tpg-result__sub"><span data-hf-id="hf-ndaw">Tencent Technology</span><span data-hf-id="hf-dtdh">(Shenzhen)</span></div>
+          </div>
+          <div data-hf-id="hf-kjvq" id="tpg-pill" class="tpg-pill">
+            <div data-hf-id="hf-ur6c" id="tpg-pill-pulse" class="tpg-pill__pulse" data-layout-ignore=""></div>
+            <div data-hf-id="hf-rf41" id="tpg-pill-body" class="tpg-pill__body">
+              <span data-hf-id="hf-r39x" id="tpg-lbl-get" class="tpg-pill__label">Get</span>
+              <span data-hf-id="hf-dh5c" id="tpg-lbl-open" class="tpg-pill__label tpg-pill__label--open">Open</span>
+            </div>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-l0cf" id="tpg-cards" class="tpg-cards" data-layout-allow-overflow="true">
+          <div data-hf-id="hf-xs6o" id="tpg-card-1" class="tpg-card">
+            <div data-hf-id="hf-lmkk" class="tpg-c1-band"></div>
+            <div data-hf-id="hf-totz" class="tpg-c1-paycard"></div>
+            <div data-hf-id="hf-0zhi" class="tpg-c-line" style="top: 150px; width: 156px"></div>
+            <div data-hf-id="hf-m9pc" class="tpg-c-line" style="top: 182px; width: 128px"></div>
+            <div data-hf-id="hf-redm" class="tpg-c-line" style="top: 214px; width: 96px"></div>
+            <div data-hf-id="hf-3afs" class="tpg-c1-pill"></div>
+          </div>
+          <div data-hf-id="hf-6g2j" id="tpg-card-2" class="tpg-card">
+            <div data-hf-id="hf-bf2v" class="tpg-c2-code">
+              <i data-hf-id="hf-hgdq" class="tpg-c2-corner" style="left: 10px; top: 10px"></i><i data-hf-id="hf-kswn" class="tpg-c2-corner" style="left: 80px; top: 10px"></i><i data-hf-id="hf-2v2h" class="tpg-c2-corner" style="left: 10px; top: 80px"></i><i data-hf-id="hf-40g6" class="tpg-c2-dot" style="left: 52px; top: 14px"></i><i data-hf-id="hf-72gz" class="tpg-c2-dot" style="left: 54px; top: 48px"></i><i data-hf-id="hf-ctmn" class="tpg-c2-dot" style="left: 84px; top: 52px"></i><i data-hf-id="hf-lob5" class="tpg-c2-dot" style="left: 46px; top: 74px"></i><i data-hf-id="hf-qxe8" class="tpg-c2-dot" style="left: 68px; top: 88px"></i><i data-hf-id="hf-6jmc" class="tpg-c2-dot" style="left: 94px; top: 94px"></i>
+            </div>
+            <div data-hf-id="hf-ukqa" class="tpg-c-line" style="top: 190px; width: 156px"></div>
+            <div data-hf-id="hf-8txq" class="tpg-c-line" style="top: 222px; width: 112px"></div>
+          </div>
+          <div data-hf-id="hf-2hyi" id="tpg-card-3" class="tpg-card">
+            <div data-hf-id="hf-pzq3" class="tpg-c3-done"><svg data-hf-id="hf-xa1g" viewBox="0 0 88 88" aria-hidden="true"><path data-hf-id="hf-gby4" d="M26 46 L39 59 L63 33" /></svg></div>
+            <div data-hf-id="hf-dj0a" class="tpg-c-line" style="top: 176px; width: 156px"></div>
+            <div data-hf-id="hf-ooq3" class="tpg-c-line" style="top: 208px; width: 140px"></div>
+            <div data-hf-id="hf-9kaf" class="tpg-c-line" style="top: 240px; width: 104px"></div>
+          </div>
+        </div>
+
+        <div data-hf-id="hf-ozhd" id="tpg-ripple-1" class="tpg-ripple" data-layout-ignore=""></div>
+        <div data-hf-id="hf-sxle" id="tpg-ripple-2" class="tpg-ripple" data-layout-ignore=""></div>
+      </div>
+
+      <script>
+        (function () {
+          "use strict";
+          var $ = function (id) { return document.getElementById(id); };
+          var el = {
+            top: $("tpg-top"), press: $("tpg-field-press"), placeholder: $("tpg-placeholder"), typed: $("tpg-typed"),
+            caret: $("tpg-caret"), clear: $("tpg-clear"), discover: $("tpg-discover"), result: $("tpg-result"),
+            icon: $("tpg-icon"), text: $("tpg-result-text"), pill: $("tpg-pill"), pillBody: $("tpg-pill-body"),
+            lblGet: $("tpg-lbl-get"), lblOpen: $("tpg-lbl-open"), pulse: $("tpg-pill-pulse"), cards: $("tpg-cards"),
+            cardList: [$("tpg-card-1"), $("tpg-card-2"), $("tpg-card-3")], ripple1: $("tpg-ripple-1"), ripple2: $("tpg-ripple-2"),
+          };
+          var letters = Array.prototype.slice.call(el.typed.querySelectorAll(".tpg-ch"));
+          // shot-plan content.typing.states: 0.12s per key, +0.06s before each capital; cleared at the reset (7.62).
+          var TYPE_SEQ = [
+            { t: 0.0, text: "" }, { t: 1.0, text: "T" }, { t: 1.12, text: "Te" }, { t: 1.24, text: "Ten" },
+            { t: 1.42, text: "TenP" }, { t: 1.54, text: "TenPa" }, { t: 1.66, text: "TenPay" },
+            { t: 1.84, text: "TenPayG" }, { t: 1.96, text: "TenPayGo" }, { t: 7.62, text: "" },
+          ];
+          var CLIP_PILL = "inset(0px 0px 0px 0px round 38px)"; // 156x76 pill
+          var CLIP_CIRCLE = "inset(0px 40px 0px 40px round 38px)"; // 76px circle, same centre (606,401)
+          var NOW = 0.001; // instant state change
+          var R = 7.62; // hidden-state reset while the row and cards are invisible
+          var IRF = { immediateRender: false };
+          var at = function (vars) { return Object.assign({}, vars, IRF); };
+          var tl = gsap.timeline({ paused: true });
+
+          // s2-focus 0.70-1.00: tap 1 on the field; Discover steps back (spotlight)
+          tl.fromTo(el.press, { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "power1.out" }, 0.7);
+          tl.fromTo(el.press, { opacity: 1 }, at({ opacity: 0, duration: 0.2, ease: "power2.out" }), 0.78);
+          tl.fromTo(el.placeholder, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.1, ease: "power1.in" }, 0.7);
+          tl.fromTo(el.caret, { autoAlpha: 0 }, at({ autoAlpha: 1, duration: NOW, ease: "none" }), 0.72);
+          tl.fromTo(el.ripple1, { scale: 1, opacity: 0.55 }, at({ scale: 2.0, opacity: 0, duration: 0.55, ease: "power2.out" }), 0.7);
+          tl.fromTo(el.discover, { autoAlpha: 1 }, { autoAlpha: 0.35, duration: 0.3, ease: "power2.out" }, 0.7);
+
+          // s3-typing 1.00-2.30: each TYPE_SEQ state shows/hides exactly the letters that changed at its t
+          var finalWord = letters.map(function (n) { return n.textContent; }).join("");
+          TYPE_SEQ.forEach(function (state, i) {
+            if (finalWord.indexOf(state.text) !== 0) throw new Error("[tenpaygo-store] typing state is not a prefix of " + finalWord);
+            if (i === 0) return;
+            var prev = TYPE_SEQ[i - 1].text.length, cur = state.text.length;
+            for (var k = Math.min(prev, cur); k < Math.max(prev, cur); k += 1) {
+              tl.set(letters[k], { display: cur > prev ? "inline" : "none" }, state.t);
+            }
+          });
+          tl.fromTo(el.clear, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.1, ease: "power1.out" }, 1.0);
+
+          // s4-results 2.30-3.66: submit, suggestions give way, result row + cards arrive
+          tl.fromTo(el.caret, { autoAlpha: 1 }, at({ autoAlpha: 0, duration: NOW, ease: "none" }), 2.3);
+          tl.fromTo(el.discover, { autoAlpha: 0.35 }, at({ autoAlpha: 0, duration: 0.2, ease: "power1.in" }), 2.3);
+          tl.fromTo(el.icon, { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: "power3.out" }, 2.4);
+          tl.fromTo(el.text, { autoAlpha: 0, y: 32 }, { autoAlpha: 1, y: 0, duration: 0.45, ease: "power3.out" }, 2.48);
+          tl.fromTo(el.pill, { autoAlpha: 0, scale: 0.85 }, { autoAlpha: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 2.56);
+          tl.fromTo(el.cardList, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power3.out", stagger: 0.06 }, 2.62);
+
+          // s5-get-tap 3.66-4.62: spotlight on the row; tap 2 at 4.00; Get condenses into a circle
+          tl.fromTo(el.top, { opacity: 1 }, { opacity: 0.5, duration: 0.3, ease: "power2.out" }, 3.66);
+          tl.fromTo(el.cards, { autoAlpha: 1 }, { autoAlpha: 0.4, duration: 0.3, ease: "power2.out" }, 3.66);
+          tl.fromTo(el.pill, { scale: 1 }, at({ scale: 0.93, duration: 0.12, ease: "power4.in" }), 4.0);
+          tl.fromTo(el.ripple2, { scale: 1, opacity: 0.55 }, at({ scale: 2.0, opacity: 0, duration: 0.55, ease: "power2.out" }), 4.0);
+          tl.fromTo(el.pill, { scale: 0.93 }, at({ scale: 1, duration: 0.28, ease: "back.out(1.4)" }), 4.18);
+          tl.fromTo(el.lblGet, { opacity: 1 }, { opacity: 0, duration: 0.08, ease: "power1.in" }, 4.18);
+          tl.fromTo(el.pillBody, { clipPath: CLIP_PILL }, { clipPath: CLIP_CIRCLE, duration: 0.28, ease: "power2.inOut" }, 4.18);
+          tl.fromTo(el.pill, { autoAlpha: 1 }, at({ autoAlpha: 0, duration: 0.16, ease: "power1.inOut" }), 4.46); // ring mount fades in 4.46-4.62
+
+          // s6-download 4.62-6.20: conic-progress-ring mount (root index.html)
+
+          // s7-open 6.20-7.30: circle blooms back into the pill, "Open", one pulse, still hold 6.48-7.30
+          tl.fromTo(el.pill, { autoAlpha: 0 }, at({ autoAlpha: 1, duration: 0.1, ease: "power1.out" }), 6.2);
+          tl.fromTo(el.pillBody, { clipPath: CLIP_CIRCLE }, at({ clipPath: CLIP_PILL, duration: 0.24, ease: "power2.out" }), 6.24);
+          tl.fromTo(el.lblOpen, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "power1.out" }, 6.36);
+          tl.fromTo(el.pulse, { scale: 1, opacity: 0.5 }, at({ scale: 1.22, opacity: 0, duration: 0.5, ease: "power2.out" }), 6.48);
+
+          // s8-reset 7.30-8.00: quiet rewind to the s1 frame
+          tl.fromTo(el.lblOpen, { opacity: 1 }, at({ opacity: 0, duration: 0.1, ease: "power1.in" }), 7.3); // white label leaves first
+          tl.fromTo(el.result, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.3, ease: "power2.in" }, 7.3);
+          tl.fromTo(el.cards, { autoAlpha: 0.4 }, at({ autoAlpha: 0, duration: 0.3, ease: "power2.in" }), 7.3);
+          tl.fromTo(el.top, { opacity: 0.5 }, at({ opacity: 1, duration: 0.3, ease: "power2.inOut" }), 7.3);
+          tl.fromTo(el.typed, { opacity: 1 }, { opacity: 0, duration: 0.17, ease: "power1.in" }, 7.45);
+          tl.fromTo(el.clear, { autoAlpha: 1 }, at({ autoAlpha: 0, duration: 0.17, ease: "power1.in" }), 7.45);
+          tl.fromTo(el.placeholder, { autoAlpha: 0 }, at({ autoAlpha: 1, duration: 0.22, ease: "power2.out" }), R); // plan 7.58: starts once the typed word is gone (no double text)
+          tl.fromTo(el.discover, { autoAlpha: 0 }, at({ autoAlpha: 1, duration: 0.35, ease: "power2.out" }), 7.6);
+          // hidden internal state back to its t=0 values (letters are cleared by TYPE_SEQ at R)
+          tl.fromTo([el.icon, el.text], { autoAlpha: 1, y: 0 }, at({ autoAlpha: 0, y: 32, duration: NOW, ease: "none" }), R);
+          tl.fromTo(el.pill, { autoAlpha: 1, scale: 1 }, at({ autoAlpha: 0, scale: 0.85, duration: NOW, ease: "none" }), R);
+          tl.fromTo(el.lblGet, { opacity: 0 }, at({ opacity: 1, duration: NOW, ease: "none" }), R);
+          tl.fromTo(el.cardList, { autoAlpha: 1, y: 0 }, at({ autoAlpha: 0, y: 40, duration: NOW, ease: "none" }), R);
+          tl.fromTo(el.result, { autoAlpha: 0 }, at({ autoAlpha: 1, duration: NOW, ease: "none" }), R);
+          tl.fromTo(el.cards, { autoAlpha: 0 }, at({ autoAlpha: 1, duration: NOW, ease: "none" }), R);
+          tl.fromTo(el.typed, { opacity: 0 }, at({ opacity: 1, duration: NOW, ease: "none" }), R);
+
+          window.__timelines["tenpaygo-store"] = tl;
+          tl.seek(0);
+        })();
+      </script>
+    </template>
+  </body>
+</html>

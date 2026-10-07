@@ -99,6 +99,23 @@ SOURCES = {
         'https://www.chinbound.com/blog/didi-foreigners-china/',
         'https://gochinaquest.com/how-to-use-didi-in-china-as-a-foreigner/',
     ],
+    # TenPayGo（2026-09-24 正式发布）：官方协议、发布新闻、上线后的指南与评测
+    'tenpaygo': [
+        'https://gtimg.wechatpay.cn/resource/xres/wego/account/TenPayGo%E6%94%AF%E4%BB%98%E7%94%A8%E6%88%B7%E6%9C%8D%E5%8A%A1%E5%8D%8F%E8%AE%AE-20260611-EN.html',
+        'https://www.tenpaygo.com/',
+        'https://english.news.cn/20260924/75da81fdbcfe47869f85d3e03b5cfd7a/c.html',
+        'https://m.21jingji.com/article/20260924/herald/b1f1a3d5c3fa5c037960065a15c2fb15.html',
+        'https://www.sohu.com/a/1080344858_121019331',
+        'https://www.hkcd.com/hkcdweb/content/2026/09/24/content_8776909.html',
+        'https://thepaypers.com/payments/news/tencent-launches-tenpaygo-payment-app-for-foreign-visitors-to-china',
+        'https://olachina.org/tenpaygo',
+        'https://tripchina.me/tenpaygo-payment-guide/',
+        'https://www.payinchinaguide.com/blog/tenpaygo-tencent-app-for-foreigners',
+        'https://beyond-shenzhen.cn/en/blog/tenpaygo-app/',
+        'https://www.jiangmitravel.com/guide/tenpaygo-for-china-travel-what-international-visitors-should-know/',
+        'https://memeburn.com/tenpaygo-why-wechat-built-a-separate-payment-app-for-tourists-in-china/',
+        'https://cntravelplus.com/blog/tencent-tenpaygo-app-2026-how-foreign-tourists-pay-in-china-_20260624_EN.html',
+    ],
 }
 
 ROOT_SELECTORS = ['article', 'main', '[role=main]', '#main-content', '#content', '.entry-content', '.post-content',
@@ -152,12 +169,12 @@ def run(source, urls):
         fm = '---\ntitle: "%s"\nsource: %s\npublished: %s\nmodified: %s\nfetched: %s\nsite: %s\n---\n\n' % (
             title.replace('"', "'"), url, pub, mod, datetime.date.today().isoformat(), source)
         name = slug(url) + '.md'
-        open(os.path.join(out, name), 'w', encoding='utf-8').write(fm + '# ' + title + '\n\n' + md + '\n')
+        open(os.path.join(out, name), 'w', encoding='utf-8', newline='\n').write(fm + '# ' + title + '\n\n' + md + '\n')
         heads = re.findall(r'^#{2,3} (.+)$', md, re.M)
         index[name] = {'title': title, 'url': url, 'published': pub, 'modified': mod, 'chars': len(md), 'headings': heads[:30]}
         print('%6d chars  %-10s  %s' % (len(md), (mod or pub or '')[:10], title[:70]))
         time.sleep(0.6)
-    json.dump(index, open(ip, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    json.dump(index, open(ip, 'w', encoding='utf-8', newline='\n'), ensure_ascii=False, indent=1)
 
 
 if __name__ == '__main__':

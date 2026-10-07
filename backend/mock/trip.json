@@ -28,6 +28,7 @@
   "transfer_booked": false,
   "car_rental_booked": false,
   "esim": {"bought": false, "provider": "Trip.com eSIM", "price_usd": 4.9},
+  "payment_apps": {"alipay": {"installed": true}, "tenpaygo": {"installed": false}},
   "offline_pack": {"downloaded": true, "airport": "PVG", "size_mb": 1.8, "date": "2026-10-11"},
   "permissions": {"location": "always", "notifications": true},
   "passport": {"valid_until": "2031-03-01"}
