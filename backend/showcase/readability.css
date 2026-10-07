@@ -56,7 +56,7 @@
 .guide-source-label, .guide-source-author { display: block; font-size: 10px; line-height: 1.6; color: var(--muted); overflow-wrap: anywhere; }
 .guide-source strong { display: block; margin: 4px 0; font-size: 12px; line-height: 1.8; }
 .guide-source-arrow { color: var(--blue); }
-.source-context, .source-verification { font-size: 11px; line-height: 1.8; color: var(--muted); margin-top: 10px; }
+.source-story { font-size: 14px; line-height: 1.9; color: var(--muted); margin: 16px 0 24px; }
 .validation-note { margin-top: 17px; }
 @media (max-width: 600px) {
   .guide-sources { grid-template-columns: 1fr; }

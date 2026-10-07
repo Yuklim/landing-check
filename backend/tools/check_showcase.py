@@ -55,17 +55,19 @@ def main():
         page.locator('[data-evidence="Y11"]').click()
         assert page.locator('#evidenceDialog').is_visible()
         assert "we couldn't buy the water" in page.locator('#dialogContent blockquote').inner_text()
-        assert '自行弄清' in page.locator('#dialogContent').inner_text()
-        assert '视频发布 2026-03-05' in page.locator('.source-meta').inner_text()
-        assert '视频日期不是留言日期' in page.locator('.source-verification').inner_text()
+        assert '后来自行解决' in page.locator('.source-story').inner_text()
+        assert page.locator('#dialogContent h3').count() == 0
+        assert page.locator('.source-verification').count() == 0
+        assert '视频发布' not in page.locator('#dialogContent').inner_text()
+        assert '2026-10-07' not in page.locator('#dialogContent').inner_text()
         assert page.locator('.dialog-source').get_attribute('href').endswith('lc=Ugy8juSoi6ePoa6IJfx4AaABAg')
-        page.screenshot(path=str(output / 'source-detail.png'))
+        page.screenshot(path=str(output / 'source-detail.png'), animations='disabled')
         page.keyboard.press('Escape')
         assert not page.locator('#evidenceDialog').is_visible()
         assert 'modal-open' not in (page.locator('html').get_attribute('class') or '')
         page.locator('[data-evidence="I01"]').click()
         assert '创作者攻略' in page.locator('.source-meta').inner_text()
-        assert '不是游客求助' in page.locator('#dialogContent').inner_text()
+        assert '旅行创作者' in page.locator('.source-story').inner_text()
         assert page.locator('.dialog-source').get_attribute('href') == 'https://www.instagram.com/p/DdJdnktiHrG/'
         page.keyboard.press('Escape')
         for topic in ['prep', 'payment', 'connectivity', 'transport', 'all']:
@@ -90,12 +92,13 @@ def main():
         assert not page.locator('[data-i18n]').evaluate_all('(nodes) => nodes.some(n => /[\u4e00-\u9fff]/.test(n.textContent))')
         assert video.evaluate('(v) => [...v.textTracks].some(t => t.language === "en" && t.mode === "showing")')
         page.locator('[data-evidence="Y01"]').click()
-        assert 'The proposed product response' in page.locator('#dialogContent').inner_text()
+        assert page.locator('#dialogContent h3').count() == 0
+        assert page.locator('.source-story').count() == 1
         assert not page.locator('#dialogContent').evaluate('(n) => /[\u4e00-\u9fff]/.test(n.textContent)')
         page.keyboard.press('Escape')
         page.locator('[data-evidence="I02"]').click()
         assert 'Creator guide' in page.locator('.source-meta').inner_text()
-        assert 'not presented as a traveler' in page.locator('#dialogContent').inner_text()
+        assert 'Travel account' in page.locator('.source-story').inner_text()
         page.keyboard.press('Escape')
         page.locator('#openArchive').click()
         source_ids = page.locator('[data-archive-evidence]').evaluate_all('(nodes) => nodes.map(n => n.dataset.archiveEvidence)')
