@@ -36,7 +36,7 @@
     collaborationKicker:'ONE CONCRETE ITERATION',collaborationTitle:'Two payment methods. One preparation task.',collaborationBody:'Alipay and TenPayGo initially occupied separate rows. Feedback brought them into one Payment in China section: verifying either method marks the task ready, while the other remains a backup. AI helped synchronize the state summary, interface copy and tests; human feedback shaped the final product expression.',collaborationExperience:'AI can help coordinate changes across files; its output still needs review. Shared error messages, stale success copy after payment failure, and unnecessary repeat-verification prompts were corrected during review and covered by regression checks.',collaborationCommit:'View the iteration commit',collaborationReview:'View the review and fixes',
     challengesTitle:'The hard part starts when the happy path ends.',highlightsTitle:'Put help inside the step that needs it.',highlightsDescription:'Focus on arrival tasks, making existing tools easier to use when they matter.',
     validationNote:'Next: compare real task completion, time and requests for help against existing guides and support.',
-    learnedTitle:'Design for uncertainty.',nextTitle:'From a working demo to real-world help.',nextDescription:'Improve reliability, then connect production capabilities. Give each step a clear validation goal.',ctaTitle:'Start with your first step after landing.',footerNote:'Trip Hackathon 2026 · An exploration in inbound travel',viewSource:'View source code',
+    learnedTitle:'Design for uncertainty.',nextTitle:'From a working demo to real-world help.',nextDescription:'Keep learning from real cases, improve offline access and explore connections with trip, payment and support services.',ctaTitle:'Start with your first step after landing.',footerNote:'Trip Hackathon 2026 · An exploration in inbound travel',viewSource:'View source code',
     altPreflight:'Preflight preparation checklist screen',altLanding:'First arrival step: get online',altDriver:'Chinese hotel address card for a driver'
   };
   const originalText = new Map();
@@ -126,14 +126,16 @@
   ];
   const roadmap = [
     [pair('完善基础体验','IMPROVE THE BASE'),[
-      [pair('离线落地卡与多语言教程','Offline arrival cards and multilingual guides'),pair('实现缓存与预翻译，让关键地址和操作在弱网时仍可阅读。','Add caching and reviewed translations so key addresses and steps remain readable with poor connectivity.')],
+      [pair('离线落地卡与多语言教程','Offline arrival cards and multilingual guides'),pair('完善目前缺少的缓存与预翻译：行前下载酒店地址和已核验教程，按语言人工复核，让弱网时仍能阅读。','Add the missing caching and pretranslated guides: download hotel addresses and verified steps before departure, review translations and keep them readable with poor connectivity.')],
       [pair('目标用户任务测试','Target-user task testing'),pair('比较现有攻略与原型的完成率、耗时、错误判断和求助次数；目前尚无对照实验结果。','Compare guides and the prototype on completion, time, errors and requests for help. No controlled results are available yet.')]
     ]],
     [pair('需要平台接入','CONNECT PLATFORMS'),[
-      [pair('真实支付与行程联动','Real payments and trip context'),pair('接入交易结果、航班和酒店信息；需要合作接口、用户授权，并确认境外验证的适用范围。','Connect transaction results, flights and hotels with partner APIs and user authorization; establish the scope of overseas verification.')],
-      [pair('原生 App 能力','Native app capabilities'),pair('完善网络状态判断、通知和跨 App 引导，需要原生集成和相应系统权限。','Improve connectivity detection, notifications and cross-app guidance through native integration and system permissions.')]
+      [pair('真实行程与到达提醒','Real trip context and arrival reminders'),pair('用获授权的行程只读接口和航班状态更新替代模拟数据，读取到达机场、时间与酒店中文地址；落地后生成对应的联网、支付和到酒店指引。具体接入范围需与平台确认。','Replace mock data with authorized read-only trip access and flight-status updates for the arrival airport, time and hotel address in Chinese; prepare the relevant data, payment and hotel steps after landing. The access scope needs agreement with the platform.')],
+      [pair('真实支付验证','Real payment verification'),pair('申请合作方测试交易、退款和结果回调能力，让用户在官方支付界面确认，再根据返回结果更新就绪状态或提供失败指引。境外验证若不受支持，则行前检查准备情况、落地后再验证。','Request partner support for test transactions, refunds and result callbacks. Travelers confirm in the official payment interface; the result updates readiness or opens failure guidance. If overseas testing is unsupported, check preparation before departure and verify after landing.')],
+      [pair('App 内提醒与人工接力','In-app reminders and human support'),pair('通过 Trip.com 原生集成、通知通道和客服转接补齐当前演示：用户开启通知后提醒下一步；需要人工帮助时，经确认把本次问题和已尝试步骤交给客服继续处理。','Extend the demo through Trip.com native integration, notifications and support handoff: prompt the next step when the traveler enables notifications; with their confirmation, pass the current issue and attempted steps to support.')]
     ]],
     [pair('逐步扩展','EXPAND CAREFULLY'),[
+      [pair('“I’m stuck” · 更多案例与多模态','“I’m stuck” · More cases and multimodal help'),pair('继续收集公开求助和自愿提供的真实案例，核对解决过程后补入知识库。在已有截图与文字识别上，逐步支持现场照片和语音描述，经确认问题后给出步骤；不确定时追问或转人工。相机、麦克风按需授权，案例复用另征同意。','Gather public questions and volunteered real cases, verify their resolutions and extend the knowledge base. Build on screenshot and text classification with photos of the surroundings and spoken descriptions; confirm the issue, then offer steps. Ask or hand off when uncertain. Request camera or microphone access when needed, with separate consent to reuse submissions.')],
       [pair('更多机场与失败场景','More airports and failure cases'),pair('沿用条目和教程结构扩充覆盖，同时建立机场指引更新与事实复核流程。','Extend coverage with the entry and tutorial structure, supported by an update and fact-checking process.')]
     ]]
   ];

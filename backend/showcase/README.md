@@ -32,12 +32,15 @@ Render 官方参考：[Monorepo Support](https://render.com/docs/monorepo-suppor
 - 原型入口：修改同文件的 `demoUrl`。目前保留仓库 README 的 GitHub Pages + Render API 链接。
 - 需求卡片：修改 `evidence.js`。弹窗只显示来源账号、原文短摘录、简短情境和原帖链接；已知后续并入情境。Instagram 攻略单独标识，不展示票分或核对日期。
 - 双语：固定文案中文在 `index.html`，英文在 `app.js` 的 `english`；交互区文案使用同文件中的中英配对数组。
+- 未来规划：`app.js` 的 `roadmap` 区分当前缺口、拟申请能力和接入后的流程。“I’m stuck” 保留为一项后续改进，截图与文字识别为已有能力，现场拍照和语音为计划扩展。行程只读、航班更新、交易/退款回调、App 通知和客服接力均是待合作确认的能力，不代表已获得平台权限。
 - 研究文档：`research/demand-review-2026-10-07.md` 与同名 JSON 保存详细需求判断、日期、核对状态和来源边界；旧文档保留作历史资料。
 - 图片：`assets/` 使用项目已有设计稿。界面原图为英文，语言切换翻译页面文案和图片说明，不重绘截图。
 
 视频区已接入约 38 秒的真实原型操作录屏，包含中英 WebVTT 字幕，并明确说明支付、航班和行程数据为模拟。重新录制时，在当前 `main` 启动本地后端，再执行 `python backend/tools/record_showcase_demo.py`（需要 Playwright、Chrome 和 ffmpeg）。
 
 协作部分依据现有 Git 提交记录和本页实际制作过程，展示支付板块收敛的具体迭代；不虚构团队成员、分工或个人感想。
+
+多模态输入的权限设计参考 [MDN：getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia)；相机/麦克风在用户主动使用时申请，具体嵌入还需宿主 App 支持。已有截图上传使用用户主动选取的文件，参考 [MDN：File API](https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications)，不等同于后台读取相册。案例收集、脱敏核对和取得样本复用同意仍是后续工作，不宣称已完成。
 
 ## 验证
 
