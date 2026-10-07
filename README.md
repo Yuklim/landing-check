@@ -2,7 +2,7 @@
 
 Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 创新」
 
-在 Trip.com App 内新增「落地检查」：外国散客落地中国机场那一刻，先检测自己的数据能否上网，再按顺序解决上网、支付、到酒店三件事，一次只给一个任务。支付在起飞前用一笔 1 元真实交易验证，支付宝或 TenPayGo 任一个通过即可，接机和租车在起飞前预订。卡住了拍一张截图，AI 认出场景，答案来自人工核验的知识库。
+产品方案是在 Trip.com App 内新增「落地检查」：外国散客落地中国机场那一刻，先检测自己的数据能否上网，再按顺序解决上网、支付、到酒店三件事，一次只给一个任务。方案中的支付准备以 1 元交易验证，支付宝或 TenPayGo 任一个通过即可，接机和租车在起飞前预订。卡住了拍一张截图，AI 认出场景，答案来自人工核验的知识库。当前演示版的支付验证、航班和行程使用模拟数据，尚未接入真实扣款或 Trip.com App。
 
 **项目展示页（中英双语）** https://yuklim.github.io/landing-check/
 
@@ -16,7 +16,7 @@ Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 
 | 部分 | 状态 | 说明 |
 |---|---|---|
 | H5 原型，18 屏 | 可用 | 设计稿导出 + 点击绑定，手机浏览器可开，可添加到主屏幕 |
-| 后端接口 | 可用 | FastAPI：知识库、识别、模拟携程数据、规则引擎，79 个测试 + 13 个 H5 端到端测试 |
+| 后端接口 | 可用 | FastAPI：知识库、识别、模拟携程数据、规则引擎，82 个后端测试 + 19 个 H5 端到端测试；最终检查见 `docs/final-review-2026-10-07.md` |
 | TenPayGo 并列支付 | 可用 | 行前检查里一个「Payment in China」板块，支付宝或 TenPayGo 任一个 ¥1 验证即就绪，另一个可作备用；失败页可改用另一种；落地后各页显示已验证的方式。调研、PRD、技术方案、测试报告在 `docs/tenpaygo/` |
 | "我卡住了"识别 | 可用 | DeepSeek `deepseek-flash` 看截图选条目，置信度分档，规则兜底 |
 | 知识库 | 5 个场景 | 支付宝 12、微信 9、滴滴 6、上网 7、TenPayGo 7 共 41 条，含来源和核验日期；资料库 115 篇 + TenPayGo 8 篇 + Reddit 608 帖求助与解答；指南截图 64 张场景命中 94%，Reddit 真实失败截图 75 张场景命中 84%（TenPayGo 场景尚未评测） |
@@ -27,26 +27,32 @@ Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 
 
 ## 快速开始
 
-```bash
-# 后端（会自动读 backend/.env 或 ~/.claude-deepseek.env 里的 DeepSeek 密钥）
-~/Desktop/携程Hackathon/backend/run.sh
+在仓库根目录启动（Windows PowerShell）：
+
+```powershell
+python -m pip install -r backend/requirements.txt
+python -m uvicorn app:app --app-dir backend --host 127.0.0.1 --port 8000
 # 打开 http://127.0.0.1:8000/app/index.html   带后端的 H5
+#      http://127.0.0.1:8000/showcase/        中英双语产品页
 #      http://127.0.0.1:8000/test             识别测试台：拖截图即测
 #      http://127.0.0.1:8000/docs             接口文档
+```
 
-# 停止
-lsof -iTCP:8000 -sTCP:LISTEN -t | xargs kill
+按 Ctrl+C 停止。真实模型使用进程环境变量 `DEEPSEEK_API_KEY`；未设置时保留规则兜底。macOS / Linux 也可运行 `backend/run.sh` 读取本地配置。
 
-# 测试
-cd backend && python3 -m pytest -q tests
+另开终端，仍在仓库根目录运行测试：
 
-# H5 端到端（需要 pip install playwright && python3 -m playwright install chromium）
-cd backend && E2E=1 python3 -m pytest -q tests/test_e2e_h5.py
+```powershell
+python -m pip install playwright
+$env:E2E = '1'
+$env:E2E_CHANNEL = 'chrome'  # 使用本机 Chrome；留空则需先 playwright install chromium
+python -m pytest -q backend/tests
+python backend/tools/check_showcase.py --url http://127.0.0.1:8000/showcase/
 ```
 
 图文教程：打开 `h5/?tutorial=<条目id>&step=<n>` 直接跳到某篇教程（嵌入 App 时按条目深链），或在右上角菜单的教程列表里点；「我卡住了」识别出带配图的条目时，步骤标题可点进图文版。给条目加图见 `知识库/entries/schema.md` 的 media 一节，加完跑一遍校验脚本即导出。
 
-首次运行先装依赖：`pip install -r backend/requirements.txt`，并复制 `backend/.env.example` 为 `.env` 填入 `DEEPSEEK_API_KEY`。
+密钥不写进源码。使用 `backend/run.sh` 时，可复制 `backend/.env.example` 为 `backend/.env`；直接运行 uvicorn 时使用进程环境变量。
 
 ## 目录
 
@@ -115,7 +121,7 @@ cd h5 && python3 build_h5.py
 - 服务根目录 `backend/`，启动命令 `uvicorn app:app --host 0.0.0.0 --port $PORT`，环境变量 `DEEPSEEK_API_KEY`。
 - 免费档 15 分钟无访问会休眠，唤醒约 30 秒。路演前先打开一次。
 - 自动部署靠 Render 的 GitHub App（仓库 Settings → Installed GitHub Apps 里要有 Render）。服务 Root Directory 是 `backend/`，只改 `知识库/` 或文档的提交会被 Render 跳过，不会上线；要么同时改一下 `backend/` 下的文件，要么在 Settings → Build & Deploy → Build Filters 把 `知识库/**` 加进 Included Paths。
-- 推送后确认是否部署成功：打开 `/health`，`commit` 应等于 GitHub 最新提交前 7 位，`kb_scenarios` 应列出 4 个场景。不一致就去 Render 控制台 Events 看部署是否触发或失败；Settings → Build & Deploy 里 Auto-Deploy 要是 On Commit，分支 main；也可以 Manual Deploy → Deploy latest commit。
+- 推送后确认是否部署成功：打开 `/health`，`commit` 应等于 GitHub 最新提交前 7 位，`kb_scenarios` 应列出 5 个场景（含 `tenpaygo`）。不一致就去 Render 控制台 Events 看部署是否触发或失败；Settings → Build & Deploy 里 Auto-Deploy 要是 On Commit，分支 main；也可以 Manual Deploy → Deploy latest commit。
 - 模拟数据在内存里，服务重启或休眠唤醒后归零；页面菜单里的"重置演示数据"同样效果。
 
 ## 下一步

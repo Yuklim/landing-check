@@ -115,7 +115,8 @@ def _payment_summary(pays: dict) -> dict:
     order = list(PAY_METHODS)
     verified = [m for m in order if pays[m]['ok']]
     # 真做过 ¥1 测试的（有 verified_at）排在只被标记完成的前面，再按时间先后
-    primary = min(verified, key=lambda m: (not pays[m].get('verified_at'), pays[m].get('verified_at') or '', order.index(m))) if verified else None
+    primary = min(verified, key=lambda m: (not pays[m].get('verified_at'), pays[m].get('verified_at') or '',
+                                          pays[m].get('verified_order', order.index(m)), order.index(m))) if verified else None
     # H5 行前检查把两种方式合成一个"Payment in China"板块，标题和说明由这里给
     backup = next((m for m in order if m not in verified), None) if verified else None
     if not verified:

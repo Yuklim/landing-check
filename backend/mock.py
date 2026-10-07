@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """模拟携程数据：行程、航班状态、1 元支付验证。全部内存态，重启归零。"""
 import os, json, time, random, threading
+from uuid import uuid4
 from datetime import datetime, timezone, timedelta
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -37,6 +38,7 @@ class MockTrip:
             self.flight_status = 'scheduled'          # scheduled | departed | landed
             self.landed_at = None
             self.payments = {m: {'method': m, 'status': 'not_verified', 'tx': None, 'verified_at': None} for m in PAY_METHODS}
+            self._payment_sequence = 0
             self.done_items = set()
             self.events = []                           # 时间线：landed / online / payment / in_car / arrived
 
@@ -46,7 +48,8 @@ class MockTrip:
     @property
     def payment(self):
         """兼容旧调用方：最先验证成功的那种方式；都没验证时是支付宝。"""
-        ok = sorted((p for p in self.payments.values() if p['status'] == 'verified'), key=lambda p: p['verified_at'])
+        ok = sorted((p for p in self.payments.values() if p['status'] == 'verified'),
+                    key=lambda p: (p['verified_at'], p.get('verified_order', 0)))
         return ok[0] if ok else self.payments['alipay']
 
     # ---------- 行程 ----------
@@ -77,15 +80,22 @@ class MockTrip:
     def pay_test(self, fail: bool = False, delay: float = 1.5, method: str = 'alipay'):
         if method not in PAY_METHODS:
             raise ValueError('unknown payment method %s' % method)
+        with self._lock:
+            if not fail and self.payments[method]['status'] == 'verified':
+                return dict(self.payments[method])
         time.sleep(delay)
         if fail:
             code = random.choice(sorted(PAY_ERRORS[method]))
             hint, entry = PAY_ERRORS[method][code]
             return {'method': method, 'status': 'failed', 'error_code': code, 'hint': hint, 'entry_id': entry}
         with self._lock:
-            tx = 'TRIP%d' % int(time.time())
+            # Concurrent/repeated clicks reuse the first successful test.
+            if self.payments[method]['status'] == 'verified':
+                return dict(self.payments[method])
+            tx = 'TRIP' + uuid4().hex[:16]
+            self._payment_sequence += 1
             p = {'method': method, 'status': 'verified', 'tx': tx, 'verified_at': self.now(), 'amount': 1.00, 'currency': 'CNY',
-                 'refund': 'issued', 'card': 'Visa ••4471'}
+                 'refund': 'issued', 'card': 'Visa ••4471', 'verified_order': self._payment_sequence}
             self.payments[method] = p
             self.done_items.add(method)
             self.events.append({'event': 'payment', 'method': method, 'at': p['verified_at']})

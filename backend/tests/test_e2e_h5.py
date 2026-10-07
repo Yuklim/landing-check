@@ -38,7 +38,7 @@ def base():
 @pytest.fixture(scope='module')
 def browser():
     with playwright_sync.sync_playwright() as p:
-        b = p.chromium.launch()
+        b = p.chromium.launch(channel=os.environ.get('E2E_CHANNEL') or None)
         yield b
         b.close()
 
@@ -282,3 +282,94 @@ def test_step3_flags_alipay_only_routes_after_tenpaygo(page, base):
     c = _client(); c.post('/mock/pay-test?method=tenpaygo'); c.post('/mock/flight/land')
     open_app(page, base, 'step3'); go(page, 'step3')
     page.wait_for_function('() => { const o = document.querySelector(\'.screen[data-route="step3"] .lc-otherways\'); return o && /Needs Alipay/.test(o.textContent); }')
+
+
+def test_browser_back_and_forward_match_the_visible_screen(page, base):
+    open_app(page, base)
+    go(page, 'preflight')
+    go(page, 'step3')
+    page.go_back()
+    page.wait_for_function('location.hash === "#preflight"')
+    assert page.locator('.screen.on').get_attribute('data-route') == 'preflight'
+    page.go_forward()
+    page.wait_for_function('location.hash === "#step3"')
+    assert page.locator('.screen.on').get_attribute('data-route') == 'step3'
+
+
+def test_repeated_payment_clicks_send_one_request(page, base):
+    open_app(page, base, 'preflight')
+    pending = []
+    page.route('**/mock/pay-test?method=tenpaygo', lambda route: pending.append(route))
+    page.evaluate('() => { lcHandle("payretry:tenpaygo"); lcHandle("payretry:tenpaygo"); }')
+    page.wait_for_timeout(150)
+    assert len(pending) == 1
+    pending[0].continue_()
+    wait_text(page, 'payment', 'Result Title', 'Your TenPayGo works in China')
+
+
+def test_payment_timeout_explains_failure_and_allows_retry(page, base):
+    open_app(page, base, 'preflight')
+    page.clock.install()
+    pending = []
+    page.route('**/mock/pay-test?method=tenpaygo', lambda route: pending.append(route))
+    page.evaluate('lcHandle("payretry:tenpaygo")')
+    page.wait_for_timeout(100)
+    page.clock.run_for(15100)
+    wait_text(page, 'payment', 'Chip Label', 'NO_CONNECTION')
+    pending[0].abort()
+    page.unroute('**/mock/pay-test?method=tenpaygo')
+    node(page, 'payment', 'Done Button').click()
+    wait_text(page, 'payment', 'Result Title', 'Your TenPayGo works in China')
+
+
+def upload_test_image(page):
+    import base64
+    png = base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aA1cAAAAASUVORK5CYII=')
+    page.locator('input[type="file"]').set_input_files({'name': 'screen.png', 'mimeType': 'image/png', 'buffer': png})
+
+
+def test_new_recognition_clears_old_steps_and_tutorial_action(page, base):
+    page.goto(base + '/app/index.html?stuck=tenpaygo_setup_before_flight')
+    wait_text(page, 'stuck', 'Steps Title', 'See it step by step')
+    pending = []
+    page.route('**/stuck/classify', lambda route: pending.append(route))
+    upload_test_image(page)
+    wait_text(page, 'stuck', 'Rec Label', 'ANALYSING')
+    assert page.locator('.screen[data-route="stuck"] [data-pencil-name="Step 1"]').is_hidden()
+    assert node(page, 'stuck', 'Steps Title').evaluate('(n) => n.onclick === null')
+    assert text(page, 'stuck', 'Src Text') == ''
+    page.wait_for_timeout(100)
+    pending[0].fulfill(json={'decision': 'unknown', 'mode': 'rules', 'scenario': 'unknown', 'advice': None, 'confidence': 0})
+    wait_text(page, 'stuck', 'Rec Label', 'NOT COVERED')
+    node(page, 'stuck', 'Steps Title').click()
+    assert page.locator('.screen.on').get_attribute('data-route') == 'stuck'
+
+
+def test_failed_candidate_load_keeps_the_choice_and_explains_retry(page, base):
+    open_app(page, base)
+    page.route('**/stuck/classify', lambda route: route.fulfill(json={
+        'decision': 'ask', 'mode': 'rules', 'scenario': 'tenpaygo', 'confidence': 0.5,
+        'candidates': [{'entry_id': 'tenpaygo_payment_declined', 'title': 'Payment declined', 'confidence': 0.5}]}))
+    upload_test_image(page)
+    wait_text(page, 'stuck', 'Steps Title', 'Tap one')
+    page.route('**/kb/entry/tenpaygo_payment_declined?lang=en', lambda route: route.abort())
+    node(page, 'stuck', 'Step 1').click()
+    page.wait_for_function('document.querySelector("#toast").textContent.includes("Could not load")')
+    assert text(page, 'stuck', 'Steps Title') == 'Tap one'
+
+
+def test_old_recognition_response_cannot_replace_the_new_result(page, base):
+    open_app(page, base)
+    pending = []
+    page.route('**/stuck/classify', lambda route: pending.append(route))
+    upload_test_image(page)
+    page.wait_for_timeout(100)
+    upload_test_image(page)
+    page.wait_for_timeout(100)
+    assert len(pending) == 2
+    pending[1].fulfill(json={'decision': 'unknown', 'mode': 'rules', 'scenario': 'unknown', 'advice': None, 'confidence': 0})
+    wait_text(page, 'stuck', 'Rec Label', 'NOT COVERED')
+    entry = _client().get('/kb/entry/tenpaygo_setup_before_flight').json()
+    pending[0].fulfill(json={'decision': 'answer', 'mode': 'model', 'confidence': 0.9, 'entry': entry})
+    page.wait_for_timeout(150)
+    assert text(page, 'stuck', 'Rec Label') == 'NOT COVERED YET'

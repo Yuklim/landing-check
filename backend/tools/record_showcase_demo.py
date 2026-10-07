@@ -1,8 +1,7 @@
 """Record the actual local H5 prototype for the project showcase.
 
 This is an interface recording, not the separate film under demo/film/.
-Use the H5 development version at e6f9b3d (feature/tenpay-go), which has
-the payment chooser. The showcase can be published separately from that H5.
+Use the current main branch, which includes both Alipay and TenPayGo.
 Requires a running local backend, Playwright, Chrome and ffmpeg.
     python backend/tools/record_showcase_demo.py
 """
