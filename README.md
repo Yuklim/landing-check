@@ -4,6 +4,8 @@ Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 
 
 在 Trip.com App 内新增「落地检查」：外国散客落地中国机场那一刻，先检测自己的数据能否上网，再按顺序解决上网、支付、到酒店三件事，一次只给一个任务。支付在起飞前用一笔 1 元真实交易验证，接机和租车在起飞前预订。卡住了拍一张截图，AI 认出场景，答案来自人工核验的知识库。
 
+**项目展示页（中英双语）** https://yuklim.github.io/landing-check/
+
 **在线演示（接 Render 后端，手机可用）** https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com
 **静态版（不依赖后端）** https://yuklim.github.io/landing-check/h5/
 **流程讲解页** `LandingCheck-流程演示.html`（单文件，可直接发人）
