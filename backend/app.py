@@ -29,6 +29,11 @@ _H5 = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), 
 if os.path.isdir(_H5):
     app.mount('/app', StaticFiles(directory=_H5, html=True), name='h5')
 
+# Keep the showcase self-contained under backend/ for the existing Render root.
+_SHOWCASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'showcase')
+if os.path.isdir(_SHOWCASE):
+    app.mount('/showcase', StaticFiles(directory=_SHOWCASE, html=True), name='showcase')
+
 
 @app.get('/')
 def root():

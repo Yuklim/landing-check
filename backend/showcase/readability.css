@@ -1,0 +1,49 @@
+/* Dense layouts still need legible text, especially inside the source cards. */
+.social-card blockquote { font-size: 15px; }
+.social-card-head .platform, .social-card-head .context { font-size: 11px; }
+.social-card .original-excerpt { font-size: 12px; }
+.social-card-bottom { flex-wrap: wrap; gap: 4px 9px; font-size: 11px; }
+.social-category { font-size: 10px; }
+.need-mapping p, .feature-item p, .build-columns p, .compact-steps,
+.challenge-row p, .highlight-card p, .learning-row p { font-size: 14px; }
+.feature-item h3 { font-size: 14px; }
+.feature-grid { column-gap: 22px; }
+.build-columns .small-note, .evidence-foot p, .research-method>div,
+.roadmap-item p, .validation-strip p, .small-note { font-size: 12px; }
+.collaboration-case {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fafcff;
+}
+.collaboration-case p { margin-top: 7px; font-size: 14px; color: var(--muted); }
+.collaboration-case .source-links { font-size: 12px; }
+.screenshot-link {
+  display: block;
+  width: fit-content;
+  margin-top: 11px;
+  color: var(--blue);
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.stage-phone { transition: transform .25s ease, box-shadow .25s ease; }
+.stage-phone:hover { transform: translateY(-3px); box-shadow: 0 17px 30px #18264525; }
+.video-heading { display: flex; justify-content: space-between; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; margin-top: 28px; }
+.video-heading h3 { font-size: 15px; }
+.video-heading>span { font-size: 11px; color: var(--muted); }
+.video-heading+.video-panel { margin-top: 12px; }
+.video-panel video::cue { font-family: var(--font); font-size: 16px; background: rgba(8,18,38,.84); color: white; }
+@media (max-width: 600px) {
+  .social-card blockquote { font-size: 14px; }
+  .social-card .original-excerpt { font-size: 11px; }
+  .social-card-head .platform, .social-card-head .context { font-size: 10px; }
+  .social-card-bottom { font-size: 10px; }
+  .need-mapping p, .feature-item p, .build-columns p, .compact-steps,
+  .challenge-row p, .highlight-card p, .learning-row p, .collaboration-case p { font-size: 13px; }
+  .feature-item h3 { font-size: 13px; }
+  .build-columns .small-note, .evidence-foot p, .research-method>div,
+  .roadmap-item p, .validation-strip p, .small-note { font-size: 11px; }
+  .collaboration-case { padding: 16px; }
+}

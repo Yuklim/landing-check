@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2454ed">
+  <meta name="description" content="Landing Check 为首次来华的自由行游客衔接行前准备、落地联网、支付和前往酒店。查看需求研究、产品原型与技术实现。">
+  <title>Landing Check · 落地中国的第一小时</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="readability.css">
+  <script src="content-config.js" defer></script>
+  <script src="evidence.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">跳到正文</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Landing Check"><span class="brand-symbol" aria-hidden="true">L<span>✓</span></span>Landing Check<span class="brand-edition">PROJECT / 2026</span></a>
+    <nav class="header-nav" aria-label="主导航" data-aria-key="navigation"><a href="#needs" data-i18n="navResearch">需求研究</a><a href="#product" data-i18n="navProduct">产品体验</a><a href="#build" data-i18n="navBuild">背后的技术</a></nav>
+    <div class="header-actions"><button class="language-switch" id="languageSwitch" type="button" aria-label="Switch to English"><span class="language-current">中</span><span class="language-divider">/</span><span class="language-other">EN</span></button><a class="button button-small demo-link" href="https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com" target="_blank" rel="noopener" data-i18n="tryDemo">体验原型</a></div>
+  </header>
+
+  <main id="main">
+    <section class="hero page-width" id="top">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="tiny-square"></span> TRIP HACKATHON 2026 <span class="eyebrow-divider">/</span><span data-i18n="heroCategory">入境游 AI 创新</span></div>
+        <h1><span data-i18n="heroTitle1">落地中国，</span><br><span class="blue" data-i18n="heroTitle2">下一步心里有数。</span></h1>
+        <p class="hero-description" data-i18n="heroDescription">从起飞前的准备，到落地后的上网、支付和前往酒店。让首次来华的自由行游客，在每一步都知道该做什么。</p>
+        <div class="hero-actions"><a class="button demo-link" href="https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com" target="_blank" rel="noopener"><span data-i18n="tryDemo">体验原型</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7h8v8M17 7 7 17"/></svg></a><a class="text-button" href="#product"><span class="play-small" aria-hidden="true">▶</span><span data-i18n="seeProduct">看产品演示</span></a></div>
+        <div class="hero-facts"><div><strong>01</strong><span data-i18n="factWindow">聚焦落地第一小时</span></div><div><strong>03</strong><span data-i18n="factTasks">上网 · 支付 · 到酒店</span></div><div><strong>05</strong><span data-i18n="factScenarios">知识库场景</span></div></div>
+      </div>
+      <div class="hero-visual" aria-label="产品原型界面" data-aria-key="prototypeScreens">
+        <div class="visual-grid" aria-hidden="true"></div>
+        <div class="hero-visual-label"><span class="mono">FIRST HOUR, SORTED.</span><span class="prototype-tag" data-i18n="prototypeTag">可交互原型</span></div>
+        <div class="phone phone-side phone-left"><img src="assets/preflight.png" width="786" height="1704" alt="行前准备检查界面" data-alt-key="altPreflight" fetchpriority="high"></div>
+        <div class="phone phone-main"><img src="assets/landing.png" width="786" height="1704" alt="落地后的第一步联网界面" data-alt-key="altLanding" fetchpriority="high"></div>
+        <div class="phone phone-side phone-right"><img src="assets/driver.png" width="786" height="1704" alt="给司机看的中文酒店地址卡" data-alt-key="altDriver" fetchpriority="high"></div>
+        <div class="visual-note"><span class="check-icon" aria-hidden="true">✓</span><span data-i18n="visualNote">准备在起飞前，指引在需要时。</span></div>
+      </div>
+    </section>
+    <div class="project-strip"><div class="page-width strip-inner"><span><span class="strip-label" data-i18n="stripFor">为谁而做</span><strong data-i18n="stripAudience">首次来华 · 自由行 · 主动做准备</strong></span><span><span class="strip-label" data-i18n="stripForm">产品形态</span><strong data-i18n="stripShape">面向 Trip.com 的嵌入式功能设计</strong></span><span class="strip-status"><span class="status-ring"></span><span data-i18n="stripStatus">当前：H5 + API 演示</span></span></div></div>
+
+    <div class="page-width story-layout">
+      <aside class="story-sidebar"><div class="sidebar-inner"><span class="sidebar-label" data-i18n="contents">项目故事</span><nav id="sectionNav" aria-label="章节目录" data-aria-key="sectionNavigation"><a href="#needs" class="active"><span>01</span><span data-i18n="sectionNeeds">问题与需求</span></a><a href="#product"><span>02</span><span data-i18n="sectionProduct">产品形态</span></a><a href="#build"><span>03</span><span data-i18n="sectionBuild">如何实现</span></a><a href="#challenges"><span>04</span><span data-i18n="sectionChallenges">遇到的挑战</span></a><a href="#highlights"><span>05</span><span data-i18n="sectionHighlights">亮点与创新</span></a><a href="#learned"><span>06</span><span data-i18n="sectionLearned">项目中的收获</span></a><a href="#next"><span>07</span><span data-i18n="sectionNext">未来做什么</span></a></nav><div class="sidebar-footer"><span class="mono">LANDING CHECK</span><p data-i18n="sidebarNote">把准备和现场操作，连接成下一步。</p><a href="https://github.com/Yuklim/landing-check" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a></div></div></aside>
+
+      <div class="story-content">
+        <section class="story-section" id="needs">
+          <div class="section-heading"><span class="section-number">01 / THE NEED</span><h2 data-i18n="needsTitle">攻略看过了，还是不确定。</h2><p data-i18n="needsDescription">他们能自己订机票、排路线，也知道要装哪些 App。真正的疑问是：准备到哪一步才算够？遇到问题，接下来怎么办？</p></div>
+          <div class="evidence-toolbar"><div class="segmented" id="evidenceFilters" role="group" aria-label="按需求筛选" data-aria-key="filterNeeds"></div><span class="interaction-hint" data-i18n="clickEvidence">点击卡片查看原话与出处</span></div>
+          <div class="social-cloud" id="socialCloud"></div>
+          <div class="evidence-foot"><p data-i18n="evidenceFoot">来自公开社媒的定性线索。原话有节选，中文为释义；票分是记录快照，不代表需求发生率。</p><button class="text-button" type="button" id="openArchive"><span data-i18n="allEvidence">查看研究证据</span><span class="count-badge">17</span></button></div>
+          <div class="need-mapping"><article><span class="mapping-kicker" data-i18n="beforeFlight">起飞前</span><h3 data-i18n="need1Title">确认我还差什么</h3><p data-i18n="need1Body">清单、就绪状态和备用方式，把“安装好了”推进到“知道怎样用”。</p></article><article><span class="mapping-kicker" data-i18n="onArrival">落地后</span><h3 data-i18n="need2Title">只看当前的下一步</h3><p data-i18n="need2Body">先确认联网，再衔接支付和交通；已完成的步骤直接继续。</p></article><article><span class="mapping-kicker" data-i18n="whenStuck">卡住时</span><h3 data-i18n="need3Title">看得懂，也做得到</h3><p data-i18n="need3Body">用截图找到问题对应的步骤，保留替代方案和官方求助入口。</p></article></div>
+          <details class="research-method"><summary><span data-i18n="methodTitle">为什么选择“第一小时”？我们的研究边界</span><span aria-hidden="true">+</span></summary><div><p data-i18n="methodBody">落地是行前准备开始接受实际检验的时刻。“第一小时”是产品的聚焦窗口，不是一小时内抵达酒店的承诺。社媒讨论支持开展产品验证，尚不能证明这是所有游客的最大痛点或产品已经提高效率。</p><p data-i18n="methodSources">核心依据：2026-10-07 的需求证据整理与 PRD 背景补强稿；补充核对 eSIM 设备限制的原帖与上海机场的护照认证上网说明。X 历史记录仅收录于研究附录。</p><div class="source-links"><a href="research/evidence.md" target="_blank" rel="noopener" data-i18n="researchDoc">需求证据原文</a><a href="research/background.md" target="_blank" rel="noopener" data-i18n="backgroundDoc">PRD 背景补强稿</a><a href="research/supplement.md" target="_blank" rel="noopener" data-i18n="supplementDoc">补充检索记录</a></div></div></details>
+        </section>
+
+        <section class="story-section" id="product">
+          <div class="section-heading"><span class="section-number">02 / THE EXPERIENCE</span><h2 data-i18n="productTitle">一条连续的落地任务线。</h2><p data-i18n="productDescription">准备从起飞前开始。落地后，围绕你当下的任务展开，遇到障碍时也能找到继续的路径。</p></div>
+          <div class="product-demo"><div class="product-tabs" id="productTabs" role="tablist" aria-label="产品流程" data-aria-key="productFlow"></div><div class="product-stage" id="productStage" role="tabpanel" tabindex="0"></div></div>
+          <div class="feature-grid" id="featureGrid"></div>
+          <div class="video-heading"><h3 id="videoTitle" data-i18n="videoTitle">原型操作演示</h3><span data-i18n="videoDescription">约 38 秒 · 中英字幕 · 支付与行程为模拟数据</span></div>
+          <div class="video-panel" id="videoPanel"><div class="video-placeholder"><span class="video-mark" aria-hidden="true">▶</span><span class="mono">LANDING CHECK / THE FIRST HOUR</span><p data-i18n="videoPending">演示影片待更新，先亲手走一遍完整原型。</p><a class="button demo-link" href="https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com" target="_blank" rel="noopener" data-i18n="openFullDemo">打开交互演示</a></div></div>
+          <p class="small-note" data-i18n="prototypeBoundary">录屏展示含 TenPayGo 的开发原型；线上体验入口保留当前已部署版本。支付验证、航班与行程为模拟数据，正式 App 集成、真实扣款和自动推送尚未接入。界面截图保留原型中的英文。</p>
+        </section>
+
+        <section class="story-section" id="build">
+          <div class="section-heading"><span class="section-number">03 / HOW IT WORKS</span><h2 data-i18n="buildTitle">AI 看懂问题，知识库给出步骤。</h2><p data-i18n="buildDescription">把场景识别、内容来源和任务规则分别做好，让每一次建议都能说明依据。</p></div>
+          <div class="architecture"><div class="architecture-top"><span class="architecture-label" data-i18n="archInput">截图 / 一句话</span><span class="flow-connector" aria-hidden="true">→</span><span class="architecture-label strong">FastAPI</span><span class="flow-connector" aria-hidden="true">→</span><span class="architecture-label" data-i18n="archModel">DeepSeek 场景分类</span></div><div class="architecture-branches"><article><span class="branch-label" data-i18n="archHigh">置信度足够</span><strong data-i18n="archAnswer">核对条目 ID，返回操作步骤</strong><span data-i18n="archAnswerNote">内容来自带来源与核验日期的知识库</span></article><article><span class="branch-label" data-i18n="archLow">不确定 / 模型不可用</span><strong data-i18n="archFallback">候选确认、规则兜底或未知分支</strong><span data-i18n="archFallbackNote">生成的未知建议明确标为未核验</span></article></div></div>
+          <div class="stack-tags"><span>HTML / CSS / JavaScript</span><span>Python · FastAPI</span><span>DeepSeek</span><span>JSON Knowledge Base</span><span>pytest · Playwright</span><span>Render</span></div>
+          <div class="build-columns"><article><h3 data-i18n="knowledgeTitle">知识如何成为可执行的指引</h3><ol class="compact-steps"><li data-i18n="knowledge1">收集官方说明、Trip.com 指南及 WildChina 等操作资料。</li><li data-i18n="knowledge2">交叉核对事实，记录来源、适用条件与核验日期。</li><li data-i18n="knowledge3">整理为结构化条目，校验后导出图文教程。</li><li data-i18n="knowledge4">用截图样本评测识别，持续补充失败分支。</li></ol></article><article><h3 data-i18n="aiProcessTitle">人定义问题，AI 协助迭代</h3><p data-i18n="aiProcessBody">需求方确定产品范围、页面形式和关键取舍；AI 协助整理资料、编写接口与前端逻辑，并把反馈落实到回归用例。产品中的 DeepSeek 负责识别截图和文字，开发协作与产品推理各有职责。</p><p class="small-note" data-i18n="aiProcessNote">仓库提交记录包含 Claude 协作标记；本展示页由 Codex 协助制作。WildChina 是知识资料来源之一。</p></article></div>
+          <div class="collaboration-case"><span class="mapping-kicker" data-i18n="collaborationKicker">一次具体的迭代</span><h3 data-i18n="collaborationTitle">把两种支付方式，收成一个准备任务。</h3><p data-i18n="collaborationBody">最初支付宝和 TenPayGo 分别占一行。根据需求方反馈，界面收敛为一个 Payment in China 板块：任一方式验证即可就绪，另一种作为备用。AI 协助同步状态摘要、页面文案和测试；人的反馈决定了最终的产品表达。</p><p data-i18n="collaborationExperience">AI 能协助跨文件推进改动，输出仍需评审。支付应用共用报错、失败页残留成功文案、重复验证的引导，都在后续评审中得到修正，并补充了回归用例。</p><div class="source-links"><a href="https://github.com/Yuklim/landing-check/commit/e6f9b3d" target="_blank" rel="noopener" data-i18n="collaborationCommit">查看这次迭代的提交</a><a href="https://github.com/Yuklim/landing-check/commit/e9f6ffe" target="_blank" rel="noopener" data-i18n="collaborationReview">查看评审与修复记录</a></div></div>
+        </section>
+
+        <section class="story-section" id="challenges"><div class="section-heading"><span class="section-number">04 / THE CHALLENGES</span><h2 data-i18n="challengesTitle">难点藏在正常流程之外。</h2></div><div class="challenge-list" id="challengeList"></div></section>
+
+        <section class="story-section" id="highlights"><div class="section-heading"><span class="section-number">05 / WHAT MAKES IT DIFFERENT</span><h2 data-i18n="highlightsTitle">把帮助放进具体的那一步。</h2><p data-i18n="highlightsDescription">围绕抵达任务做取舍，让已有工具在需要时更容易用起来。</p></div><div class="highlight-grid" id="highlightGrid"></div><div class="validation-strip"><div><strong>41</strong><span data-i18n="validationEntries">知识条目</span></div><div><strong>5</strong><span data-i18n="validationScenarios">覆盖场景</span></div><div><strong>10</strong><span data-i18n="validationTutorials">图文教程</span></div><p data-i18n="validationNote">规模来自含 TenPayGo 的开发版本。下一步通过目标用户测试验证任务完成率、耗时和求助次数。</p></div></section>
+
+        <section class="story-section" id="learned"><div class="section-heading"><span class="section-number">06 / WHAT WE LEARNED</span><h2 data-i18n="learnedTitle">把不确定性设计进去。</h2></div><div class="learning-list" id="learningList"></div></section>
+
+        <section class="story-section" id="next"><div class="section-heading"><span class="section-number">07 / WHAT'S NEXT</span><h2 data-i18n="nextTitle">从能演示，到真实地帮上忙。</h2><p data-i18n="nextDescription">先完善可靠性，再接入真实平台能力。每一步都有清晰的验证目标。</p></div><div class="roadmap" id="roadmap"></div><div class="final-cta"><div><span class="mono">READY FOR YOUR FIRST HOUR?</span><h3 data-i18n="ctaTitle">从落地的第一步，开始体验。</h3></div><a class="button demo-link" href="https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com" target="_blank" rel="noopener" data-i18n="tryDemo">体验原型</a></div></section>
+      </div>
+    </div>
+  </main>
+  <footer class="page-width site-footer"><a class="brand footer-brand" href="#top"><span class="brand-symbol" aria-hidden="true">L<span>✓</span></span>Landing Check</a><span data-i18n="footerNote">Trip Hackathon 2026 · 面向入境游的产品探索</span><a href="https://github.com/Yuklim/landing-check" target="_blank" rel="noopener" data-i18n="viewSource">查看源代码</a></footer>
+
+  <dialog id="evidenceDialog" aria-labelledby="dialogTitle"><div class="dialog-top"><span class="mono">RESEARCH / SOURCE</span><button class="icon-button" id="closeDialog" type="button" aria-label="关闭" data-aria-key="close">×</button></div><div id="dialogContent"></div></dialog>
+  <noscript><p class="noscript-note">此页面的语言切换和交互卡片需要 JavaScript。可直接阅读<a href="research/evidence.md">需求证据文档</a>或<a href="https://yuklim.github.io/landing-check/h5/">打开原型</a>。</p></noscript>
+</body>
+</html>
