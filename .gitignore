@@ -1,12 +1,45 @@
+# 系统文件与日志
 .DS_Store
-h5/qr.png
-h5/screens-css.html
+Thumbs.db
 *.log
 
-backend/.env
-backend/__pycache__/
-backend/.pytest_cache/
-__pycache__/
+# 本地配置；示例配置保留
+.env
+.env.*
+!.env.example
 
-# Reddit 用户截图只留本地，不进公开仓库
+# Python / Node 依赖与缓存
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+node_modules/
+
+# H5 中间导出
+h5/qr.png
+h5/screens-css.html
+
+# 动画制作缓存与渲染中间产物
+.thumbnails/
+.hyperframes/
+.render-tmp/
+.media/
+demo/film/**/renders/
+demo/film/**/snapshots/
+
+# 本地调研工具和完整制作归档
+/trip/
+/submission/
+.release-staging/
+
+# Reddit 用户截图只留本地
 知识库/samples/from_reddit/images/
+
+# 初赛原件通过 GitHub Release 归档；Git 只跟踪索引和校验信息
+/submission-final/*
+!/submission-final/README.md
+!/submission-final/manifest.json
+!/submission-final/SHA256SUMS

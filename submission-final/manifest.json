@@ -1,0 +1,48 @@
+{
+  "project": "Landing Check",
+  "milestone": "preliminary_submission",
+  "submission_status": "submitted",
+  "recorded_at": "2026-10-09",
+  "release_tag": "v0.1.0-preliminary",
+  "release_url": "https://github.com/Yuklim/landing-check/releases/tag/v0.1.0-preliminary",
+  "artifacts": [
+    {
+      "kind": "proposal",
+      "original_filename": "01-Landing-Check-方案书.pdf",
+      "release_filename": "Landing-Check-Proposal.pdf",
+      "bytes": 1805891,
+      "sha256": "11aa861d6a8042f5521014932e9f79006d6cb8c168baebd20219a4d9149869ed",
+      "download_url": "https://github.com/Yuklim/landing-check/releases/download/v0.1.0-preliminary/Landing-Check-Proposal.pdf"
+    },
+    {
+      "kind": "poster",
+      "original_filename": "03-Landing-Check-项目海报-头像下置版.png",
+      "release_filename": "Landing-Check-Poster.png",
+      "bytes": 3382150,
+      "sha256": "bd27874184be5dc97bb50f2e3ef1bfbe8fed6995b77b19ae81c9947e2986e443",
+      "download_url": "https://github.com/Yuklim/landing-check/releases/download/v0.1.0-preliminary/Landing-Check-Poster.png"
+    },
+    {
+      "kind": "demo_landscape",
+      "original_filename": "landing-check-real-v2-83s.mp4",
+      "release_filename": "Landing-Check-Demo-Landscape-83s.mp4",
+      "bytes": 116751742,
+      "sha256": "854ac2d6d734e5bbd3e9921a6c925b1ceaecfbe94236f6650dcf71ece6fd5af7",
+      "download_url": "https://github.com/Yuklim/landing-check/releases/download/v0.1.0-preliminary/Landing-Check-Demo-Landscape-83s.mp4",
+      "duration_seconds": 83.1,
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "kind": "demo_portrait",
+      "original_filename": "landing-check-vertical-83s.mp4",
+      "release_filename": "Landing-Check-Demo-Portrait-83s.mp4",
+      "bytes": 132473424,
+      "sha256": "71879c73e81fb8822a2795a3eb5e1a2ce1c612460030f70772b6b6dfc5116cee",
+      "download_url": "https://github.com/Yuklim/landing-check/releases/download/v0.1.0-preliminary/Landing-Check-Demo-Portrait-83s.mp4",
+      "duration_seconds": 83.1,
+      "width": 1080,
+      "height": 1920
+    }
+  ]
+}
