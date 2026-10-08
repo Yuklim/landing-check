@@ -65,34 +65,34 @@
           <p class="small-note" data-i18n="prototypeBoundary">当前在线原型包含支付宝与 TenPayGo，支付验证、航班与行程使用模拟数据。动画说明产品思路，具体操作以在线原型为准；正式 App 集成、真实扣款和自动推送尚未接入。界面截图保留原型中的英文。</p>
         </section>
 
-        <section class="story-section" id="build">
-          <div class="section-heading"><span class="section-number">03 / TECH STACK</span><h2 data-i18n="buildTitle">技术栈</h2><p data-i18n="buildDescription">目前的演示由浏览器里的 H5 和一个 Python API 服务组成。我们用前端展示任务和教程，用后端管理知识条目、识别请求与演示状态。下面是项目实际使用的技术，以及它们各自负责的部分。</p></div>
+        <section class="story-section concise-section" id="build">
+          <div class="section-heading"><span class="section-number">03 / TECH STACK</span><h2 data-i18n="buildTitle">技术栈</h2><p data-i18n="buildDescription">H5 前端承载任务和教程，Python 后端负责规则、识别与知识库。</p></div>
           <div class="article-prose tech-prose">
-            <article><h3 data-i18n="stackFrontendTitle">前端与原型：HTML、CSS、JavaScript</h3><p data-i18n="stackFrontendBody">可交互原型使用原生 HTML、CSS 和 JavaScript。界面设计保存在 appearance.pen 中，经 pen.dev 导出后，由 Python 构建脚本组装页面与点击跳转；app.js 负责调用接口、更新支付和行程状态，以及在后端不可用时切换到静态演示。项目展示页同样使用原生前端，来源弹窗、语言切换和产品流程不依赖后端服务。</p></article>
-            <article><h3 data-i18n="stackBackendTitle">接口与规则：Python、FastAPI、Uvicorn</h3><p data-i18n="stackBackendBody">后端通过 FastAPI 提供知识库查询、截图识别、行前检查和交通推荐接口，由 Uvicorn 运行。Pydantic 用来校验请求数据，HTTPX 负责调用模型。行前状态和交通推荐使用明确的规则计算，例如深夜抵达、多件行李或已预订接机时，给出相应方案。目前的航班、订单和支付结果来自模拟接口，运行状态保存在内存中。</p></article>
-            <article><h3 data-i18n="stackModelTitle">场景识别：DeepSeek 与关键词规则</h3><p data-i18n="stackModelBody">“我卡住了”把用户上传的截图或输入的文字交给 DeepSeek，当前代码默认使用 deepseek-flash。模型需要从已有条目中选择问题类型，并返回条目 ID 和置信度；后端核对 ID 后，再读取对应的操作步骤。不够确定时提供候选让用户确认，模型超时或不可用时尝试关键词匹配。对于知识库没有覆盖的问题，生成建议会明确标为未经核验。</p></article>
-            <article><h3 data-i18n="stackKnowledgeTitle">知识内容：JSON 条目与图文教程</h3><p data-i18n="stackKnowledgeBody">知识库直接使用 JSON 文件维护，目前包含支付宝、微信支付、滴滴、上网和 TenPayGo 五类场景，共 41 条记录。每条保存适用条件、操作步骤、备用办法、来源和核验日期；存在争议的数字单独记录，避免直接写进面向游客的指引。Python 校验脚本检查格式和引用，并把带配图的条目导出为 H5 可以读取的教程数据，因此新增内容不必重新编写页面。</p></article>
-            <article><h3 data-i18n="stackTestingTitle">测试与部署：pytest、Playwright、GitHub Pages、Render</h3><p data-i18n="stackTestingBody">pytest 检查接口、规则和支付状态，Playwright 在浏览器中走一遍验证成功、失败切换、截图求助和页面返回等流程。10 月 7 日的回归记录为 82 个后端测试和 19 个 H5 端到端测试通过。静态展示页和 H5 发布在 GitHub Pages，FastAPI 服务部署在 Render；模型密钥只配置在服务端。这样的结构让评委可以直接用手机打开原型，同时保留不依赖后端的静态演示。</p></article>
+            <article><h3 data-i18n="stackFrontendTitle">前端与原型</h3><p data-i18n="stackFrontendBody">HTML、CSS、JavaScript 构建交互界面。appearance.pen 经 pen.dev 导出，由 Python 脚本组装为 H5；后端不可用时可体验静态流程。</p></article>
+            <article><h3 data-i18n="stackBackendTitle">后端与规则</h3><p data-i18n="stackBackendBody">Python + FastAPI 提供接口，Uvicorn 运行服务，Pydantic 校验数据，HTTPX 调用模型。行前检查和交通推荐采用规则计算。</p></article>
+            <article><h3 data-i18n="stackModelTitle">AI 场景识别</h3><p data-i18n="stackModelBody">DeepSeek（deepseek-flash）匹配截图或文字中的问题，再从知识库读取步骤。不确定时提供候选，模型不可用时回退到关键词规则；库外建议标注为未经核验。</p></article>
+            <article><h3 data-i18n="stackKnowledgeTitle">知识库与教程</h3><p data-i18n="stackKnowledgeBody">JSON 维护 5 类场景、41 条记录，保存步骤、备用办法、来源和核验日期。Python 脚本校验内容并导出图文教程。</p></article>
+            <article><h3 data-i18n="stackTestingTitle">测试与部署</h3><p data-i18n="stackTestingBody">pytest + Playwright 检查接口和完整流程。GitHub Pages 托管展示页与 H5，Render 运行后端，模型密钥保留在服务端。</p></article>
           </div>
         </section>
 
-        <section class="story-section" id="thoughts">
-          <div class="section-heading"><span class="section-number">04 / OUR REFLECTIONS</span><h2 data-i18n="thoughtsTitle">我们的思考</h2><p data-i18n="thoughtsDescription">做这个项目时，我们逐渐把注意力放到几件很具体的事情上：游客怎样判断自己准备好了，遇到报错时应该得到什么帮助，以及前一个步骤的结果如何影响后面的选择。这些问题决定了现在的产品，也留下了还需要验证的地方。</p></div>
+        <section class="story-section concise-section" id="thoughts">
+          <div class="section-heading"><span class="section-number">04 / OUR REFLECTIONS</span><h2 data-i18n="thoughtsTitle">我们的思考</h2></div>
           <div class="article-prose reflections-prose">
-            <article><h3 data-i18n="thoughtFocusTitle">先明确游客眼前要完成什么</h3><p data-i18n="thoughtFocusBody">来华旅行可以涉及翻译、点餐、景点预约和行程规划，最早的方案也考虑过不少场景。继续看游客的具体求助后，我们更在意的是：一个人已经知道要装哪些应用，到了实际操作时却还是拿不准。于是我们把这次原型收窄到上网、支付和到酒店，并把能提前处理的准备放到起飞前。这样每一页都有一个明确任务，也能说清楚为什么此时需要它。</p><p data-i18n="thoughtFocusLimit">不过，选定这个范围不代表它已经得到完整验证。有人通过攻略和社区回复就顺利完成了旅行，机场工作人员也能提供帮助。Landing Check 是否值得使用，要看它能不能让游客更快找到适用办法、少做几次错误尝试；仅仅把现有信息集中展示，还不足以说明这一点。</p></article>
-            <article><h3 data-i18n="thoughtPaymentTitle">两种支付应用，仍然是一个准备任务</h3><p data-i18n="thoughtPaymentBody">接入 TenPayGo 时，我们最初给它和支付宝各放了一行。界面上虽然多了一个选择，却也让同一件“准备付款”的事看起来变成了两个待办。后来我们把它们合成一个 Payment in China 板块：任一种验证通过，支付任务就算完成，另一种作为可选备用。这个调整提醒我们，页面应该按游客要办的事情组织，接入了几个应用不应该直接决定清单有几项。</p><p data-i18n="thoughtPaymentLimit">同时，一次小额测试能说明的事情也有限。它可以帮助确认某次交易是否完成，却不能保证所有商户、叫车和地铁场景都能使用同一种方式。TenPayGo 在境外能否测试、Trip.com 能否提供对应收款与退款能力，也还需要对接确认。因此，我们既保留支付测试的设计，也把具体交通方案的支付条件和备用办法写出来。</p></article>
-            <article><h3 data-i18n="thoughtRecognitionTitle">相似的报错，需要不同的处理</h3><p data-i18n="thoughtRecognitionBody">TenPayGo 和微信支付可能出现同一句银行拒绝提示，如果只看报错文字，很容易选错应用。我们因此把界面特征、应用名称和关键词一起作为识别线索；看不清时，让用户确认候选，而不是直接给一组看似肯定的步骤。模型负责匹配问题，已经覆盖的问题则从知识库读取答案，方便之后核对和更新。</p><p data-i18n="thoughtRecognitionEvidence">样本评测也让这个问题更具体。64 张已标注指南截图的场景命中率约为 94%，换成 75 张 Reddit 用户截图后约为 84%。真实截图里有失败弹窗、翻译浮层和缺少上下文的页面，比教程中的标准画面更难判断。这些数字衡量的是场景分类，游客是否照着步骤解决了问题，还需要另做任务测试。TenPayGo 的真实失败截图目前也不足，尚未单独评测。</p></article>
-            <article><h3 data-i18n="thoughtFlowTitle">完整流程也要经得起失败和重试</h3><p data-i18n="thoughtFlowBody">联调时，我们遇到过重复点击验证、请求迟迟不返回、失败页残留成功文案，以及新截图上传后被旧识别结果覆盖等问题。单看某一张页面，这些地方并不显眼，连着操作才会暴露出来。后续修复加入了重复请求处理、超时重试和过期响应拦截，再用端到端测试检查不同页面是否读取同一份状态。</p><p data-i18n="thoughtFlowLearning">这也影响了我们对完成度的判断。按钮能点、正常流程能走通，只是演示的起点；游客在机场可能重复操作、切走页面或暂时断网，我们还需要考虑他回来时看到什么、之前做过的事是否保留，以及失败后有没有清楚的去向。现有测试帮我们检查了这些已知分支，接下来仍要在真实设备和目标用户的任务中继续验证。</p></article>
+            <article><h3 data-i18n="thoughtFocusTitle">先做好上网、支付和到酒店</h3><p data-i18n="thoughtFocusBody">最初考虑过翻译、点餐和行程规划，后来把范围收窄到落地时最先要做的三件事。游客的求助让我们看到：应用装好了，现场仍可能不知道怎么用。因此，我们把准备提前到起飞前，把操作指引放到需要的那一步；能否比现有攻略更省事，还要通过真实任务验证。</p></article>
+            <article><h3 data-i18n="thoughtPaymentTitle">支付方式多了，待办不用增加</h3><p data-i18n="thoughtPaymentBody">加入 TenPayGo 时，我们最初给它和支付宝各放了一行，后来合成一项支付准备：验证一种即可，另一种留作备用。这样清单更接近游客要完成的事情。一次测试无法保证所有场景都能付款，所以交通页仍会说明支付条件和替代方案。</p></article>
+            <article><h3 data-i18n="thoughtRecognitionTitle">识别不确定时，让用户确认</h3><p data-i18n="thoughtRecognitionBody">微信支付和 TenPayGo 可能出现同一句报错，只看文字容易选错应用。我们结合界面特征识别，模糊时提供候选，让用户确认。</p><p data-i18n="thoughtRecognitionEvidence">64 张指南截图的场景命中率约 94%，75 张 Reddit 用户截图约 84%。真实画面更难判断；这些数字衡量的是分类，实际解决率仍需验证，TenPayGo 失败样本也待补充。</p></article>
+            <article><h3 data-i18n="thoughtFlowTitle">把失败和重试也走一遍</h3><p data-i18n="thoughtFlowBody">联调时，重复点击、请求超时和旧结果覆盖新截图，比正常流程更容易暴露问题。我们补上了重复请求处理、重试和过期响应拦截，再用端到端测试检查跨页状态。游客中途切走或重新操作，也应该知道接下来怎么做。</p></article>
           </div>
         </section>
 
-        <section class="story-section" id="next">
-          <div class="section-heading"><span class="section-number">05 / WHAT'S NEXT</span><h2 data-i18n="nextTitle">接下来做什么</h2><p data-i18n="nextDescription">原型已经能把主要操作串起来，下一步需要确认它是否真的省事，并补齐现场使用的条件。我们会先围绕现有流程验证和完善，再逐项推进平台接入。</p></div>
-          <div class="article-prose next-prose">
-            <article><h3 data-i18n="nextTestTitle">用真实任务检验这套设计</h3><p data-i18n="nextTestBody">让首次来华的游客分别用现有攻略和原型完成联网准备、理解支付报错、选择机场到酒店方案，记录完成情况、耗时、错误判断和求助次数。同时继续收集公开求助和用户自愿提供的案例，核对实际解决过程后再补入知识库。“I’m stuck” 后续也会尝试支持现场照片和语音描述，但会先确认这两种输入是否比截图和文字更方便。</p></article>
-            <article><h3 data-i18n="nextOfflineTitle">补上离线内容和多语言</h3><p data-i18n="nextOfflineBody">目前的静态演示不等于完整离线功能。我们计划在起飞前下载机场联网指引、酒店中文地址和常见问题教程，通过 Service Worker 缓存，让弱网时仍能阅读。多语言内容会先预翻译并复核菜单路径与关键步骤，避免游客每次打开教程都要等待在线翻译。</p></article>
-            <article><h3 data-i18n="nextIntegrationTitle">逐项确认 Trip.com 与支付渠道的接入</h3><p data-i18n="nextIntegrationBody">正式使用需要获授权的行程只读接口、航班状态更新，以及 App 内通知和客服转接能力。获得这些信息后，才能根据真实到达机场、时刻和酒店生成指引；用户需要人工帮助时，也希望能把当前问题和已尝试的步骤交给客服继续处理，减少重复解释。</p><p data-i18n="nextPaymentBody">真实支付验证还需要合作方提供测试交易、退款和结果回调。我们会先确认境外测试是否可行、一次测试能说明哪些条件，再决定怎样展示“已验证”。如果某种方式只支持落地后交易，行前就检查安装与配置，落地后再确认付款结果。上述能力目前仍是接入计划，演示中的航班、行程和支付继续使用模拟数据。</p></article>
-          </div>
+        <section class="story-section concise-section" id="next">
+          <div class="section-heading"><span class="section-number">05 / WHAT'S NEXT</span><h2 data-i18n="nextTitle">接下来做什么</h2></div>
+          <ul class="article-prose next-list">
+            <li><strong data-i18n="nextTestTitle">真实用户测试。</strong> <span data-i18n="nextTestBody">请首次来华的游客完成联网、支付和到酒店的任务，比较原型与现有攻略，补充真实失败案例；再评估现场照片和语音求助是否更方便。</span></li>
+            <li><strong data-i18n="nextOfflineTitle">离线与多语言。</strong> <span data-i18n="nextOfflineBody">行前缓存联网指引、酒店地址和常用教程，预翻译并复核关键步骤，让弱网时也能查看。</span></li>
+            <li><strong data-i18n="nextIntegrationTitle">平台与支付接入。</strong> <span data-i18n="nextIntegrationBody">确认 Trip.com 行程、航班通知和客服转接能力，以及真实支付、退款和结果回调。上述接入尚待确认，演示继续使用模拟数据。</span></li>
+          </ul>
           <div class="final-cta"><div><span class="mono">LANDING CHECK / PROTOTYPE</span><h3 data-i18n="ctaTitle">打开原型，试走一遍落地流程</h3></div><a class="button demo-link" href="https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com" target="_blank" rel="noopener" data-i18n="tryDemo">体验原型</a></div>
         </section>
       </div>
