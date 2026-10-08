@@ -9,7 +9,7 @@ import json
 import tempfile
 from pathlib import Path
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import sync_playwright, expect
 
 
 def main():
@@ -28,7 +28,14 @@ def main():
         page.goto(args.url, wait_until='networkidle')
         page.wait_for_timeout(1000)
         assert page.locator('html').get_attribute('lang') == 'zh-CN'
-        assert page.locator('.story-section').count() == 7
+        assert page.locator('.story-section').evaluate_all('(nodes) => nodes.map(n => n.id)') == ['needs', 'product', 'build', 'thoughts', 'next']
+        assert page.locator('#sectionNav a').count() == 5
+        assert page.locator('#build h2').inner_text() == '技术栈'
+        assert page.locator('#thoughts h2').inner_text() == '我们的思考'
+        assert 'FastAPI' in page.locator('#build').inner_text()
+        assert 'Playwright' in page.locator('#build').inner_text()
+        assert 'Claude' not in page.locator('main').inner_text()
+        assert 'Codex' not in page.locator('main').inner_text()
         assert page.locator('.social-card').count() == 6
         assert page.locator('.guide-source').count() == 2
         assert page.locator('.social-card .platform-youtube').count() == 4
@@ -40,15 +47,26 @@ def main():
         video = page.locator('#videoPanel video')
         assert video.count() == 1
         page.wait_for_function('Number.isFinite(document.querySelector("#videoPanel video").duration)')
-        assert 30 < video.evaluate('(v) => v.duration') < 45
-        assert video.evaluate('(v) => v.videoWidth') == 1280
-        assert video.evaluate('(v) => [...v.textTracks].some(t => t.language === "zh" && t.mode === "showing")')
+        assert 57 < video.evaluate('(v) => v.duration') < 58
+        assert video.evaluate('(v) => v.videoWidth') == 1920
+        assert video.evaluate('(v) => v.currentSrc').endswith('/assets/landing-check-final.mp4')
+        assert video.locator('track').count() == 0  # Final film has burned-in bilingual subtitles.
         video.evaluate('(v) => v.play()')
         page.wait_for_function('document.querySelector("#videoPanel video").currentTime > 0.2')
         video.evaluate('(v) => { v.pause(); v.currentTime = 0; }')
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
         assert page.locator('img').evaluate_all('(imgs) => imgs.every(img => img.complete && img.naturalWidth > 0)')
         page.screenshot(path=str(output / 'desktop-zh.png'), full_page=True)
+        page.emulate_media(reduced_motion='reduce')
+        for section_id in ['needs', 'product', 'build', 'thoughts', 'next']:
+            link = page.locator(f'#sectionNav a[href="#{section_id}"]')
+            link.click()
+            expect(link).to_have_attribute('aria-current', 'location')
+        page.locator('#sectionNav a[href="#build"]').click()
+        page.screenshot(path=str(output / 'tech-stack-viewport.png'))
+        page.locator('#sectionNav a[href="#thoughts"]').click()
+        page.screenshot(path=str(output / 'reflections-viewport.png'))
+        page.emulate_media(reduced_motion='no-preference')
         page.locator('#needs').scroll_into_view_if_needed()
         page.screenshot(path=str(output / 'needs-desktop.png'))
         page.locator('#needs').screenshot(path=str(output / 'needs-section-desktop.png'))
@@ -88,9 +106,11 @@ def main():
         page.keyboard.press('Escape')
         page.locator('#languageSwitch').click()
         assert page.locator('html').get_attribute('lang') == 'en'
-        assert page.locator('#needs h2').inner_text() == 'Read the guides. Still not sure.'
+        assert page.locator('#needs h2').inner_text() == 'Why we started Landing Check'
+        assert page.locator('#build h2').inner_text() == 'Tech stack'
+        assert page.locator('#thoughts h2').inner_text() == 'Our reflections'
         assert not page.locator('[data-i18n]').evaluate_all('(nodes) => nodes.some(n => /[\u4e00-\u9fff]/.test(n.textContent))')
-        assert video.evaluate('(v) => [...v.textTracks].some(t => t.language === "en" && t.mode === "showing")')
+        assert page.locator('.hero-actions .video-link').get_attribute('href') == '#demoVideo'
         page.locator('[data-evidence="Y01"]').click()
         assert page.locator('#dialogContent h3').count() == 0
         assert page.locator('.source-story').count() == 1
@@ -136,10 +156,48 @@ def main():
                 page.keyboard.press('Escape')
         page.emulate_media(reduced_motion='reduce')
         assert page.locator('.social-card').first.evaluate('(n) => getComputedStyle(n).animationName') == 'none'
+
+        # The public entry stays on the showcase and scrolls to its inline film.
+        page.set_viewport_size({'width': 1440, 'height': 1050})
+        showcase_path = page.evaluate('location.pathname')
+        page.locator('.hero-actions .video-link').click()
+        page.wait_for_url('**/#demoVideo')
+        assert page.evaluate('location.pathname') == showcase_path
+        assert 0 <= page.locator('#videoTitle').bounding_box()['y'] < 300
+        player = page.locator('#videoPanel video')
+        assert 57 < player.evaluate('(v) => v.duration') < 58
+        assert player.evaluate('(v) => v.videoWidth') == 1920
+        assert player.evaluate('(v) => v.controls && v.playsInline && !v.autoplay')
+        player.evaluate('(v) => v.play()')
+        page.wait_for_function('document.querySelector("#videoPanel video").currentTime > 0.2')
+        player.evaluate('(v) => { v.pause(); v.currentTime = 8; }')
+        page.wait_for_function('!document.querySelector("#videoPanel video").seeking')
+        page.screenshot(path=str(output / 'inline-video-desktop.png'))
+        for width in [320, 390, 768, 1280]:
+            page.set_viewport_size({'width': width, 'height': 844})
+            assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), f'Player overflow at {width}'
+            assert player.bounding_box()['width'] <= width
+            if width == 390:
+                page.locator('.hero-actions .video-link').click()
+                assert 0 <= page.locator('#videoTitle').bounding_box()['y'] < 300
+                page.screenshot(path=str(output / 'inline-video-mobile.png'))
+        page.locator('#languageSwitch').click()
+        assert page.locator('html').get_attribute('lang') == 'en'
+        assert page.locator('#videoTitle').inner_text() == 'Demo video'
+        assert not page.locator('[data-i18n]').evaluate_all('(nodes) => nodes.some(n => /[\u4e00-\u9fff]/.test(n.textContent))')
+        assert player.evaluate('(v) => v.currentTime') >= 8  # Language switching preserves playback position.
+        page.reload(wait_until='networkidle')
+        assert page.locator('html').get_attribute('lang') == 'en'
+        page.locator('.hero-actions .video-link').click()
+        assert page.evaluate('location.pathname') == showcase_path
+        assert page.evaluate('location.hash') == '#demoVideo'
+        page.locator('#languageSwitch').click()
+        page.reload(wait_until='networkidle')
+        assert page.locator('html').get_attribute('lang') == 'zh-CN'
         browser.close()
     assert not errors, errors
     assert not failures, failures
-    print(json.dumps({'result': 'passed', 'checks': '7 sections; 14 sources; distinct traveler/guide roles and follow-up; Chinese/English dialogs; filters; keyboard tabs; video playback and captions; assets; 320/390/768/1280 layouts; reduced motion', 'screenshots': str(output), 'page_errors': errors, 'http_errors': failures}, ensure_ascii=False))
+    print(json.dumps({'result': 'passed', 'checks': '5 sections; tech stack and reflections; 14 sources; Chinese/English dialogs; filters; keyboard tabs; final 57s film; project demo scrolls to inline video; playback and seeking; language preserves playback position; assets; 320/390/768/1280 layouts; reduced motion', 'screenshots': str(output), 'page_errors': errors, 'http_errors': failures}, ensure_ascii=False))
 
 
 if __name__ == '__main__':
