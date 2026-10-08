@@ -71,10 +71,13 @@ html { scroll-padding-top: 96px; }
 .article-prose article + article { margin-top: 32px; }
 .needs-context, .product-summary { margin-top: 30px; }
 .section-number { display: block; margin-bottom: 11px; color: #71809b; }
-.social-cloud { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding: 22px; background: #f7f9fd; }
-.social-card { padding: 18px; border-radius: 9px; box-shadow: none; }
-.social-card:nth-child(n) { transform: none; }
-.social-card::after { display: none; }
+.social-cloud { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 22px; padding: 30px 22px; border-radius: 18px; background: radial-gradient(ellipse at 50% 35%, #eaf0ff, #f7f9fd 75%); }
+.social-card { padding: 18px; border-radius: 18px 18px 18px 5px; box-shadow: 0 6px 18px #23315e0a; }
+.social-card:nth-child(odd) { transform: rotate(-1.5deg) translateY(3px); }
+.social-card:nth-child(even) { transform: rotate(1.5deg) translateY(-3px); }
+.social-card:hover, .social-card:focus-visible { transform: translateY(-4px) rotate(0); box-shadow: 0 12px 28px #23315e16; }
+.social-card::after { display: block; left: 22px; border-radius: 0 0 3px 0; }
+.social-card:hover::after, .social-card:focus-visible::after { border-color: #9cb3ff; }
 .social-card blockquote { font-size: 16px; line-height: 1.8; }
 .social-card .original-excerpt { font-size: 13px; line-height: 1.7; }
 .evidence-foot { align-items: baseline; gap: 16px; }
@@ -111,6 +114,10 @@ html { scroll-padding-top: 96px; }
 .tech-prose article { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 24px; padding: 15px 0; border-top: 1px solid var(--line); }
 .concise-section .tech-prose article + article { margin-top: 0; }
 .concise-section .tech-prose h3 { margin: 0; font-size: 16px; }
+.reflections-prose { margin: 0; padding-left: 22px; list-style: disc; }
+.reflections-prose > li { padding-left: 5px; }
+.reflections-prose > li + li { margin-top: 24px; }
+.reflections-prose > li::marker { color: #111; font-size: 18px; }
 .next-list { margin: 0; padding-left: 21px; }
 .next-list li { padding-left: 4px; }
 .next-list li + li { margin-top: 18px; }
@@ -139,8 +146,11 @@ html { scroll-padding-top: 96px; }
   .section-heading > p, .article-prose, .guide-context-heading p { font-size: 15px; line-height: 1.95; }
   .article-prose h3, .guide-context-heading h3 { font-size: 18px; }
   .article-prose article + article { margin-top: 28px; }
-  .social-cloud { grid-template-columns: 1fr; padding: 14px; gap: 13px; }
+  .social-cloud { grid-template-columns: 1fr; padding: 22px 14px; gap: 22px; }
   .social-card { padding: 16px; }
+  .social-card:nth-child(odd) { transform: rotate(-.7deg); }
+  .social-card:nth-child(even) { transform: rotate(.7deg); }
+  .social-card:hover, .social-card:focus-visible { transform: translateY(-3px) rotate(0); }
   .social-card blockquote { font-size: 15px; }
   .social-card .original-excerpt { font-size: 12px; }
   .social-card-head .platform, .social-card-head .context, .social-card-bottom { font-size: 11px; }
@@ -157,4 +167,5 @@ html { scroll-padding-top: 96px; }
   .tech-prose article { grid-template-columns: 1fr; gap: 7px; padding: 14px 0; }
   .concise-section .article-prose article + article { margin-top: 22px; }
   .concise-section .tech-prose article + article { margin-top: 0; }
+  .reflections-prose > li + li { margin-top: 22px; }
 }
