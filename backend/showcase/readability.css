@@ -114,15 +114,12 @@ html { scroll-padding-top: 96px; }
 .tech-prose article { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 24px; padding: 15px 0; border-top: 1px solid var(--line); }
 .concise-section .tech-prose article + article { margin-top: 0; }
 .concise-section .tech-prose h3 { margin: 0; font-size: 16px; }
-.reflections-prose { margin: 0; padding-left: 22px; list-style: disc; }
-.reflections-prose > li { padding-left: 5px; }
-.reflections-prose > li + li { margin-top: 24px; }
-.reflections-prose > li::marker { color: #111; font-size: 18px; }
 .next-list { margin: 0; padding-left: 21px; }
 .next-list li { padding-left: 4px; }
 .next-list li + li { margin-top: 18px; }
 .next-list li::marker { color: var(--blue); }
 .next-list strong { color: var(--ink); font-weight: 650; }
+.reflections-prose > li::marker { color: #111; }
 
 @media (max-width: 1100px) {
   .page-width { width: calc(100% - 56px); }
@@ -167,5 +164,4 @@ html { scroll-padding-top: 96px; }
   .tech-prose article { grid-template-columns: 1fr; gap: 7px; padding: 14px 0; }
   .concise-section .article-prose article + article { margin-top: 22px; }
   .concise-section .tech-prose article + article { margin-top: 0; }
-  .reflections-prose > li + li { margin-top: 22px; }
 }

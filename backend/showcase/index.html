@@ -78,11 +78,11 @@
 
         <section class="story-section concise-section" id="thoughts">
           <div class="section-heading"><span class="section-number">04 / OUR REFLECTIONS</span><h2 data-i18n="thoughtsTitle">我们的思考</h2></div>
-          <ul class="article-prose reflections-prose">
-            <li><h3 data-i18n="thoughtFocusTitle">先做好上网、支付和到酒店</h3><p data-i18n="thoughtFocusBody">最初考虑过翻译、点餐和行程规划，后来把范围收窄到落地时最先要做的三件事。游客的求助让我们看到：应用装好了，现场仍可能不知道怎么用。因此，我们把准备提前到起飞前，把操作指引放到需要的那一步；能否比现有攻略更省事，还要通过真实任务验证。</p></li>
-            <li><h3 data-i18n="thoughtPaymentTitle">支付方式多了，待办不用增加</h3><p data-i18n="thoughtPaymentBody">加入 TenPayGo 时，我们最初给它和支付宝各放了一行，后来合成一项支付准备：验证一种即可，另一种留作备用。这样清单更接近游客要完成的事情。一次测试无法保证所有场景都能付款，所以交通页仍会说明支付条件和替代方案。</p></li>
-            <li><h3 data-i18n="thoughtRecognitionTitle">识别不确定时，让用户确认</h3><p data-i18n="thoughtRecognitionBody">微信支付和 TenPayGo 可能出现同一句报错，只看文字容易选错应用。我们结合界面特征识别，模糊时提供候选，让用户确认。</p><p data-i18n="thoughtRecognitionEvidence">64 张指南截图的场景命中率约 94%，75 张 Reddit 用户截图约 84%。真实画面更难判断；这些数字衡量的是分类，实际解决率仍需验证，TenPayGo 失败样本也待补充。</p></li>
-            <li><h3 data-i18n="thoughtFlowTitle">把失败和重试也走一遍</h3><p data-i18n="thoughtFlowBody">联调时，重复点击、请求超时和旧结果覆盖新截图，比正常流程更容易暴露问题。我们补上了重复请求处理、重试和过期响应拦截，再用端到端测试检查跨页状态。游客中途切走或重新操作，也应该知道接下来怎么做。</p></li>
+          <ul class="article-prose next-list reflections-prose">
+            <li><strong data-i18n="thoughtFocusTitle">先做好上网、支付和到酒店。</strong> <span data-i18n="thoughtFocusBody">最初考虑过翻译、点餐和行程规划，后来把范围收窄到落地时最先要做的三件事。游客的求助让我们看到：应用装好了，现场仍可能不知道怎么用。因此，我们把准备提前到起飞前，把操作指引放到需要的那一步；能否比现有攻略更省事，还要通过真实任务验证。</span></li>
+            <li><strong data-i18n="thoughtPaymentTitle">支付方式多了，待办不用增加。</strong> <span data-i18n="thoughtPaymentBody">加入 TenPayGo 时，我们最初给它和支付宝各放了一行，后来合成一项支付准备：验证一种即可，另一种留作备用。这样清单更接近游客要完成的事情。一次测试无法保证所有场景都能付款，所以交通页仍会说明支付条件和替代方案。</span></li>
+            <li><strong data-i18n="thoughtRecognitionTitle">识别不确定时，让用户确认。</strong> <span data-i18n="thoughtRecognitionBody">微信支付和 TenPayGo 可能出现同一句报错，只看文字容易选错应用。我们结合界面特征识别，模糊时提供候选，让用户确认。</span> <span data-i18n="thoughtRecognitionEvidence">64 张指南截图的场景命中率约 94%，75 张 Reddit 用户截图约 84%。真实画面更难判断；这些数字衡量的是分类，实际解决率仍需验证，TenPayGo 失败样本也待补充。</span></li>
+            <li><strong data-i18n="thoughtFlowTitle">把失败和重试也走一遍。</strong> <span data-i18n="thoughtFlowBody">联调时，重复点击、请求超时和旧结果覆盖新截图，比正常流程更容易暴露问题。我们补上了重复请求处理、重试和过期响应拦截，再用端到端测试检查跨页状态。游客中途切走或重新操作，也应该知道接下来怎么做。</span></li>
           </ul>
         </section>
 
