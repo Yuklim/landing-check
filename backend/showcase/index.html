@@ -79,13 +79,11 @@
         <section class="story-section concise-section" id="thoughts">
           <div class="section-heading"><span class="section-number">04 / OUR REFLECTIONS</span><h2 data-i18n="thoughtsTitle">我们的思考</h2></div>
           <ul class="article-prose next-list reflections-prose">
-            <li><strong data-i18n="thoughtFocusTitle">先把上网、支付和到酒店这段路做完整。</strong> <span data-i18n="thoughtFocusBody">最初考虑过翻译、点餐和行程规划，后来逐渐收窄到抵达前后的三件事。游客的求助让我们看到，应用装好了，到了现场仍可能不知道怎么用。于是我们把能提前做的准备放到起飞前，把具体指引放到实际需要的那一步。这个取舍帮助我们理清了页面顺序，也留下一个需要继续验证的问题：把这些步骤串起来，是否真的比查攻略更省事？</span></li>
-            <li><strong data-i18n="thoughtResearchTitle">做调研时，也要追问问题后来怎样了。</strong> <span data-i18n="thoughtResearchBody">一条求助能说明有人遇到困难，却不能说明所有游客都会遇到。整理来源时，我们发现有的提问已经得到回复，有人后来自己解决，也有人靠现有攻略顺利完成旅行。因此，我们把追问、亲历反馈和创作者攻略分开记录，保留已知的后续。经验是，调研既要找到问题，也要看现有办法能解决到哪一步，才知道自己的方案还能帮上什么忙。</span></li>
-            <li><strong data-i18n="thoughtPaymentTitle">支付方式多了，待办不用跟着增加。</strong> <span data-i18n="thoughtPaymentBody">加入 TenPayGo 时，我们最初给它和支付宝各放了一行，后来合成一项支付准备：验证一种即可，另一种留作备用。接着又发现，支付已就绪，并不代表每种交通方案都能直接使用；例如支付宝里的滴滴仍需要支付宝。我们在交通页补上使用条件和替代方案。这次调整提醒我们，增加一种选择时，要检查它对后续步骤的影响，不能只把新入口放上去就算完成。</span></li>
-            <li><strong data-i18n="thoughtRecognitionTitle">识别模糊时，留一步给用户确认。</strong> <span data-i18n="thoughtRecognitionBody">微信支付和 TenPayGo 可能出现同一句报错，单靠文字容易选错应用，连“财付通”这样的词也不足以区分两者。我们补充了页面布局、导航和应用名称等识别线索，把共用报错与应用特征分开处理；信息不足时展示候选，让用户确认，模型不可用时尝试关键词匹配。做下来才体会到，识别功能还需要设计好怎样表达不确定、怎样让用户继续操作。</span></li>
-            <li><strong data-i18n="thoughtEvaluationTitle">换成真实截图，才看见原先漏掉的问题。</strong> <span data-i18n="thoughtEvaluationBody">64 张指南截图的场景命中率约 94%，换到 75 张 Reddit 用户截图约为 84%。错例中既有相似界面，也有翻译浮层和知识库范围外的图片。逐张看错例，才能判断该补识别线索、补充条目，还是返回未知；样本里账户受限和身份验证的求助，也让我们重新关注知识库的覆盖重点。这些数字只衡量分类，游客能否按指引解决问题仍需单独验证，TenPayGo 的失败样本也还要补充。</span></li>
-            <li><strong data-i18n="thoughtKnowledgeTitle">知识库要写到用户能照着操作。</strong> <span data-i18n="thoughtKnowledgeBody">整理 I’m Stuck 的内容时，只解释报错原因还不够，还得写清从哪个菜单进入、按什么顺序操作，以及做不下去时怎么办。我们把原因、步骤、备用办法、来源和核验日期整理成固定条目，让模型匹配已有内容；范围外的建议则标明未经核验。这让我们意识到，后续维护不能只数新增了多少条，还要逐步核对现有步骤是否适用、配图是否对应，规则变化后有没有及时更新。</span></li>
-            <li><strong data-i18n="thoughtFlowTitle">正常流程跑通后，把失败和重试也走一遍。</strong> <span data-i18n="thoughtFlowBody">联调时，重复点击可能发出多次验证请求，请求超时会让页面一直等，上传新截图后还可能被晚到的旧结果覆盖。我们补上了重复请求处理、超时提示和重试，并拦截过期响应，再用端到端测试检查返回、切页和重新操作后的状态。这些问题看起来零碎，却会直接影响用户是否敢继续点下去。我们的教训是，做完成功页面后，还要给失败、等待和中途退出都留好出路。</span></li>
+            <li><strong data-i18n="thoughtFocusTitle">先做好上网、支付和到酒店。</strong> <span data-i18n="thoughtFocusBody">最初考虑过翻译、点餐和行程规划，后来收窄到抵达前后的三件事：能提前准备的放到起飞前，操作指引留在需要的那一步。调研也让我们学会保留问题的后续，看看现有办法已经解决了什么，再判断还能帮上什么忙。</span></li>
+            <li><strong data-i18n="thoughtPaymentTitle">支付方式多了，待办不用增加。</strong> <span data-i18n="thoughtPaymentBody">加入 TenPayGo 后，我们把它与支付宝合成一项支付准备，验证一种即可，另一种作为备用。但交通方案仍有各自的支付条件，于是又补上提醒和替代方案。这次改动让我们意识到，新增功能也要检查前后步骤能否接得上。</span></li>
+            <li><strong data-i18n="thoughtRecognitionTitle">用真实截图检验识别，模糊时让用户确认。</strong> <span data-i18n="thoughtRecognitionBody">微信支付与 TenPayGo 可能出现同一句报错，我们补充界面特征，判断不清时展示候选。64 张指南截图的场景命中率约 94%，75 张 Reddit 用户截图约 84%，也提醒我们持续检查真实错例。这些数字只衡量分类，能否解决问题仍需验证，TenPayGo 的失败样本也待补充。</span></li>
+            <li><strong data-i18n="thoughtKnowledgeTitle">指引要写到用户能照着操作。</strong> <span data-i18n="thoughtKnowledgeBody">整理 I’m Stuck 时，我们把报错原因进一步写成菜单路径、操作步骤和备用办法，保留来源与核验日期，让模型匹配已有条目；范围外的建议则标明未经核验。经验是，知识库维护还要核对步骤是否适用、配图是否对应，规则变了有没有及时更新。</span></li>
+            <li><strong data-i18n="thoughtFlowTitle">失败和重试，也要走一遍。</strong> <span data-i18n="thoughtFlowBody">联调暴露了重复点击、请求超时，以及旧识别结果覆盖新截图的问题。我们补上重复请求处理、超时重试和过期响应拦截，再用端到端测试检查跨页状态。做完成功页面后，也要给等待、失败和中途退出留好出路。</span></li>
           </ul>
         </section>
 
