@@ -55,6 +55,9 @@ def main():
         page.wait_for_function('document.querySelector("#videoPanel video").currentTime > 0.2')
         video.evaluate('(v) => { v.pause(); v.currentTime = 0; }')
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+        # Load below-the-fold images before checking their resources.
+        page.locator('img').evaluate_all('(imgs) => imgs.forEach(img => { img.loading = "eager"; })')
+        page.wait_for_function('Array.from(document.images).every(img => img.complete)')
         assert page.locator('img').evaluate_all('(imgs) => imgs.every(img => img.complete && img.naturalWidth > 0)')
         page.screenshot(path=str(output / 'desktop-zh.png'), full_page=True)
         page.emulate_media(reduced_motion='reduce')

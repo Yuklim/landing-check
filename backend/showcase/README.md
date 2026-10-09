@@ -39,7 +39,7 @@ Render 官方参考：[Monorepo Support](https://render.com/docs/monorepo-suppor
 
 视频区使用 `demo/film/landing-check-60s/renders/landing-check-v6.mp4` 最终动画版：57.3 秒、1920×1080、英文配音和中英字幕。网页文件为 `assets/landing-check-final.mp4`，只通过 ffmpeg 的 `-c copy -movflags +faststart` 将播放索引移到文件开头，画面和音频没有重新编码；封面从同一成片提取。原 38 秒录屏及其字幕保留为历史素材，当前页面不再使用。
 
-“我们的思考”合并原来的挑战、亮点与收获，以范围选择、支付板块合并、真实截图评测、失败与重试的处理为具体例子；不把工具协作署名作为项目故事，也不虚构用户测试或团队经历。
+“我们的思考”合并原来的挑战、亮点与收获，沿用黑点列表和行内加粗的段落形式，记录范围选择、调研后续、支付流程衔接、识别不确定性、真实截图评测、知识库维护、失败与重试七方面的经验。内容以开发、调研和测试记录为依据；不把工具协作署名作为项目故事，也不虚构用户测试或团队经历。
 
 多模态输入的权限设计参考 [MDN：getUserMedia](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia)；相机/麦克风在用户主动使用时申请，具体嵌入还需宿主 App 支持。已有截图上传使用用户主动选取的文件，参考 [MDN：File API](https://developer.mozilla.org/en-US/docs/Web/API/File_API/Using_files_from_web_applications)，不等同于后台读取相册。案例收集、脱敏核对和取得样本复用同意仍是后续工作，不宣称已完成。
 
