@@ -79,11 +79,11 @@
         <section class="story-section concise-section" id="thoughts">
           <div class="section-heading"><span class="section-number">04 / OUR REFLECTIONS</span><h2 data-i18n="thoughtsTitle">我们的思考</h2></div>
           <ul class="article-prose next-list reflections-prose">
-            <li><strong data-i18n="thoughtFocusTitle">先做好上网、支付和到酒店。</strong> <span data-i18n="thoughtFocusBody">最初考虑过翻译、点餐和行程规划，后来收窄到抵达前后的三件事：能提前准备的放到起飞前，操作指引留在需要的那一步。调研也让我们学会保留问题的后续，看看现有办法已经解决了什么，再判断还能帮上什么忙。</span></li>
-            <li><strong data-i18n="thoughtPaymentTitle">支付方式多了，待办不用增加。</strong> <span data-i18n="thoughtPaymentBody">加入 TenPayGo 后，我们把它与支付宝合成一项支付准备，验证一种即可，另一种作为备用。但交通方案仍有各自的支付条件，于是又补上提醒和替代方案。这次改动让我们意识到，新增功能也要检查前后步骤能否接得上。</span></li>
-            <li><strong data-i18n="thoughtRecognitionTitle">用真实截图检验识别，模糊时让用户确认。</strong> <span data-i18n="thoughtRecognitionBody">微信支付与 TenPayGo 可能出现同一句报错，我们补充界面特征，判断不清时展示候选。64 张指南截图的场景命中率约 94%，75 张 Reddit 用户截图约 84%，也提醒我们持续检查真实错例。这些数字只衡量分类，能否解决问题仍需验证，TenPayGo 的失败样本也待补充。</span></li>
-            <li><strong data-i18n="thoughtKnowledgeTitle">指引要写到用户能照着操作。</strong> <span data-i18n="thoughtKnowledgeBody">整理 I’m Stuck 时，我们把报错原因进一步写成菜单路径、操作步骤和备用办法，保留来源与核验日期，让模型匹配已有条目；范围外的建议则标明未经核验。经验是，知识库维护还要核对步骤是否适用、配图是否对应，规则变了有没有及时更新。</span></li>
-            <li><strong data-i18n="thoughtFlowTitle">失败和重试，也要走一遍。</strong> <span data-i18n="thoughtFlowBody">联调暴露了重复点击、请求超时，以及旧识别结果覆盖新截图的问题。我们补上重复请求处理、超时重试和过期响应拦截，再用端到端测试检查跨页状态。做完成功页面后，也要给等待、失败和中途退出留好出路。</span></li>
+            <li><strong data-i18n="thoughtFocusTitle">范围收窄，才能把流程做完整。</strong> <span data-i18n="thoughtFocusBody">聚焦上网、支付和到酒店后，我们才把准备与现场操作接了起来。做取舍时，要先看游客当前要完成什么，以及现有办法还缺什么，避免功能越来越多，重点却越来越模糊。</span></li>
+            <li><strong data-i18n="thoughtPaymentTitle">多一种选择，也要理清前后关系。</strong> <span data-i18n="thoughtPaymentBody">接入 TenPayGo 后，合并支付待办只是一步，还要检查交通方案能否衔接。这提醒我们，新增功能要沿着用户的操作走一遍，看看有没有把额外的判断和麻烦留给用户。</span></li>
+            <li><strong data-i18n="thoughtRecognitionTitle">用真实场景检验自己的判断。</strong> <span data-i18n="thoughtRecognitionBody">真实截图暴露了攻略样本没呈现的问题。评测要多看错例，判断模糊时让用户确认；还要继续验证，给出的指引是否真的能帮人解决问题。</span></li>
+            <li><strong data-i18n="thoughtKnowledgeTitle">指引要能照着做，也要持续更新。</strong> <span data-i18n="thoughtKnowledgeBody">整理知识库时，我们发现解释报错之后，还要写清按哪里、做不下去怎么办。内容积累以后，核对步骤是否仍适用，就和补充新条目一样重要。</span></li>
+            <li><strong data-i18n="thoughtFlowTitle">把失败后的路也设计好。</strong> <span data-i18n="thoughtFlowBody">联调中的超时和重复操作提醒我们，等待多久、怎样重试、退出后怎么接着做，都需要提前想清楚。检查流程时，也要主动走一遍这些不顺利的情况。</span></li>
           </ul>
         </section>
 
