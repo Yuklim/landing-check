@@ -64,3 +64,7 @@ python -m uvicorn app:app --app-dir backend --host 127.0.0.1 --port 8000
 ## 接下来
 
 继续做真实用户任务测试，完善 I’m Stuck 知识库并接入现场照片、语音等多模态能力；补充离线缓存和多语言内容，确认 Trip.com 行程、航班、客服及真实支付相关接入。上述能力仍属于后续计划，具体思考见[项目展示页](https://yuklim.github.io/landing-check/backend/showcase/#next)。
+
+## 协作约定
+
+- 提交前确认本机 git 邮箱已在自己的 GitHub 账号里验证过（`git config user.email`），否则提交不会计入贡献者。
