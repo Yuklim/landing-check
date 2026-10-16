@@ -42,6 +42,7 @@ BIND = [
     ('home', 'name:Search', 'toast:Demo：搜索'),
     # My Trips
     ('trips', 'name:Chip Landing Check', 'go:preflight'),
+    ('trips', 'name:Stamps', 'go:city-passport'),
     ('trips', 'name:LC Button', 'api:landing'),
     ('trips', 'name:Landing Check Card', 'api:landing'),
     ('trips', 'name:Tab Home', 'go:home'),
@@ -142,7 +143,7 @@ BIND = [
     ('transit', 'name:Stuck FAB', 'api:stuck'),
     # 司机地址
     ('driver', 'name:Close', 'back'),
-    ('driver', 'name:Didi Button', 'toast:Demo：打开支付宝里的滴滴小程序'),
+    ('driver', 'name:In Car Button', 'api:incar'),
     ('driver', 'name:Call Button', 'toast:Demo：拨打酒店电话'),
     ('driver', 'name:Stuck FAB', 'api:stuck'),
     # 完成页

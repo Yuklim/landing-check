@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "version": "2026.10.16.3",
-  "revision": "c5c29d35ba6a05ac4019",
+  "revision": "acafc2d6349240ba2f56",
   "assets": [
     {
       "path": "app.js",
@@ -160,8 +160,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "7c9cc24e646b75f2db028410d93573c9efec2dc218885eea2f6ae018d00f1341",
-      "bytes": 1172560
+      "sha256": "f9390c44cd1a0f3fef4a4348bcde24e2d494f1f9e04d488b7438861184a0055a",
+      "bytes": 1175949
     },
     {
       "path": "manifest.json",
@@ -190,13 +190,13 @@
     },
     {
       "path": "stamp.css",
-      "sha256": "ea5eb6d13c6887e85a657e3a01d2dd0dadb0e2ed074cf5c18c313a7e297c6ebf",
-      "bytes": 10700
+      "sha256": "a99fb230d4996d8ec81c64e6b573d48afbb843adcece66ae5d2538d437a27b7f",
+      "bytes": 10596
     },
     {
       "path": "stamp.js",
-      "sha256": "ac5e13eb84a27dc5c90fb220d91876e192d52fbb7aa679591e6c6b9aaa6c46f1",
-      "bytes": 33947
+      "sha256": "c2f10a8ac63201a3e45aa580d918e7a0abc20551ab19434522b6ec2f573ec084",
+      "bytes": 32555
     },
     {
       "path": "tutorials.json",
