@@ -10,6 +10,7 @@
 <meta name="theme-color" content="#2C61FE">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="offline.css">
 <title>Trip.com Landing Check · H5 Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -4452,7 +4453,7 @@
 <div id="menu"><button id="menuBtn">页面 ≡</button><div id="list"><button data-go="home">首页入口</button><button data-go="preflight">行前检查</button><button data-go="payment">支付验证</button><button data-go="transfer">接机车型</button><button data-go="lock">锁屏推送</button><button data-go="trips">My Trips</button><button data-go="step1">落地卡·第一步</button><button data-go="online">已联网分支</button><button data-go="wifi">Wi-Fi 引导</button><button data-go="stuck">我卡住了</button><button data-go="step3">第三步交通</button><button data-go="transit">地铁导航</button><button data-go="driver">司机地址</button><button data-go="done">完成页</button><button data-go="share">分享卡</button><button data-go="car">租车页</button><button data-go="transfers">接机落地页</button><button data-go="esim">eSIM 页</button></div></div>
 <div id="hint">← → 上一页/下一页 · 点屏幕内的按钮跳转 · 右上角可直接跳到任意页</div>
 <script>
-const order = ["home", "preflight", "payment", "transfer", "lock", "trips", "step1", "online", "wifi", "stuck", "step3", "transit", "driver", "done", "share", "car", "transfers", "esim"];
+const order = ["home", "preflight", "payment", "transfer", "lock", "trips", "step1", "online", "wifi", "stuck", "step3", "transit", "driver", "done", "share", "car", "transfers", "esim", "offline", "offline-hotel", "offline-cards", "offline-guide", "offline-help", "offline-place"];
 const hist = [];
 const $ = s => document.querySelector(s);
 function fit(){
@@ -4538,6 +4539,7 @@ document.addEventListener('touchend', () => clearTimeout(lp));
 document.addEventListener('touchmove', () => clearTimeout(lp), {passive:true});
 document.querySelectorAll('#list button').forEach(b => b.onclick = () => show(b.dataset.go));
 document.addEventListener('keydown', e => {
+  if (e.target.closest('input,textarea,select,[contenteditable],dialog') || location.hash.startsWith('#offline')) return;
   const cur = document.querySelector('.screen.on').dataset.route;
   const i = order.indexOf(cur);
   if (e.key === 'ArrowRight') show(order[(i+1) % order.length]);
@@ -4554,5 +4556,7 @@ if (/island=2/.test(location.search)) { const n = $('#notif'); n.style.transitio
 if (/island=3/.test(location.search)) { const n = $('#notif'); n.style.transition = 'none'; n.classList.add('show', 'in', 'expanded'); }
 </script>
 <script src="app.js"></script>
+<script src="offline-db.js"></script>
+<script src="offline.js"></script>
 </body>
 </html>

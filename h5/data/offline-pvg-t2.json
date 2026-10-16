@@ -1,0 +1,567 @@
+{
+  "schema": 1,
+  "version": "2026.10.16.2",
+  "airport": {
+    "code": "PVG",
+    "terminal": "T2",
+    "name": "Shanghai Pudong",
+    "name_zh": "上海浦东国际机场"
+  },
+  "checked_at": "2026-10-16",
+  "sources": [
+    {
+      "id": "airport",
+      "name": "Shanghai Airport Group",
+      "url": "https://www.shanghaiairport.com/ensh/xwg/info_itemid_44398.html",
+      "published_at": "2026-04-23"
+    },
+    {
+      "id": "shanghai",
+      "name": "International Services Shanghai",
+      "url": "https://english.shanghai.gov.cn/en-LatestNews/20260319/526f61df226649a58acf4b174d18f8aa.html",
+      "published_at": "2026-03-19"
+    },
+    {
+      "id": "forex",
+      "name": "Ctrip Currency Exchange — outlet listing",
+      "url": "https://forex.ctrip.com/",
+      "published_at": null
+    },
+    {
+      "id": "esim",
+      "name": "Trip.com eSIM guide",
+      "url": "https://www.trip.com/guide/phone/esim.html/",
+      "published_at": null
+    },
+    {
+      "id": "phone",
+      "name": "Shanghai Airport — contact information",
+      "url": "https://www.shanghaiairport.com/pudong/fuwusheshi/index_lcid_390.html",
+      "published_at": null
+    }
+  ],
+  "places": [
+    {
+      "id": "wifi",
+      "category": "Internet",
+      "name": "Airport Wi-Fi help",
+      "name_zh": "机场 Wi-Fi 联网协助",
+      "location": "PVG T2. Ask airport staff for the current Wi-Fi authentication point.",
+      "location_zh": "浦东机场 T2，请向机场工作人员询问现行 Wi-Fi 认证点。",
+      "floor": null,
+      "hours": null,
+      "operator": "Airport service staff; authentication equipment is a separate facility.",
+      "services": "Ask about airport Wi-Fi authentication. The airport reports passport-photo authentication; follow the current login screen and staff instructions.",
+      "note": "The exact kiosk location and operating status have not been verified. Use the question card rather than a guessed walking route.",
+      "image": "img/offline/wifi.svg",
+      "phrase": "wifi-code",
+      "sources": [
+        "airport"
+      ],
+      "checked_at": "2026-10-16"
+    },
+    {
+      "id": "service",
+      "category": "Help",
+      "name": "International Services Shanghai",
+      "name_zh": "外籍人员一站式综合服务中心",
+      "location": "PVG T2 international arrivals hall, public arrivals area. Look for International Services Shanghai signs.",
+      "location_zh": "浦东机场 T2 国际到达大厅公共区域，寻找外籍人员一站式综合服务中心标识。",
+      "floor": "International arrivals public area; exact floor/desk marker not confirmed.",
+      "hours": "24-hour service center, as reported by the airport. Individual desks may have different availability.",
+      "operator": "Airport one-stop service center; separate from the Ctrip currency-exchange outlet.",
+      "services": "Payment assistance, tourism information, mobile communication and transport help. Ask staff which desk can handle your request.",
+      "note": "Detailed walking directions and individual-desk hours are not verified. Show the name card to airport staff.",
+      "image": "img/offline/service.svg",
+      "phrase": "find-counter",
+      "sources": [
+        "airport",
+        "shanghai"
+      ],
+      "checked_at": "2026-10-16"
+    },
+    {
+      "id": "sim",
+      "category": "Mobile data",
+      "name": "SIM card / communication service",
+      "name_zh": "手机 SIM 卡／通信服务窗口",
+      "location": "Ask for the communication desk at the T2 International Services Shanghai center in the public arrivals hall.",
+      "location_zh": "请前往 T2 国际到达大厅公共区域的一站式综合服务中心，询问通信服务窗口。",
+      "floor": null,
+      "hours": null,
+      "operator": "Telecom service desk; the official report describes China Telecom short-term SIM service.",
+      "services": "Ask about short-term SIM plans, required identification, phone compatibility, accepted payment and installation assistance.",
+      "note": "Plans, prices, stock, payment methods and desk hours must be confirmed with staff. SIM purchase is not attributed to the Ctrip exchange counter.",
+      "image": "img/offline/sim.svg",
+      "phrase": "buy-sim",
+      "sources": [
+        "airport",
+        "shanghai"
+      ],
+      "checked_at": "2026-10-16"
+    },
+    {
+      "id": "exchange",
+      "category": "Payment",
+      "name": "Ctrip currency-exchange collection point",
+      "name_zh": "携程浦东机场 T2 国际出发 G 岛取钞点",
+      "location": "T2, level 3, G check-in island, near departures door 25, before security. Listed by the Ctrip exchange website when checked.",
+      "location_zh": "T2 航站楼 3 楼 G 岛，近出发层 25 号门，安检外；以核验时携程换汇官网网点信息为依据。",
+      "floor": "Level 3 · Departures · Public area",
+      "hours": null,
+      "operator": "Listed by Ctrip Currency Exchange; its website identifies Shanghai Yidui Currency Exchange Co., Ltd. as the service provider.",
+      "services": "The website lists online foreign-currency ordering and outlet collection. Ask whether this outlet can exchange your foreign cash for RMB.",
+      "note": "Walk-in foreign-cash-to-RMB eligibility, supported currencies, fees and hours are not confirmed. This is not a confirmed Wi-Fi or SIM desk. If unavailable, ask the airport service center for a suitable exchange point.",
+      "image": "img/offline/exchange.svg",
+      "phrase": "exchange-rmb",
+      "sources": [
+        "forex"
+      ],
+      "checked_at": "2026-10-16"
+    }
+  ],
+  "phrases": [
+    {
+      "id": "hotel",
+      "category": "Hotel",
+      "en": "Please take me to this hotel.",
+      "zh": "请带我去这家酒店。",
+      "label": "Go to my hotel"
+    },
+    {
+      "id": "wifi-help",
+      "category": "Internet",
+      "en": "Could you help me connect to the airport Wi-Fi?",
+      "zh": "可以帮我连接机场 Wi-Fi 吗？",
+      "label": "Connect to Wi-Fi"
+    },
+    {
+      "id": "wifi-code",
+      "category": "Internet",
+      "en": "Where can I get a Wi-Fi access code or help with authentication?",
+      "zh": "请问在哪里可以获取 Wi-Fi 上网验证码，或办理上网认证？",
+      "label": "Wi-Fi authentication help"
+    },
+    {
+      "id": "find-counter",
+      "category": "Help",
+      "en": "Could you show me where this service counter is?",
+      "zh": "可以告诉我这个服务柜台在哪里吗？",
+      "label": "Find a service counter"
+    },
+    {
+      "id": "exchange-rmb",
+      "category": "Payment",
+      "en": "Where can I exchange foreign cash for Chinese yuan (RMB)?",
+      "zh": "请问在哪里可以把外币现金兑换成人民币？",
+      "label": "Exchange foreign cash"
+    },
+    {
+      "id": "buy-sim",
+      "category": "Mobile data",
+      "en": "I would like a SIM card with mobile data. Could you help me choose and set it up?",
+      "zh": "我想办理一张可以上网的手机 SIM 卡，可以帮我选择并安装吗？",
+      "label": "Buy a SIM card"
+    },
+    {
+      "id": "payment",
+      "category": "Payment",
+      "en": "My payment did not go through. Could you help me check what happened?",
+      "zh": "我的支付没有成功，可以帮我看看是什么问题吗？",
+      "label": "Payment failed"
+    },
+    {
+      "id": "contact-hotel",
+      "category": "Hotel",
+      "en": "Could you help me contact this hotel?",
+      "zh": "可以帮我联系这家酒店吗？",
+      "label": "Contact my hotel"
+    },
+    {
+      "id": "no-internet",
+      "category": "Help",
+      "en": "I cannot access the internet. Could you help me find an airport service desk?",
+      "zh": "我现在无法上网，可以帮我找到机场服务台吗？",
+      "label": "Find help getting online"
+    },
+    {
+      "id": "wifi-connection-failed",
+      "category": "Internet",
+      "label": "Wi-Fi connection failed",
+      "en": "I tried the airport Wi-Fi but still cannot access the internet. Could you help me connect?",
+      "zh": "我尝试连接机场 Wi-Fi，但仍然无法上网，可以帮我连接吗？"
+    },
+    {
+      "id": "wifi-auth-failed",
+      "category": "Internet",
+      "label": "Wi-Fi authentication failed",
+      "en": "I could not complete the airport Wi-Fi authentication. Could you help me check the login steps or try another authentication method?",
+      "zh": "我的机场 Wi-Fi 上网认证没有成功，可以帮我检查登录步骤，或换一种认证方式吗？"
+    },
+    {
+      "id": "wifi-kiosk-missing",
+      "category": "Internet",
+      "label": "Find Wi-Fi equipment",
+      "en": "I cannot find the Wi-Fi authentication machine or access-code point. Could you show me where it is, or help me authenticate another way?",
+      "zh": "我找不到 Wi-Fi 上网认证设备或验证码领取点，可以告诉我在哪里，或帮我使用其他方式认证吗？"
+    },
+    {
+      "id": "service-missing",
+      "category": "Help",
+      "label": "Find the service center",
+      "en": "I cannot find this service center. Could you show me where it is?",
+      "zh": "我找不到这个服务中心，可以告诉我在哪里吗？"
+    },
+    {
+      "id": "service-unavailable",
+      "category": "Help",
+      "label": "Service center unavailable",
+      "en": "I could not get help at this service center. Could you direct me to another available airport service point?",
+      "zh": "我暂时未能在这个服务中心获得帮助，可以指引我去其他可用的机场服务点吗？"
+    },
+    {
+      "id": "choose-data",
+      "category": "Mobile data",
+      "label": "Choose mobile data",
+      "en": "Could you help me choose a physical SIM or eSIM that works with my phone?",
+      "zh": "可以帮我选择适用于这部手机的实体 SIM 卡或 eSIM 吗？"
+    },
+    {
+      "id": "sim-missing",
+      "category": "Mobile data",
+      "label": "Find the SIM desk",
+      "en": "I cannot find this SIM card service desk. Could you show me where it is?",
+      "zh": "我找不到这个手机 SIM 卡服务窗口，可以告诉我在哪里吗？"
+    },
+    {
+      "id": "sim-closed",
+      "category": "Mobile data",
+      "label": "SIM desk unavailable",
+      "en": "This SIM card service desk is closed or unavailable. Could you help me find another available communication service?",
+      "zh": "这个手机 SIM 卡服务窗口已关闭或暂时无法办理业务，可以帮我找到其他可用的通信服务点吗？"
+    },
+    {
+      "id": "payment-methods",
+      "category": "Payment",
+      "label": "Accepted payment methods",
+      "en": "I would like to buy a SIM card. Which payment methods can I use here?",
+      "zh": "我想办理一张手机 SIM 卡，请问这里支持哪些支付方式？"
+    },
+    {
+      "id": "sim-cash-needed",
+      "category": "Payment",
+      "label": "Cash needed for a SIM",
+      "en": "I need Chinese yuan cash to buy a SIM card. Could you direct me to a suitable currency-exchange service?",
+      "zh": "我需要人民币现金来办理手机 SIM 卡，可以指引我去合适的换汇服务点吗？"
+    },
+    {
+      "id": "payment-unavailable",
+      "category": "Payment",
+      "label": "No usable payment method",
+      "en": "I have not found a payment method I can use to buy a SIM card. Could you help me find an available way to pay or get connected?",
+      "zh": "我暂时没有找到可用的支付方式来办理手机 SIM 卡，可以帮我确认其他支付或联网办法吗？"
+    },
+    {
+      "id": "exchange-unavailable",
+      "category": "Payment",
+      "label": "Exchange not available",
+      "en": "I have not been able to exchange my foreign cash for Chinese yuan. Could you help me find another suitable exchange service?",
+      "zh": "我暂时未能把外币现金兑换成人民币，可以帮我找到其他合适的换汇服务点吗？"
+    },
+    {
+      "id": "sim-setup",
+      "category": "Mobile data",
+      "label": "SIM setup help",
+      "en": "Could you help me install and set up this SIM card for internet access?",
+      "zh": "可以帮我安装并设置这张手机 SIM 卡，让手机能够上网吗？"
+    },
+    {
+      "id": "sim-no-data",
+      "category": "Mobile data",
+      "label": "SIM still has no internet",
+      "en": "I still cannot access the internet with this SIM card. Could you help me check the setup and connection?",
+      "zh": "使用这张手机 SIM 卡后，我仍然无法上网，可以帮我检查设置和网络连接吗？"
+    },
+    {
+      "id": "esim-help",
+      "category": "Mobile data",
+      "label": "eSIM compatibility and setup",
+      "en": "Could you check whether my phone supports an eSIM and help me understand how to install it?",
+      "zh": "可以帮我确认这部手机是否支持 eSIM，并说明如何安装吗？"
+    },
+    {
+      "id": "esim-needs-internet",
+      "category": "Internet",
+      "label": "Internet needed for eSIM",
+      "en": "I need an internet connection to purchase or install an eSIM, but I cannot get online. Could you help me connect first?",
+      "zh": "我需要联网才能购买或安装 eSIM，但现在无法上网，可以先帮我连接网络吗？"
+    }
+  ],
+  "contacts": [
+    {
+      "id": "airport",
+      "name": "Shanghai Airport service hotline",
+      "name_zh": "上海机场服务热线",
+      "phone": "+86 21 96990",
+      "sources": [
+        "phone"
+      ],
+      "checked_at": "2026-10-16"
+    }
+  ],
+  "online_support": "https://www.trip.com/pages/support/",
+  "demo_hotel": {
+    "name_en": "The PuLi Hotel and Spa",
+    "name_zh": "上海璞丽酒店",
+    "address_en": "1 Changde Road, Jing'an, Shanghai",
+    "address_zh": "上海市静安区常德路 1 号",
+    "phone": "021 3203 9999",
+    "notes": "Example only. Confirm your booking details before travel.",
+    "demo": true
+  },
+  "guide": {
+    "start": "wifi",
+    "steps": {
+      "wifi": {
+        "label": "Airport Wi-Fi",
+        "title": "Try the airport Wi-Fi",
+        "body": "Open your phone's Wi-Fi settings. Choose the official airport network shown on terminal signs, then follow its login and authentication instructions. Return here when you have tried it.",
+        "place": "wifi",
+        "phrase": "wifi-help",
+        "options": [
+          {
+            "label": "I can access the internet",
+            "next": "complete"
+          },
+          {
+            "label": "I need an access code / authentication",
+            "next": "auth"
+          },
+          {
+            "label": "It did not work",
+            "next": "assist",
+            "request": "wifi-connection-failed"
+          }
+        ]
+      },
+      "auth": {
+        "label": "Authentication",
+        "title": "Get help with authentication",
+        "body": "Follow the current Wi-Fi login page. If it asks for an access code, ask staff where to obtain one. Exact kiosk positions are not confirmed in this pack. Airport staff can also advise on the available passport authentication method.",
+        "place": "wifi",
+        "phrase": "wifi-code",
+        "options": [
+          {
+            "label": "Ready to try Wi-Fi again",
+            "next": "wifi"
+          },
+          {
+            "label": "Authentication failed",
+            "next": "assist",
+            "request": "wifi-auth-failed"
+          },
+          {
+            "label": "I cannot find the equipment",
+            "next": "assist",
+            "request": "wifi-kiosk-missing"
+          }
+        ]
+      },
+      "assist": {
+        "label": "In-person help",
+        "title": "Ask an airport staff member",
+        "body": "Show the question card or ask for the International Services Shanghai center in the T2 public international arrivals hall. Staff can direct you to the appropriate network or communication service.",
+        "place": "service",
+        "phrase": "no-internet",
+        "options": [
+          {
+            "label": "I can access the internet now",
+            "next": "complete"
+          },
+          {
+            "label": "I need mobile data instead",
+            "next": "choose"
+          },
+          {
+            "label": "I cannot find the service center",
+            "next": "fallback",
+            "request": "service-missing",
+            "request_place": "service"
+          },
+          {
+            "label": "The service is closed / unavailable",
+            "next": "fallback",
+            "request": "service-unavailable",
+            "request_place": "service"
+          }
+        ]
+      },
+      "choose": {
+        "label": "Mobile data",
+        "title": "Choose a mobile-data option",
+        "body": "An in-person SIM service is an option when you cannot get online. An eSIM requires a compatible device and may need internet access for purchase and installation. Choose the option that fits your situation.",
+        "phrase": "choose-data",
+        "options": [
+          {
+            "label": "Get help buying a physical SIM",
+            "next": "sim"
+          },
+          {
+            "label": "Check my eSIM options",
+            "next": "esim"
+          },
+          {
+            "label": "I need help deciding",
+            "next": "fallback",
+            "request": "choose-data"
+          }
+        ]
+      },
+      "sim": {
+        "label": "Physical SIM",
+        "title": "Ask at the communication desk",
+        "body": "Ask staff about a suitable SIM, phone compatibility, identification requirements, plan terms and accepted payment. Use a payment method you already have if it is accepted; exchanging cash is optional.",
+        "place": "sim",
+        "phrase": "buy-sim",
+        "options": [
+          {
+            "label": "I have a usable payment method",
+            "next": "setup"
+          },
+          {
+            "label": "My payment failed",
+            "next": "payment",
+            "request": "payment"
+          },
+          {
+            "label": "I need RMB cash",
+            "next": "payment",
+            "request": "sim-cash-needed"
+          },
+          {
+            "label": "I cannot find the SIM desk",
+            "next": "fallback",
+            "request": "sim-missing",
+            "request_place": "sim"
+          },
+          {
+            "label": "The SIM desk is closed / unavailable",
+            "next": "fallback",
+            "request": "sim-closed",
+            "request_place": "sim"
+          }
+        ]
+      },
+      "payment": {
+        "label": "Payment help",
+        "title": "Check how you can pay",
+        "body": "Ask the communication desk which payment methods it accepts. If you already have a usable method, continue without exchanging money. If you need RMB cash, view the exchange information and confirm service details with staff.",
+        "phrase": "payment-methods",
+        "options": [
+          {
+            "label": "I can pay with an existing method",
+            "next": "setup"
+          },
+          {
+            "label": "I need to exchange cash for RMB",
+            "next": "currency"
+          },
+          {
+            "label": "I have no usable payment option",
+            "next": "fallback",
+            "request": "payment-unavailable"
+          }
+        ]
+      },
+      "currency": {
+        "label": "Optional exchange",
+        "title": "Ask about exchanging cash",
+        "body": "The airport service center can advise on exchange services. A Ctrip collection point is also listed in this pack, but walk-in foreign-cash-to-RMB service there is not confirmed. Ask about eligibility, accepted currencies and fees before proceeding.",
+        "place": "exchange",
+        "alternative_place": "service",
+        "phrase": "exchange-rmb",
+        "options": [
+          {
+            "label": "I have usable payment — return to SIM",
+            "next": "sim"
+          },
+          {
+            "label": "Exchange is unavailable / not suitable",
+            "next": "fallback",
+            "request": "exchange-unavailable"
+          }
+        ]
+      },
+      "setup": {
+        "label": "Connect and check",
+        "title": "Set up the SIM with staff",
+        "body": "Follow the provider's setup instructions. Ask staff to help if needed. Confirm that you can actually open an internet service; a Wi-Fi or signal icon alone does not prove internet access.",
+        "place": "sim",
+        "phrase": "sim-setup",
+        "options": [
+          {
+            "label": "I confirm I can access the internet",
+            "next": "complete"
+          },
+          {
+            "label": "I still cannot access the internet",
+            "next": "fallback",
+            "request": "sim-no-data"
+          }
+        ]
+      },
+      "esim": {
+        "label": "eSIM",
+        "title": "Check compatibility and installation",
+        "body": "Check your phone supports the selected eSIM and is eligible for that provider's service. Follow your specific product instructions. Purchase or installation may need internet; this offline guide cannot buy or download an eSIM for you.",
+        "phrase": "esim-help",
+        "sources": [
+          "esim"
+        ],
+        "options": [
+          {
+            "label": "Already installed — I can access the internet",
+            "next": "complete"
+          },
+          {
+            "label": "I need internet to install it",
+            "next": "assist",
+            "request": "esim-needs-internet"
+          },
+          {
+            "label": "Not compatible — try a physical SIM",
+            "next": "sim"
+          }
+        ]
+      },
+      "fallback": {
+        "label": "Keep getting help",
+        "title": "Show your request to airport staff",
+        "body": "Use the large bilingual card below. Ask a nearby airport staff member to direct you to an available service point. You can also open your saved contacts. The guide remains available while you are offline.",
+        "phrase": "no-internet",
+        "options": [
+          {
+            "label": "Try the airport service center",
+            "next": "assist"
+          },
+          {
+            "label": "Review mobile-data options",
+            "next": "choose"
+          }
+        ]
+      },
+      "complete": {
+        "label": "Confirmed by you",
+        "title": "You confirmed internet access",
+        "body": "Your confirmation is saved on this device. Keep this pack for later — your hotel address, communication cards and contacts remain available without a connection.",
+        "phrase": "hotel",
+        "options": [
+          {
+            "label": "Start a new connection check",
+            "next": "wifi"
+          }
+        ]
+      }
+    }
+  }
+}

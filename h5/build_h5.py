@@ -260,6 +260,7 @@ page = f'''<!doctype html>
 <meta name="theme-color" content="#2C61FE">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
+<link rel="stylesheet" href="offline.css">
 <title>Trip.com Landing Check · H5 Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -330,7 +331,7 @@ page = f'''<!doctype html>
 <div id="menu"><button id="menuBtn">页面 ≡</button><div id="list">{nav_items}</div></div>
 <div id="hint">← → 上一页/下一页 · 点屏幕内的按钮跳转 · 右上角可直接跳到任意页</div>
 <script>
-const order = {json.dumps(list(SCREENS.values()))};
+const order = {json.dumps(list(SCREENS.values()) + ['offline', 'offline-hotel', 'offline-cards', 'offline-guide', 'offline-help', 'offline-place'])};
 const hist = [];
 const $ = s => document.querySelector(s);
 function fit(){{
@@ -416,6 +417,7 @@ document.addEventListener('touchend', () => clearTimeout(lp));
 document.addEventListener('touchmove', () => clearTimeout(lp), {{passive:true}});
 document.querySelectorAll('#list button').forEach(b => b.onclick = () => show(b.dataset.go));
 document.addEventListener('keydown', e => {{
+  if (e.target.closest('input,textarea,select,[contenteditable],dialog') || location.hash.startsWith('#offline')) return;
   const cur = document.querySelector('.screen.on').dataset.route;
   const i = order.indexOf(cur);
   if (e.key === 'ArrowRight') show(order[(i+1) % order.length]);
@@ -432,7 +434,11 @@ if (/island=2/.test(location.search)) {{ const n = $('#notif'); n.style.transiti
 if (/island=3/.test(location.search)) {{ const n = $('#notif'); n.style.transition = 'none'; n.classList.add('show', 'in', 'expanded'); }}
 </script>
 <script src="app.js"></script>
+<script src="offline-db.js"></script>
+<script src="offline.js"></script>
 </body>
 </html>'''
 open(OUT, 'w', encoding='utf-8').write(page)
 print('built', OUT, round(os.path.getsize(OUT)/1e6, 2), 'MB,', len(screens_html), 'screens')
+from build_offline import build as build_offline_manifest
+build_offline_manifest()

@@ -106,7 +106,8 @@ def block_label(pg):
 # ---------------- FR-1 行前检查 ----------------
 def test_preflight_has_one_payment_in_china_block(page, base):
     open_app(page, base, 'preflight'); go(page, 'preflight')
-    wait_text(page, 'preflight', 'Progress Label', '4 of 6 ready · 2 to do · 2 optional')
+    # 离线包现在按真实本机状态计数；新浏览器尚未下载，不沿用 mock 的 done。
+    wait_text(page, 'preflight', 'Progress Label', '3 of 6 ready · 3 to do · 2 optional')
     rows = page.evaluate("""() => [...document.querySelectorAll('.screen[data-route="preflight"] [data-pencil-name$=" payment"]')].map(e => e.getAttribute('data-pencil-name'))""")
     assert rows == ['Item Alipay payment']                      # 只有一个支付板块，没有单独的 TenPayGo 行
     row = pay_block(page)
@@ -129,7 +130,7 @@ def test_verify_tenpaygo_then_add_alipay_as_backup(page, base):
     assert 'TenPayGo pays' in text(page, 'payment', 'Source')
     assert 'VERIFIED' in text(page, 'payment', 'Chip Label')
     node(page, 'payment', 'Done Button').click()
-    wait_text(page, 'preflight', 'Progress Label', '5 of 6 ready · 1 to do · 2 optional')
+    wait_text(page, 'preflight', 'Progress Label', '4 of 6 ready · 2 to do · 2 optional')
     page.wait_for_function("""() => /Add backup/.test(document.querySelector('.screen[data-route="preflight"] [data-pencil-name="Item Alipay payment"] [data-pencil-name="Item Button Label"]').textContent)""")
     desc = pay_block(page).locator('[data-pencil-name="Item Desc"]').text_content()
     assert desc.startswith('TenPayGo verified · ¥1 test on') and desc.endswith('Alipay is an optional backup')
@@ -159,7 +160,7 @@ def test_tenpaygo_failure_explains_code_and_switches_to_alipay(page, base):
     wait_text(page, 'payment', 'Result Title', 'Your Alipay works in China')
     assert not node(page, 'payment', 'Pay Switch').is_visible()
     go(page, 'preflight')
-    wait_text(page, 'preflight', 'Progress Label', '5 of 6 ready')
+    wait_text(page, 'preflight', 'Progress Label', '4 of 6 ready')
 
 
 # ---------------- FR-4 落地流程先验证支付 ----------------

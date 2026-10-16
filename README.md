@@ -25,6 +25,7 @@ Render 实例休眠后，在线原型首次连接可能需要等待唤醒。展�
 - **行前检查与落地引导**：围绕联网、支付和交通安排任务，支付准备支持支付宝与 TenPayGo，任一种模拟验证通过即可继续。
 - **I’m Stuck**：从截图或文字判断场景，返回知识库条目；不确定时给出候选，模型不可用时使用关键词规则兜底。知识库外的 AI 建议单独标记为未经核验。
 - **知识库与图文教程**：5 个场景、41 条记录、10 篇图文教程，保留步骤、备用办法、来源和核验日期。
+- **离线旅行包**：浦东 T2 酒店双语地址、地点与沟通卡、联网向导及求助联系；整包校验下载，本机保存个人信息。入口 `h5/index.html#offline`，运行与验证见[离线包说明](docs/offline-pack.md)。
 - **演示与研究资料**：可交互 H5、中英双语展示页、初赛成片，以及需求复核和测试记录。
 
 前端使用 HTML、CSS、JavaScript，设计源文件为 `appearance.pen`；后端使用 Python、FastAPI、Uvicorn、Pydantic 和 HTTPX，截图识别接入 DeepSeek。数据保存在 JSON 文件中，测试使用 pytest 和 Playwright。GitHub Pages 承载前端，Render 承载 API。
@@ -63,7 +64,7 @@ python -m uvicorn app:app --app-dir backend --host 127.0.0.1 --port 8000
 
 ## 接下来
 
-继续做真实用户任务测试，完善 I’m Stuck 知识库并接入现场照片、语音等多模态能力；补充离线缓存和多语言内容，确认 Trip.com 行程、航班、客服及真实支付相关接入。上述能力仍属于后续计划，具体思考见[项目展示页](https://yuklim.github.io/landing-check/backend/showcase/#next)。
+继续做真实用户任务测试，完善 I’m Stuck 知识库并接入现场照片、语音等多模态能力；在已有离线包基础上补充现场核验资料与更多语言，确认 Trip.com 行程、航班、客服及真实支付相关接入。上述扩展仍属于后续计划，具体思考见[项目展示页](https://yuklim.github.io/landing-check/backend/showcase/#next)。
 
 ## 协作约定
 

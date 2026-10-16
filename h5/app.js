@@ -19,8 +19,10 @@
   const $all = (route, name) => [...document.querySelectorAll(`.screen[data-route="${route}"] [data-pencil-name="${name}"]`)];
   const txt = (el, v) => { if (el && v != null) el.textContent = v; };
   const ok = r => { if (!r.ok) throw new Error(r.status); return r.json(); };
-  const get = p => fetch(API + p).then(ok);
-  const post = (p, body, isForm) => fetch(API + p, isForm ? { method: 'POST', body } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) }).then(ok);
+  const localOnly = () => !navigator.onLine || location.hash.startsWith('#offline');
+  const get = (p, explicit = false) => (!navigator.onLine || (!explicit && localOnly())) ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p).then(ok);
+  const post = (p, body, isForm) => localOnly() ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p, isForm ? { method: 'POST', body } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) }).then(ok);
+  window.lcOfflineTrip = () => withTimeout(get('/mock/trip', true), 4000);
 
   // ---------- 状态指示 ----------
   const dot = document.createElement('div');
@@ -308,6 +310,7 @@
   const ITEM_NODE = { permissions: 'Item Location & notifications', data: 'Item Mobile data in China', alipay: 'Item Alipay payment', transfer: 'Item Ride from the airport', car: 'Item Car rental', tickets: 'Item Palace Museum reservation', passport: 'Item Passport', pack: 'Item Offline landing pack' };
   async function renderPreflight() {
     let d; try { d = await get('/rules/preflight'); } catch (e) { return; }
+    window.lcPreflightData = d;
     if (!ICONS.done) captureIcons();
     txt($$('preflight', 'Progress Label'), d.summary); txt($$('preflight', 'Progress Pct'), d.pct + '%');
     const fill = $$('preflight', 'Fill'); if (fill) fill.style.width = Math.round(337 * d.pct / 100) + 'px';
@@ -317,6 +320,7 @@
       if (st && ICONS[status]) { const t = document.createElement('div'); t.innerHTML = ICONS[status]; st.replaceWith(t.firstElementChild); }
     };
     d.items.forEach(it => {
+      if (it.id === 'pack') return;                          // 真实本机保存状态由 offline.js 管理
       if (it.group && d.payment) return;                       // 支付宝 / TenPayGo 两项合在下面的板块里
       const node = $$('preflight', ITEM_NODE[it.id]); if (!node) return;
       setRow(node, it.status, it.desc);
@@ -328,6 +332,7 @@
       const btn = row.querySelector('[data-pencil-name="Item Button"]');
       if (btn) { btn.style.visibility = p.ready && !p.backup ? 'hidden' : 'visible'; txt(btn.querySelector('[data-pencil-name="Item Button Label"]'), p.ready ? 'Add backup' : 'Verify ¥1'); }
     }
+    if (window.lcOfflineReadiness) window.lcOfflineReadiness(d);
   }
 
   // ---------- 支付验证（文案切换见前面"支付方式"一节） ----------
