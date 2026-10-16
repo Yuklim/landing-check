@@ -130,3 +130,14 @@ OUTRO = [
     ('When you land', '3-4', '11-落地卡-已联网分支'),
     ('One next step', '4-2', '16-给司机看地址'),
 ]
+
+
+# 叠界面的镜头用哪条生成素材（多镜共用一条）。渲染器优先找 footage/<镜号>，再找这里的组名。
+GROUP = {
+    '1-2': 'sf-calm', '1-3': 'sf-calm', '1-5': 'sf-calm', '2-6a': 'sf-calm',
+    '1-4': 'sf-nod', '1-6': 'sf-doing', '2-5': 'sf-doing',
+    '2-1': 'sf-frown', '2-2': 'sf-snap', '2-3': 'sf-wait', '2-4': 'sf-read',
+    '2-6b': 'sf-smile', '2-7': 'sf-pack', '3-2': 'plane-seat',
+    '3-4': 'hall-walk', '4-1': 'hall-walk', '4-2': 'hall-door',
+    '4-4': 'taxi-seat', '5-1': 'taxi-seat',
+}

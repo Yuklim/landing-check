@@ -10,7 +10,7 @@ from multiprocessing import Pool
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from shotspec import SPEC, OUTRO
+from shotspec import SPEC, OUTRO, GROUP
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, '..', '..'))
@@ -166,6 +166,18 @@ def vgrad(size, top, bot):
 
 SPLIT = 1152
 
+def _left_scrim():
+    """素材铺满全屏时，左侧压一层极淡的提亮，让深色手机和白色放大卡读得出来。"""
+    lay = Image.new('RGBA', (W, H), (255, 255, 255, 0))
+    a = np.zeros((H, W), dtype=np.uint8)
+    ramp = np.clip(np.linspace(1.0, 0.0, W) * 1.45 - 0.18, 0, 1) ** 1.2
+    a[:, :] = (ramp * 58).astype(np.uint8)
+    lay.putalpha(Image.fromarray(a))
+    return lay
+
+LEFT_SCRIM = _left_scrim()
+
+
 def app_base(spec):
     im = Image.new('RGB', (W, H), BG)
     im.paste(vgrad((W - SPLIT, H), WARM, (238, 233, 224)), (SPLIT, 0))
@@ -239,13 +251,12 @@ def card_pos(zi, zpad, ry0, ry1):
     return cx2, cy2
 
 
-def draw_app(im, spec, sid, u, t, vframe=None):
+def draw_app(im, spec, sid, u, t, has_video=False):
     d = ImageDraw.Draw(im, 'RGBA')
-    # 右侧：有生成好的镜头就直接用，没有则放定妆照占位
+    # 没有生成素材时，右侧放定妆照占位
     rp = spec.get('rp')
-    if vframe is not None:
-        pw = W - SPLIT
-        im.paste(vframe, (SPLIT, 0))
+    if has_video:
+        pass
     elif rp:
         kind, tag = rp
         src = alex(kind)
@@ -505,38 +516,47 @@ def footage_path(name):
 
 
 def clip_for(spec, sid):
-    """找这一镜要用的素材，按优先级：
-    整镜人物戏  footage/<镜号>.mp4
-    分屏右侧    footage/<镜号>-r.mp4（这一镜单独生成的）→ footage/<R编号>.mp4（多镜共用的）"""
-    if spec['kind'] == 'slate':
-        return footage_path(sid)
-    rp = spec.get('rp')
-    if not rp: return None
-    return footage_path(sid + '-r') or footage_path(rp[1].split()[0])
+    """找这一镜要用的素材：先找 footage/<镜号>，叠界面的镜头再退回 footage/<组名>。
+    全部按 16:9 全屏使用，手机和放大卡浮在左侧留白上。"""
+    if spec['kind'] not in ('slate', 'app'):
+        return None
+    return footage_path(sid) or (footage_path(GROUP[sid]) if sid in GROUP else None)
 
 
 class VideoSource:
-    """把素材解码成一串定好尺寸的帧，按需逐帧取；长度不够就定格最后一帧。"""
+    """解码素材并缓存（JPEG 存内存，省得几 G 的裸帧）。
+    素材比镜头短时做往返循环：正放到底再倒放回来，接缝不跳。"""
     def __init__(self, path, size):
+        import io
         w, h = size
-        self.size = size; self.n = w * h * 3; self.last = None
-        self.p = subprocess.Popen(
+        self.size = size
+        p = subprocess.Popen(
             ['ffmpeg', '-v', 'error', '-i', path, '-vf',
              f'fps={FPS},scale={w}:{h}:force_original_aspect_ratio=increase,crop={w}:{h}',
              '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'],
             stdout=subprocess.PIPE, bufsize=10 ** 8)
+        n = w * h * 3
+        self.buf = []
+        while True:
+            b = p.stdout.read(n)
+            if not b or len(b) < n: break
+            o = io.BytesIO()
+            Image.frombytes('RGB', size, b).save(o, 'JPEG', quality=93)
+            self.buf.append(o.getvalue())
+        p.stdout.close(); p.wait()
+        self.i = 0
 
     def next(self):
-        b = self.p.stdout.read(self.n)
-        if b and len(b) == self.n:
-            self.last = Image.frombytes('RGB', self.size, b)
-        return self.last
+        import io
+        if not self.buf: return None
+        n = len(self.buf)
+        k = self.i % max(1, 2 * n - 2) if n > 1 else 0
+        if k >= n: k = 2 * n - 2 - k          # 往返
+        self.i += 1
+        return Image.open(io.BytesIO(self.buf[k])).convert('RGB')
 
     def close(self):
-        try:
-            self.p.stdout.close(); self.p.wait(timeout=5)
-        except Exception:
-            self.p.kill()
+        self.buf = []
 
 
 def render_frame(sid, i, nf, vframe=None):
@@ -545,7 +565,11 @@ def render_frame(sid, i, nf, vframe=None):
     t_abs = START[sid] + i / FPS
     kind = spec['kind']
     if kind == 'app':
-        im = app_base(spec); draw_app(im, spec, sid, u, i / FPS, vframe)
+        if vframe is not None:
+            im = vframe.copy(); im.paste(LEFT_SCRIM, (0, 0), LEFT_SCRIM)
+        else:
+            im = app_base(spec)
+        draw_app(im, spec, sid, u, i / FPS, vframe is not None)
     elif kind == 'slate':
         if vframe is not None:
             im = vframe.copy()
@@ -580,8 +604,7 @@ def render_shot(sid):
     src = None
     fp = clip_for(spec, sid)
     if fp:
-        size = (W, H) if spec['kind'] == 'slate' else (W - SPLIT, H)
-        src = VideoSource(fp, size)
+        src = VideoSource(fp, (W, H))
     out = os.path.join(SEG, f'{ORDER.index(sid):02d}_{sid}.mp4')
     p = subprocess.Popen(['ffmpeg', '-y', '-loglevel', 'error', '-f', 'rawvideo', '-pix_fmt', 'rgb24',
                           '-s', f'{W}x{H}', '-r', str(FPS), '-i', '-', '-an',
