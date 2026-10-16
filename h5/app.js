@@ -768,6 +768,240 @@
     if ((location.hash.slice(1) || '') === 'explore') loadCommunity();
   })();
 
+  // ---------- 共用：新建一个自带屏（状态栏克隆 + 顶部条 + 可滚内容），返回 {screen, body} ----------
+  function lcMakeScreen(route, name, topHTML) {
+    const cs = document.createElement('div');
+    cs.className = 'screen'; cs.dataset.route = route; cs.setAttribute('data-pencil-name', name);
+    cs.style.cssText = `background:${BG};width:393px;height:852px;position:relative;margin:0 auto;display:flex;flex-direction:column;font-family:Inter,-apple-system,"PingFang SC",sans-serif;color:${INK}`;
+    cs.innerHTML = `<div data-lc="top" style="background:#fff;flex:none">${topHTML}</div><div class="scroll" data-lc="body" style="flex:1;overflow-y:auto;background:${BG}"></div>`;
+    const sb = document.querySelector('.screen[data-route="wifi"] [data-pencil-name="Status Bar"]');
+    if (sb) { const c = sb.cloneNode(true); c.style.flexShrink = '0'; cs.insertBefore(c, cs.firstChild); }
+    { const all = document.querySelectorAll('#phone > .screen'); if (all.length) all[all.length - 1].after(cs); else (document.getElementById('phone') || document.body).appendChild(cs); }
+    if (typeof order !== 'undefined' && !order.includes(route)) order.push(route);
+    return { screen: cs, body: cs.querySelector('[data-lc="body"]') };
+  }
+  const LC_BACK = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>`;
+  const LC_SRCH = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="${MUTED}" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>`;
+  // 本地日期 yyyy-MM-dd（按本地时区，不走 toISOString 以免差一天）
+  const lcDate = n => { const d = new Date(Date.now() + (n || 0) * 864e5); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+  // 单选/可切换筛选 chip 组：items=[{t,...}]，isOn(o) 决定高亮，onPick(o) 处理点击；点击后重渲染高亮
+  function lcChips(box, items, isOn, onPick) {
+    const render = () => {
+      box.innerHTML = items.map((o, i) => `<div class="lc-chip${isOn(o) ? ' on' : ''}" data-i="${i}">${o.t}</div>`).join('');
+      box.querySelectorAll('.lc-chip').forEach(c => c.onclick = () => { onPick(items[+c.dataset.i]); render(); });
+    };
+    render();
+    return render;
+  }
+  (() => {
+    const css = document.createElement('style');
+    css.textContent = `.lc-srch input{font:600 14px Inter,sans-serif;border:0;outline:0;background:transparent;color:${INK};min-width:0;width:100%}`
+      + `.lc-srch input[type=date]{font:500 12px Inter,sans-serif;color:${INK};width:auto;max-width:118px}`
+      + `.lc-chip{flex:none;padding:7px 12px;border-radius:16px;font:600 13px Inter,sans-serif;border:1px solid ${LINE};color:${INK};background:#fff;cursor:pointer;white-space:nowrap}`
+      + `.lc-chip.on{border-color:${BLUE};color:${BLUE};background:rgba(44,97,254,.06)}`
+      + `.lc-row{display:flex;gap:8px;padding:0 14px 10px;overflow-x:auto}.lc-row::-webkit-scrollbar{display:none}`;
+    document.head.appendChild(css);
+  })();
+
+  // 共享查询状态：入口页写、结果页读（酒店 HQ / 租车 CQ）
+  const HQ = { city: '上海', checkIn: lcDate(0), checkOut: lcDate(1), stars: '', sortType: '1' };
+  const CQ = { city: '上海', pick: lcDate(1), ret: lcDate(3), group: '' };
+  const LC_MON = { '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr', '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug', '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec' };
+  const lcMd = s => { const p = (s || '').split('-'); return p.length === 3 ? LC_MON[p[1]] + ' ' + (+p[2]) : (s || ''); };
+  const lcRange = (a, b) => lcMd(a) + ' - ' + lcMd(b);
+
+  // ---------- 酒店结果页：真实数据来自官方 query_hotel（后端 /content/hotels）；查询条来自入口页（HQ），星级/排序可就地 refine ----------
+  (function () {
+    const PIN = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="${MUTED}" stroke-width="2" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>`;
+    const HEART = `<svg viewBox="0 0 24 24" width="20" height="20" fill="#fff" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" opacity=".92"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.6 8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>`;
+    const top = `
+      <div style="padding:8px 12px 8px;display:flex;align-items:center;gap:8px">
+        <div class="tap" data-lc-back style="flex:none">${LC_BACK}</div>
+        <div class="tap lc-srch" data-lc-pill style="flex:1;display:flex;align-items:center;gap:8px;border:1px solid ${LINE};border-radius:10px;padding:9px 12px;cursor:pointer">${LC_SRCH}<span data-lc-pilltext style="font:600 13px Inter,sans-serif;color:${INK}">上海</span><span style="margin-left:auto;color:${MUTED}">✎</span></div>
+      </div>
+      <div class="lc-row" data-lc-chips></div>`;
+    const { screen: cs, body: HB } = lcMakeScreen('hotels', 'Hotels', top);
+    cs.querySelector('[data-lc-back]').onclick = () => back();
+    cs.querySelector('[data-lc-pill]').onclick = () => show('hotels-search');
+    const pillText = cs.querySelector('[data-lc-pilltext]');
+    const syncPill = () => { pillText.textContent = HQ.city + ' · ' + lcRange(HQ.checkIn, HQ.checkOut) + (HQ.stars ? ' · ' + HQ.stars + '★' : '') + (HQ.sortType === '2' ? ' · 低价' : ''); };
+    lcChips(cs.querySelector('[data-lc-chips]'),
+      [{ t: '不限', k: 's', v: '' }, { t: '3★', k: 's', v: '3' }, { t: '4★', k: 's', v: '4' }, { t: '5★', k: 's', v: '5' }, { t: '低价优先', k: 'sort' }],
+      o => o.k === 'sort' ? HQ.sortType === '2' : HQ.stars === o.v,
+      o => { if (o.k === 'sort') HQ.sortType = HQ.sortType === '2' ? '1' : '2'; else HQ.stars = o.v; load(true); });
+    const stars = n => { n = +n || 0; return n ? `<span style="color:#F5A623;font-size:13px;letter-spacing:1px">${'◆'.repeat(Math.min(n, 5))}</span>` : ''; };
+    const sk = () => Array.from({ length: 3 }).map(() => `<div style="display:flex;gap:12px;padding:14px 16px;background:#fff;margin-bottom:8px"><div style="width:116px;height:150px;border-radius:10px;background:${BG};flex:none"></div><div style="flex:1"><div style="height:18px;width:85%;border-radius:9px;background:${BG}"></div><div style="height:14px;width:50%;border-radius:7px;background:${BG};margin-top:12px"></div><div style="height:14px;width:70%;border-radius:7px;background:${BG};margin-top:10px"></div><div style="height:20px;width:40%;border-radius:7px;background:${BG};margin-top:24px;margin-left:auto"></div></div></div>`).join('');
+    function card(d) {
+      const img = d.cover ? `background:#eee center/cover no-repeat url('${esc(d.cover)}')` : `background:${BG}`;
+      const feats = (d.tags || []).slice(0, 3).map(t => `<div style="font:500 13px Inter,sans-serif;color:${GREEN};margin-top:4px">${esc(t)}</div>`).join('');
+      const loc = [d.district, d.zone].filter(Boolean).join(' · ') || d.address || '';
+      const sc = d.score != null ? `<span style="background:${BLUE};color:#fff;font:700 13px Inter,sans-serif;border-radius:6px 6px 6px 0;padding:2px 7px">${esc(String(d.score))}</span>` : '';
+      const rev = d.comments ? `<span style="font:400 13px Inter,sans-serif;color:${MUTED}">${esc(String(d.comments))} reviews</span>` : '';
+      return `<div class="tap" data-lc-url="${esc(d.url || '')}" style="display:flex;gap:12px;padding:14px 16px;background:#fff;margin-bottom:8px;cursor:pointer">
+        <div style="width:116px;height:150px;border-radius:10px;${img};flex:none;position:relative"><div style="position:absolute;top:7px;right:7px">${HEART}</div></div>
+        <div style="flex:1;min-width:0">
+          <div style="font:700 16px/1.25 Inter,sans-serif;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(d.name || '')} ${stars(d.star)}</div>
+          <div style="display:flex;align-items:center;gap:7px;margin-top:7px">${sc}${rev}</div>
+          ${loc ? `<div style="display:flex;align-items:flex-start;gap:4px;margin-top:7px;font:400 13px/1.35 Inter,sans-serif;color:${MUTED}">${PIN}<span style="flex:1">${esc(loc)}</span></div>` : ''}
+          ${feats}
+          ${d.recommend ? `<div style="font:400 12px Inter,sans-serif;color:${MUTED};margin-top:6px">“${esc(d.recommend)}”</div>` : ''}
+          <div style="text-align:right;margin-top:10px"><span style="font:700 22px Inter,sans-serif;color:${BLUE}">¥${esc(String(Math.round(d.price || 0)))}</span><span style="font:400 12px Inter,sans-serif;color:${MUTED}"> 起</span></div>
+        </div>
+      </div>`;
+    }
+    const MOCK = [
+      { name: 'Novotel Shanghai Hongqiao', star: 5, score: 4.7, comments: 6826, district: '闵行区', zone: '虹桥枢纽', tags: ['免费取消', '室内泳池'], price: 533, cover: '' },
+      { name: 'Holiday Inn Shanghai Hongqiao', star: 5, score: 4.8, comments: 7957, district: '闵行区', zone: '七宝', tags: ['30 分钟取消窗口', '室内泳池'], price: 463, cover: '' },
+    ];
+    let busy = false;
+    async function load(force) {
+      if (busy) return;
+      busy = true; syncPill(); HB.innerHTML = sk();
+      const p = new URLSearchParams({ city: HQ.city || '上海', sortType: HQ.sortType, size: '12' });
+      if (HQ.stars) p.set('stars', HQ.stars);
+      if (HQ.checkIn) p.set('checkIn', HQ.checkIn);
+      if (HQ.checkOut) p.set('checkOut', HQ.checkOut);
+      let data = null;
+      try { data = await withTimeout(get('/content/hotels?' + p.toString(), true), 10000); } catch (e) {}
+      busy = false;
+      const real = data && data.items && data.items.length;
+      const items = real ? data.items : MOCK;
+      HB.innerHTML = `<div style="padding:12px 16px 2px;font:700 15px Inter,sans-serif">${items.length} properties found${HQ.city ? ' · ' + esc(HQ.city) : ''}</div>` + items.map(card).join('');
+      HB.querySelectorAll('[data-lc-url]').forEach(c => c.onclick = () => { const u = c.dataset.lcUrl; if (u) window.open(u, '_blank'); else toast('Demo'); });
+      status(real ? `酒店·真实数据 ${items.length} 家` : '酒店·示例数据(接口兜底)', real ? 'rgba(27,166,114,.85)' : 'rgba(232,137,12,.9)');
+    }
+    let opened = false;
+    window.lcHotels = force => { show('hotels'); if (force || !opened) { opened = true; load(true); } };
+    window.addEventListener('hashchange', () => { if ((location.hash.slice(1) || '') === 'hotels' && !opened) { opened = true; load(true); } });
+    if ((location.hash.slice(1) || '') === 'hotels') { opened = true; load(true); }
+  })();
+
+  // ---------- 酒店入口搜索页（仿 Trip.com「Hotels & Homes」）：改目的地/日期 → 搜索进结果页 ----------
+  (function () {
+    const d1 = lcDate(0), d2 = lcDate(1);
+    const top = `<div style="padding:8px 12px 2px;display:flex;align-items:center;gap:8px"><div class="tap" data-lc-back style="flex:none">${LC_BACK}</div><div style="font:800 24px Inter,sans-serif">Hotels &amp; Homes</div><span style="width:7px;height:7px;border-radius:4px;background:#F5B400;align-self:center"></span></div>`;
+    const { screen: cs, body: B } = lcMakeScreen('hotels-search', 'Hotels Search', top);
+    cs.querySelector('[data-lc-back]').onclick = () => back();
+    B.innerHTML = `
+      <div style="margin:12px 14px 0;background:#fff;border-radius:14px;padding:4px 14px 16px;box-shadow:0 4px 18px rgba(0,0,0,.06)">
+        <div class="lc-srch" style="display:flex;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid ${LINE}">${LC_SRCH}<input data-lc-dest value="上海" placeholder="Enter a destination or property" style="font-weight:600"></div>
+        <div class="lc-srch" style="display:flex;align-items:center;gap:8px;padding:14px 0;border-bottom:1px solid ${LINE}">
+          <span style="color:${MUTED};font:500 13px Inter,sans-serif;flex:none">入住</span><input type="date" data-lc-in value="${d1}">
+          <span style="color:${MUTED};flex:none">→</span>
+          <span style="color:${MUTED};font:500 13px Inter,sans-serif;flex:none">离店</span><input type="date" data-lc-out value="${d2}">
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:14px 0;color:${INK};font:600 15px Inter,sans-serif"><span style="color:${MUTED}">👤</span>1 room · 2 adults · 0 children</div>
+        <div class="tap" data-lc-go style="margin-top:14px;background:${BLUE};color:#fff;border-radius:10px;padding:14px;text-align:center;font:700 16px Inter,sans-serif;cursor:pointer">Search</div>
+      </div>
+      <div style="padding:18px 16px 8px;font:800 18px Inter,sans-serif">Thinking about your trip?</div>
+      <div style="padding:0 16px 20px;color:${MUTED};font:400 13px/1.5 Inter,sans-serif">输入城市(如 北京 / 成都 / 广州)和日期，点 Search 查该城市的真实携程酒店。</div>`;
+    const dest = cs.querySelector('[data-lc-dest]');
+    function go() {
+      HQ.city = (dest.value || '').trim() || '上海';
+      HQ.checkIn = cs.querySelector('[data-lc-in]').value; HQ.checkOut = cs.querySelector('[data-lc-out]').value;
+      window.lcHotels(true);
+    }
+    dest.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); go(); } });
+    cs.querySelector('[data-lc-go]').onclick = go;
+    window.lcHotelsSearch = () => show('hotels-search');
+  })();
+
+  // ---------- 租车结果页：真实数据来自官方 car_rental（后端 /content/cars）；查询条来自入口页（CQ），车型可就地 refine ----------
+  (function () {
+    const top = `
+      <div style="padding:8px 12px 8px;display:flex;align-items:center;gap:8px">
+        <div class="tap" data-lc-back style="flex:none">${LC_BACK}</div>
+        <div class="tap lc-srch" data-lc-pill style="flex:1;display:flex;align-items:center;gap:8px;border:1px solid ${LINE};border-radius:10px;padding:9px 12px;cursor:pointer">${LC_SRCH}<span data-lc-pilltext style="font:600 13px Inter,sans-serif;color:${INK}">上海</span><span style="margin-left:auto;color:${MUTED}">✎</span></div>
+      </div>
+      <div class="lc-row" data-lc-chips></div>`;
+    const { screen: cs, body: CB } = lcMakeScreen('cars', 'Cars', top);
+    cs.querySelector('[data-lc-back]').onclick = () => back();
+    cs.querySelector('[data-lc-pill]').onclick = () => show('car');
+    const pillText = cs.querySelector('[data-lc-pilltext]');
+    const syncPill = () => { pillText.textContent = CQ.city + ' · ' + lcRange(CQ.pick, CQ.ret); };
+    lcChips(cs.querySelector('[data-lc-chips]'),
+      [{ t: '全部', v: '' }, { t: '经济型', v: '2' }, { t: '舒适型', v: '3' }, { t: 'SUV', v: '6' }, { t: '商务车', v: '4' }, { t: '豪华型', v: '5' }],
+      o => CQ.group === o.v,
+      o => { CQ.group = o.v; load(true); });
+    const sk = () => Array.from({ length: 3 }).map(() => `<div style="background:#fff;margin-bottom:8px;padding:16px"><div style="height:18px;width:60%;border-radius:9px;background:${BG}"></div><div style="display:flex;gap:12px;margin-top:14px"><div style="flex:1"><div style="height:14px;width:70%;border-radius:7px;background:${BG}"></div><div style="height:14px;width:50%;border-radius:7px;background:${BG};margin-top:10px"></div></div><div style="width:130px;height:84px;border-radius:8px;background:${BG};flex:none"></div></div></div>`).join('');
+    const spec = (txt) => txt ? `<span style="font:400 14px Inter,sans-serif;color:${INK}">${esc(txt)}</span>` : '';
+    function card(d) {
+      const img = d.image ? `background:#fff center/contain no-repeat url('${esc(d.image)}')` : `background:${BG}`;
+      const specs = [d.seat ? d.seat + ' seats' : '', d.trans, d.displacement].filter(Boolean);
+      const brand = d.brandLogo ? `<div style="width:22px;height:22px;border-radius:4px;background:#fff center/contain no-repeat url('${esc(d.brandLogo)}')"></div>` : '';
+      return `<div class="tap" data-lc-url="${esc(d.url || '')}" style="background:#fff;margin-bottom:8px;padding:16px;cursor:pointer">
+        ${d.group ? `<div style="display:inline-block;font:600 12px Inter,sans-serif;color:${GREEN};background:rgba(27,166,114,.1);border-radius:5px;padding:2px 8px">${esc(d.group)}</div>` : ''}
+        <div style="font:700 17px/1.3 Inter,sans-serif;margin-top:8px">${esc(d.name || '')} <span style="font:400 14px Inter,sans-serif;color:${MUTED}">or similar</span></div>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:10px">
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px">${specs.map(spec).join('')}${d.fuel ? spec(d.fuel + (d.doors ? ' · ' + d.doors + ' doors' : '')) : (d.doors ? spec(d.doors + ' doors') : '')}</div>
+          <div style="width:130px;height:84px;border-radius:8px;${img};flex:none"></div>
+        </div>
+        <div style="border-top:1px solid ${LINE};margin-top:14px;padding-top:12px;display:flex;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:7px">${brand}<span style="font:500 13px Inter,sans-serif;color:${MUTED}">${esc(d.brand || '')}</span></div>
+          <div><span style="font:700 20px Inter,sans-serif;color:${BLUE}">¥${esc(String(Math.round(d.price || 0)))}</span><span style="font:400 12px Inter,sans-serif;color:${MUTED}"> /day</span></div>
+        </div>
+      </div>`;
+    }
+    const MOCK = [
+      { group: '经济型', name: '大众 Polo', brand: '大众', seat: '5', trans: '自动挡', displacement: '1.5L', fuel: '92号', doors: '4', price: 139, image: '' },
+      { group: 'SUV', name: '本田 CR-V', brand: '本田', seat: '5', trans: '自动挡', displacement: '2.0L', fuel: '92号', doors: '5', price: 268, image: '' },
+    ];
+    let busy = false;
+    async function load(force) {
+      if (busy) return;
+      busy = true; syncPill(); CB.innerHTML = sk();
+      const p = new URLSearchParams({ pickUpCity: CQ.city || '上海', size: '12' });
+      if (CQ.group) p.set('vehicleGroupIds', CQ.group);
+      if (CQ.pick) p.set('pickUpTime', CQ.pick + ' 10:00:00');
+      if (CQ.ret) p.set('returnTime', CQ.ret + ' 10:00:00');
+      let data = null;
+      try { data = await withTimeout(get('/content/cars?' + p.toString(), true), 12000); } catch (e) {}
+      busy = false;
+      const real = data && data.items && data.items.length;
+      const items = real ? data.items : MOCK;
+      CB.innerHTML = `<div style="padding:12px 16px 2px;font:700 15px Inter,sans-serif">${items.length} cars available${CQ.city ? ' · ' + esc(CQ.city) : ''}</div>` + items.map(card).join('');
+      CB.querySelectorAll('[data-lc-url]').forEach(c => c.onclick = () => { const u = c.dataset.lcUrl; if (u) window.open(u, '_blank'); else toast('Demo'); });
+      status(real ? `租车·真实数据 ${items.length} 辆` : '租车·示例数据(接口兜底)', real ? 'rgba(27,166,114,.85)' : 'rgba(232,137,12,.9)');
+    }
+    let opened = false;
+    window.lcCars = force => { show('cars'); if (force || !opened) { opened = true; load(true); } };
+    window.addEventListener('hashchange', () => { if ((location.hash.slice(1) || '') === 'cars' && !opened) { opened = true; load(true); } });
+    if ((location.hash.slice(1) || '') === 'cars') { opened = true; load(true); }
+  })();
+
+  // ---------- 入口接线（运行时改绑，不改 index.html / build_h5.py）----------
+  // 首页「Big Hotels」→ 酒店入口搜索页；「Small Car Rentals」→ 现有 Pen 租车入口页(car)。
+  // 入口页改好条件 → 点 Search 才进结果页（仿 Trip.com：截图 1/3 入口 → 截图 2/4 结果）。
+  (function () {
+    const wire = (sel, act) => { const n = document.querySelector(sel); if (n) { n.dataset.act = act; n.classList.add('tap'); n.style.cursor = 'pointer'; } };
+    wire('[data-pencil-name="Big Hotels"]', 'go:hotels-search');
+    wire('[data-pencil-name="Small Car Rentals"]', 'go:car');
+
+    // 把 Pen 租车入口页(car)的"地点/日期"接活，Search → 带参进 #cars 结果页
+    const carScreen = document.querySelector('.screen[data-route="car"]');
+    if (carScreen) {
+      const istyle = 'border:0;outline:0;background:transparent;font:600 17px Inter,sans-serif;color:#121826;width:100%';
+      const dstyle = 'border:0;outline:0;background:transparent;font:600 14px Inter,sans-serif;color:#121826';
+      const locRow = carScreen.querySelector('[data-pencil-name="Form Shanghai Pudong Airport (PVG)"]');
+      const locText = locRow && locRow.querySelector('[data-pencil-name="Form Text"]');
+      if (locText) locText.innerHTML = `<input id="lc-car-city" value="上海" placeholder="取车城市" style="${istyle}">`;
+      const dateRow = carScreen.querySelector('[data-pencil-name="Form 14:30, Sep 25 - 10:00, Sep 28"]');
+      const dateText = dateRow && dateRow.querySelector('[data-pencil-name="Form Text"]');
+      if (dateText) dateText.innerHTML = `<span style="display:flex;align-items:center;gap:6px"><input type="date" id="lc-car-pick" value="${CQ.pick}" style="${dstyle}"><span style="color:#6F7685">→</span><input type="date" id="lc-car-ret" value="${CQ.ret}" style="${dstyle}"></span>`;
+      const sb = carScreen.querySelector('[data-pencil-name="Search Button"]');
+      if (sb) {
+        sb.removeAttribute('data-act');
+        sb.onclick = () => {
+          const c = document.getElementById('lc-car-city'), pk = document.getElementById('lc-car-pick'), rt = document.getElementById('lc-car-ret');
+          CQ.city = (c && c.value.trim()) || '上海';
+          if (pk && pk.value) CQ.pick = pk.value;
+          if (rt && rt.value) CQ.ret = rt.value;
+          window.lcCars(true);
+        };
+      }
+    }
+  })();
+
   // Browser history and the visible screen must stay in sync in both modes.
   window.addEventListener('hashchange', () => {
     cydf.style.display = 'none';
