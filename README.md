@@ -2,7 +2,7 @@
 
 Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 创新」
 
-在 Trip.com App 内新增「落地检查」：外国散客落地中国机场那一刻，先检测自己的数据能否上网，再按顺序解决上网、支付、到酒店三件事，一次只给一个任务。支付在起飞前用一笔 1 元真实交易验证，支付宝或 TenPayGo 任一个通过即可，接机和租车在起飞前预订。卡住了拍一张截图，AI 认出场景，答案来自人工核验的知识库。
+产品方案是在 Trip.com App 内新增「落地检查」：外国散客落地中国机场那一刻，先检测自己的数据能否上网，再按顺序解决上网、支付、到酒店三件事，一次只给一个任务。方案中的支付准备以 1 元交易验证，支付宝或 TenPayGo 任一个通过即可，接机和租车在起飞前预订。卡住了拍一张截图，AI 认出场景，答案来自人工核验的知识库。当前演示版的航班时刻、酒店地址电话、景点开放规则、租车报价和城际高铁已接携程营销 MCP 的真实数据；行程订单本身、支付验证和落地事件仍是模拟数据，尚未接入真实扣款或 Trip.com App。
 
 **在线演示（接 Render 后端，手机可用）** https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com
 **静态版（不依赖后端）** https://yuklim.github.io/landing-check/h5/
@@ -19,6 +19,7 @@ Trip Hackathon 2026 高校赛 · 赛题一「旅行中国搭子 · 入境游 AI 
 | "我卡住了"识别 | 可用 | DeepSeek `deepseek-flash` 看截图选条目，置信度分档，规则兜底 |
 | 知识库 | 5 个场景 | 支付宝 12、微信 9、滴滴 6、上网 7、TenPayGo 7 共 41 条，含来源和核验日期；资料库 115 篇 + TenPayGo 8 篇 + Reddit 608 帖求助与解答；指南截图 64 张场景命中 94%，Reddit 真实失败截图 75 张场景命中 84%（TenPayGo 场景尚未评测） |
 | 图文教程屏 | 10 篇 | 条目加 `media` 字段即成为一步一图的教程，H5 运行时注入，静态模式也能看。支付宝、微信、滴滴、上网、TenPayGo 各 1 到 3 篇；配图多数是指南站扒来的占位图，Trip.com 指南和官方海报的图可直接用，正式版其余要换成自己截的。配图也可以是静音循环 MP4：TenPayGo 第 1 步是自制的 App Store 下载动画（源工程 `demo/motion/tenpaygo-appstore-download/`，HyperFrames） |
+| 真实数据（携程营销 MCP） | 可用 | 航班时刻、酒店（司机地址卡）、景点门票规则、租车报价、城际高铁 5 块，实时 + 30 分钟缓存 + 快照兜底，页面左下角标明来源。接入说明和数据差异见 `docs/mcp/01-携程MCP接入说明.md`，用真实数据挖出的新需求见 `docs/mcp/02-新需求挖掘.md` |
 | 公网后端（Render） | 已部署 | https://landing-check.onrender.com ，免费档首次访问需等约 30 秒唤醒 |
 | 离线包 / Service Worker | 未做 | 方案承诺项，初赛前完成 |
 | 多语言预翻译 | 未做 | 同上 |
@@ -82,6 +83,7 @@ appearance.pen      设计源文件（pen.dev）
 | `GET /rules/transport?landed_at=HH:MM&bags=&adults=` | 交通推荐，带上客点和理由 |
 | `GET /mock/trip` `GET /mock/flight` `POST /mock/flight/land` `POST /mock/pay-test?method=alipay\|tenpaygo&fail=1` `POST /mock/event` `GET /mock/timeline` `POST /mock/reset` | 模拟携程数据与演示开关；`method` 缺省为 alipay |
 | `POST /kb/feedback` `POST /feedback/hardest` | 用户反馈 |
+| `GET /live/status` `GET /live/{flight\|hotel\|tickets\|car\|train}?refresh=` `POST /live/refresh` | 真实数据来源与刷新；`/mock/trip`、`/mock/flight`、`/rules/*` 已合并真实数据 |
 
 设计原则：模型只返回知识库里存在的条目 id，答案文字全部来自条目；只有判为未知时才生成建议并标 `unverified`。
 
@@ -102,7 +104,7 @@ cd h5 && python3 build_h5.py
 
 ## Render 部署说明
 
-- 服务根目录 `backend/`，启动命令 `uvicorn app:app --host 0.0.0.0 --port $PORT`，环境变量 `DEEPSEEK_API_KEY`。
+- 服务根目录 `backend/`，启动命令 `uvicorn app:app --host 0.0.0.0 --port $PORT`，环境变量 `DEEPSEEK_API_KEY`、`TRIP_MCP_TOKEN`（携程营销 MCP；不配也能跑，真实数据退回仓库里的快照 `backend/mock/live_snapshot.json`）。
 - 免费档 15 分钟无访问会休眠，唤醒约 30 秒。路演前先打开一次。
 - 自动部署靠 Render 的 GitHub App（仓库 Settings → Installed GitHub Apps 里要有 Render）。服务 Root Directory 是 `backend/`，只改 `知识库/` 或文档的提交会被 Render 跳过，不会上线；要么同时改一下 `backend/` 下的文件，要么在 Settings → Build & Deploy → Build Filters 把 `知识库/**` 加进 Included Paths。
 - 推送后确认是否部署成功：打开 `/health`，`commit` 应等于 GitHub 最新提交前 7 位，`kb_scenarios` 应列出 4 个场景。不一致就去 Render 控制台 Events 看部署是否触发或失败；Settings → Build & Deploy 里 Auto-Deploy 要是 On Commit，分支 main；也可以 Manual Deploy → Deploy latest commit。

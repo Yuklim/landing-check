@@ -26,9 +26,37 @@ def _load(name):
     return json.load(open(os.path.join(HERE, 'mock', name), encoding='utf-8'))
 
 
+def shift_weeks(trip: dict, today=None) -> dict:
+    """演示行程的出发日已过时整周往后挪（星期几不变，故宫周一闭馆这类规则仍成立），
+    让真实数据（航班、酒店、火车）总能查到未来的日期。LC_DEMO_SHIFT=0 关闭。"""
+    if os.environ.get('LC_DEMO_SHIFT', 'auto').strip().lower() in ('0', 'off', 'no'):
+        return trip
+    today = today or datetime.now(CST).date()
+    f = trip.get('flight', {})
+    dep = datetime.strptime(f['scheduled_departure'][:10], '%Y-%m-%d').date()
+    if dep > today:
+        return trip
+    days = 7 * (((today - dep).days // 7) + 1)
+
+    def mv(s):
+        d = datetime.strptime(s[:10], '%Y-%m-%d').date() + timedelta(days=days)
+        return d.isoformat() + s[10:]
+    f['scheduled_departure'], f['scheduled_arrival'] = mv(f['scheduled_departure']), mv(f['scheduled_arrival'])
+    h = trip.get('hotel', {})
+    for k in ('checkin', 'checkout'):
+        if h.get(k):
+            h[k] = mv(h[k])
+    for t in trip.get('tickets', []):
+        t['date'] = mv(t['date'])
+    if (trip.get('offline_pack') or {}).get('date'):
+        trip['offline_pack']['date'] = mv(trip['offline_pack']['date'])
+    trip['demo_shift_days'] = days
+    return trip
+
+
 class MockTrip:
     def __init__(self):
-        self.trip = _load('trip.json')
+        self.trip = shift_weeks(_load('trip.json'))
         self._lock = threading.Lock()
         self.reset()
 

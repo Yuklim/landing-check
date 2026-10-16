@@ -1,0 +1,1378 @@
+{
+ "trains": [
+  {
+   "StartTime": "06:31",
+   "ArriveTime": "12:18",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G532",
+   "DurationMinutes": 347,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 576,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 967,
+     "TicketLeft": 12
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1870.0,
+     "TicketLeft": 5
+    },
+    {
+     "SeatName": "无座",
+     "Price": 576,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "06:32",
+   "ArriveTime": "12:39",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G548",
+   "DurationMinutes": 367,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 617,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1025,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2067,
+     "TicketLeft": 10
+    },
+    {
+     "SeatName": "无座",
+     "Price": 617,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "06:43",
+   "ArriveTime": "11:32",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G2",
+   "DurationMinutes": 289,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 20
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 10
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "07:00",
+   "ArriveTime": "11:37",
+   "FromStationName": "上海",
+   "ToStationName": "北京南",
+   "TrainNo": "G4",
+   "DurationMinutes": 277,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "14:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 667,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1069,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1468,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2337,
+     "TicketLeft": 8
+    },
+    {
+     "SeatName": "无座",
+     "Price": 667,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "07:22",
+   "ArriveTime": "13:21",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G550",
+   "DurationMinutes": 359,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 598,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1995,
+     "TicketLeft": 10
+    },
+    {
+     "SeatName": "无座",
+     "Price": 598,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "07:27",
+   "ArriveTime": "13:36",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G566",
+   "DurationMinutes": 369,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 576,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 967,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1870.0,
+     "TicketLeft": 5
+    },
+    {
+     "SeatName": "无座",
+     "Price": 576,
+     "TicketLeft": 0
+    }
+   ]
+  },
+  {
+   "StartTime": "07:38",
+   "ArriveTime": "13:32",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G598",
+   "DurationMinutes": 354,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 598,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1995,
+     "TicketLeft": 8
+    },
+    {
+     "SeatName": "无座",
+     "Price": 598,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "08:00",
+   "ArriveTime": "12:26",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G8",
+   "DurationMinutes": 266,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1455,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 4
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "08:05",
+   "ArriveTime": "14:04",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G600",
+   "DurationMinutes": 359,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 598,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1995,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "无座",
+     "Price": 598,
+     "TicketLeft": 0
+    }
+   ]
+  },
+  {
+   "StartTime": "08:15",
+   "ArriveTime": "14:13",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G634",
+   "DurationMinutes": 358,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 598,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1995,
+     "TicketLeft": 20
+    },
+    {
+     "SeatName": "无座",
+     "Price": 598,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "09:00",
+   "ArriveTime": "13:26",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G10",
+   "DurationMinutes": 266,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1455,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "09:26",
+   "ArriveTime": "15:21",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G668",
+   "DurationMinutes": 355,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 626,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1033,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2156,
+     "TicketLeft": 2
+    },
+    {
+     "SeatName": "无座",
+     "Price": 626,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "09:43",
+   "ArriveTime": "15:51",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G670",
+   "DurationMinutes": 368,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 598,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1382,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1995,
+     "TicketLeft": 11
+    },
+    {
+     "SeatName": "无座",
+     "Price": 598,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "10:00",
+   "ArriveTime": "14:24",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G12",
+   "DurationMinutes": 264,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "10:43",
+   "ArriveTime": "16:42",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G694",
+   "DurationMinutes": 359,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 626,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1033,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2156,
+     "TicketLeft": 8
+    },
+    {
+     "SeatName": "无座",
+     "Price": 626,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "11:00",
+   "ArriveTime": "15:31",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G14",
+   "DurationMinutes": 271,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 14
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "11:05",
+   "ArriveTime": "18:07",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G736",
+   "DurationMinutes": 422,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 598,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2156,
+     "TicketLeft": 2
+    },
+    {
+     "SeatName": "无座",
+     "Price": 598,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "11:15",
+   "ArriveTime": "17:20",
+   "FromStationName": "上海",
+   "ToStationName": "北京南",
+   "TrainNo": "G734",
+   "DurationMinutes": 365,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "14:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 604,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1016,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2019,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "无座",
+     "Price": 604,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "11:53",
+   "ArriveTime": "16:34",
+   "FromStationName": "上海",
+   "ToStationName": "北京南",
+   "TrainNo": "G16",
+   "DurationMinutes": 281,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "14:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 667,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1069,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1468,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2337,
+     "TicketLeft": 2
+    },
+    {
+     "SeatName": "无座",
+     "Price": 667,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "12:20",
+   "ArriveTime": "18:47",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G738",
+   "DurationMinutes": 387,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 598,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1382,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1995,
+     "TicketLeft": 14
+    },
+    {
+     "SeatName": "无座",
+     "Price": 598,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "12:32",
+   "ArriveTime": "18:32",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G742",
+   "DurationMinutes": 360,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 5
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "12:46",
+   "ArriveTime": "18:52",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G746",
+   "DurationMinutes": 366,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 9
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 5
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "12:55",
+   "ArriveTime": "17:37",
+   "FromStationName": "上海",
+   "ToStationName": "北京南",
+   "TrainNo": "G18",
+   "DurationMinutes": 282,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "14:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 667,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1069,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2337,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "无座",
+     "Price": 667,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "13:26",
+   "ArriveTime": "18:59",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G748",
+   "DurationMinutes": 333,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 626,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1995,
+     "TicketLeft": 2
+    },
+    {
+     "SeatName": "无座",
+     "Price": 626,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "13:33",
+   "ArriveTime": "19:50",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G750",
+   "DurationMinutes": 377,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 8
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "14:00",
+   "ArriveTime": "18:36",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G20",
+   "DurationMinutes": 276,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1455,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "14:18",
+   "ArriveTime": "20:13",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G752",
+   "DurationMinutes": 355,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 10
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "14:40",
+   "ArriveTime": "20:47",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G796",
+   "DurationMinutes": 367,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 8
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "15:00",
+   "ArriveTime": "19:33",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G22",
+   "DurationMinutes": 273,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1455,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 1
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "15:04",
+   "ArriveTime": "19:37",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G44",
+   "DurationMinutes": 273,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 5
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 6
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 0
+    }
+   ]
+  },
+  {
+   "StartTime": "15:10",
+   "ArriveTime": "20:39",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G804",
+   "DurationMinutes": 329,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 598,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "无座",
+     "Price": 598,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "15:21",
+   "ArriveTime": "21:10",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G798",
+   "DurationMinutes": 349,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 4
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "15:25",
+   "ArriveTime": "21:42",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G800",
+   "DurationMinutes": 377,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 678,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1111,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2463,
+     "TicketLeft": 9
+    },
+    {
+     "SeatName": "无座",
+     "Price": 678,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "15:47",
+   "ArriveTime": "23:11",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G2590",
+   "DurationMinutes": 444,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 572,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 936,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1788,
+     "TicketLeft": 2
+    },
+    {
+     "SeatName": "无座",
+     "Price": 572,
+     "TicketLeft": 0
+    }
+   ]
+  },
+  {
+   "StartTime": "16:00",
+   "ArriveTime": "20:35",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G24",
+   "DurationMinutes": 275,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1455,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 7
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "16:04",
+   "ArriveTime": "22:00",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G802",
+   "DurationMinutes": 356,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 598,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1005,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 12
+    },
+    {
+     "SeatName": "无座",
+     "Price": 598,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "16:37",
+   "ArriveTime": "22:22",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G806",
+   "DurationMinutes": 345,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 626,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1033,
+     "TicketLeft": 16
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 4
+    },
+    {
+     "SeatName": "无座",
+     "Price": 626,
+     "TicketLeft": 18
+    }
+   ]
+  },
+  {
+   "StartTime": "17:00",
+   "ArriveTime": "21:32",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G26",
+   "DurationMinutes": 272,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 661,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 1058,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "优选一等座",
+     "Price": 1455,
+     "TicketLeft": 0
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 2315,
+     "TicketLeft": 9
+    },
+    {
+     "SeatName": "无座",
+     "Price": 661,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "17:16",
+   "ArriveTime": "23:02",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G726",
+   "DurationMinutes": 346,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 553,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 929,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1995,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "无座",
+     "Price": 553,
+     "TicketLeft": 99
+    }
+   ]
+  },
+  {
+   "StartTime": "17:25",
+   "ArriveTime": "23:16",
+   "FromStationName": "上海虹桥",
+   "ToStationName": "北京南",
+   "TrainNo": "G808",
+   "DurationMinutes": 351,
+   "DayDiff": 0,
+   "ControlDay": 14,
+   "SaleTime": "13:45",
+   "Seats": [
+    {
+     "SeatName": "二等座",
+     "Price": 553,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "一等座",
+     "Price": 929,
+     "TicketLeft": 99
+    },
+    {
+     "SeatName": "商务座",
+     "Price": 1995,
+     "TicketLeft": 12
+    },
+    {
+     "SeatName": "无座",
+     "Price": 553,
+     "TicketLeft": 99
+    }
+   ]
+  }
+ ],
+ "h5ListUrl": "https://m.ctrip.com/webapp/train/list?ticketType=0&dDate=2026-10-25&aStation=%E5%8C%97%E4%BA%AC&dStation=%E4%B8%8A%E6%B5%B7",
+ "miniProgramListUrl": "pages/train/list/list?dstation=%E4%B8%8A%E6%B5%B7&ddate=2026-10-25&popup=close&astation=%E5%8C%97%E4%BA%AC&autoawaken=close",
+ "pcListUrl": "https://trains.ctrip.com/webapp/train/list?aStationName=%E5%8C%97%E4%BA%AC&dDate=2026-10-25&dStationName=%E4%B8%8A%E6%B5%B7",
+ "appListUrl": "ctrip://wireless/train_list?c3=20261025&c1=%E4%B8%8A%E6%B5%B7&c2=%E5%8C%97%E4%BA%AC"
+}

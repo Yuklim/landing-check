@@ -38,15 +38,37 @@ def preflight(trip: dict, done: set = frozenset(), today: date = None) -> dict:
     add('transfer', 'Ride from the airport · optional', 'done' if trip.get('transfer_booked') else 'optional',
         'Driver will wait at arrivals' if trip.get('transfer_booked') else _transfer_hint(trip), None if trip.get('transfer_booked') else 'book_transfer')
 
+    car = trip.get('car_offer')            # 真实租车报价（live.py），没有就用原文案
     add('car', 'Car rental · optional', 'done' if trip.get('car_rental_booked') else 'optional',
-        'Booked' if trip.get('car_rental_booked') else 'Pick up at the airport · foreign licences need a temporary Chinese permit', None if trip.get('car_rental_booked') else 'book_car')
+        'Booked' if trip.get('car_rental_booked') else
+        ('Economy about ¥%d/day · %d cars in %s on Trip.com · foreign licences need a temporary Chinese permit' % (car['typical_price'], car['total'], car['city_en'])) if car else
+        'Pick up at the airport · foreign licences need a temporary Chinese permit', None if trip.get('car_rental_booked') else 'book_car')
 
     realname = [t for t in tickets if t.get('realname')]
     if realname:
         t = realname[0]
-        add('tickets', '%s reservation' % t['name'], 'done', 'Confirmed · %s %s · bring passport' % (t['date'], t.get('slot', '')), None)
+        hrs = (t.get('rules') or {}).get('hours')          # 景点真实开放规则（live.py），没有就用原文案
+        if not hrs:
+            add('tickets', '%s reservation' % t['name'], 'done', 'Confirmed · %s %s · bring passport' % (t['date'], t.get('slot', '')), None)
+        elif hrs.get('closed_on_visit'):
+            add('tickets', '%s reservation' % t['name'], 'todo', 'Closed on %s · your visit on %s falls on a closed day, change the date' % (
+                _plural_days(hrs['closed_weekdays']), _day_label(t['date'])), 'change_ticket')
+        else:
+            rule = ', '.join(x for x in ('last entry %s' % hrs['last_entry'] if hrs.get('last_entry') else '',
+                                         'closed %s' % _plural_days(hrs['closed_weekdays']) if hrs.get('closed_weekdays') else '') if x)
+            add('tickets', '%s reservation' % t['name'], 'done', 'Confirmed · %s · %s · passport%s' % (
+                _day_label(t['date']), t.get('slot', '').replace('-', '–'), (' · ' + rule) if rule else ''), None)
     else:
         add('tickets', 'Attraction reservations', 'done', 'No real-name tickets on this trip', None)
+
+    leg = trip.get('next_leg')             # 门票在另一座城市、没订城际交通（live.next_leg），只提醒不计入必做
+    if leg:
+        if leg.get('trains'):
+            desc = 'Not booked · %d high-speed trains on %s · fastest %s · from ¥%d' % (
+                leg['count'], _day_label(leg['date']), _dur(leg['fastest_min']), leg['from_price'])
+        else:
+            desc = 'Not booked · you need to be in %s for %s on %s' % (leg['to_en'], leg['for'], leg['for_date'])
+        add('nextleg', '%s → %s · optional' % (leg['from_en'], leg['to_en']), 'optional', desc, 'book_train')
 
     valid = passport.get('valid_until')
     months_left = None
@@ -133,6 +155,24 @@ def _payment_summary(pays: dict) -> dict:
 def _transfer_hint(trip):
     f, h = trip.get('flight', {}), trip.get('hotel', {})
     return '%d bag%s, %d adult%s, %d km · a pre-booked transfer beats the taxi queue' % (f.get('checked_bags', 0), '' if f.get('checked_bags', 0) == 1 else 's', f.get('adults', 1), '' if f.get('adults', 1) == 1 else 's', h.get('distance_from_airport_km', 0))
+
+
+_DAY_FULL = {'Mon': 'Monday', 'Tue': 'Tuesday', 'Wed': 'Wednesday', 'Thu': 'Thursday', 'Fri': 'Friday', 'Sat': 'Saturday', 'Sun': 'Sunday'}
+
+
+def _day_label(iso: str) -> str:
+    """'2026-10-21' -> 'Wed Oct 21'"""
+    d = date.fromisoformat(iso[:10])
+    return '%s %s %d' % (('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')[d.weekday()],
+                         ('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec')[d.month - 1], d.day)
+
+
+def _plural_days(days: list) -> str:
+    return '/'.join(_DAY_FULL.get(d, d) + 's' for d in days)
+
+
+def _dur(minutes) -> str:
+    return '%dh %02dm' % divmod(int(minutes), 60) if minutes else '?'
 
 
 # ---------------- 交通推荐 ----------------

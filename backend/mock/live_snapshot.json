@@ -1,0 +1,379 @@
+{
+ "flight": {
+  "fetched_at": "2026-10-16 21:30",
+  "query": {
+   "departCityCode": "SFO",
+   "arriveCityCode": "SHA",
+   "departDate": "2026-10-18",
+   "airLine": "UA",
+   "allFlights": true,
+   "locale": "en-US"
+  },
+  "data": {
+   "number": "UA 857",
+   "departure": "2026-10-18 13:00",
+   "arrival": "2026-10-19 17:25",
+   "from_airport": "SFO",
+   "from_terminal": "I",
+   "to_airport": "PVG",
+   "to_terminal": "T2",
+   "duration_min": 805,
+   "price": {
+    "amount": 1269.1,
+    "currency": "USD"
+   },
+   "link": "https://www.trip.com/m/flights/detail/?segment_list=%255B%257B%2522flight_list%2522%253A%255B%257B%2522flight_no%2522%253A%2522UA857%2522%252C%2522d_date%2522%253A%25222026-10-18%2522%252C%2522airline%2522%253A%2522UA%2522%252C%2522class%2522%253A%2522Y%2522%252C%2522d_airport%2522%253A%2522SFO%2522%252C%2522a_airport%2522%253A%2522PVG%2522%257D%255D%257D%255D&ddate=2026-10-18&triptype=0&acitycode=SHA&classtype=0&currency=USD&dcitycode=SFO&adult=1"
+  }
+ },
+ "hotel": {
+  "fetched_at": "2026-10-16 21:30",
+  "query": {
+   "cityName": "上海",
+   "hotelName": "璞丽酒店",
+   "checkInDate": "2026-10-19",
+   "checkOutDate": "2026-10-20"
+  },
+  "data": {
+   "name_zh": "上海璞丽",
+   "address_zh": "静安区常德路1号",
+   "zone_zh": "静安寺/南京西路",
+   "landmark_zh": "靠近静安寺、南京西路",
+   "phone": "021 3203 9999",
+   "lat": 31.222291,
+   "lng": 121.448379,
+   "distance_km": 35,
+   "star": 5,
+   "score": 4.6,
+   "reviews": 5636,
+   "price_cny": 3986,
+   "image": "https://dimg04.c-ctrip.com/images/1mc6y12000qll06ubC115.jpg",
+   "link": "https://m.ctrip.com/webapp/hotels/detail?atime=20261019&days=1&hotelid=416228"
+  }
+ },
+ "tickets": {
+  "fetched_at": "2026-10-16 21:30",
+  "query": [
+   {
+    "scenicSpotName": "故宫博物院",
+    "cityName": "北京"
+   }
+  ],
+  "data": [
+   {
+    "name_zh": "故宫博物院",
+    "address_zh": "北京市东城区景山前街4号",
+    "level": "5A",
+    "score": 4.9,
+    "hours_text_zh": "特殊营业时间：清明节,劳动节,端午节,中秋节,国庆节 08:30-17:00开放（16:00停止入园）;特殊营业时间：7月27日 08:30-17:00开放（16:00停止入园）;每年4月1日-10月31日 周二–周日 08:30-17:00开放（16:00停止入园）;每年11月1日-次年3月31日 周二–周日 08:30-16:30开放（15:30停止入园）;全年 周一 不开放",
+    "latest_entry": "16:00",
+    "products": 10,
+    "passport_ok": 6,
+    "id_card_only": 4,
+    "from_price": 108.0,
+    "english_guided_from": 268.0,
+    "product_list": [
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-12:00场-中文讲解",
+      "price": 112.0,
+      "entry_with_zh": "联系人手机或身份证或携程订单号或预留姓名",
+      "id_card_only": false,
+      "for_foreigners": false,
+      "english": false,
+      "bookable_from": "2026-11-10",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r105394184.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     },
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-09:00场-英文讲解",
+      "price": 258.0,
+      "entry_with_zh": "身份证",
+      "id_card_only": true,
+      "for_foreigners": false,
+      "english": true,
+      "bookable_from": "2026-10-24",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r116234733.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     },
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-09:00场-英文讲解",
+      "price": 268.0,
+      "entry_with_zh": "有效证件",
+      "id_card_only": false,
+      "for_foreigners": false,
+      "english": true,
+      "bookable_from": "2026-10-23",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r99278059.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     },
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-珍宝馆-09:00场-中文讲解",
+      "price": 110.0,
+      "entry_with_zh": "身份证",
+      "id_card_only": true,
+      "for_foreigners": false,
+      "english": false,
+      "bookable_from": "2026-10-24",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r116236073.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     },
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-珍宝馆-13:00场-英文讲解",
+      "price": 268.0,
+      "entry_with_zh": "身份证",
+      "id_card_only": true,
+      "for_foreigners": false,
+      "english": true,
+      "bookable_from": "2026-10-24",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r116234985.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     },
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-珍宝馆-09:30场-中文讲解",
+      "price": 108.0,
+      "entry_with_zh": "有效证件",
+      "id_card_only": false,
+      "for_foreigners": false,
+      "english": false,
+      "bookable_from": "2026-10-24",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r92874701.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     },
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-珍宝馆+钟表馆-14:00场-中文讲解",
+      "price": 168.0,
+      "entry_with_zh": "有效证件",
+      "id_card_only": false,
+      "for_foreigners": false,
+      "english": false,
+      "bookable_from": "2026-10-23",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r92846158.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     },
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-09:00场-中文讲解",
+      "price": 112.0,
+      "entry_with_zh": "联系人手机或身份证或携程订单号或预留姓名",
+      "id_card_only": false,
+      "for_foreigners": false,
+      "english": false,
+      "bookable_from": "2026-11-10",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r105394127.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     },
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-13:00场-中文讲解",
+      "price": 100.0,
+      "entry_with_zh": "身份证",
+      "id_card_only": true,
+      "for_foreigners": false,
+      "english": false,
+      "bookable_from": "2026-10-24",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r116236197.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     },
+     {
+      "name_zh": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-13:00场-英文讲解",
+      "price": 268.0,
+      "entry_with_zh": "有效证件",
+      "id_card_only": false,
+      "for_foreigners": false,
+      "english": true,
+      "bookable_from": "2026-10-23",
+      "link": "https://m.ctrip.com/webapp/ticket/dest/r99279714.html?ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+     }
+    ],
+    "link": "https://m.ctrip.com/webapp/you/gspoi/sight/1/0.html?poiId=75595&seo=0&isHideNavBar=YES&poiType=3&ouid=VegSWO%2BqgL8CI6AWQpBlZA%3D%3D"
+   }
+  ]
+ },
+ "car": {
+  "fetched_at": "2026-10-16 21:30",
+  "query": {
+   "pickUpCity": "上海",
+   "pickUpTime": "2026-10-19 19:00:00",
+   "returnTime": "2026-10-22 10:00:00"
+  },
+  "data": {
+   "city_zh": "上海",
+   "city_en": "Shanghai",
+   "pickup_time": "2026-10-19 19:00",
+   "return_time": "2026-10-22 10:00",
+   "days": 3,
+   "pickup_zh": "虹桥国际机场",
+   "pickup_en": "Hongqiao Airport (SHA)",
+   "pickup_matches_airport": false,
+   "from_price": 5,
+   "typical_price": 99,
+   "total": 567,
+   "groups": [
+    {
+     "code": "2",
+     "name_en": "Economy",
+     "name_zh": "经济型",
+     "from_price": 5,
+     "typical_price": 99,
+     "promo": true,
+     "count": 64,
+     "seats": "4–5",
+     "example_zh": "别克英朗",
+     "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%88%AB%E5%85%8B_%E5%88%AB%E5%85%8B%E8%8B%B1%E6%9C%97%22%5D&channelId=110&vehicleid=4101&vehicleDayPrice=5&currentDailyPrice=5&skuId=87720711&productId=72241692176091779&isShowSearchConditionTip=true"
+    },
+    {
+     "code": "3",
+     "name_en": "Comfort",
+     "name_zh": "舒适型",
+     "from_price": 1,
+     "typical_price": 147,
+     "promo": true,
+     "count": 78,
+     "seats": "4–5",
+     "example_zh": "比亚迪秦L",
+     "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E6%AF%94%E4%BA%9A%E8%BF%AA_%E6%AF%94%E4%BA%9A%E8%BF%AA%E7%A7%A6L%22%5D&channelId=110&vehicleid=86990&license=沪牌&vehicleDayPrice=1&currentDailyPrice=1&skuId=88426871&productId=71913383188365876&isShowSearchConditionTip=true"
+    },
+    {
+     "code": "6",
+     "name_en": "SUV",
+     "name_zh": "SUV",
+     "from_price": 17,
+     "typical_price": 184,
+     "promo": true,
+     "count": 235,
+     "seats": "4–7",
+     "example_zh": "吉利缤越",
+     "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%90%89%E5%88%A9%E6%B1%BD%E8%BD%A6_%E5%90%89%E5%88%A9%E7%BC%A4%E8%B6%8A%22%5D&channelId=110&vehicleid=4843&vehicleDayPrice=17.0&currentDailyPrice=17.0&skuId=117779012&productId=92282076557329501&isShowSearchConditionTip=true"
+    },
+    {
+     "code": "7",
+     "name_en": "Minibus",
+     "name_zh": "小巴士",
+     "from_price": 141,
+     "typical_price": 211,
+     "promo": false,
+     "count": 7,
+     "seats": "9",
+     "example_zh": "福田图雅诺大V",
+     "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E7%A6%8F%E7%94%B0_%E7%A6%8F%E7%94%B0%E5%9B%BE%E9%9B%85%E8%AF%BA%E5%A4%A7V%22%5D&channelId=110&vehicleid=104637&license=沪牌&vehicleDayPrice=141&currentDailyPrice=141&skuId=113303121&productId=89958936145676416&isShowSearchConditionTip=true"
+    },
+    {
+     "code": "4",
+     "name_en": "Business van",
+     "name_zh": "商务车",
+     "from_price": 92,
+     "typical_price": 305,
+     "promo": false,
+     "count": 75,
+     "seats": "5–9",
+     "example_zh": "广汽传祺M8",
+     "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%B9%BF%E6%B1%BD%E4%BC%A0%E7%A5%BA_%E5%B9%BF%E6%B1%BD%E4%BC%A0%E7%A5%BAM8%22%5D&channelId=110&vehicleid=4088&vehicleDayPrice=92&currentDailyPrice=92&skuId=102306317&productId=72242999547136596&isShowSearchConditionTip=true"
+    },
+    {
+     "code": "5",
+     "name_en": "Luxury",
+     "name_zh": "豪华型",
+     "from_price": 127,
+     "typical_price": 330,
+     "promo": false,
+     "count": 78,
+     "seats": "2–5",
+     "example_zh": "雷克萨斯ES",
+     "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E9%9B%B7%E5%85%8B%E8%90%A8%E6%96%AF_%E9%9B%B7%E5%85%8B%E8%90%A8%E6%96%AFES%22%5D&channelId=110&vehicleid=2459&license=沪牌&vehicleDayPrice=127&currentDailyPrice=127&skuId=31082892&productId=72025437022244591&isShowSearchConditionTip=true"
+    },
+    {
+     "code": "10",
+     "name_en": "Pickup",
+     "name_zh": "皮卡",
+     "from_price": 165,
+     "typical_price": 470,
+     "promo": false,
+     "count": 2,
+     "seats": "4–5",
+     "example_zh": "雷达RD6",
+     "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%90%89%E5%88%A9%E9%9B%B7%E8%BE%BE_%E9%9B%B7%E8%BE%BERD6%22%5D&channelId=110&vehicleid=17960&license=沪牌&vehicleDayPrice=165&currentDailyPrice=165&skuId=137667440&productId=113001923349956623&isShowSearchConditionTip=true"
+    },
+    {
+     "code": "9",
+     "name_en": "Sports car",
+     "name_zh": "跑车",
+     "from_price": 188,
+     "typical_price": 511,
+     "promo": false,
+     "count": 26,
+     "seats": "2–4",
+     "example_zh": "哪吒GT 硬顶版",
+     "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%93%AA%E5%90%92%E6%B1%BD%E8%BD%A6_%E5%93%AA%E5%90%92GT+%E7%A1%AC%E9%A1%B6%E7%89%88%22%5D&channelId=110&vehicleid=17753&license=沪牌&vehicleDayPrice=188&currentDailyPrice=188&skuId=106565614&productId=75820548898228608&isShowSearchConditionTip=true"
+    },
+    {
+     "code": "11",
+     "name_en": "Campervan",
+     "name_zh": "房车",
+     "from_price": 750,
+     "typical_price": 750,
+     "promo": false,
+     "count": 2,
+     "seats": "4–6",
+     "example_zh": "上汽大通MAXUS RV80",
+     "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A4%A7%E9%80%9A_%E4%B8%8A%E6%B1%BD%E5%A4%A7%E9%80%9AMAXUS+RV80%22%5D&channelId=110&vehicleid=17986&vehicleDayPrice=750&currentDailyPrice=750&skuId=102224501&productId=71900158724768711&isShowSearchConditionTip=true"
+    }
+   ],
+   "link": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261019190000&rtime=20261022100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%88%AB%E5%85%8B_%E5%88%AB%E5%85%8B%E8%8B%B1%E6%9C%97%22%5D&channelId=110&vehicleid=4101&vehicleDayPrice=5&currentDailyPrice=5&skuId=87720711&productId=72241692176091779&isShowSearchConditionTip=true"
+  }
+ },
+ "train": {
+  "fetched_at": "2026-10-16 21:30",
+  "query": {
+   "fromCity": "上海",
+   "toCity": "北京",
+   "departDate": "2026-10-20",
+   "trainTypeMode": "OnlyHighSpeed"
+  },
+  "data": {
+   "date": "2026-10-20",
+   "count": 50,
+   "from_price": 553,
+   "fastest_min": 264,
+   "trains": [
+    {
+     "no": "G12",
+     "dep": "10:00",
+     "arr": "14:24",
+     "day_diff": 0,
+     "from_zh": "上海虹桥",
+     "to_zh": "北京南",
+     "from_en": "Shanghai Hongqiao",
+     "to_en": "Beijing South",
+     "duration_min": 264,
+     "second_class": 661,
+     "first_class": 1058,
+     "left": 99,
+     "control_day": 14,
+     "sale_time": "13:45"
+    },
+    {
+     "no": "G10",
+     "dep": "09:00",
+     "arr": "13:26",
+     "day_diff": 0,
+     "from_zh": "上海虹桥",
+     "to_zh": "北京南",
+     "from_en": "Shanghai Hongqiao",
+     "to_en": "Beijing South",
+     "duration_min": 266,
+     "second_class": 661,
+     "first_class": 1058,
+     "left": 99,
+     "control_day": 14,
+     "sale_time": "13:45"
+    },
+    {
+     "no": "G14",
+     "dep": "11:00",
+     "arr": "15:31",
+     "day_diff": 0,
+     "from_zh": "上海虹桥",
+     "to_zh": "北京南",
+     "from_en": "Shanghai Hongqiao",
+     "to_en": "Beijing South",
+     "duration_min": 271,
+     "second_class": 661,
+     "first_class": 1058,
+     "left": 99,
+     "control_day": 14,
+     "sale_time": "13:45"
+    }
+   ],
+   "on_sale_from": null,
+   "link": "https://m.ctrip.com/webapp/train/list?ticketType=0&dDate=2026-10-20&aStation=%E5%8C%97%E4%BA%AC&dStation=%E4%B8%8A%E6%B5%B7"
+  }
+ }
+}

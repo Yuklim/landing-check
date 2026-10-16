@@ -1,0 +1,538 @@
+[
+ {
+  "productID": 229,
+  "basicInfo": {
+   "productID": 229,
+   "reqProductID": 229,
+   "name": "故宫博物院",
+   "marketPrice": 70.0,
+   "available": true,
+   "imageURL": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88.jpg",
+   "score": 4.9,
+   "cityID": 1,
+   "cityName": "北京",
+   "countryID": 1,
+   "countryName": "中国",
+   "provinceID": 1,
+   "provinceName": "北京",
+   "address": "北京市东城区景山前街4号"
+  },
+  "additionalInfo": {
+   "pmRecommand": "穿越明清两朝的皇家宫殿群",
+   "qualityScore": 10.0,
+   "coordinate": {
+    "lat": 39.9177516,
+    "lng": 116.3970476
+   },
+   "zoneId": 31,
+   "zoneName": "天安门/王府井地区",
+   "star": 5,
+   "commentsCount": 203062,
+   "tags": [
+    "遛娃宝藏地",
+    "亲子同乐",
+    "赏花胜地",
+    "历史建筑",
+    "博物馆&展馆"
+   ],
+   "addTags": [
+    "遛娃宝藏地",
+    "亲子同乐",
+    "赏花胜地",
+    "历史建筑",
+    "博物馆&展馆"
+   ],
+   "poiId": 75595,
+   "videoInfo": {
+    "videoUrl": "https://video.c-ctrip.com/videos/1A051r000001i0vam58FF_smart.mp4?ts=1618633035000"
+   },
+   "positionInfo": "1747.5731507414455",
+   "rankTag": "2026全球100必打卡景点",
+   "containsRareUsedWord": false,
+   "rankTagId": "10006010",
+   "rankTagIds": [
+    "10006010",
+    "10006001"
+   ],
+   "specialTagIds": [
+    "10001057"
+   ]
+  },
+  "ticketExtendInfo": {
+   "hasMainTicket": false,
+   "displayPriceType": "3",
+   "sightLevel": "5A",
+   "openTimeInfo": {
+    "latestEntryTime": "16:00",
+    "unFormatOpenTime": "特殊营业时间：清明节,劳动节,端午节,中秋节,国庆节 08:30-17:00开放（16:00停止入园）;特殊营业时间：7月27日 08:30-17:00开放（16:00停止入园）;每年4月1日-10月31日 周二–周日 08:30-17:00开放（16:00停止入园）;每年11月1日-次年3月31日 周二–周日 08:30-16:30开放（15:30停止入园）;全年 周一 不开放"
+   }
+  },
+  "urlInfo": {
+   "pcUrl": "https://you.ctrip.com/sight/0/229.html",
+   "h5Url": "https://m.ctrip.com/webapp/you/gspoi/sight/1/0.html?poiId=75595&seo=0&isHideNavBar=YES&poiType=3&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "appUrl": "ctrip://wireless/h5?type=5&url=L3JuX2Rlc3RpbmF0aW9uX3BvaS9pbmRleC5tYWluLmpzP0NSTk1vZHVsZU5hbWU9cm5fZGVzdGluYXRpb25fcG9pJkNSTlR5cGU9MSZpbml0aWFsUGFnZT1zaWdodERldGFpbCZwb2lJZD03NTU5NSZkaXN0cmljdElkPTEmcG9pVHlwZT0z&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "universalUrl": "https://dp.ctrip.com/webapp/you/gspoi/sight/1/0.html?poiId=75595&seo=0&isHideNavBar=YES&poiType=3&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "miniProgramUrl": "/pages/gs/sight/newDetail?poiId=75595&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "quickAppUrl": "hap://app/com.ctrip.app/pages/ticket/webview?url=https%3A%2F%2Fm.ctrip.com%2Fwebapp%2Fyou%2Fgspoi%2Fsight%2F1%2F0.html%3FpoiId%3D75595%26seo%3D0%26isHideNavBar%3DYES%26poiType%3D3&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "appListUrl": "ctrip://wireless/h5?guidtype=base&url=L3JuX3R0ZF94dGFyby9fY3JuX2NvbmZpZz9DUk5Nb2R1bGVOYW1lPXJuX3R0ZF94dGFybyZDUk5UeXBlPTEmaW5pdGlhbFBhZ2U9bGlzdCZwYWdldHlwZT1jaXR5JmlkPTEmbmFtZT3ljJfkuqwmY2l0eXR5cGU9Y3QmcHNob3djb2RlPVRpY2tldDI=&type=5&guidtype=base&needguid=1&ouid=t9BwlgecThv8kudyTN2zlg%3D%3D",
+   "h5ListUrl": "https://m.ctrip.com/webapp/things-to-do/list?pagetype=city&citytype=dt&name=%E5%8C%97%E4%BA%AC&id=1&pshowcode=Ticket2",
+   "pcListUrl": "https://you.ctrip.com/sight/beijing1.html",
+   "miniProgramListUrl": "pages/market/web/index?from=https%3A%2F%2Fm.ctrip.com%2Fwebapp%2Ftnt%2Flist%3Fpagetype%3Dcity%26citytype%3Ddt%26id%3D1%26pshowcode%3DTicket2"
+  },
+  "resourceInfoList": [
+   {
+    "resourceId": 105394184,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-12:00场-中文讲解",
+    "price": 112.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 112.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r105394184.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r105394184.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=105394184&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r105394184.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=105394184&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「联系人手机或身份证或携程订单号或预留姓名」直接验证使用",
+    "saleCount": 17,
+    "tags": [
+     "无需取票",
+     "可订11月10日",
+     "有条件退",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": true,
+    "firstBookingDate": "2026-11-10",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   },
+   {
+    "resourceId": 116234733,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-09:00场-英文讲解",
+    "price": 258.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 258.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r116234733.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r116234733.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=116234733&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r116234733.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=116234733&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「身份证」直接验证使用",
+    "saleCount": 0,
+    "tags": [
+     "无需取票",
+     "可订10月24日",
+     "有条件退",
+     "新品",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": true,
+    "firstBookingDate": "2026-10-24",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   },
+   {
+    "resourceId": 99278059,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-09:00场-英文讲解",
+    "price": 268.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 268.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r99278059.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r99278059.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=99278059&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r99278059.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=99278059&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「有效证件」直接验证使用",
+    "saleCount": 28,
+    "tags": [
+     "无需取票",
+     "可订10月23日",
+     "有条件退",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": true,
+    "firstBookingDate": "2026-10-23",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   },
+   {
+    "resourceId": 116236073,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-珍宝馆-09:00场-中文讲解",
+    "price": 110.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 110.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r116236073.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r116236073.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=116236073&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r116236073.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=116236073&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「身份证」直接验证使用",
+    "saleCount": 5,
+    "tags": [
+     "无需取票",
+     "可订10月24日",
+     "有条件退",
+     "新品",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": true,
+    "firstBookingDate": "2026-10-24",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   },
+   {
+    "resourceId": 116234985,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-珍宝馆-13:00场-英文讲解",
+    "price": 268.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 268.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r116234985.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r116234985.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=116234985&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r116234985.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=116234985&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「身份证」直接验证使用",
+    "saleCount": 0,
+    "tags": [
+     "无需取票",
+     "可订10月24日",
+     "有条件退",
+     "新品",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": true,
+    "firstBookingDate": "2026-10-24",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   },
+   {
+    "resourceId": 92874701,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-珍宝馆-09:30场-中文讲解",
+    "price": 108.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 108.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r92874701.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r92874701.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=92874701&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r92874701.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=92874701&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「有效证件」直接验证使用",
+    "saleCount": 337,
+    "tags": [
+     "无需取票",
+     "可订10月24日",
+     "有条件退",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": false,
+    "firstBookingDate": "2026-10-24",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   },
+   {
+    "resourceId": 92846158,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-珍宝馆+钟表馆-14:00场-中文讲解",
+    "price": 168.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 168.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r92846158.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r92846158.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=92846158&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r92846158.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=92846158&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「有效证件」直接验证使用",
+    "saleCount": 254,
+    "tags": [
+     "无需取票",
+     "可订10月23日",
+     "有条件退",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": true,
+    "firstBookingDate": "2026-10-23",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   },
+   {
+    "resourceId": 105394127,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-09:00场-中文讲解",
+    "price": 112.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 112.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r105394127.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r105394127.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=105394127&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r105394127.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=105394127&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「联系人手机或身份证或携程订单号或预留姓名」直接验证使用",
+    "saleCount": 35,
+    "tags": [
+     "无需取票",
+     "可订11月10日",
+     "有条件退",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": true,
+    "firstBookingDate": "2026-11-10",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   },
+   {
+    "resourceId": 116236197,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-13:00场-中文讲解",
+    "price": 100.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 100.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r116236197.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r116236197.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=116236197&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r116236197.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=116236197&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「身份证」直接验证使用",
+    "saleCount": 0,
+    "tags": [
+     "无需取票",
+     "可订10月24日",
+     "有条件退",
+     "新品",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": true,
+    "firstBookingDate": "2026-10-24",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   },
+   {
+    "resourceId": 99279714,
+    "name": "故宫博物院大团散拼深度线路精讲服务(含门票)成人票-不含内馆-13:00场-英文讲解",
+    "price": 268.0,
+    "marketPrice": 0.0,
+    "ctripPrice": 268.0,
+    "isBooking": true,
+    "urlInfoDto": {
+     "pcUrl": "https://m.ctrip.com/webapp/ticket/dest/r99279714.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "h5Url": "https://m.ctrip.com/webapp/ticket/dest/r99279714.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "appUrl": "/rn_ttd_taro/_crn_config?CRNModuleName=rn_ttd_taro&CRNType=1&initialPage=resourceDetail&resourceid=99279714&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "universalUrl": "https://dp.ctrip.com/webapp/ticket/dest/r99279714.html?ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+     "miniProgramUrl": "/pages/tnt/business/detail/resource-detail/index?resourceid=99279714&ouid=fKssF0izFSu3MILxumvrKA%3D%3D"
+    },
+    "descDetail": "凭「有效证件」直接验证使用",
+    "saleCount": 12,
+    "tags": [
+     "无需取票",
+     "可订10月23日",
+     "有条件退",
+     "人工讲解"
+    ],
+    "categoryId": 273,
+    "resourceType": 1,
+    "img": "https://dimg04.c-ctrip.com/images/010671200087d4o7zEA88_C_500_280.jpg",
+    "dataSource": 2,
+    "visible": true,
+    "resourceExtras": {
+     "relationScenicSpotIds": "229",
+     "pricemode": "S",
+     "overduerefund": "false"
+    },
+    "isSameSalePrice": true,
+    "firstBookingDate": "2026-10-23",
+    "suitablePeople": "chengrp",
+    "saleType": 0
+   }
+  ],
+  "extras": {
+   "concert": "0",
+   "isActivity": "false",
+   "classScore": "20"
+  }
+ },
+ {
+  "productID": 133020,
+  "basicInfo": {
+   "productID": 133020,
+   "reqProductID": 133020,
+   "name": "故宫博物院-东华门(东门)",
+   "available": true,
+   "imageURL": "https://dimg04.c-ctrip.com/images/0101412000o5rgyly78E6.jpg",
+   "score": 4.8,
+   "cityID": 1,
+   "cityName": "北京",
+   "countryID": 1,
+   "countryName": "中国",
+   "provinceID": 1,
+   "provinceName": "北京",
+   "address": "北京市东城区景山前街4号故宫博物院内"
+  },
+  "additionalInfo": {
+   "pmRecommand": "紫禁城东门",
+   "qualityScore": 4.0,
+   "coordinate": {
+    "lat": 39.915129,
+    "lng": 116.4016244
+   },
+   "zoneId": 31,
+   "zoneName": "天安门/王府井地区",
+   "star": 0,
+   "commentsCount": 160,
+   "tags": [
+    "赏花胜地",
+    "历史建筑"
+   ],
+   "addTags": [
+    "赏花胜地",
+    "历史建筑"
+   ],
+   "poiId": 95017,
+   "positionInfo": "1312.6713465860694",
+   "typeTags": [
+    "宠物友好"
+   ],
+   "containsRareUsedWord": false,
+   "petsFriendly": 1,
+   "noteCount": 2
+  },
+  "ticketExtendInfo": {
+   "hasMainTicket": false,
+   "displayPriceType": "5",
+   "sightLevel": "",
+   "openTimeInfo": {
+    "latestEntryTime": "16:00",
+    "unFormatOpenTime": "特殊营业时间：清明节,劳动节,端午节,中秋节,国庆节 08:30-17:00开放（16:00停止入园）;特殊营业时间：7月27日 08:30-17:00开放（16:00停止入园）;每年4月1日-10月31日 周二–周日 08:30-17:00开放（16:00停止入园）;每年11月1日-次年3月31日 周二–周日 08:30-16:30开放（15:30停止入园）;全年 周一 不开放"
+   }
+  },
+  "urlInfo": {
+   "pcUrl": "https://you.ctrip.com/sight/0/133020.html",
+   "h5Url": "https://m.ctrip.com/webapp/you/gspoi/sight/1/0.html?poiId=95017&seo=0&isHideNavBar=YES&poiType=3&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "appUrl": "ctrip://wireless/h5?type=5&url=L3JuX2Rlc3RpbmF0aW9uX3BvaS9pbmRleC5tYWluLmpzP0NSTk1vZHVsZU5hbWU9cm5fZGVzdGluYXRpb25fcG9pJkNSTlR5cGU9MSZpbml0aWFsUGFnZT1zaWdodERldGFpbCZwb2lJZD05NTAxNyZkaXN0cmljdElkPTEmcG9pVHlwZT0z&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "universalUrl": "https://dp.ctrip.com/webapp/you/gspoi/sight/1/0.html?poiId=95017&seo=0&isHideNavBar=YES&poiType=3&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "miniProgramUrl": "/pages/gs/sight/newDetail?poiId=95017&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "quickAppUrl": "hap://app/com.ctrip.app/pages/ticket/webview?url=https%3A%2F%2Fm.ctrip.com%2Fwebapp%2Fyou%2Fgspoi%2Fsight%2F1%2F0.html%3FpoiId%3D95017%26seo%3D0%26isHideNavBar%3DYES%26poiType%3D3&ouid=fKssF0izFSu3MILxumvrKA%3D%3D",
+   "appListUrl": "ctrip://wireless/h5?guidtype=base&url=L3JuX3R0ZF94dGFyby9fY3JuX2NvbmZpZz9DUk5Nb2R1bGVOYW1lPXJuX3R0ZF94dGFybyZDUk5UeXBlPTEmaW5pdGlhbFBhZ2U9bGlzdCZwYWdldHlwZT1jaXR5JmlkPTEmbmFtZT3ljJfkuqwmY2l0eXR5cGU9Y3QmcHNob3djb2RlPVRpY2tldDI=&type=5&guidtype=base&needguid=1&ouid=t9BwlgecThv8kudyTN2zlg%3D%3D",
+   "h5ListUrl": "https://m.ctrip.com/webapp/things-to-do/list?pagetype=city&citytype=dt&name=%E5%8C%97%E4%BA%AC&id=1&pshowcode=Ticket2",
+   "pcListUrl": "https://you.ctrip.com/sight/beijing1.html",
+   "miniProgramListUrl": "pages/market/web/index?from=https%3A%2F%2Fm.ctrip.com%2Fwebapp%2Ftnt%2Flist%3Fpagetype%3Dcity%26citytype%3Ddt%26id%3D1%26pshowcode%3DTicket2"
+  },
+  "extras": {
+   "parentSightIds": "229",
+   "petsRecommend": "公共区域遛狗友好，环境干净舒适",
+   "concert": "0",
+   "isActivity": "false",
+   "classScore": "0"
+  }
+ }
+]

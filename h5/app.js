@@ -288,6 +288,152 @@
   }
   renderFlight();
 
+  // ---------- 真实数据（携程营销 MCP，后端 live.py 合并进 /mock/trip）：司机地址卡、租车、门票规则、下一程火车 ----------
+  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const dayLabel = iso => new Date(iso.slice(0, 10) + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).replace(',', '');
+  const fmtDT = s => `${s.slice(11, 16)}, ${MON[+s.slice(5, 7) - 1]} ${+s.slice(8, 10)}`;
+  const dur = m => m ? `${Math.floor(m / 60)}h ${String(m % 60).padStart(2, '0')}m` : '';
+  // 数据来源一行：实时 / 快照 / 模拟
+  const SRC = s => !s ? 'Demo data' : s.source === 'live' ? `Live from Trip.com · ${(s.fetched_at || '').slice(11)}` : `Trip.com data · saved ${(s.fetched_at || '').slice(5, 10).replace('-', '/')}`;
+  // MCP 给的链接多数是携程国内站（m.ctrip.com），航班是 trip.com；按域名如实标出
+  const linkLabel = u => { let h = ''; try { h = new URL(u).hostname; } catch (e) {} return /(^|\.)trip\.com$/.test(h) ? 'View on Trip.com' : 'View listing on Ctrip'; };
+  const DAYS = { Mon: 'Mondays', Tue: 'Tuesdays', Wed: 'Wednesdays', Thu: 'Thursdays', Fri: 'Fridays', Sat: 'Saturdays', Sun: 'Sundays' };
+  // 底部结果层：租车车型、门票规则、火车班次共用
+  const sheet = el('div', 'position:absolute;inset:0;z-index:72;display:none;flex-direction:column;justify-content:flex-end;background:rgba(18,24,38,.45)');
+  sheet.setAttribute('data-pencil-name', 'Live Sheet');
+  (document.getElementById('phone') || document.body).appendChild(sheet);
+  const F = 'Inter,system-ui,sans-serif';
+  function closeSheet() { sheet.style.display = 'none'; sheet.replaceChildren(); }
+  sheet.addEventListener('click', ev => { if (ev.target === sheet) closeSheet(); });
+  window.addEventListener('hashchange', closeSheet);
+  function openSheet({ title, sub, rows, note, src, link, action }) {
+    const box = el('div', `background:#fff;border-radius:16px 16px 0 0;padding:20px 20px 26px;box-sizing:border-box;max-height:80%;overflow-y:auto;font-family:${F}`);
+    box.append(el('div', `font:700 17px/1.3 ${F};color:${INK}`, title));
+    if (sub) box.append(el('div', `font:400 13px/1.45 ${F};color:${MUTED};margin:4px 0 6px`, sub));
+    rows.forEach(r => {
+      const row = el('div', `display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-top:1px solid ${LINE}`);
+      const left = el('div', 'flex:1;min-width:0');
+      left.append(el('div', `font:700 15px/1.3 ${F};color:${INK}`, r.title));
+      if (r.meta) left.append(el('div', `font:400 13px/1.4 ${F};color:${MUTED};margin-top:2px`, r.meta));
+      if (r.desc) left.append(el('div', `font:400 12px/1.4 ${F};color:${r.warn ? '#B25E00' : MUTED};margin-top:2px`, r.desc));
+      row.append(left);
+      if (r.right) row.append(el('div', `flex:none;text-align:right;font:700 14px/1.3 ${F};color:${INK}`, r.right));
+      box.append(row);
+    });
+    if (note) box.append(el('div', `margin-top:6px;padding:10px 12px;border-radius:10px;background:#EEF3FF;font:400 12px/1.45 ${F};color:${INK}`, note));
+    const foot = el('div', 'display:flex;align-items:center;gap:10px;margin-top:12px');
+    foot.append(el('div', `flex:1;font:400 11px/1.4 ${F};color:${MUTED}`, SRC(src)));
+    if (link) { const a = el('a', `flex:none;color:${BLUE};font:600 13px ${F};text-decoration:none`, linkLabel(link) + ' ›'); a.href = link; a.target = '_blank'; a.rel = 'noopener'; foot.append(a); }
+    box.append(foot);
+    if (action) { const b = el('div', `margin-top:14px;height:46px;border-radius:23px;background:${BLUE};color:#fff;font:600 15px/46px ${F};text-align:center;cursor:pointer`, action.label); b.onclick = () => { closeSheet(); action.run(); }; box.append(b); }
+    const x = el('div', `text-align:center;padding:14px 0 0;font:600 14px ${F};color:${MUTED};cursor:pointer`, 'Close'); x.onclick = closeSheet; box.append(x);
+    sheet.replaceChildren(box); sheet.style.display = 'flex';
+  }
+  const loadTrip = () => get('/mock/trip');
+
+  // 给司机看：中文名、地址、地标、电话来自携程酒店数据
+  async function renderDriver() {
+    let t; try { t = await loadTrip(); } catch (e) { return; }
+    const h = t.hotel || {};
+    txt($$('driver', 'Hotel CN'), h.name_zh); txt($$('driver', 'Addr CN'), h.address_zh); txt($$('driver', 'Landmark CN'), h.landmark_zh);
+    txt($$('driver', 'Hotel EN'), `${h.name} · ${h.address}`);
+    const vals = $all('driver', 'Info Val'); txt(vals[0], h.phone); txt(vals[1], (t.user || {}).phone_last4);
+    const lm = $$('driver', 'Landmark CN');
+    if (lm) { let s = lm.parentElement.querySelector('.lc-src'); if (!s) { s = el('div', `font:400 11px/1.4 ${F};color:#8592A6;margin-top:4px`); s.className = 'lc-src'; lm.after(s); } txt(s, t.live && t.live.hotel ? 'Name, address and phone · ' + SRC(t.live.hotel) : ''); }
+  }
+
+  // 租车页：取还车时间按真实落地时间；搜索弹出真实车型和日价
+  async function renderCar() {
+    let t; try { t = await loadTrip(); } catch (e) { return; }
+    const c = t.car_offer; if (!c) return;
+    const ft = $all('car', 'Form Text'), fr = $all('car', 'Form Right');
+    txt(ft.find(n => /\d{2}:\d{2}/.test(n.textContent)), `${fmtDT(c.pickup_time)} - ${fmtDT(c.return_time)}`);
+    txt(fr.find(n => /days?$/.test(n.textContent.trim())), `${c.days} days`);
+    const b = $$('car', 'Search Button'); if (b) b.dataset.act = 'api:cars';
+  }
+  async function showCars() {
+    let t; try { t = await loadTrip(); } catch (e) { toast('后端不可达'); return; }
+    const c = t.car_offer; if (!c) { toast('No live car data yet, try again in a minute'); return; }
+    openSheet({
+      title: `${c.total} cars in ${c.city_en}`,
+      sub: `${fmtDT(c.pickup_time)} → ${fmtDT(c.return_time)} · daily prices on Trip.com` + (c.pickup_matches_airport ? '' : `. This search picks up at ${c.pickup_en}; switch to Pudong (PVG) when you book.`),
+      rows: c.groups.slice(0, 6).map(g => ({ title: g.name_en, meta: `${g.count} cars · ${g.seats} seats · e.g. ${g.example_zh}`, desc: g.promo ? `Promo from ¥${g.from_price}/day on a few cars` : '', right: `about ¥${g.typical_price}/day` })),
+      note: 'To drive yourself you need a temporary Chinese driving permit. An international driving permit alone is not accepted in China.',
+      src: t.live && t.live.car, link: c.link,
+    });
+  }
+
+  // 门票：访问当天的开放时间、闭馆日、哪些票护照能用（只写「身份证」的不行）
+  async function showTicketRules() {
+    let t; try { t = await loadTrip(); } catch (e) { toast('后端不可达'); return; }
+    const tk = (t.tickets || []).find(x => x.rules); if (!tk) { toast('No live ticket rules yet'); return; }
+    const r = tk.rules, h = r.hours || {};
+    const rows = [
+      { title: `${dayLabel(tk.date)} · your slot ${tk.slot.replace('-', '–')}`, meta: h.open ? `Open ${h.open}–${h.close} · last entry ${h.last_entry}` : `Last entry ${r.latest_entry || 'not listed'}`,
+        desc: h.closed_on_visit ? 'Closed on this day. Change your date.' : (h.closed_weekdays && h.closed_weekdays.length ? `Closed on ${h.closed_weekdays.map(d => DAYS[d] || d).join(', ')}` : ''), warn: !!h.closed_on_visit },
+      { title: 'Entry with a passport', meta: `${r.passport_ok} of ${r.products} ticket options on Trip.com accept a passport`,
+        desc: r.id_card_only ? `${r.id_card_only} accept a Chinese ID card only. Avoid those when you book.` : '', warn: !!r.id_card_only },
+    ];
+    if (r.english_guided_from) rows.push({ title: 'English-guided entry', meta: 'Small-group tour with an English guide, ticket included', right: `from ¥${Math.round(r.english_guided_from)}` });
+    openSheet({ title: `${tk.name} · ${tk.city}`, sub: `${r.level ? r.level + ' · ' : ''}${r.score}/5 on Trip.com · ${r.address_zh}`, rows,
+      note: (h.note ? h.note + '. ' : '') + 'Bring the passport you booked with.', src: t.live && t.live.tickets, link: r.link });
+  }
+
+  // 下一程：门票在另一座城市却没订城际交通，给真实高铁班次
+  async function showTrains() {
+    let t; try { t = await loadTrip(); } catch (e) { toast('后端不可达'); return; }
+    const L = t.next_leg; if (!L || !L.trains) { toast('No train data yet, try again in a minute'); return; }
+    const other = L.timetable_date && L.timetable_date !== L.date ? ` (timetable for ${dayLabel(L.timetable_date)})` : '';
+    openSheet({
+      title: `${L.from_en} → ${L.to_en} · ${dayLabel(L.date)}`,
+      sub: `For ${L.for} on ${dayLabel(L.for_date)}. No train or flight on this trip yet. ${L.count} high-speed trains that day${other}, fastest ${dur(L.fastest_min)}.`,
+      // 站名中英都给：英文给自己看，中文给检票口和车站指示牌对照
+      rows: L.trains.map(x => ({ title: `${x.no} · ${x.dep} → ${x.arr}`, meta: `${x.from_en} → ${x.to_en} · ${dur(x.duration_min)}`,
+        desc: `${x.from_zh} → ${x.to_zh}` + (x.left != null ? ' · ' + (x.left >= 99 ? 'plenty of seats' : `${x.left} seats left`) : ''), right: x.second_class ? `¥${x.second_class}` : '' })),
+      note: (L.on_sale_from ? `Tickets go on sale ${L.on_sale_from}. ` : '') + 'Prices are 2nd class. Book with your passport number, and show the same passport at the station ticket check.',
+      src: t.live && t.live.train, link: L.link,
+      action: { label: 'I booked it · mark as done', run: () => post('/rules/preflight/done', { item: 'train' }).then(() => { toast("Noted · we'll remind you the day before"); renderPreflight(); }).catch(() => toast('后端不可达')) },
+    });
+  }
+
+  // 行前检查：门票一行可点开规则；缺城际交通时在门票下面插一行（克隆租车行的样式）
+  const TRAIN_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#6F7685" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 10h14M9 21l-2-3M15 21l2-3M9 14h.01M15 14h.01"/></svg>';
+  function renderLiveRows(d) {
+    const by = Object.fromEntries(d.items.map(i => [i.id, i]));
+    const tk = $$('preflight', 'Item Palace Museum reservation');
+    if (tk) { tk.dataset.act = 'api:ticketrules'; tk.classList.add('tap'); tk.style.cursor = 'pointer'; }
+    let leg = $$('preflight', 'Item Next leg');
+    const it = by.nextleg;
+    if (!it) { if (leg) leg.style.display = 'none'; return; }
+    if (!leg) {
+      const car = $$('preflight', 'Item Car rental'); if (!car || !tk) return;
+      leg = car.cloneNode(true); leg.setAttribute('data-pencil-name', 'Item Next leg');
+      [leg, ...leg.querySelectorAll('[data-pencil-id]')].forEach(n => n.removeAttribute('data-pencil-id'));
+      const ic = leg.querySelector('[data-pencil-name="State Icon"]'); if (ic) { const w = document.createElement('div'); w.innerHTML = TRAIN_SVG; const n = w.firstElementChild; n.setAttribute('data-pencil-name', 'State Icon'); ic.replaceWith(n); }
+      const btn = leg.querySelector('[data-pencil-name="Item Button"]'); if (btn) btn.dataset.act = 'api:trains';
+      txt(leg.querySelector('[data-pencil-name="Item Button Label"]'), 'Trains');
+      tk.after(leg);
+    }
+    leg.style.display = '';
+    txt(leg.querySelector('[data-pencil-name="Item Title"]'), it.title); txt(leg.querySelector('[data-pencil-name="Item Desc"]'), it.desc);
+  }
+
+  // My Trips：门票日期跟着行程
+  async function renderTripsLive() {
+    let t; try { t = await loadTrip(); } catch (e) { return; }
+    const tk = (t.tickets || [])[0]; if (!tk) return;
+    const b = $all('trips', 'Booking Title').find(n => /Palace Museum/.test(n.textContent));
+    if (b) txt(b.parentElement.querySelector('[data-pencil-name="Booking Sub"]'), `${dayLabel(tk.date)} · ${tk.slot.replace('-', '–')} · Passport needed`);
+  }
+  async function liveStatus() {
+    try {
+      const s = await get('/live/status'); if (!s.enabled) return;
+      const v = Object.values(s.blocks), n = v.filter(b => b.source === 'live').length, snap = v.filter(b => b.source === 'snapshot').length;
+      status(n ? `真实数据 · 携程 MCP 实时 ${n}/${v.length}` : snap ? `真实数据 · 携程快照 ${snap}/${v.length}` : '模拟数据', 'rgba(44,97,254,.85)');
+    } catch (e) {}
+  }
+  setTimeout(liveStatus, 4500);           // 等"后端已连接"那条提示先显示完
+
   // ---------- 行前检查 ----------
   const ICONS = {};
   function captureIcons() {
@@ -319,6 +465,7 @@
       const btn = row.querySelector('[data-pencil-name="Item Button"]');
       if (btn) { btn.style.visibility = p.ready && !p.backup ? 'hidden' : 'visible'; txt(btn.querySelector('[data-pencil-name="Item Button Label"]'), p.ready ? 'Add backup' : 'Verify ¥1'); }
     }
+    renderLiveRows(d);
   }
 
   // ---------- 支付验证（文案切换见前面"支付方式"一节） ----------
@@ -513,6 +660,9 @@
     else if (act === 'esim') post('/rules/preflight/done', { item: 'esim' }).then(() => toast('eSIM added · China mainland · US$4.9')).catch(() => toast('Demo：eSIM'));
     else if (act === 'transfer') post('/rules/preflight/done', { item: 'transfer' }).then(() => { toast('Transfer booked · driver will wait at arrivals'); setTimeout(() => show('preflight'), 800); }).catch(() => show('preflight'));
     else if (act.startsWith('fb:')) feedback(act.slice(3));
+    else if (act === 'cars') showCars();                                 // 以下三个是真实数据结果层
+    else if (act === 'trains') showTrains();
+    else if (act === 'ticketrules') showTicketRules();
   };
   // 落地卡入口：有 eSIM 走已联网分支，否则走 Wi-Fi 分支
   async function landingEntry() {
@@ -592,7 +742,9 @@
     txt($$('trips', 'LC Sub'), open === 0 ? 'Everything is ready. Tap to see your route to the hotel.' : `${open} of 3 things still to sort out before you leave the airport.`);
   }
   window.lcOnShow = route => {
-    if (route === 'trips') renderTripsCard();
+    if (route === 'trips') { renderTripsCard(); renderTripsLive(); }
+    if (route === 'driver') renderDriver();
+    if (route === 'car') renderCar();
     if (route === 'step1' || route === 'online' || route === 'step3') renderSteps(route);
     if (route === 'preflight') renderPreflight();
     if (route === 'step3') renderTransport();
@@ -607,7 +759,12 @@
     list.appendChild(sep);
     const mk = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; list.appendChild(b); return b; };
     mk('🔄 重置演示数据', async () => { try { await post('/mock/reset'); Object.assign(S, S0()); toast('已重置'); setTimeout(() => location.reload(), 400); } catch (e) { toast('后端不可达'); } });
-    const nb = mk('🌙 深夜落地模式：关', () => { S.night = !S.night; nb.textContent = '🌙 深夜落地模式：' + (S.night ? '开' : '关'); renderTransport(); toast(S.night ? '交通推荐按 23:40 落地计算' : '恢复 14:20 落地'); });
+    const nb = mk('🌙 深夜落地模式：关', () => { S.night = !S.night; nb.textContent = '🌙 深夜落地模式：' + (S.night ? '开' : '关'); renderTransport(); toast(S.night ? '交通推荐按 23:40 落地计算' : '恢复按航班落地时间计算'); });
+    mk('📡 刷新真实数据（携程 MCP）', async () => {
+      toast('正在向携程 MCP 取数…');
+      try { const s = await withTimeout(post('/live/refresh'), 60000); const v = Object.values(s.blocks); toast(`实时 ${v.filter(b => b.source === 'live').length}/${v.length}` + (v.some(b => b.error) ? ' · 部分失败，已用快照' : '')); renderFlight(); const cur = document.querySelector('.screen.on'); if (cur) window.lcOnShow(cur.dataset.route); }
+      catch (e) { toast('刷新失败，继续使用快照'); }
+    });
     const failSim = m => async () => { try { const r = await post('/mock/pay-test?fail=1&method=' + m); renderPayFail(m, r, await otherVerified(m)); show('payment'); } catch (e) { toast('后端不可达'); } };
     mk('💳 模拟支付失败（支付宝）', failSim('alipay'));
     mk('💳 模拟支付失败（TenPayGo）', failSim('tenpaygo'));

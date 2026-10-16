@@ -14,6 +14,7 @@ from pydantic import BaseModel
 
 from kb import KnowledgeBase
 from mock import MockTrip
+import live
 from rules import PAY_METHODS
 import stuck
 import rules
@@ -26,6 +27,8 @@ app.add_middleware(CORSMiddleware,
 
 kb = KnowledgeBase()
 trip = MockTrip()
+live_store = live.LiveStore()
+live_store.warm(trip.get_trip)          # 有 Token 时后台预热真实数据，不阻塞启动
 _H5 = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'h5'))
 if os.path.isdir(_H5):
     app.mount('/app', StaticFiles(directory=_H5, html=True), name='h5')
@@ -45,7 +48,7 @@ def test_page():
 def health():
     # Render 会注入 RENDER_GIT_COMMIT，用来确认线上跑的是哪次提交
     return {'ok': True, 'build': '2026-10-06-tenpaygo', 'commit': (os.environ.get('RENDER_GIT_COMMIT') or os.environ.get('GIT_COMMIT') or '')[:7] or None,
-            'kb_scenarios': sorted(kb.scenarios)}
+            'kb_scenarios': sorted(kb.scenarios), 'live': {'enabled': live.enabled(), 'token': bool(live.tripmcp.token())}}
 
 
 # ---------------- A 知识库 ----------------
@@ -116,14 +119,20 @@ def kb_reload():
 
 
 # ---------------- C 模拟携程数据 ----------------
+# 行程和航班接口保留原路径，内容已合并真实数据（见 live.py）；trip['live'] 标明每块数据来自 live / snapshot
+def _live_trip():
+    return live.enrich(trip.get_trip(), live_store)
+
+
 @app.get('/mock/trip')
 def mock_trip():
-    return trip.get_trip()
+    return _live_trip()
 
 
 @app.get('/mock/flight')
 def mock_flight():
-    return trip.get_flight()
+    t = _live_trip()
+    return {**t['flight'], 'status': trip.flight_status, 'landed_at': trip.landed_at, 'live': t.get('live', {}).get('flight')}
 
 
 @app.post('/mock/flight/depart')
@@ -185,8 +194,9 @@ async def stuck_classify(image: UploadFile | None = File(None), text: str = Form
 
 # ---------------- D 规则引擎 ----------------
 def _trip_with_done():
-    t = trip.get_trip()
+    t = _live_trip()
     d = trip.done_items
+    if 'train' in d: t['intercity_booked'] = True; t.pop('next_leg', None)
     if 'transfer' in d: t['transfer_booked'] = True
     if 'car' in d: t['car_rental_booked'] = True
     if 'esim' in d: t['esim'] = {**t.get('esim', {}), 'bought': True}
@@ -206,7 +216,7 @@ class DoneItem(BaseModel):
 
 @app.post('/rules/preflight/done')
 def rules_preflight_done(d: DoneItem):
-    if d.item not in ('esim', 'alipay', 'tenpaygo', 'transfer', 'car', 'permissions', 'pack'):
+    if d.item not in ('esim', 'alipay', 'tenpaygo', 'transfer', 'car', 'train', 'permissions', 'pack'):
         raise HTTPException(400, 'unknown item %s' % d.item)
     trip.mark_done(d.item)
     return rules.preflight(_trip_with_done(), trip.done_items)
@@ -225,3 +235,37 @@ def rules_transport(landed_at: Optional[str] = None, bags: Optional[int] = None,
     if landed_at is None and trip.landed_at:
         landed_at = trip.landed_at[11:16]
     return rules.transport(t, landed_at=landed_at, airport=airport, weather=weather, paid=rules.verified_methods(t, trip.done_items))
+
+
+# ---------------- E 真实数据（携程营销 MCP） ----------------
+@app.get('/live/status')
+def live_status():
+    """每块数据现在来自哪里：live（实时，带抓取时间）/ snapshot（快照兜底）/ mock（模拟），以及最近一次失败原因。"""
+    return {'enabled': live.enabled(), 'token': bool(live.tripmcp.token()), 'ttl_s': live_store.ttl, 'blocks': live_store.status()}
+
+
+@app.post('/live/refresh')
+def live_refresh():
+    """同步刷新全部真实数据（演示前点一次）。失败的块保留旧值或快照。"""
+    if not live.enabled():
+        raise HTTPException(409, 'live data is off (LC_LIVE=off)')
+    base = trip.get_trip()
+    for k in live.KEYS:
+        live_store.cache.pop(k, None)
+    live.enrich(base, live_store, wait=True)
+    return live_status()
+
+
+@app.get('/live/{key}')
+def live_get(key: str, refresh: bool = False):
+    if key not in live.KEYS:
+        raise HTTPException(404, 'key must be one of %s' % ' | '.join(live.KEYS))
+    if not live.enabled():
+        raise HTTPException(409, 'live data is off (LC_LIVE=off)')
+    base = trip.get_trip()
+    if key in ('car', 'train'):          # 租车依赖真实落地时间，火车依赖真实酒店城市和退房日：先合并航班和酒店
+        base = live.enrich(base, live_store, wait=refresh)
+    e = live_store.get(key, base, wait=refresh)
+    if not e:
+        raise HTTPException(503, 'no live data or snapshot for %s yet' % key)
+    return {k: v for k, v in e.items() if not k.startswith('_')}

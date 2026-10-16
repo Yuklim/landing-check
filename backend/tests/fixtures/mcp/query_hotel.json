@@ -1,0 +1,103 @@
+[
+ {
+  "productID": 416228,
+  "basicInfo": {
+   "productID": 416228,
+   "reqProductID": 416228,
+   "name": "上海璞丽",
+   "price": 3916,
+   "available": true,
+   "imageURL": "https://dimg04.c-ctrip.com/images/1mc6y12000qll06ubC115.jpg",
+   "score": 4.6,
+   "cityID": 2,
+   "cityName": "上海",
+   "cityUrlEName": "shanghai",
+   "countryID": 1,
+   "countryName": "中国",
+   "provinceID": 2,
+   "provinceName": "上海",
+   "address": "常德路1号",
+   "areaName": "华东地区",
+   "priceIncludeTax": false,
+   "parentCityID": 2
+  },
+  "additionalInfo": {
+   "description": "",
+   "coordinate": {
+    "lat": 31.222291,
+    "lng": 121.448379
+   },
+   "zoneId": 16,
+   "zoneName": "静安寺/南京西路",
+   "zoneAlias": "",
+   "locationId": 112,
+   "locationName": "静安区",
+   "star": 5,
+   "commentsCount": 5636,
+   "showCommentsCount": 5636,
+   "groupName": "The Leading Hotels of the World",
+   "starLicence": false,
+   "masterHotelId": 416228,
+   "brandId": 2693,
+   "brandName": "The Leading Hotels of the World",
+   "tags": [
+    "全部房型禁烟",
+    "上榜酒店",
+    "美食林酒店"
+   ],
+   "categorys": [
+    "酒店"
+   ],
+   "openDate": "2009-09-01",
+   "contactTel": "32039999",
+   "poiId": 21138172,
+   "favorityCount": 78578,
+   "typeTags": [
+    "酒店"
+   ],
+   "recommendText": "坐拥城市绿洲，享米其林星馔",
+   "rankTag": "2026亚洲100设计感酒店",
+   "rankTagId": "10006010",
+   "decorationDate": "2016-02-01",
+   "mainLand": true,
+   "hkmotw": false,
+   "rankTagIds": [
+    "10006010",
+    "10006001"
+   ],
+   "specialTagIds": [
+    "10006099",
+    "10001003"
+   ]
+  },
+  "urlInfo": {
+   "pcUrl": "https://hotels.ctrip.com/hotels/detail?checkin=2026-10-23&hotelId=416228&checkout=2026-10-25",
+   "h5Url": "https://m.ctrip.com/webapp/hotels/detail?atime=20261023&days=2&hotelid=416228",
+   "appUrl": "ctrip://wireless/InlandHotel?checkOutDate=20261025&hotelId=416228&checkInDate=20261023",
+   "universalUrl": "https://dp.ctrip.com/webapp/hotel/hoteldetail/416228.html?atime=20261023&days=2",
+   "miniProgramUrl": "/pages/hoteldetail/detail/index?id=416228&inday=2026-10-23&outday=2026-10-25",
+   "quickAppUrl": "hap://app/com.ctrip.app/pages/hotel/detail?options=%7B%22id%22%3A416228%2C%22inday%22%3A%222026-10-23%22%2C%22outday%22%3A%222026-10-25%22%7D"
+  },
+  "listPageUrlInfo": {
+   "h5Url": "https://m.ctrip.com/webapp/hotels/list?atime=20261023&city=2&days=2",
+   "appUrl": "ctrip://wireless/hotel_inland_list?c3=2&c1=20261023&c2=20261025",
+   "pcUrl": "https://hotels.ctrip.com/hotels/list?city=2",
+   "miniProgramUrl": "pages/hotel/list/index?cityname=%E4%B8%8A%E6%B5%B7&cityid=2"
+  },
+  "dailyHotelRates": [
+   {
+    "EffectDate": "20261023",
+    "HotelRate": {
+     "HotelBookable": false
+    }
+   },
+   {
+    "EffectDate": "20261024",
+    "HotelRate": {
+     "HotelBookable": true,
+     "Price": 3915.21
+    }
+   }
+  ]
+ }
+]

@@ -1,0 +1,750 @@
+[
+ {
+  "vehicleGroupName": "房车",
+  "vehiclegroupCode": "11",
+  "dailyPrice": "750",
+  "vechileInfos": [
+   {
+    "productName": "上汽大通MAXUS RV80",
+    "vehicleLaebl": "",
+    "brandName": "大通",
+    "carriageDesc": "房车",
+    "driveMode": "前置前驱",
+    "fuel": "0号",
+    "trans": "自动挡",
+    "seat": "6",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "2.0T",
+    "dailyPrice": "750",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A4%A7%E9%80%9A_%E4%B8%8A%E6%B1%BD%E5%A4%A7%E9%80%9AMAXUS+RV80%22%5D&channelId=110&vehicleid=17986&vehicleDayPrice=750&currentDailyPrice=750&skuId=102224501&productId=71900158724768711&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "上汽大通MAXUS RV90",
+    "vehicleLaebl": "",
+    "brandName": "大通",
+    "carriageDesc": "客车",
+    "driveMode": "前置后驱",
+    "fuel": "0号",
+    "trans": "自动挡",
+    "seat": "4",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "2.0T",
+    "dailyPrice": "750",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A4%A7%E9%80%9A_%E4%B8%8A%E6%B1%BD%E5%A4%A7%E9%80%9AMAXUS+RV90%22%5D&channelId=110&vehicleid=17438&vehicleDayPrice=750&currentDailyPrice=750&skuId=103298343&productId=71900162120813864&isShowSearchConditionTip=true"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "vehicleGroupName": "经济型",
+  "vehiclegroupCode": "2",
+  "dailyPrice": "20",
+  "vechileInfos": [
+   {
+    "productName": "日产轩逸",
+    "vehicleLaebl": "",
+    "brandName": "日产",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置前驱",
+    "fuel": "92号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "1.2L-1.6L",
+    "dailyPrice": "141",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E6%97%A5%E4%BA%A7_%E6%97%A5%E4%BA%A7%E8%BD%A9%E9%80%B8%22%5D&channelId=110&vehicleid=6266&license=沪牌&vehicleDayPrice=141&currentDailyPrice=141&skuId=125519983&productId=104142379107288071&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "马自达3 昂克赛拉",
+    "vehicleLaebl": "",
+    "brandName": "马自达",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置前驱",
+    "fuel": "92号或95号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "1.5L-2.0L",
+    "dailyPrice": "142",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E9%A9%AC%E8%87%AA%E8%BE%BE_%E9%A9%AC%E8%87%AA%E8%BE%BE3+%E6%98%82%E5%85%8B%E8%B5%9B%E6%8B%89%22%5D&channelId=110&vehicleid=2828&license=沪牌&vehicleDayPrice=142&currentDailyPrice=142&skuId=143484979&productId=123350782843783381&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "大众宝来",
+    "vehicleLaebl": "",
+    "brandName": "大众",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置前驱",
+    "fuel": "95号或92号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "1.2T-1.5L",
+    "dailyPrice": "28",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A4%A7%E4%BC%97_%E5%A4%A7%E4%BC%97%E5%AE%9D%E6%9D%A5%22%5D&channelId=110&vehicleid=5348&vehicleDayPrice=28&currentDailyPrice=28&skuId=89005680&productId=72241848450925632&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "比亚迪海豹05",
+    "vehicleLaebl": "",
+    "brandName": "比亚迪",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置前驱",
+    "fuel": "92号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "1.5L",
+    "dailyPrice": "111.0",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E6%AF%94%E4%BA%9A%E8%BF%AA_%E6%AF%94%E4%BA%9A%E8%BF%AA%E6%B5%B7%E8%B1%B905%22%5D&channelId=110&vehicleid=97735&vehicleDayPrice=111.0&currentDailyPrice=111.0&skuId=102821930&productId=72459326160473204&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "大众速腾",
+    "vehicleLaebl": "",
+    "brandName": "大众",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置前驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "1.4T",
+    "dailyPrice": "208",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A4%A7%E4%BC%97_%E5%A4%A7%E4%BC%97%E9%80%9F%E8%85%BE%22%5D&channelId=110&vehicleid=1140&license=沪牌&vehicleDayPrice=208&currentDailyPrice=208&skuId=45533902&productId=71961370236799359&isShowSearchConditionTip=true"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "vehicleGroupName": "舒适型",
+  "vehiclegroupCode": "3",
+  "dailyPrice": "21",
+  "vechileInfos": [
+   {
+    "productName": "丰田凯美瑞 双擎",
+    "vehicleLaebl": "",
+    "brandName": "丰田",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置前驱",
+    "fuel": "92号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "2.0L",
+    "dailyPrice": "127",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E4%B8%B0%E7%94%B0_%E4%B8%B0%E7%94%B0%E5%87%AF%E7%BE%8E%E7%91%9E+%E5%8F%8C%E6%93%8E%22%5D&channelId=110&vehicleid=84694&license=沪牌&vehicleDayPrice=127&currentDailyPrice=127&skuId=89079740&productId=71930513755014847&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "阿维塔06",
+    "vehicleLaebl": "",
+    "brandName": "阿维塔",
+    "carriageDesc": "三厢车",
+    "driveMode": "后置后驱/双电机四驱",
+    "fuel": "",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "纯电动",
+    "dailyPrice": "188",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E9%98%BF%E7%BB%B4%E5%A1%94_%E9%98%BF%E7%BB%B4%E5%A1%9406%22%5D&channelId=110&vehicleid=103923&license=沪牌&vehicleDayPrice=188&currentDailyPrice=188&skuId=119961304&productId=99782742356806870&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "凯迪拉克CT4",
+    "vehicleLaebl": "",
+    "brandName": "凯迪拉克",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置后驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "2.0T",
+    "dailyPrice": "240",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%87%AF%E8%BF%AA%E6%8B%89%E5%85%8B_%E5%87%AF%E8%BF%AA%E6%8B%89%E5%85%8BCT4%22%5D&channelId=110&vehicleid=5259&license=沪牌&vehicleDayPrice=240&currentDailyPrice=240&skuId=101712381&productId=71880053887159374&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "奔驰A级",
+    "vehicleLaebl": "",
+    "brandName": "奔驰",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置前驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "marketingLabel": "限时超值",
+    "hot": true,
+    "displacement": "1.3T",
+    "dailyPrice": "142",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A5%94%E9%A9%B0_%E5%A5%94%E9%A9%B0A%E7%BA%A7%22%5D&channelId=110&vehicleid=4482&vehicleDayPrice=142&currentDailyPrice=142&skuId=69930540&productId=103012134263571589&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "极氪007(2026款)",
+    "vehicleLaebl": "",
+    "brandName": "极氪",
+    "carriageDesc": "三厢车",
+    "driveMode": "双电机四驱/后置后驱",
+    "fuel": "",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "",
+    "dailyPrice": "315",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E6%9E%81%E6%B0%AA_%E6%9E%81%E6%B0%AA007%282026%E6%AC%BE%29%22%5D&channelId=110&vehicleid=114570&license=沪牌&vehicleDayPrice=315&currentDailyPrice=315&skuId=140492654&productId=120606474168386440&isShowSearchConditionTip=true"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "vehicleGroupName": "商务车",
+  "vehiclegroupCode": "4",
+  "dailyPrice": "105",
+  "vechileInfos": [
+   {
+    "productName": "丰田格瑞维亚",
+    "vehicleLaebl": "",
+    "brandName": "丰田",
+    "carriageDesc": "MPV",
+    "driveMode": "前置前驱",
+    "fuel": "92号",
+    "trans": "自动挡",
+    "seat": "7",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "2.5L",
+    "dailyPrice": "186",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E4%B8%B0%E7%94%B0_%E4%B8%B0%E7%94%B0%E6%A0%BC%E7%91%9E%E7%BB%B4%E4%BA%9A%22%5D&channelId=110&vehicleid=17550&license=沪牌&vehicleDayPrice=186&currentDailyPrice=186&skuId=139971091&productId=116479753422868368&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "荣威iMAX8 EV",
+    "vehicleLaebl": "",
+    "brandName": "荣威",
+    "carriageDesc": "MPV",
+    "driveMode": "前置前驱",
+    "fuel": "",
+    "trans": "自动挡",
+    "seat": "7",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "纯电动",
+    "dailyPrice": "330",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E8%8D%A3%E5%A8%81_%E8%8D%A3%E5%A8%81iMAX8+EV%22%5D&channelId=110&vehicleid=17421&license=沪牌&vehicleDayPrice=330&currentDailyPrice=330&skuId=131152253&productId=107556522774546914&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "极氪MIX",
+    "vehicleLaebl": "",
+    "brandName": "极氪",
+    "carriageDesc": "MPV",
+    "driveMode": "后置后驱",
+    "fuel": "",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "1.9T",
+    "dailyPrice": "269",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E6%9E%81%E6%B0%AA_%E6%9E%81%E6%B0%AAMIX%22%5D&channelId=110&vehicleid=89979&license=沪牌&vehicleDayPrice=269&currentDailyPrice=269&skuId=109356185&productId=110449440567460378&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "广汽传祺M8",
+    "vehicleLaebl": "",
+    "brandName": "广汽传祺",
+    "carriageDesc": "MPV",
+    "driveMode": "前置前驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "7",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "2.0T",
+    "dailyPrice": "279",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%B9%BF%E6%B1%BD%E4%BC%A0%E7%A5%BA_%E5%B9%BF%E6%B1%BD%E4%BC%A0%E7%A5%BAM8%22%5D&channelId=110&vehicleid=17931&vehicleDayPrice=279&currentDailyPrice=279&skuId=136473457&productId=112406519819289448&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "上汽大通MAXUS EUNIQ 5",
+    "vehicleLaebl": "",
+    "brandName": "大通",
+    "carriageDesc": "MPV",
+    "driveMode": "前置前驱",
+    "fuel": "92号",
+    "trans": "自动挡",
+    "seat": "6",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "1.3T",
+    "dailyPrice": "115",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A4%A7%E9%80%9A_%E4%B8%8A%E6%B1%BD%E5%A4%A7%E9%80%9AMAXUS+EUNIQ+5%22%5D&channelId=110&vehicleid=5243&license=沪牌&vehicleDayPrice=115&currentDailyPrice=115&skuId=146950266&productId=130667965705357669&isShowSearchConditionTip=true"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "vehicleGroupName": "豪华型",
+  "vehiclegroupCode": "5",
+  "dailyPrice": "79",
+  "vechileInfos": [
+   {
+    "productName": "保时捷Panamera",
+    "vehicleLaebl": "",
+    "brandName": "保时捷",
+    "carriageDesc": "掀背车",
+    "driveMode": "前置四驱/前置后驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "4",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "2.9T",
+    "dailyPrice": "803",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E4%BF%9D%E6%97%B6%E6%8D%B7_%E4%BF%9D%E6%97%B6%E6%8D%B7Panamera%22%5D&channelId=110&vehicleid=85198&license=沪牌&vehicleDayPrice=803&currentDailyPrice=803&skuId=49249698&productId=75684006089442801&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "奔驰E级",
+    "vehicleLaebl": "",
+    "brandName": "奔驰",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置后驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": true,
+    "displacement": "2.0T",
+    "dailyPrice": "367",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A5%94%E9%A9%B0_%E5%A5%94%E9%A9%B0E%E7%BA%A7%22%5D&channelId=110&vehicleid=116845&license=沪牌&vehicleDayPrice=367&currentDailyPrice=367&skuId=128751708&productId=120645880270572358&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "奥迪E5",
+    "vehicleLaebl": "",
+    "brandName": "奥迪AUDI",
+    "carriageDesc": "旅行车",
+    "driveMode": "双电机四驱/后置后驱",
+    "fuel": "",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "纯电动",
+    "dailyPrice": "278",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A5%A5%E8%BF%AAAUDI_%E5%A5%A5%E8%BF%AAE5%22%5D&channelId=110&vehicleid=105456&license=沪牌&vehicleDayPrice=278&currentDailyPrice=278&skuId=108531333&productId=81298065843276219&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "奔驰C级",
+    "vehicleLaebl": "",
+    "brandName": "奔驰",
+    "carriageDesc": "三厢车",
+    "driveMode": "前置后驱/前置四驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "1.5T",
+    "dailyPrice": "196",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A5%94%E9%A9%B0_%E5%A5%94%E9%A9%B0C%E7%BA%A7%22%5D&channelId=110&vehicleid=4734&license=沪牌&vehicleDayPrice=196&currentDailyPrice=196&skuId=119240710&productId=96900860635105974&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "奥迪A5L Sportback",
+    "vehicleLaebl": "",
+    "brandName": "奥迪",
+    "carriageDesc": "掀背车",
+    "driveMode": "前置四驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "2.0T",
+    "dailyPrice": "513",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A5%A5%E8%BF%AA_%E5%A5%A5%E8%BF%AAA5L+Sportback%22%5D&channelId=110&vehicleid=116789&license=沪牌&vehicleDayPrice=513&currentDailyPrice=513&skuId=101675659&productId=72077515212194315&isShowSearchConditionTip=true"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "vehicleGroupName": "SUV",
+  "vehiclegroupCode": "6",
+  "dailyPrice": "27.0",
+  "vechileInfos": [
+   {
+    "productName": "捷途旅行者(24-25款)",
+    "vehicleLaebl": "",
+    "brandName": "捷途",
+    "carriageDesc": "SUV",
+    "driveMode": "前置四驱",
+    "fuel": "92号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "2.0T",
+    "dailyPrice": "105.0",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E6%8D%B7%E9%80%94_%E6%8D%B7%E9%80%94%E6%97%85%E8%A1%8C%E8%80%85%2824-25%E6%AC%BE%29%22%5D&channelId=110&vehicleid=85534&vehicleDayPrice=105.0&currentDailyPrice=105.0&skuId=138217962&productId=113744169826078459&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "奥迪Q2L",
+    "vehicleLaebl": "",
+    "brandName": "奥迪",
+    "carriageDesc": "SUV",
+    "driveMode": "前置前驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "5",
+    "hot": true,
+    "displacement": "1.4T-1.5T",
+    "dailyPrice": "134",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A5%A5%E8%BF%AA_%E5%A5%A5%E8%BF%AAQ2L%22%5D&channelId=110&vehicleid=4883&license=沪牌&vehicleDayPrice=134&currentDailyPrice=134&skuId=144476942&productId=125460344295440791&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "蔚来ES6",
+    "vehicleLaebl": "",
+    "brandName": "蔚来",
+    "carriageDesc": "SUV",
+    "driveMode": "双电机四驱",
+    "fuel": "",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "纯电动",
+    "dailyPrice": "260",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E8%94%9A%E6%9D%A5_%E8%94%9A%E6%9D%A5ES6%22%5D&channelId=110&vehicleid=17943&license=沪牌&vehicleDayPrice=260&currentDailyPrice=260&skuId=108702721&productId=82051584727058052&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "林肯冒险家",
+    "vehicleLaebl": "",
+    "brandName": "林肯",
+    "carriageDesc": "SUV",
+    "driveMode": "前置四驱/前置前驱",
+    "fuel": "92号或95号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "2.0T",
+    "dailyPrice": "312.0",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E6%9E%97%E8%82%AF_%E6%9E%97%E8%82%AF%E5%86%92%E9%99%A9%E5%AE%B6%22%5D&channelId=110&vehicleid=5202&license=沪牌&vehicleDayPrice=312.0&currentDailyPrice=312.0&skuId=95942071&productId=72500112140897146&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "荣威RX5",
+    "vehicleLaebl": "",
+    "brandName": "荣威",
+    "carriageDesc": "SUV",
+    "driveMode": "前置前驱",
+    "fuel": "92号",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "1.5T",
+    "dailyPrice": "135",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E8%8D%A3%E5%A8%81_%E8%8D%A3%E5%A8%81RX5%22%5D&channelId=110&vehicleid=4022&license=沪牌&vehicleDayPrice=135&currentDailyPrice=135&skuId=143487205&productId=123359939686321640&isShowSearchConditionTip=true"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "vehicleGroupName": "小巴士",
+  "vehiclegroupCode": "7",
+  "dailyPrice": "171",
+  "vechileInfos": [
+   {
+    "productName": "九龙A5",
+    "vehicleLaebl": "",
+    "brandName": "九龙",
+    "carriageDesc": "客车",
+    "driveMode": "中置后驱",
+    "fuel": "92号",
+    "trans": "自动挡",
+    "seat": "9",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "2.7L",
+    "dailyPrice": "550",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E4%B9%9D%E9%BE%99_%E4%B9%9D%E9%BE%99A5%22%5D&channelId=110&vehicleid=87802&license=沪牌&vehicleDayPrice=550&currentDailyPrice=550&skuId=85606018&productId=72072718991804581&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "大通大拿V1L",
+    "vehicleLaebl": "",
+    "brandName": "大通",
+    "carriageDesc": "客车",
+    "driveMode": "前置前驱",
+    "fuel": "",
+    "trans": "自动挡",
+    "seat": "7",
+    "doorNo": "5",
+    "hot": false,
+    "displacement": "纯电动",
+    "dailyPrice": "171",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A4%A7%E9%80%9A_%E5%A4%A7%E9%80%9A%E5%A4%A7%E6%8B%BFV1L%22%5D&channelId=110&vehicleid=108382&license=沪牌&vehicleDayPrice=171&currentDailyPrice=171&skuId=142351602&productId=120591041347964439&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "宇通客车天骏",
+    "vehicleLaebl": "",
+    "brandName": "宇通客车",
+    "carriageDesc": "客车",
+    "driveMode": "前置后驱",
+    "fuel": "0号",
+    "trans": "自动挡",
+    "seat": "9",
+    "doorNo": "3",
+    "hot": false,
+    "displacement": "2.3T",
+    "dailyPrice": "521",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%AE%87%E9%80%9A%E5%AE%A2%E8%BD%A6_%E5%AE%87%E9%80%9A%E5%AE%A2%E8%BD%A6%E5%A4%A9%E9%AA%8F%22%5D&channelId=110&vehicleid=102201&license=沪牌&vehicleDayPrice=521&currentDailyPrice=521&skuId=141611730&productId=118936281939674770&isShowSearchConditionTip=true"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "vehicleGroupName": "跑车",
+  "vehiclegroupCode": "9",
+  "dailyPrice": "198",
+  "vechileInfos": [
+   {
+    "productName": "奔驰CLE",
+    "vehicleLaebl": "",
+    "brandName": "奔驰",
+    "carriageDesc": "硬顶跑车",
+    "driveMode": "前置四驱/前置后驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "4",
+    "doorNo": "2",
+    "hot": false,
+    "displacement": "2.0T",
+    "dailyPrice": "567",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A5%94%E9%A9%B0_%E5%A5%94%E9%A9%B0CLE%22%5D&channelId=110&vehicleid=88810&vehicleDayPrice=567&currentDailyPrice=567&skuId=92179648&productId=71876755293520573&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "福特野马 软顶敞篷版",
+    "vehicleLaebl": "",
+    "brandName": "福特",
+    "carriageDesc": "软顶敞篷车",
+    "driveMode": "后置两驱",
+    "fuel": "98号",
+    "trans": "自动挡",
+    "seat": "4",
+    "doorNo": "2",
+    "hot": false,
+    "displacement": "2.3T",
+    "dailyPrice": "269",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E7%A6%8F%E7%89%B9_%E7%A6%8F%E7%89%B9%E9%87%8E%E9%A9%AC+%E8%BD%AF%E9%A1%B6%E6%95%9E%E7%AF%B7%E7%89%88%22%5D&channelId=110&vehicleid=17380&vehicleDayPrice=269&currentDailyPrice=269&skuId=142750658&productId=129115394104610577&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "保时捷911 软顶敞篷版",
+    "vehicleLaebl": "",
+    "brandName": "保时捷",
+    "carriageDesc": "软顶敞篷车",
+    "driveMode": "后置四驱/后置后驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "4",
+    "doorNo": "2",
+    "hot": false,
+    "displacement": "3.0T",
+    "dailyPrice": "1349",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E4%BF%9D%E6%97%B6%E6%8D%B7_%E4%BF%9D%E6%97%B6%E6%8D%B7911+%E8%BD%AF%E9%A1%B6%E6%95%9E%E7%AF%B7%E7%89%88%22%5D&channelId=110&vehicleid=340&license=沪牌&vehicleDayPrice=1349&currentDailyPrice=1349&skuId=92020958&productId=72044904767029624&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "奥迪RS 5 硬顶版",
+    "vehicleLaebl": "",
+    "brandName": "奥迪",
+    "carriageDesc": "硬顶跑车",
+    "driveMode": "前置四驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "4",
+    "doorNo": "2",
+    "hot": false,
+    "displacement": "2.9T",
+    "dailyPrice": "1477",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%A5%A5%E8%BF%AA_%E5%A5%A5%E8%BF%AARS+5+%E7%A1%AC%E9%A1%B6%E7%89%88%22%5D&channelId=110&vehicleid=4892&license=沪牌&vehicleDayPrice=1477&currentDailyPrice=1477&skuId=84933087&productId=72025946183516543&isShowSearchConditionTip=true"
+     }
+    ]
+   },
+   {
+    "productName": "保时捷911 硬顶版",
+    "vehicleLaebl": "",
+    "brandName": "保时捷",
+    "carriageDesc": "硬顶跑车",
+    "driveMode": "后置后驱/后置四驱",
+    "fuel": "95号",
+    "trans": "自动挡",
+    "seat": "4",
+    "doorNo": "2",
+    "hot": false,
+    "displacement": "3.0T",
+    "dailyPrice": "1030",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E4%BF%9D%E6%97%B6%E6%8D%B7_%E4%BF%9D%E6%97%B6%E6%8D%B7911+%E7%A1%AC%E9%A1%B6%E7%89%88%22%5D&channelId=110&vehicleid=4470&license=沪牌&vehicleDayPrice=1030&currentDailyPrice=1030&skuId=1911567&productId=72078502741264671&isShowSearchConditionTip=true"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "vehicleGroupName": "皮卡",
+  "vehiclegroupCode": "10",
+  "dailyPrice": "214",
+  "vechileInfos": [
+   {
+    "productName": "雷达RD6",
+    "vehicleLaebl": "",
+    "brandName": "吉利雷达",
+    "carriageDesc": "皮卡",
+    "driveMode": "后置后驱/双电机四驱",
+    "fuel": "",
+    "trans": "自动挡",
+    "seat": "5",
+    "doorNo": "4",
+    "hot": false,
+    "displacement": "纯电动",
+    "dailyPrice": "214",
+    "vendorInfos": [
+     {
+      "h5ListUrl": "https://m.ctrip.com/xtaro/car/pages/xcar/entry/list/index?urlPageName=List&apptype=ISD_C_CW_MAIN&st=ser&fromurl=common&landingto=List&scene=1&isMarketing=1&klbVersion=1&orignScenes=0&pcid=2&rcid=2&plid=SHA&rlid=SHA&ptime=20261023090000&rtime=20261026100000&plat=31.196029&plng=121.339775&rlat=31.196029&rlng=121.339775&rlname=虹桥国际机场&plname=虹桥国际机场&filters=%5B%22Brand_%E5%90%89%E5%88%A9%E9%9B%B7%E8%BE%BE_%E9%9B%B7%E8%BE%BERD6%22%5D&channelId=110&vehicleid=17960&license=沪牌&vehicleDayPrice=214&currentDailyPrice=214&skuId=137667440&productId=113001923349956623&isShowSearchConditionTip=true"
+     }
+    ]
+   }
+  ]
+ }
+]

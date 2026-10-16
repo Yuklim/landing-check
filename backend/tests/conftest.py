@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+# 真实数据层和演示日期平移默认关掉，原有用例按 mock/*.json 断言；test_live.py 按需打开
+os.environ.setdefault('LC_LIVE', 'off')
+os.environ.setdefault('LC_DEMO_SHIFT', '0')
 import pytest
 
 
