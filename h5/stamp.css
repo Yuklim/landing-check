@@ -49,8 +49,6 @@ body.stamp-open #lcdot,body.stamp-open #hint{display:none}
 .fs-check input{accent-color:var(--blue);margin:3px 0 0;flex:none;width:17px;height:17px}
 .fs-check span{flex:1}
 .fs-check small{display:block;color:var(--muted);font-size:11px}
-.fs-checklist{border:0;margin:12px 0;padding:0}
-.fs-checklist legend{font-size:12px;color:var(--muted)}
 .fs-notice{font-size:12px;padding:12px 14px;border:0;border-radius:10px;background:#FFF4E5;color:#B4650A;overflow-wrap:anywhere}
 .fs-notice.good{background:#E6F7F0;color:#1BA672}
 .fs-notice:empty{display:none}

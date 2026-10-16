@@ -82,11 +82,10 @@
   }
   function share() {
     const d = state.personal.draft, unlocked = stamp();
-    const checks = [['arrived','I have arrived in Shanghai.'],['internet','I have a working internet connection.'],['payment','I have a usable way to pay.'],['transport','I know how I am getting to my hotel.']];
     return `<div class="fs-intro"><div><div class="fs-eyebrow">THE FIRST STAMP · SHANGHAI EDITION</div><p>${unlocked ? 'Your China story has begun.' : 'Every journey has a first page.'}</p></div><span class="fs-number">${unlocked ? '01' : '✦'}</span></div>
       ${preview()}<div class="fs-actions">${btn(icon('download')+' Save image','save-image')}${btn(icon('share')+' Share','share-image','','outline')}</div>
       <details class="fs-panel" data-fs-customize><summary>Make it yours · choose what to share</summary><form id="fs-customize"><label class="fs-field">Traveler nickname<input name="name" maxlength="40" value="${H(d.name)}" placeholder="Your name, if you choose" autocomplete="off"></label><label class="fs-check"><input name="showName" type="checkbox" ${d.showName?'checked':''}><span>Show my nickname on the card<small>Off by default. Otherwise your card says “A traveler”.</small></span></label><label class="fs-field">Arrival date · Shanghai local date<input name="arrival" type="date" value="${H(d.arrival)}" min="2000-01-01" max="2100-12-31" required></label><label class="fs-check"><input name="showDate" type="checkbox" ${d.showDate?'checked':''}><span>Show my arrival date<small>Off by default. The date stays private unless selected.</small></span></label></form><p class="fs-small">Only your selected nickname and date appear. Hotel details, live location, payment information and booking references are never included. Previously saved images and posts keep the information you chose at that time.</p></details>
-      ${unlocked ? `<section class="fs-panel"><div class="fs-eyebrow">CITY NO. 001 · COLLECTED</div><h2>Shanghai is in your atlas.</h2><p class="fs-small">Your arrival is self-confirmed. No location tracking or booking verification.</p>${btn('View my city atlas','nav','city-passport','secondary')}</section>` : `<details class="fs-panel" data-fs-unlock><summary>Ready to explore? Unlock Shanghai.</summary><p class="fs-small">Confirm your own arrival essentials to collect a city stamp. Entering this page does not verify a flight or payment.</p><form id="fs-unlock-form"><fieldset class="fs-checklist"><legend>My arrival essentials</legend>${checks.map(([key,label])=>`<label class="fs-check"><input name="${key}" type="checkbox" ${state.personal.confirmations[key]?'checked':''} required><span>${label}</span></label>`).join('')}</fieldset><button type="submit" class="fs-btn">${icon('stamp')} Unlock Shanghai & add to my atlas</button></form></details>`}
+      ${unlocked ? `<section class="fs-panel"><div class="fs-eyebrow">CITY NO. 001 · COLLECTED</div><h2>Shanghai is in your atlas.</h2><p class="fs-small">Collected when you finished your landing steps. No location tracking.</p>${btn('View my city atlas','nav','city-passport','secondary')}</section>` : ''}
       <section class="fs-panel"><div class="fs-eyebrow">THE NEXT CHAPTER</div><h2>Stories are better shared.</h2><p class="fs-small">See what other travelers are discovering in China right now.</p><div style="margin-top:12px">${btn(icon('community')+' See what other travelers share','nav','explore','secondary')}</div></section>${btn('Copy share caption','copy-caption','','outline')}`;
   }
   const posts = () => [...state.personal.posts, ...state.config.samplePosts];
@@ -109,7 +108,7 @@
     const draft = state.personal.composer;
     return `<div class="fs-demo">Local Community demo</div><div><h2>A first line for your story.</h2><p class="fs-small">Review your card and caption before saving a local post. No content is sent to Trip.com or another service.</p></div>${preview()}
       <form id="fs-compose-form" class="fs-panel"><label class="fs-field">Your story<textarea name="caption" maxlength="1000" required placeholder="What does the beginning feel like?">${H(draft.caption)}</textarea></label><label class="fs-field">Story topic<select name="topic">${state.config.topics.filter(t=>t!=='All stories').map(topic=>`<option ${draft.topic===topic?'selected':''}>${H(topic)}</option>`).join('')}</select></label><button type="button" class="fs-text-btn" data-fs="suggest-caption">Try a different opening line</button><p class="fs-small">Include only what you want others to read. Do not add hotel addresses, contact details or payment information.</p><label class="fs-check"><input type="checkbox" name="reviewed" required><span>I have reviewed the image and text for sharing.</span></label><button class="fs-btn" type="submit" ${!stamp()?'disabled':''}>Save post to this demo Community</button>${!stamp()?'<p class="fs-small" style="margin-top:10px">This card is a preview. Confirm your arrival essentials to unlock it before creating a post.</p>':''}</form>
-      ${btn(stamp()?'Edit card & public fields':'Confirm arrival & unlock my stamp','edit-card','','outline')}<p class="fs-small">Draft saved on this device. Official Trip.com publishing requires a separate integration.</p>`;
+      ${btn('Edit card & public fields','edit-card','','outline')}<p class="fs-small">Draft saved on this device. Official Trip.com publishing requires a separate integration.</p>`;
   }
   function story() {
     const post = posts().find(item=>item.id===state.postId) || posts()[0];
@@ -122,7 +121,7 @@
   function atlas() {
     const collected = stamp();
     return `<section class="fs-atlas"><div class="fs-count">${collected?'01':'00'}</div><div class="fs-eyebrow">MY CITY ATLAS</div><h2>Places become<br>part of you.</h2><p class="fs-small">${collected?'One city collected. A thousand stories ahead.':'Your first China stamp is waiting.'}</p></section>
-      <button class="fs-city-tile ${collected?'':'locked'}" type="button" data-fs="nav" data-value="share"><span class="fs-seal">沪<small>${collected?'UNLOCKED':'WAITING'}</small></span><span><span class="fs-eyebrow">CITY NO. 001</span><strong>Shanghai</strong><p>${collected?'First arrival · '+H(renderer.formatDate(collected.arrival)):'Confirm your arrival to light up Shanghai.'}</p><p>${collected?'View & export my keepsake →':'Preview your first stamp →'}</p></span></button><p class="fs-milestone">“Thousands of miles away from home,<br>and a new story has just begun.”</p>
+      <button class="fs-city-tile ${collected?'':'locked'}" type="button" ${collected?'data-fs="nav" data-value="share"':'disabled'}><span class="fs-seal">沪<small>${collected?'UNLOCKED':'WAITING'}</small></span><span><span class="fs-eyebrow">CITY NO. 001</span><strong>Shanghai</strong><p>${collected?'First arrival · '+H(renderer.formatDate(collected.arrival)):'Finish your landing steps to light up Shanghai.'}</p><p>${collected?'View & export my keepsake →':'Not collected yet'}</p></span></button><p class="fs-milestone">“Thousands of miles away from home,<br>and a new story has just begun.”</p>
       <section class="fs-panel"><h3>Your collection stays with you.</h3><p class="fs-small">Stored on this browser, without location tracking. Clearing site data or switching browsers removes this local collection. More city editions are planned; only Shanghai is available in this version.</p></section><div class="fs-clear-row"><button type="button" class="fs-text-btn" data-fs="clear-stamps">Clear my stamps, posts & sharing drafts</button><p class="fs-small">Your offline hotel and contacts will be kept. The offline pack’s “Clear my personal data” option clears everything together.</p></div>`;
   }
   function drawPreviews() {
@@ -142,6 +141,12 @@
       });
     }
   }
+  // 分享页只从完成页进入，落地流程已经确认过落地 / 联网 / 支付 / 上车：直接收集印章，不再让用户勾一遍
+  function collect() {
+    if (!state.ready || state.error || !state.config || stamp()) return;
+    state.personal.stamps.push({cityId:state.config.city.id,sequence:1,arrival:state.personal.draft.arrival,confirmedAt:new Date().toISOString(),source:'landing-flow'});
+    if (!state.storageError) flush().catch(()=>{});
+  }
   function render() {
     if(rendered && rendered!==current()){state.notice='';state.good=false;}
     rendered = current();
@@ -150,6 +155,7 @@
     document.body.classList.remove('offline-open');
     const titles = {share:'Share your first stamp',community:'Shanghai Community','community-compose':'Share a little story','community-post':'A page from the journey','city-passport':'My city atlas'};
     const views = {share,community,'community-compose':compose,'community-post':story,'city-passport':atlas};
+    if (rendered==='share') collect();
     const body = !state.ready?'<div class="fs-empty">Opening your collection…</div>':state.error?`<div class="fs-empty"><h2>Your keepsake is waiting.</h2><p>${H(state.error)}</p>${btn('Try again','retry','','outline')}</div>`:views[rendered]();
     screens[rendered].innerHTML=header(titles[rendered],rendered)+`<main class="scroll fs-body"><div class="fs-feedback fs-notice ${state.good?'good':''}" role="status">${H(state.notice)}</div>${state.storageError?`<div class="fs-notice">${H(state.storageError)}</div>`:''}<div class="fs-offline-label" data-fs-network ${navigator.onLine?'hidden':''}>Offline · saved artwork, cards & drafts still work</div>${body}</main>`+footer(rendered);
     if (statusBar) screens[rendered].querySelector('.fs-head').prepend(statusBar.cloneNode(true));
@@ -159,8 +165,6 @@
     if (form.id==='fs-customize') {
       state.personal.draft={name:form.elements.name.value,arrival:form.elements.arrival.value,showName:form.elements.showName.checked,showDate:form.elements.showDate.checked};
       releaseImage(); drawPreviews();
-    } else if(form.id==='fs-unlock-form') {
-      for (const key of Object.keys(state.personal.confirmations)) state.personal.confirmations[key]=form.elements[key].checked;
     } else if(form.id==='fs-compose-form') state.personal.composer={caption:form.elements.caption.value,topic:form.elements.topic.value};
     autosave();
   }
@@ -224,7 +228,7 @@
     else if(type==='compose') {
       if(!state.personal.composer.caption) state.personal.composer.caption=state.config.storyPrompts[0];
       await flush(); go('community-compose');
-    } else if(type==='edit-card') { go('share'); const section=screens.share.querySelector(stamp()?'[data-fs-customize]':'[data-fs-unlock]'); section.open=true; section.scrollIntoView({block:'center',behavior:'smooth'}); }
+    } else if(type==='edit-card') { go('share'); const section=screens.share.querySelector('[data-fs-customize]'); section.open=true; section.scrollIntoView({block:'center',behavior:'smooth'}); }
     else if(type==='filter') { state.filter=value; render(); }
     else if(type==='open-post') { state.postId=value; go('community-post'); }
     else if(type==='bookmark') {
@@ -249,15 +253,8 @@
   }
   async function submit(form) {
     capture(form); clearTimeout(saveTimer);
-    if(form.id==='fs-unlock-form') {
-      if(!Object.values(state.personal.confirmations).every(Boolean))throw new Error('Confirm all four arrival essentials first.');
-      if(!renderer.validDate(state.personal.draft.arrival) || state.personal.draft.arrival>today()) throw new Error('Choose a valid arrival date on or before today in Shanghai.');
-      const previous=state.personal.stamps.slice();
-      if(!stamp())state.personal.stamps.push({cityId:state.config.city.id,sequence:1,arrival:state.personal.draft.arrival,confirmedAt:new Date().toISOString(),source:'user-confirmed'});
-      try {await flush();} catch(error) {state.personal.stamps=previous;throw error;}
-      render();feedback('Shanghai unlocked. Your first stamp is saved in your city atlas.',true);
-    } else if(form.id==='fs-compose-form') {
-      if(!stamp()) throw new Error('Confirm your arrival essentials before creating a post.');
+    if(form.id==='fs-compose-form') {
+      if(!stamp()) throw new Error('Finish your landing steps to collect your stamp before creating a post.');
       const body=state.personal.composer.caption.trim();if(!body)throw new Error('Write a short story first.');
       const snapshot=card(), previous=structuredClone(state.personal), id=crypto.randomUUID();
       const post={id,topic:state.personal.composer.topic,title:Array.from(body.split(/[\n.!?]/)[0] || 'Hello, Shanghai.').slice(0,85).join(''),body,author:snapshot.traveler,card:snapshot,demo:false,savedAt:new Date().toISOString()};
@@ -289,10 +286,10 @@
     event.preventDefault();event.stopImmediatePropagation();
     action(target.dataset.fs,target.dataset.value).catch(error=>feedback(error.message||'Could not save on this device. Please retry.'));
   },true);
-  document.addEventListener('input',event=>{const form=event.target.closest('form');if(['fs-customize','fs-unlock-form','fs-compose-form'].includes(form?.id))capture(form);});
-  document.addEventListener('change',event=>{const form=event.target.closest('form');if(['fs-customize','fs-unlock-form','fs-compose-form'].includes(form?.id))capture(form);});
+  document.addEventListener('input',event=>{const form=event.target.closest('form');if(['fs-customize','fs-compose-form'].includes(form?.id))capture(form);});
+  document.addEventListener('change',event=>{const form=event.target.closest('form');if(['fs-customize','fs-compose-form'].includes(form?.id))capture(form);});
   document.addEventListener('submit',async event=>{
-    if(!['fs-customize','fs-unlock-form','fs-compose-form'].includes(event.target.id))return;event.preventDefault();
+    if(!['fs-customize','fs-compose-form'].includes(event.target.id))return;event.preventDefault();
     const form=event.target;if(!form.reportValidity())return;
     const button=form.querySelector('[type=submit]');if(button)button.disabled=true;
     try{await submit(form);}catch(error){feedback(error.message||'Could not save. Your previous collection is unchanged.');}finally{if(button?.isConnected)button.disabled=false;}

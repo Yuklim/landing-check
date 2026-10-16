@@ -1025,6 +1025,7 @@
           "id": "c1DIV",
           "name": "Title Row",
           "width": "fill_container",
+          "gap": 18,
           "padding": [
             6,
             20,
@@ -1038,6 +1039,7 @@
               "type": "frame",
               "id": "WIVyb",
               "name": "Title Group",
+              "width": "fill_container",
               "gap": 2,
               "alignItems": "end",
               "children": [
@@ -1058,6 +1060,36 @@
                   "fill": "$accent",
                   "width": 8,
                   "height": 8
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "v1p4ry",
+              "name": "Stamps",
+              "layout": "vertical",
+              "gap": 2,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "pDSFP",
+                  "name": "Stamps Icon",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "stamp",
+                  "library": "lucide",
+                  "fill": "$text"
+                },
+                {
+                  "type": "text",
+                  "id": "K8TCQ",
+                  "name": "Stamps Label",
+                  "fill": "$text",
+                  "content": "Stamps",
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -3288,7 +3320,7 @@
             {
               "type": "frame",
               "id": "PamlL",
-              "name": "Didi Button",
+              "name": "In Car Button",
               "width": "fill_container",
               "height": 44,
               "fill": "$brand",
@@ -3310,9 +3342,9 @@
                 {
                   "type": "text",
                   "id": "BLBn7",
-                  "name": "Didi Label",
+                  "name": "In Car Label",
                   "fill": "$white",
-                  "content": "Order a DiDi via Alipay",
+                  "content": "I'm in the car",
                   "fontFamily": "$font",
                   "fontSize": 15,
                   "fontWeight": "700"
