@@ -101,7 +101,8 @@ def _add_payment_group(add, pays: dict, apps: dict):
         c = PAY_ITEM[m]
         installed = (apps.get(m) or {}).get('installed', m == 'alipay')
         if p['ok']:
-            status, desc = 'done', ('Verified · ¥1 test on %s, refunded' % p['verified_at'][:10]) if p.get('verified_at') else 'Verified before you flew · ¥1 test, refunded'
+            fate = 'donated to CYDF' if p.get('donated') else 'refunded'
+            status, desc = 'done', ('Verified · ¥1 test on %s, %s' % (p['verified_at'][:10], fate)) if p.get('verified_at') else 'Verified before you flew · ¥1 test, %s' % fate
         elif group_ok:
             status, desc = 'optional', c['backup']
         elif m == 'alipay':
@@ -125,10 +126,12 @@ def _payment_summary(pays: dict) -> dict:
         desc = '%s verified · ¥1 tests refunded' % ' and '.join(PAY_METHODS[m] for m in order)
     else:
         at = pays[primary].get('verified_at')
-        desc = '%s verified · %s · %s is an optional backup' % (PAY_METHODS[primary], ('¥1 test on %s, refunded' % at[:10]) if at else '¥1 test, refunded', PAY_METHODS[backup])
+        fate = 'donated to CYDF' if pays[primary].get('donated') else 'refunded'
+        desc = '%s verified · %s · %s is an optional backup' % (PAY_METHODS[primary], ('¥1 test on %s, %s' % (at[:10], fate)) if at else '¥1 test, %s' % fate, PAY_METHODS[backup])
     return {'ready': bool(verified), 'primary': primary, 'primary_name': PAY_METHODS.get(primary),
             'verified': verified, 'verified_at': pays[primary].get('verified_at') if primary else None, 'methods': order,
-            'title': 'Payment in China', 'desc': desc, 'backup': backup}
+            'title': 'Payment in China', 'desc': desc, 'backup': backup,
+            'donated': [m for m in verified if pays[m].get('donated')]}
 
 
 def _transfer_hint(trip):

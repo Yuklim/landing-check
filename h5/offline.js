@@ -64,10 +64,10 @@
     return `<details class="op-source"><summary>Sources & last checked · ${H(state.data.checked_at)}</summary>${list.map(source => `<p>${H(source.name)}${source.published_at ? ' · published ' + H(source.published_at) : ''}<br><a data-op-online href="${H(source.url)}" target="_blank" rel="noopener noreferrer">${H(source.url)}</a></p>`).join('')}<p>Checked against published web information. Not an on-site inspection. Links need internet.</p></details>`;
   }
   function header(route, title) {
-    return `<header class="op-header"><div class="op-brand"><b>Trip<span style="color:#efb83d">.</span>com</b><span>LANDING CHECK</span></div><div class="op-topline"><button type="button" class="op-back" data-op="back" aria-label="Go back">${icon('back')}</button><h1 tabindex="-1">${H(title)}</h1></div><div class="op-meta"><span class="op-chip">PVG · Terminal 2</span><span class="op-chip ${navigator.onLine ? '' : 'is-offline'}" data-op-network>${navigator.onLine ? 'Network detected' : 'Offline · saved content'}</span></div></header>`;
+    return `<header class="op-header"><div class="op-topline"><button type="button" class="op-back" data-op="back" aria-label="Go back">${icon('back')}</button><h1 tabindex="-1">${H(title)}</h1></div><div class="op-meta"><span class="op-chip">PVG · Terminal 2</span><span class="op-chip ${navigator.onLine ? '' : 'is-offline'}" data-op-network>${navigator.onLine ? 'Network detected' : 'Offline · saved content'}</span></div></header>`;
   }
   function footer(route) {
-    return `<footer class="op-footer">${route === 'offline-help' ? button('Return to my task', 'return-help', '', 'secondary') : `<button class="op-support" type="button" data-op="help"><span>${icon('help')} I’m Stuck</span><span>Offline help →</span></button>`}</footer>`;
+    return `<footer class="op-footer">${route === 'offline-help' ? button('Return to my task', 'return-help', '', 'secondary') : `<button class="op-support" type="button" data-op="help"><span><img class="op-bot" src="img/ai-bot.png" alt="">I'm stuck</span><span>Works offline →</span></button>`}</footer>`;
   }
   function home() {
     const p = state.pack, mb = p ? (p.bytes / 1048576).toFixed(1) : null;
@@ -152,8 +152,11 @@
     let body = !state.ready ? '<div class="op-empty">Opening your saved pack…</div>' : state.dataError ? `<div class="op-empty"><h2>Guide not available on this device</h2><p>${H(state.dataError)}</p>${button('Try loading again', 'retry', '', 'secondary')}</div>` : views[route]();
     const notice = state.notice ? `<div class="op-notice ${state.noticeGood ? 'success' : ''}" role="status">${H(state.notice)}</div>` : '';
     screens[route].innerHTML = header(route, titles[route]) + `<main class="scroll op-body">${state.storageError ? note(state.storageError) : ''}${notice}${body}</main>` + footer(route);
+    if (statusBar) screens[route].querySelector('.op-header').prepend(statusBar.cloneNode(true));
     networkChanged();
   }
+  // 设计稿里的 iOS 状态栏（和教程屏一样从 Wi-Fi 引导屏克隆）
+  const statusBar = document.querySelector('.screen[data-route="wifi"] [data-pencil-name="Status Bar"]');
   let registrationPromise;
   async function worker() {
     if (!('serviceWorker' in navigator) || !window.isSecureContext) throw new Error('Use HTTPS or localhost in a browser that supports offline packs.');
@@ -197,7 +200,8 @@
     const row = document.querySelector('.screen[data-route="preflight"] [data-pencil-name="Item Offline landing pack"]');
     if (row) {
       const desc = row.querySelector('[data-pencil-name="Item Desc"]');
-      if (desc) desc.textContent = state.pack ? 'Saved on this device · PVG T2 · ' + date(state.pack.savedAt) : 'Not saved on this device · download before you fly';
+      if (desc) desc.textContent = state.busy && state.progress ? `Downloading… ${state.progress.done} of ${state.progress.total} files · PVG T2`
+        : state.pack ? 'Saved on this device · PVG T2 · ' + date(state.pack.savedAt) : 'Not saved on this device · download before you fly';
       let b = row.querySelector('[data-pencil-name="Item Button"]');
       if (!b) { b = document.createElement('button'); b.setAttribute('data-pencil-name', 'Item Button'); b.className = 'op-btn secondary'; b.style.cssText = 'width:auto;max-width:88px;min-height:34px;padding:6px 10px;border-radius:8px;font-size:12px;flex-shrink:0'; (row.querySelector('[data-pencil-name="Row"]') || row).append(b); }
       row.style.height = 'auto'; row.style.minHeight = '60px';
@@ -214,9 +218,16 @@
     const find = name => document.querySelector(`.screen[data-route="preflight"] [data-pencil-name="${name}"]`);
     if (find('Progress Label')) find('Progress Label').textContent = `${done} of ${data.required} ready · ${data.required - done} to do · ${data.optional_open} optional`;
     if (find('Progress Pct')) find('Progress Pct').textContent = pct + '%';
-    if (find('Fill')) find('Fill').style.width = Math.round(337 * pct / 100) + 'px';
+    if (find('Fill')) find('Fill').style.width = pct + '%';
+    if (window.lcPackChanged) window.lcPackChanged(!!state.pack, done, data.required);
   }
   window.lcOfflineReadiness = syncPreflight;
+  // 行前检查：权限页关闭后自动下载公共指引；返回 true 表示这次保存成功
+  window.lcOffline = {
+    saved: () => !!state.pack,
+    busy: () => state.busy,
+    save: async () => { if (state.busy || state.pack || !navigator.onLine) return false; await act('download'); return !!state.pack; },
+  };
   function networkChanged() {
     document.querySelectorAll('[data-op-network]').forEach(item => {
       item.textContent = navigator.onLine ? 'Network detected' : 'Offline · saved content';
@@ -252,8 +263,13 @@
   function openCard(title, zh, en, context = '', demo = false) {
     dialogCopy = [zh, en, context].filter(Boolean).join('\n\n'); dialogFocus = document.activeElement;
     dialog.innerHTML = `<div class="op-dialog-wrap"><div class="op-dialog-header"><span id="op-dialog-title">${H(title)}</span><button class="op-back" type="button" data-op="dialog-close" aria-label="Close card">×</button></div><div class="op-dialog-body">${demo ? '<span class="op-demo">DEMO HOTEL</span>' : ''}<div lang="zh-CN">${H(zh)}</div><div lang="en">${H(en)}</div>${context ? `<div class="op-context">${H(context).replace(/\n/g, '<br>')}</div>` : ''}</div><div class="op-actions">${button('Larger text', 'dialog-size', '', 'secondary')}${button('Copy card', 'dialog-copy')}</div><p class="op-muted" data-copy-status role="status">Show this screen to a driver or staff member.</p></div>`;
-    dialog.showModal();
+    // 电脑上演示时 H5 显示在一个手机框里：卡片只铺满手机框（非模态 + Esc 关闭）；真机上照常全屏模态
+    const phone = !document.body.classList.contains('mobile') && document.getElementById('phone');
+    dialog.classList.toggle('in-phone', !!phone);
+    (phone || document.body).append(dialog);
+    if (phone) dialog.show(); else dialog.showModal();
   }
+  dialog.addEventListener('keydown', event => { if (event.key === 'Escape' && dialog.open) { event.preventDefault(); dialog.close(); } });
   dialog.addEventListener('close', () => { if (dialogFocus?.isConnected) dialogFocus.focus(); });
   async function copy(text) {
     if (!text) throw new Error('There is nothing to copy yet.');
@@ -289,6 +305,7 @@
           if (progressEl) { progressEl.max = progress.total; progressEl.value = progress.done; }
           const label = document.querySelector('[data-testid="pack-status"]');
           if (label) label.textContent = `Saving ${progress.done} of ${progress.total} files`;
+          syncPreflight();
         });
         state.pack = result.pack;
         state.notice = 'Saved and checked. Open this pack in this browser when you are offline.'; state.noticeGood = true;
@@ -387,14 +404,13 @@
       errorBox.textContent = error.message || 'Could not save on this device.';
     } finally { if (submit.isConnected) submit.disabled = false; }
   });
-  for (const route of ['home', 'preflight', 'trips', 'wifi', 'step1', 'online', 'step3', 'driver']) {
+  for (const route of ['wifi', 'step1', 'online', 'step3', 'driver']) {
     const host = document.querySelector(`.screen[data-route="${route}"] > .scroll`);
     if (!host) continue;
     const entry = document.createElement('button'); entry.className = 'op-entry'; entry.dataset.op = 'nav'; entry.dataset.value = 'offline';
     entry.innerHTML = `${icon('download')}<span>Offline travel pack<small>Your hotel, useful phrases & connection help</small></span>`;
-    const before = route === 'home' ? host.querySelector('[data-pencil-name="Landing Banner"]') : null;
     const body = [...host.children].find(node => ['Body', 'Content'].includes(node.dataset.pencilName));
-    if (before) before.after(entry); else if (body) host.insertBefore(entry, body); else host.append(entry);
+    if (body) host.insertBefore(entry, body); else host.append(entry);
   }
   const menu = document.getElementById('list');
   if (menu) { const entry = document.createElement('button'); entry.textContent = 'Offline travel pack · 离线包'; entry.dataset.op = 'nav'; entry.dataset.value = 'offline'; menu.prepend(entry); }

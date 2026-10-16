@@ -19,8 +19,8 @@
     "phone": "021 3203 9999",
     "checkin": "2026-10-12",
     "lat": 31.2256, "lng": 121.4455,
-    "distance_from_airport_km": 18,
-    "nearest_metro": {"name": "Jing'an Temple", "line": "2", "walk_m": 600}
+    "distance_from_airport_km": 48,
+    "nearest_metro": {"name": "Jing'an Temple", "line": "2", "walk_m": 460}
   },
   "tickets": [
     {"name": "Palace Museum", "city": "Beijing", "date": "2026-10-14", "slot": "08:30-11:00", "realname": true, "passport_required": true}

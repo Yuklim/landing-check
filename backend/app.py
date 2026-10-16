@@ -15,6 +15,7 @@ from pydantic import BaseModel
 from kb import KnowledgeBase
 from mock import MockTrip
 from rules import PAY_METHODS
+from ctrip_mcp import query_content as ctrip_query_content, query_train as ctrip_query_train, CtripMCPError
 import stuck
 import rules
 
@@ -148,10 +149,29 @@ def mock_reset():
 
 
 @app.post('/mock/pay-test')
-def mock_pay_test(fail: bool = False, method: str = 'alipay'):
+def mock_pay_test(fail: bool = False, method: str = 'alipay', donate: bool = False):
+    """donate=true：¥1 测试款不退回，捐给中国青少年发展基金会（CYDF）"""
     if method not in PAY_METHODS:
         raise HTTPException(400, 'method must be %s' % ' | '.join(PAY_METHODS))
-    return trip.pay_test(fail=fail, method=method)
+    return trip.pay_test(fail=fail, method=method, donate=donate)
+
+
+class Consent(BaseModel):
+    location: bool = False
+    notifications: bool = False
+    camera: bool = False
+    microphone: bool = False
+
+
+@app.get('/mock/consent')
+def mock_consent_get():
+    return {'consent': trip.consent}
+
+
+@app.post('/mock/consent')
+def mock_consent(c: Consent):
+    """行前检查首次进入的隐私授权页：逐项授权的结果"""
+    return {'consent': trip.set_consent(c.dict()), 'preflight': rules.preflight(_trip_with_done(), trip.done_items)}
 
 
 @app.post('/mock/event')
@@ -164,6 +184,31 @@ def mock_event(event: str = Body(..., embed=True)):
 @app.get('/mock/timeline')
 def mock_timeline():
     return trip.timeline()
+
+
+# ---------------- E 携程营销 MCP（真实数据，Token 走环境变量 CTRIP_MCP_TOKEN） ----------------
+# 失败一律返回 {items:[], note}（HTTP 200），让前端静默兜底到静态/mock，绝不空页面翻车。
+@app.get('/content/community')
+def content_community(query: str = '', city: str = '', keyword: str = '',
+                      region: str = '', scenarios: str = '', size: int = 10):
+    """探索 / 社区信息流：代理官方 query_content，归一化成卡片列表。"""
+    try:
+        return ctrip_query_content(query=query, city=city, keyword=keyword,
+                                   region=region, scenarios=scenarios,
+                                   size=min(max(size, 1), 30))
+    except CtripMCPError as e:
+        return {'items': [], 'note': str(e)}
+
+
+@app.get('/content/trains')
+def content_trains(fromCity: str, toCity: str, departDate: str, size: int = 20):
+    """城际火车票：代理官方 query_train，归一化成车次列表。departDate 格式 yyyy-MM-dd。"""
+    if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', departDate or ''):
+        raise HTTPException(400, 'departDate must be yyyy-MM-dd')
+    try:
+        return ctrip_query_train(fromCity, toCity, departDate, size=min(max(size, 1), 40))
+    except CtripMCPError as e:
+        return {'items': [], 'note': str(e)}
 
 
 # ---------------- B 识别 ----------------

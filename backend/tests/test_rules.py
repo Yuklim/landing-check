@@ -110,9 +110,24 @@ def test_transport_rain_light_luggage():
 def test_http_preflight_and_done_flow():
     trip.reset()
     r = c.get('/rules/preflight').json()
-    assert r['ready'] == 4
+    assert r['ready'] == 2                                                  # 还没做隐私授权：权限、离线包都未完成
     assert c.post('/rules/preflight/done', json={'item': 'esim'}).status_code == 200
-    assert c.get('/rules/preflight').json()['ready'] == 5
+    assert c.get('/rules/preflight').json()['ready'] == 3
+    assert c.post('/rules/preflight/done', json={'item': 'bogus'}).status_code == 400
+
+
+def test_http_consent_grants_permissions_then_pack_downloads():
+    trip.reset()
+    assert c.get('/mock/consent').json()['consent'] is None
+    r = c.post('/mock/consent', json={'location': True, 'notifications': True, 'camera': False, 'microphone': True}).json()
+    assert r['consent']['camera'] is False
+    by = {i['id']: i for i in r['preflight']['items']}
+    assert by['permissions']['status'] == 'done' and by['pack']['status'] == 'todo'
+    c.post('/rules/preflight/done', json={'item': 'pack'})
+    assert c.get('/rules/preflight').json()['ready'] == 4
+    trip.reset()
+    r = c.post('/mock/consent', json={'location': False, 'notifications': True}).json()
+    assert {i['id']: i for i in r['preflight']['items']}['permissions']['status'] == 'todo'   # 拒绝位置：落地无法自动触发
     assert c.post('/rules/preflight/done', json={'item': 'bogus'}).status_code == 400
 
 

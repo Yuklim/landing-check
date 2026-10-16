@@ -40,6 +40,7 @@ class MockTrip:
             self.payments = {m: {'method': m, 'status': 'not_verified', 'tx': None, 'verified_at': None} for m in PAY_METHODS}
             self._payment_sequence = 0
             self.done_items = set()
+            self.consent = None                        # 隐私授权：None = 还没选；否则 {location, notifications, camera, microphone}
             self.events = []                           # 时间线：landed / online / payment / in_car / arrived
 
     def now(self):
@@ -58,6 +59,12 @@ class MockTrip:
         t['flight'] = {**t['flight'], 'status': self.flight_status, 'landed_at': self.landed_at}
         t['payment'] = self.payment
         t['payments'] = {m: dict(p) for m, p in self.payments.items()}
+        # 系统权限以用户在隐私授权页的选择为准；授权后才开始下载离线包（下载完由前端标记 pack 完成）
+        c = self.consent or {}
+        t['permissions'] = {'location': 'while_using' if c.get('location') else None, 'notifications': bool(c.get('notifications')),
+                            'camera': bool(c.get('camera')), 'microphone': bool(c.get('microphone'))}
+        t['offline_pack'] = {**t.get('offline_pack', {}), 'downloaded': False}
+        t['consent'] = self.consent
         return t
 
     # ---------- 航班 ----------
@@ -77,7 +84,7 @@ class MockTrip:
         return self.get_flight()
 
     # ---------- 1 元支付验证 ----------
-    def pay_test(self, fail: bool = False, delay: float = 1.5, method: str = 'alipay'):
+    def pay_test(self, fail: bool = False, delay: float = 1.5, method: str = 'alipay', donate: bool = False):
         if method not in PAY_METHODS:
             raise ValueError('unknown payment method %s' % method)
         with self._lock:
@@ -95,11 +102,18 @@ class MockTrip:
             tx = 'TRIP' + uuid4().hex[:16]
             self._payment_sequence += 1
             p = {'method': method, 'status': 'verified', 'tx': tx, 'verified_at': self.now(), 'amount': 1.00, 'currency': 'CNY',
-                 'refund': 'issued', 'card': 'Visa ••4471', 'verified_order': self._payment_sequence}
+                 'refund': 'donated' if donate else 'issued', 'donated': bool(donate),
+                 'card': 'Visa ••4471', 'verified_order': self._payment_sequence}
             self.payments[method] = p
             self.done_items.add(method)
-            self.events.append({'event': 'payment', 'method': method, 'at': p['verified_at']})
+            self.events.append({'event': 'payment', 'method': method, 'at': p['verified_at'], **({'donated': True} if donate else {})})
         return dict(p)
+
+    def set_consent(self, perms: dict):
+        with self._lock:
+            self.consent = {k: bool(perms.get(k)) for k in ('location', 'notifications', 'camera', 'microphone')}
+            self.events.append({'event': 'consent', 'at': self.now(), **self.consent})
+        return dict(self.consent)
 
     def mark_done(self, item: str):
         with self._lock:

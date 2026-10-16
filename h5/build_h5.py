@@ -18,14 +18,15 @@ SCREENS = {
     'p6jXS': 'lock',       't7mCs': 'trips',     'E91Ggd': 'step1',   'cQhO3': 'online',
     'kKY1n': 'wifi',       'rK2om': 'stuck',     'Sxxn5': 'step3',    'SByuS': 'transit',
     'ZV1Kk': 'driver',     'tmk1G': 'done',      'Bn5F2': 'share',    'd8xLl': 'car',
-    'AN3x1': 'transfers',  'TDAfD': 'esim',
+    'AN3x1': 'transfers',  'TDAfD': 'esim',     'InaFM': 'paysetup',
+    'GnXA8': 'privacy',
 }
 TITLES = {
     'home': '首页入口', 'preflight': '行前检查', 'payment': '支付验证', 'transfer': '接机车型',
     'lock': '锁屏推送', 'trips': 'My Trips', 'step1': '落地卡·第一步', 'online': '已联网分支',
     'wifi': 'Wi-Fi 引导', 'stuck': '我卡住了', 'step3': '第三步交通', 'transit': '地铁导航',
     'driver': '司机地址', 'done': '完成页', 'share': '分享卡', 'car': '租车页',
-    'transfers': '接机落地页', 'esim': 'eSIM 页',
+    'transfers': '接机落地页', 'esim': 'eSIM 页', 'paysetup': '支付方式选择', 'privacy': '隐私授权',
 }
 
 # 点击绑定：(路由, 选择器) -> 动作。选择器用 data-pencil-id 或 data-pencil-name（在该屏范围内）。
@@ -34,6 +35,9 @@ BIND = [
     # 首页入口
     ('home', 'name:Feat Landing Check', 'go:preflight'),
     ('home', 'name:Landing Banner', 'go:preflight'),
+    ('home', 'name:Feat Offline Pack', 'go:offline'),
+    ('home', 'name:AI Pill', 'api:genie:ask'),
+    ('trips', 'name:AI Pill', 'api:genie:ask'),
     ('home', 'name:Tab My Trips', 'go:trips'),
     ('home', 'name:Search', 'toast:Demo：搜索'),
     # My Trips
@@ -69,6 +73,25 @@ BIND = [
     ('preflight', 'name:Stuck FAB', 'api:stuck'),
     ('preflight', 'name:Tab Home', 'go:home'),
     ('preflight', 'name:Tab My Trips', 'go:trips'),
+    # 隐私授权（首次进入行前检查时出现；行前检查里点权限 / 离线包也能回来）
+    ('privacy', 'name:Back', 'back'),
+    ('privacy', 'name:Perm Location', 'api:perm:location'),
+    ('privacy', 'name:Perm Notifications', 'api:perm:notifications'),
+    ('privacy', 'name:Perm Camera & photos', 'api:perm:camera'),
+    ('privacy', 'name:Perm Microphone', 'api:perm:microphone'),
+    ('privacy', 'name:Agree Button', 'api:consent'),
+    ('privacy', 'name:Not Now', 'api:consentlater'),
+    ('privacy', 'name:Policy Link', 'toast:Demo：隐私政策全文'),
+    ('preflight', 'name:Item Location & notifications', 'api:privacy'),
+    ('preflight', 'name:Item Offline landing pack', 'api:privacy'),
+    # 支付方式选择（行前检查 Verify ¥1 / 落地第三步"先验证支付"进入）
+    ('paysetup', 'name:Back', 'back'),
+    ('paysetup', 'name:Method Alipay', 'api:paysel:alipay'),
+    ('paysetup', 'name:Method TenPayGo', 'api:paysel:tenpaygo'),
+    ('paysetup', 'name:Use Donate', 'api:payuse:donate'),
+    ('paysetup', 'name:Use Refund', 'api:payuse:refund'),
+    ('paysetup', 'name:Learn More', 'api:cydf'),
+    ('paysetup', 'name:Confirm Button', 'api:payconfirm'),
     # 支付验证
     ('payment', 'name:Back', 'back'),
     ('payment', 'name:Done Button', 'go:preflight'),
@@ -232,6 +255,8 @@ import hashlib, urllib.request
 IMG_DIR = os.path.join(HERE, 'img'); os.makedirs(IMG_DIR, exist_ok=True)
 def localize(m):
     url = m.group(1).strip('"\'')
+    if url.startswith('h5/'):                      # Pen 里引用的本地图片相对项目根目录，H5 里相对 h5/
+        return 'url(%s)' % url[3:]
     if not url.startswith('http'):
         return m.group(0)
     name = hashlib.md5(url.encode()).hexdigest()[:12] + '.jpg'
