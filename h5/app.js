@@ -19,7 +19,7 @@
   const $all = (route, name) => [...document.querySelectorAll(`.screen[data-route="${route}"] [data-pencil-name="${name}"]`)];
   const txt = (el, v) => { if (el && v != null) el.textContent = v; };
   const ok = r => { if (!r.ok) throw new Error(r.status); return r.json(); };
-  const localOnly = () => !navigator.onLine || location.hash.startsWith('#offline');
+  const localOnly = () => !navigator.onLine || /^#(?:offline|share|community|city-passport)/.test(location.hash);
   const get = (p, explicit = false) => (!navigator.onLine || (!explicit && localOnly())) ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p).then(ok);
   const post = (p, body, isForm) => localOnly() ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p, isForm ? { method: 'POST', body } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) }).then(ok);
   window.lcOfflineTrip = () => withTimeout(get('/mock/trip', true), 4000);
@@ -515,7 +515,7 @@
     const tl2 = (name, v) => { const n = $$('share', name); if (n && v) txt(n.querySelector('[data-pencil-name="TL Time"]'), v); };
     tl2('TL Landed', hhmm(landed)); tl2('TL Online', hhmm(online)); tl2('TL In car', hhmm(car));
     if (landed) { const d = new Date(landed.replace(' ', 'T')); txt($$('share', 'Foot Date'), d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }) + ' · trip.com/landing'); }
-    if (landed && car) { const m = Math.max(1, Math.round((new Date(car.replace(' ', 'T')) - new Date(landed.replace(' ', 'T'))) / 60000)); txt($$('done', 'Big Number'), m + ' min'); txt($$('share', 'Big Number'), String(m)); txt($$('done', 'Share Title'), `Share your ${m}-minute card`); txt($$('share', 'Share Title'), `Share your ${m}-minute card`); }
+    if (landed && car) { const m = Math.max(1, Math.round((new Date(car.replace(' ', 'T')) - new Date(landed.replace(' ', 'T'))) / 60000)); txt($$('done', 'Big Number'), m + ' min'); }
   }
   const FB = { wifi: 'FB Wi-Fi', payment: 'FB Payment', transport: 'FB Transport' };
   const FB_STYLE = {};
@@ -623,7 +623,7 @@
     if (route === 'step1' || route === 'online' || route === 'step3') renderSteps(route);
     if (route === 'preflight') renderPreflight();
     if (route === 'step3') renderTransport();
-    if (route === 'done' || route === 'share') renderDone();
+    if (route === 'done') renderDone();
     if (route === 'online' || route === 'wifi' || route === 'step3') post('/mock/event', { event: 'online' }).then(() => { if (route === 'step3') renderSteps('step3'); if (route === 'wifi') renderSteps('wifi'); }).catch(() => {});
   };
 

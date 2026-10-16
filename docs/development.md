@@ -36,6 +36,8 @@ python -m uvicorn app:app --app-dir backend --host 127.0.0.1 --port 8000
 
 离线包已实现本机持久保存，入口为 `#offline`。其运行、内容来源、资源清单生成和断网验收见[离线包说明](offline-pack.md)；其他模拟接口状态仍按下文说明处理。
 
+城市纪念票根入口为 `#share`，新增 Community 与城市图鉴同样使用本机持久存储。图片导出是真实 PNG，Community 为明确标记的本机演示，尚未接入官方发帖；流程、隐私和素材记录见 [The First Stamp](first-stamp.md)。
+
 H5 后端接入代码位于 [`h5/app.js`](../h5/app.js)，接口不可达时退回静态展示。模拟航班、支付验证、行前检查和反馈等运行时状态保存在内存中，服务重启后重置；H5 菜单也提供重置演示数据入口。
 
 ## 验证

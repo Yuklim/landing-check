@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "version": "2026.10.16.1",
+  "city": {
+    "id": "shanghai",
+    "name": "Shanghai",
+    "country": "China",
+    "code": "SHA",
+    "edition": "001",
+    "coordinates": "31.2304° N · 121.4737° E",
+    "art": "img/stamp/shanghai-dusk.png",
+    "artAlt": "An original illustrated Shanghai postcard: the Bund, Huangpu River and Pudong skyline at sunset. An illustration, not a live view.",
+    "subtitle": "One city unlocked. A thousand stories ahead."
+  },
+  "template": {
+    "id": "first-stamp-v1",
+    "width": 1080,
+    "height": 1350,
+    "headline": "YOUR CHINA STORY BEGINS HERE",
+    "quote": "Not just a destination. The beginning of something unforgettable.",
+    "brand": "Made with Landing Check",
+    "tagline": "Your first friend in China.",
+    "publicUrl": "https://yuklim.github.io/landing-check/h5/#community",
+    "qr": "img/stamp/discover-qr.png"
+  },
+  "topics": ["All stories", "First Stamp", "Travel Stories", "Local Tips"],
+  "storyPrompts": [
+    "Thousands of miles away from home, and a new story has just begun. Hello, Shanghai.",
+    "My first city stamp in China. Here’s to getting a little lost and finding something wonderful.",
+    "A new skyline, a new chapter. My China story begins in Shanghai."
+  ],
+  "samplePosts": [
+    {
+      "id": "sample-first-light",
+      "topic": "First Stamp",
+      "author": "Maya",
+      "title": "A little nervous. A lot curious.",
+      "body": "An illustrated example of a first-arrival story. Imagine your first glimpse of the Huangpu River after finding your way into the city. What would your first line be?",
+      "cover": "city",
+      "demo": true
+    },
+    {
+      "id": "sample-small-moments",
+      "topic": "Travel Stories",
+      "author": "Leo",
+      "title": "Leave room for the unplanned.",
+      "body": "A sample travel journal: one slow walk, a riverside view, and a page left blank for tomorrow. Add your own moments when you are ready to share.",
+      "cover": "journal",
+      "demo": true
+    },
+    {
+      "id": "sample-right-words",
+      "topic": "Local Tips",
+      "author": "Landing Check",
+      "title": "Keep the right words close.",
+      "body": "Before you fly, save your hotel’s confirmed Chinese address and your offline travel pack. If you get stuck, show a bilingual request to someone nearby. Open the offline pack to prepare your own cards.",
+      "cover": "tip",
+      "demo": true
+    }
+  ]
+}

@@ -18,7 +18,7 @@ def test_offline_manifest_matches_all_delivered_bytes():
         content = path.read_bytes()
         assert len(content) == asset['bytes'], asset['path']
         assert hashlib.sha256(content).hexdigest() == asset['sha256'], 'Run python h5/build_offline.py: ' + asset['path']
-    assert {'index.html', 'app.js', 'offline.js', 'offline.css', 'offline-db.js', 'data/offline-pvg-t2.json'} <= paths
+    assert {'index.html', 'app.js', 'offline.js', 'offline.css', 'offline-db.js', 'data/offline-pvg-t2.json', 'stamp.js', 'stamp-renderer.js', 'stamp.css', 'data/first-stamp.json', 'img/stamp/shanghai-dusk.png', 'img/stamp/discover-qr.png', 'fonts/cormorant-garamond.ttf'} <= paths
     assert not any(path.startswith(('backend/', 'api/')) for path in paths)
 
 
@@ -56,6 +56,6 @@ def test_guide_has_valid_links_and_a_route_to_help_and_completion():
 
 def test_build_template_keeps_offline_integration():
     template = (H5 / 'build_h5.py').read_text()
-    for asset in ('offline.css', 'offline-db.js', 'offline.js'):
+    for asset in ('offline.css', 'offline-db.js', 'offline.js', 'stamp.css', 'stamp-renderer.js', 'stamp.js'):
         assert asset in template
     assert "'offline-help'" in template

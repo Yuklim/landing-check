@@ -84,7 +84,7 @@
         ['help', 'Help & contacts', 'Saved numbers and a request to show staff', 'offline-help'],
       ].map(([ic, title, text, route]) => `<button class="op-tile" type="button" data-op="nav" data-value="${route}"><span class="op-icon">${icon(ic)}</span><strong>${H(title)}</strong><small>${H(text)}</small></button>`).join('')}</div>
       <p class="op-muted">Prepared for Shanghai Pudong T2. Service information checked ${H(state.data.checked_at)}. Personal details stay on this browser.</p>
-      <button type="button" class="op-text-btn" data-op="clear">Clear my hotel, contacts & guide progress</button>`;
+      <button type="button" class="op-text-btn" data-op="clear">Clear my personal data</button><p class="op-muted">Removes hotel, contacts, guide progress, city stamps and sharing drafts. Public guides and artwork stay saved.</p>`;
   }
   function field(label, name, value = '', extra = '') {
     return `<label class="op-field">${H(label)}<input name="${name}" value="${H(value)}" maxlength="${name === 'phone' ? 40 : 240}" ${extra}></label>`;
@@ -336,7 +336,7 @@
     else if (action === 'copy-number') await copy(value);
     else if (action === 'remove-contact') { const contacts = state.contacts.filter(contact => contact.id !== value); await db.put('contacts', contacts); state.contacts = contacts; render(); }
     else if (action === 'clear') {
-      if (!confirm('Remove your hotel, personal contacts and guide progress from this browser? The public guide will remain saved.')) return;
+      if (!confirm('Remove your hotel, personal contacts, guide progress, city stamps, local posts and sharing drafts from this browser? Public guides and artwork will remain saved.')) return;
       await db.clear(); state.hotel = null; state.contacts = []; state.guide = { step: 'wifi', history: [] }; state.draft = null; state.editHotel = false;
       state.helpReturn = 'offline'; dialogCopy = ''; if (dialog.open) dialog.close(); dialog.replaceChildren();
       ROUTES.forEach(route => screens[route].replaceChildren());

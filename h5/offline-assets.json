@@ -1,17 +1,32 @@
 {
   "schema": 1,
-  "version": "2026.10.16.2",
-  "revision": "4fc7ba51c232a720e434",
+  "version": "2026.10.16.3",
+  "revision": "6749e5ea0f8e67e4b5e6",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "cad7420083844a62b3d953acbaa18b4bc68406e1ff3896c3c31a9b0363067acb",
-      "bytes": 59506
+      "sha256": "ff71737a5abc1349657b5718fcded668ac1722a10c808256a8f20395047cc332",
+      "bytes": 59344
+    },
+    {
+      "path": "data/first-stamp.json",
+      "sha256": "86f61cf16cc3245452faeb2ea067f0358287e233723735c268400dd55085a5cd",
+      "bytes": 2435
     },
     {
       "path": "data/offline-pvg-t2.json",
-      "sha256": "1064a94701b3d63f99229ab9bb29c1cda0eeea6268baca9cceb696671e40bc70",
+      "sha256": "3debaacfe5a4de262ef7030fed9c876492e8b9f0b6e54c96979b278ab82a3607",
       "bytes": 22754
+    },
+    {
+      "path": "fonts/OFL-CormorantGaramond.txt",
+      "sha256": "6f5a41d57400577a50aae88475b11f292f3d7de78ee7d5113c69577331d8ad31",
+      "bytes": 4386
+    },
+    {
+      "path": "fonts/cormorant-garamond.ttf",
+      "sha256": "b20b7d9626dd956b2c5e558692ad328b1f19e3275e2782db4fa07670d83f35e0",
+      "bytes": 1195560
     },
     {
       "path": "icon-180.png",
@@ -129,9 +144,19 @@
       "bytes": 854
     },
     {
+      "path": "img/stamp/discover-qr.png",
+      "sha256": "52186a258a9b2bf94d376c0a9a6f20944a5d1afdc33f01fd92b1ce022de593a7",
+      "bytes": 1249
+    },
+    {
+      "path": "img/stamp/shanghai-dusk.png",
+      "sha256": "5b46dc51f2ed65cb36a6afcb6d253d603ba39b2bf613aeb7dc1f8084916d38e0",
+      "bytes": 3166699
+    },
+    {
       "path": "index.html",
-      "sha256": "8bcbdc03de3f2c91261a46276d7558e8544bd3a2e59a650a98b2dc97645686aa",
-      "bytes": 1192806
+      "sha256": "dd9b6f0bad00d851ad03efc46f2ed8ffe6352c8b56a8a0772c341c36d6c36e52",
+      "bytes": 1110723
     },
     {
       "path": "manifest.json",
@@ -140,8 +165,8 @@
     },
     {
       "path": "offline-db.js",
-      "sha256": "35e91fc0893e7a71d5f53d2c4c7897c291325aeb701e5eaf2fcc3c5fa8cfd24d",
-      "bytes": 1469
+      "sha256": "24f68a8a49baf26f2525126ea54f949c2c32db2133dffb92c8ae2495ff9f0d69",
+      "bytes": 1619
     },
     {
       "path": "offline.css",
@@ -150,8 +175,23 @@
     },
     {
       "path": "offline.js",
-      "sha256": "34acc96259e770099afb9ee5e0c731b9904c2dccf10e62f4339413f1bb677013",
-      "bytes": 39139
+      "sha256": "fc3b9fe12f9a416af763e218d9aeb5a88424392939d58aae07aa651bb3367846",
+      "bytes": 39305
+    },
+    {
+      "path": "stamp-renderer.js",
+      "sha256": "cd639fd4c92ac251fdb71b0d829b3df7c8f070c2ca15177ca44928a892169a75",
+      "bytes": 7120
+    },
+    {
+      "path": "stamp.css",
+      "sha256": "85b1b9d679becbc789956ab30fc2cfc783ddcebddafaf202c61d6729a7b072de",
+      "bytes": 10622
+    },
+    {
+      "path": "stamp.js",
+      "sha256": "09b49e7ca9da729d19e275d235277f0bd47aed9466ec66ca02164dad4d9572c2",
+      "bytes": 33289
     },
     {
       "path": "tutorials.json",

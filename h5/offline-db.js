@@ -30,6 +30,10 @@
   window.LCOfflineDB = {
     get: key => run('readonly', store => store.get(key)),
     put: (key, value) => run('readwrite', store => store.put(value, key)),
-    clear: () => run('readwrite', store => store.clear()),
+    clear: async () => {
+      window.dispatchEvent(new Event('lc-private-clearing'));
+      await run('readwrite', store => store.clear());
+      window.dispatchEvent(new Event('lc-private-cleared'));
+    },
   };
 })();

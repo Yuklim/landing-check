@@ -9,10 +9,13 @@ HERE = Path(__file__).resolve().parent
 
 def build():
     paths = {'index.html', 'app.js', 'offline-db.js', 'offline.js', 'offline.css',
-             'manifest.json', 'icon-180.png', 'icon-512.png', 'tutorials.json', 'data/offline-pvg-t2.json'}
+             'manifest.json', 'icon-180.png', 'icon-512.png', 'tutorials.json', 'data/offline-pvg-t2.json',
+             'stamp.js', 'stamp-renderer.js', 'stamp.css', 'data/first-stamp.json'}
     html = (HERE / 'index.html').read_text()
     paths.update(re.findall(r'''(?:src=["']|url\(["']?)(img/[^"'\s)]+)''', html))
     paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'img' / 'offline').glob('*.svg'))
+    paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'img' / 'stamp').glob('*.png'))
+    paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'fonts').glob('*') if p.is_file())
     assets = []
     for path in sorted(paths):
         content = (HERE / path).read_bytes()

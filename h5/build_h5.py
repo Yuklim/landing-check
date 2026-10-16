@@ -29,7 +29,7 @@ TITLES = {
 }
 
 # 点击绑定：(路由, 选择器) -> 动作。选择器用 data-pencil-id 或 data-pencil-name（在该屏范围内）。
-# 动作：'go:xxx' 跳转；'back' 返回；'toast:文字' 提示；'toggle-privacy' 分享页开关
+# 动作：'go:xxx' 跳转；'back' 返回；'toast:文字' 提示。分享页由 stamp.js 接管。
 BIND = [
     # 首页入口
     ('home', 'name:Feat Landing Check', 'go:preflight'),
@@ -128,12 +128,7 @@ BIND = [
     ('done', 'name:FB Wi-Fi', 'api:fb:wifi'),
     ('done', 'name:FB Payment', 'api:fb:payment'),
     ('done', 'name:FB Transport', 'api:fb:transport'),
-    # 分享卡
-    ('share', 'name:Close', 'back'),
-    ('share', 'name:Share Button', 'then:Demo：调起系统分享|go:home'),
-    ('share', 'name:Privacy Toggle Row', 'toggle-privacy'),
-    ('share', 'name:Share Save image', 'toast:Demo：已保存到相册'),
-    ('share', 'name:Share Copy link', 'toast:已复制 trip.com/landing'),
+    # The share screen is rendered by stamp.js, including real export and privacy controls.
 ]
 
 soup = BeautifulSoup(open(SRC, encoding='utf-8').read(), 'lxml')
@@ -149,6 +144,9 @@ for div in root.find_all('div', recursive=False):
     div['style'] = st + '; position: relative; left: 0; top: 0; margin: 0 auto;'
     div['class'] = 'screen'
     div['data-route'] = route
+    if route == 'share':
+        div.clear()
+        div.append(BeautifulSoup('<div class="fs-empty">Opening The First Stamp…<noscript>Enable JavaScript to create and save your keepsake.</noscript></div>', 'html.parser').div)
     for el in div.find_all('div'):
         if el.find(True) is None:
             continue
@@ -261,6 +259,7 @@ page = f'''<!doctype html>
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="stylesheet" href="offline.css">
+<link rel="stylesheet" href="stamp.css">
 <title>Trip.com Landing Check · H5 Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
@@ -331,7 +330,7 @@ page = f'''<!doctype html>
 <div id="menu"><button id="menuBtn">页面 ≡</button><div id="list">{nav_items}</div></div>
 <div id="hint">← → 上一页/下一页 · 点屏幕内的按钮跳转 · 右上角可直接跳到任意页</div>
 <script>
-const order = {json.dumps(list(SCREENS.values()) + ['offline', 'offline-hotel', 'offline-cards', 'offline-guide', 'offline-help', 'offline-place'])};
+const order = {json.dumps(list(SCREENS.values()) + ['offline', 'offline-hotel', 'offline-cards', 'offline-guide', 'offline-help', 'offline-place', 'community', 'community-compose', 'community-post', 'city-passport'])};
 const hist = [];
 const $ = s => document.querySelector(s);
 function fit(){{
@@ -367,17 +366,6 @@ function show(route, push=true){{
 function back(){{ const r = hist.pop(); show(r || 'home', false); }}
 let tt;
 function toast(msg){{ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(()=>t.classList.remove('show'), 1600); }}
-function togglePrivacy(){{
-  const share = document.querySelector('.screen[data-route="share"]');
-  const sw = share.querySelector('[data-pencil-name="Switch"]');
-  const knob = sw.querySelector('[data-pencil-name="Knob"]');
-  const name = share.querySelector('[data-pencil-name="Foot Name"]');
-  const on = sw.dataset.on === '1';
-  sw.dataset.on = on ? '0' : '1';
-  sw.style.backgroundColor = on ? '#DADFE6' : '#2C61FE';
-  sw.style.justifyContent = on ? 'flex-start' : 'flex-end';
-  name.textContent = on ? 'Alex · Shanghai PVG → The PuLi' : 'A traveler · PVG → Shanghai';
-}}
 document.addEventListener('click', e => {{
   const el = e.target.closest('[data-act]');
   if (!el) return;
@@ -385,7 +373,6 @@ document.addEventListener('click', e => {{
   const act = el.dataset.act;
   if (act.startsWith('go:')) show(act.slice(3));
   else if (act === 'back') back();
-  else if (act === 'toggle-privacy') togglePrivacy();
   else if (act.startsWith('toast:')) toast(act.slice(6));
   else if (act.startsWith('then:')) {{ const [t, g] = act.slice(5).split('|'); toast(t); setTimeout(() => g === 'island' ? island() : show(g.slice(3)), 900); }}
   else if (act === 'island') island();
@@ -436,6 +423,8 @@ if (/island=3/.test(location.search)) {{ const n = $('#notif'); n.style.transiti
 <script src="app.js"></script>
 <script src="offline-db.js"></script>
 <script src="offline.js"></script>
+<script src="stamp-renderer.js"></script>
+<script src="stamp.js"></script>
 </body>
 </html>'''
 open(OUT, 'w', encoding='utf-8').write(page)

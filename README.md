@@ -26,6 +26,7 @@ Render 实例休眠后，在线原型首次连接可能需要等待唤醒。展�
 - **I’m Stuck**：从截图或文字判断场景，返回知识库条目；不确定时给出候选，模型不可用时使用关键词规则兜底。知识库外的 AI 建议单独标记为未经核验。
 - **知识库与图文教程**：5 个场景、41 条记录、10 篇图文教程，保留步骤、备用办法、来源和核验日期。
 - **离线旅行包**：浦东 T2 酒店双语地址、地点与沟通卡、联网向导及求助联系；整包校验下载，本机保存个人信息。入口 `h5/index.html#offline`，运行与验证见[离线包说明](docs/offline-pack.md)。
+- **The First Stamp**：上海城市纪念票根，支持动态 PNG 导出、系统分享及本机城市图鉴；底部 Community 可进入示例与本机帖子社区。尚未接通官方发帖，体验入口 `h5/index.html#share`，详见[城市票根说明](docs/first-stamp.md)。
 - **演示与研究资料**：可交互 H5、中英双语展示页、初赛成片，以及需求复核和测试记录。
 
 前端使用 HTML、CSS、JavaScript，设计源文件为 `appearance.pen`；后端使用 Python、FastAPI、Uvicorn、Pydantic 和 HTTPX，截图识别接入 DeepSeek。数据保存在 JSON 文件中，测试使用 pytest 和 Playwright。GitHub Pages 承载前端，Render 承载 API。
