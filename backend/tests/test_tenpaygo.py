@@ -48,7 +48,7 @@ def test_initial_state_keeps_summary_and_both_rows_todo():
     assert r['summary'] == '4 of 6 ready · 2 to do · 2 optional'            # 与设计稿、exports 一致
     assert r['required'] == 6 and r['backup_open'] == 0
     assert r['payment'] == {'ready': False, 'primary': None, 'primary_name': None, 'verified': [], 'verified_at': None,
-                            'methods': ['alipay', 'tenpaygo'], 'title': 'Payment in China', 'backup': None,
+                            'methods': ['alipay', 'tenpaygo'], 'title': 'Payment in China', 'backup': None, 'donated': [],
                             'desc': 'Alipay or TenPayGo · either one is enough · ¥1 test, refunded in 24 h'}
     assert b['alipay']['desc'] == 'Installed · not verified yet · ¥1 test, refunded in 24 h'
     assert b['tenpaygo']['desc'] == 'Not installed · either one is enough · email sign-up, no Chinese number'
@@ -180,6 +180,15 @@ def test_http_tenpaygo_verification_flow():
     assert t['payments']['alipay']['status'] == 'not_verified'
     tl = c.get('/mock/timeline').json()
     assert tl[-1] == {'event': 'payment', 'method': 'tenpaygo', 'at': r['verified_at']}
+
+
+def test_http_donate_keeps_the_test_payment_for_cydf():
+    r = c.post('/mock/pay-test?method=alipay&donate=true').json()
+    assert r['status'] == 'verified' and r['donated'] is True and r['refund'] == 'donated'
+    p = c.get('/rules/preflight').json()
+    assert p['payment']['donated'] == ['alipay'] and 'donated to CYDF' in p['payment']['desc']
+    assert 'donated to CYDF' in by_id(p)['alipay']['desc']
+    assert c.get('/mock/timeline').json()[-1]['donated'] is True
 
 
 def test_http_default_method_is_still_alipay():

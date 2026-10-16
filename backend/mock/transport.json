@@ -3,7 +3,7 @@
     "taxi": {
       "id": "taxi",
       "title": "Taxi",
-      "min": 50,
+      "min": 57,
       "price_cny": [
         160,
         200
@@ -19,7 +19,7 @@
     "transfer": {
       "id": "transfer",
       "title": "Trip.com transfer",
-      "min": 50,
+      "min": 57,
       "price_cny": [
         220,
         220
@@ -35,25 +35,25 @@
     "metro": {
       "id": "metro",
       "title": "Metro Line 2",
-      "min": 70,
+      "min": 82,
       "price_cny": [
         7,
         7
       ],
-      "where": "Follow Metro signs from Arrivals",
+      "where": "Direct to Jing'an Temple · 20 stops, no transfer",
       "action": "transit",
-      "transfers": 1,
+      "transfers": 0,
       "needs_alipay": "No Alipay verified: have some cash for the ticket machine.",
       "go_to": {
         "title": "Metro Line 2 station",
-        "where": "Follow the Metro / 地铁 signs from Arrivals. Buy a ticket at the machine with Alipay or cash.",
+        "where": "Follow the Metro / 地铁 signs from Arrivals to Pudong Airport T1&T2 station. Line 2 runs direct to Jing'an Temple (20 stops, no transfer). Buy a ticket at the machine with Alipay or cash.",
         "verified": false
       }
     },
     "didi": {
       "id": "didi",
       "title": "Ride-hailing · DiDi via Alipay",
-      "min": 50,
+      "min": 57,
       "price_cny": [
         140,
         180
@@ -69,13 +69,13 @@
     },
     "maglev": {
       "id": "maglev",
-      "title": "Maglev + Metro",
-      "min": 45,
+      "title": "Maglev + Metro Line 7",
+      "min": 68,
       "price_cny": [
-        57,
-        57
+        54,
+        54
       ],
-      "where": "Maglev station, T2 level 2",
+      "where": "Maglev to Longyang Rd, then Line 7 to Jing'an Temple",
       "action": "transit",
       "go_to": {
         "title": "Maglev station",

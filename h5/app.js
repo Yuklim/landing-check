@@ -212,10 +212,13 @@
   }
   function renderPayOk(method, r) {
     applyPayCopy(method); setPayTone(false);
+    const fate = r && r.donated ? 'Donated to China Youth Development Foundation (CYDF) · thank you' : 'Refund issued · back on your card in 1–3 days';
     if (r && r.verified_at) {
-      multiline('Result Sub', `¥1.00 charged via ${PAY_NAME[method]} at ${r.verified_at.slice(11, 16)} · ${r.card}\nRefund issued · back on your card in 1–3 days`);
+      multiline('Result Sub', `¥1.00 charged via ${PAY_NAME[method]} at ${r.verified_at.slice(11, 16)} · ${r.card}\n${fate}`);
       txt($$('payment', 'Chip Label'), 'VERIFIED · ' + r.verified_at.slice(5, 10).replace('-', '/'));
-    }
+    } else if (r && r.donated) multiline('Result Sub', `¥1.00 charged via ${PAY_NAME[method]} · Visa ••4471\n${fate}`);
+    // 捐赠时没有退款，"What we just tested"第三行不能再写退款路径
+    if (r && r.donated) { txt($all('payment', 'How Item Title')[2], 'Your ¥1 went to CYDF'); txt($all('payment', 'How Item Desc')[2], 'Instead of a refund, the test payment supports young people in China.'); }
   }
   // otherVerified：另一种方式已经验证过时，不再引导去重复验证（会再扣一次 ¥1）
   function renderPayFail(method, r, otherVerified) {
@@ -235,36 +238,463 @@
     paySwitch.style.display = '';
   }
 
-  // 落地流程里"先验证支付"：底部选择层，选支付宝或 TenPayGo
-  const chooser = el('div', 'position:absolute;inset:0;z-index:70;display:none;flex-direction:column;justify-content:flex-end;background:rgba(18,24,38,.45)');
-  chooser.setAttribute('data-pencil-name', 'Pay Chooser');
-  const opt = (m, title, sub) => `<div data-pay="${m}" class="tap" style="display:flex;align-items:center;gap:12px;padding:14px;border:1px solid ${LINE};border-radius:12px;margin-top:10px;cursor:pointer"><div style="flex:1;min-width:0"><div style="font:700 15px/1.3 Inter,system-ui,sans-serif;color:${INK}">${title}</div><div style="font:400 12px/1.4 Inter,system-ui,sans-serif;color:${MUTED};margin-top:2px">${sub}</div></div><div style="flex:none;border:1px solid ${BLUE};color:${BLUE};border-radius:4px;padding:6px 10px;font:700 12px Inter,system-ui,sans-serif">Verify ¥1</div></div>`;
-  chooser.innerHTML = `<div style="background:#fff;border-radius:16px 16px 0 0;padding:20px 20px 30px;box-sizing:border-box">
-      <div data-role="title" style="font:700 17px/1.3 Inter,system-ui,sans-serif;color:${INK}">Verify payment first</div>
-      <div style="font:400 13px/1.45 Inter,system-ui,sans-serif;color:${MUTED};margin-top:4px">A ¥1 test, refunded. Either one is enough.</div>
-      ${opt('alipay', 'Alipay', 'Also books DiDi rides and buys metro tickets')}
-      ${opt('tenpaygo', 'TenPayGo', 'Email sign-up · pays wherever WeChat Pay works')}
-      <div data-pay="" style="text-align:center;padding:16px 0 0;font:600 14px Inter,system-ui,sans-serif;color:${MUTED};cursor:pointer">Not now</div>
-    </div>`;
-  (document.getElementById('phone') || document.body).appendChild(chooser);
-  let closeChooser = null;
-  function choosePay(title) {
-    if (closeChooser) closeChooser(null);
-    return new Promise(res => {
-      txt(chooser.querySelector('[data-role="title"]'), title || 'Verify payment first');
-      chooser.style.display = 'flex';
-      closeChooser = choice => { chooser.style.display = 'none'; chooser.onclick = null; closeChooser = null; res(choice); };
-      chooser.onclick = ev => { const b = ev.target.closest('[data-pay]'); if (!b && ev.target !== chooser) return; closeChooser(b ? (b.dataset.pay || null) : null); };
+  // ---------- 支付方式选择页（行前检查 Verify ¥1 / 第三步"先验证支付"进入）：选支付宝或 TenPayGo + ¥1 去向，默认捐给 CYDF ----------
+  const SETUP = { method: 'alipay', donate: true, ret: null, style: null };
+  // 设计稿里 Alipay 和 Donate 是选中态、另外两张是未选中态，先快照两种样式再互换
+  function snapSetup() {
+    if (SETUP.style) return;
+    const on = $$('paysetup', 'Method Alipay'), off = $$('paysetup', 'Method TenPayGo'); if (!on || !off) return;
+    const pick = e => ({ card: e.style.cssText, radio: e.querySelector('[data-pencil-name="Radio"]').outerHTML });
+    SETUP.style = { on: pick(on), off: pick(off) };
+  }
+  function markSetup(names, chosen) {
+    snapSetup(); if (!SETUP.style) return;
+    names.forEach(n => {
+      const e = $$('paysetup', n), r = e && e.querySelector('[data-pencil-name="Radio"]'); if (!r) return;
+      const st = n === chosen ? SETUP.style.on : SETUP.style.off, t = document.createElement('div');
+      e.style.cssText = st.card; t.innerHTML = st.radio; r.replaceWith(t.firstElementChild);
     });
   }
-  const PICK_TITLE = 'Which app will you pay with?';
+  function renderSetup() {
+    markSetup(['Method Alipay', 'Method TenPayGo'], SETUP.method === 'tenpaygo' ? 'Method TenPayGo' : 'Method Alipay');
+    markSetup(['Use Donate', 'Use Refund'], SETUP.donate ? 'Use Donate' : 'Use Refund');
+    txt($$('paysetup', 'Confirm Label'), `Pay ¥1 with ${PAY_NAME[SETUP.method]}`);
+    txt($$('paysetup', 'Foot Note'), `One-time ¥1.00 · no other charges · card details stay with ${PAY_NAME[SETUP.method]}`);
+  }
+  function openSetup(method, ret) { SETUP.method = PAY_NAME[method] ? method : 'alipay'; SETUP.ret = ret || null; renderSetup(); show('paysetup'); }
+  // CYDF 说明：底部弹层
+  const cydf = el('div', 'position:absolute;inset:0;z-index:70;display:none;flex-direction:column;justify-content:flex-end;background:rgba(18,24,38,.45)');
+  cydf.setAttribute('data-pencil-name', 'CYDF Sheet');
+  cydf.innerHTML = `<div style="background:#fff;border-radius:16px 16px 0 0;padding:22px 20px 30px;box-sizing:border-box;font-family:Inter,system-ui,sans-serif">
+      <div style="display:flex;align-items:flex-start;gap:12px"><div style="flex:1;font:700 18px/1.3 Inter,system-ui,sans-serif;color:${INK}">China Youth Development Foundation (CYDF)</div><div data-close style="flex:none;font:400 22px/1 Inter,sans-serif;color:${MUTED};cursor:pointer;padding:2px 4px">×</div></div>
+      <div style="font:400 14px/1.5 Inter,system-ui,sans-serif;color:${INK};margin-top:10px">Helping young people build capacity and improving the environment for their growth by providing aid services and giving a voice to their interests.</div>
+      <div style="font:400 13px/1.5 Inter,system-ui,sans-serif;color:${MUTED};margin-top:10px">Based in Beijing, CYDF is a national public foundation registered in March 1989 and dedicated to youth development.</div>
+      <div style="background:#FFF0F5;border-radius:12px;padding:12px 14px;margin-top:14px;color:#C2185B;font:400 13px/1.7 Inter,system-ui,sans-serif"><div style="font-weight:700">Our impact</div>• 500,000+ students reached<br>• 1,200 schools supported<br>• 300 community programs launched</div>
+      <div style="font:400 12px/1.45 Inter,system-ui,sans-serif;color:${MUTED};margin-top:12px">Choose "Donate" and your ¥1 test goes to CYDF instead of back to your card. Trip.com passes on 100%.</div>
+      <div data-close style="margin-top:14px;height:44px;border-radius:22px;background:${BLUE};color:#fff;display:flex;align-items:center;justify-content:center;font:700 15px Inter,system-ui,sans-serif;cursor:pointer">Got it</div>
+    </div>`;
+  (document.getElementById('phone') || document.body).appendChild(cydf);
+  cydf.onclick = ev => { if (ev.target === cydf || ev.target.closest('[data-close]')) cydf.style.display = 'none'; };
+  function setupAct(act) {
+    if (act.startsWith('paysel:')) { SETUP.method = act.slice(7); renderSetup(); return true; }
+    if (act.startsWith('payuse:')) { SETUP.donate = act.slice(7) === 'donate'; renderSetup(); return true; }
+    if (act === 'cydf') { cydf.style.display = 'flex'; return true; }
+    return false;
+  }
+  // ---------- 隐私授权页：逐项开关系统权限，同意后开始下载离线包 ----------
+  const PRIV = { on: { location: true, notifications: true, camera: false, microphone: false }, sw: null, asked: false };
+  const PERM_NODE = { location: 'Perm Location', notifications: 'Perm Notifications', camera: 'Perm Camera & photos', microphone: 'Perm Microphone' };
+  function renderPriv() {
+    if (!PRIV.sw) { const a = $$('privacy', 'Perm Location'), b = $$('privacy', 'Perm Camera & photos'); if (!a || !b) return; PRIV.sw = { on: a.querySelector('[data-pencil-name="Switch"]').outerHTML, off: b.querySelector('[data-pencil-name="Switch"]').outerHTML }; }
+    Object.entries(PERM_NODE).forEach(([k, n]) => { const sw = $$('privacy', n) && $$('privacy', n).querySelector('[data-pencil-name="Switch"]'); if (!sw) return; const t = document.createElement('div'); t.innerHTML = PRIV.sw[PRIV.on[k] ? 'on' : 'off']; sw.replaceWith(t.firstElementChild); });
+  }
+  // 离线包（offline.js）：权限页关掉后——同意或 Not now 都算——自动下载公共指引，不需要任何权限；下载完提示去确认酒店地址
+  let packTried = false;
+  async function startPack() {
+    const o = window.lcOffline; if (!o || packTried || o.saved() || o.busy()) return;
+    packTried = true;
+    try { if (await o.save()) packPrompt(); } catch (e) {}
+  }
+  const packTip = el('div', 'position:absolute;left:16px;right:16px;bottom:100px;z-index:60;display:none;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;background:#121826;color:#fff;font:400 13px/1.35 Inter,system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer');
+  packTip.innerHTML = '<div style="flex:1"><div style="font-weight:700">Offline pack saved</div><div style="opacity:.8;margin-top:2px">Confirm your hotel address so it shows offline</div></div><div style="font-weight:700;color:#8FB0FF;white-space:nowrap">Confirm ›</div>';
+  (document.getElementById('phone') || document.body).appendChild(packTip);
+  packTip.onclick = () => { packTip.style.display = 'none'; show('offline-hotel'); };
+  function packPrompt() { packTip.style.display = 'flex'; clearTimeout(packTip._t); packTip._t = setTimeout(() => { packTip.style.display = 'none'; }, 9000); }
+  function privacyAct(act) {
+    if (act.startsWith('perm:')) { const k = act.slice(5); PRIV.on[k] = !PRIV.on[k]; renderPriv(); return true; }
+    if (act === 'privacy') { renderPriv(); show('privacy'); return true; }
+    if (act === 'consentlater') { PRIV.asked = true; show('preflight'); startPack(); return true; }
+    if (act === 'consent' && !API) { PRIV.asked = true; show('preflight'); startPack(); return true; }
+    return false;
+  }
+  // ---------- 真实地图：高德 JS API 2.0（英文标注）；路线由 backend/tools/amap_routes.py 预先从高德取好，放在 routes.json（GCJ-02） ----------
+  // Web端(JS API) key 本来就会出现在前端；请在高德控制台给它设域名白名单（127.0.0.1、yuklim.github.io）
+  const AMAP_JS = { key: 'de3704da02953bb4e6f7484b75f5749a', securityJsCode: '66c2eb31034482e3a0477b1f23af4224' };
+  const MAPS = {};
+  let ROUTES = null, AMAP = null;
+  const loadRoutes = () => ROUTES || (ROUTES = fetch('routes.json').then(r => r.json()));
+  const loadAMap = () => AMAP || (AMAP = new Promise((res, rej) => {
+    if (window.AMap) return res(window.AMap);
+    window._AMapSecurityConfig = { securityJsCode: AMAP_JS.securityJsCode };
+    const sc = document.createElement('script'); sc.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_JS.key}`;
+    sc.onload = () => window.AMap ? res(window.AMap) : rej(new Error('AMap')); sc.onerror = () => { AMAP = null; rej(new Error('AMap')); };
+    document.head.appendChild(sc);
+  }));
+  const dotHTML = (bg, ring, size = 14) => `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${bg};border:3px solid ${ring};box-sizing:border-box;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div>`;
+  const PIN = '<svg width="28" height="36" viewBox="0 0 28 36" style="display:block"><path d="M14 35s12-11.5 12-21A12 12 0 0 0 2 14c0 9.5 12 21 12 21z" fill="#2C61FE" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="4.5" fill="#fff"/></svg>';
+  // 小工具：新建地图 / 画线 / 打点，返回覆盖物，最后 setFitView
+  async function newMap(box, interactive) {
+    const A = await loadAMap();
+    const map = new A.Map(box, { lang: 'en', mapStyle: 'amap://styles/whitesmoke', zoom: 11, center: [121.62, 31.19], resizeEnable: true,
+      dragEnable: interactive, zoomEnable: interactive, doubleClickZoom: interactive, touchZoom: interactive, scrollWheel: false, keyboardEnable: false, jogEnable: false });
+    map.setLang && map.setLang('en');
+    return map;
+  }
+  function mapLine(map, path, color, dash) {
+    if (!path || path.length < 2) return null;
+    const pl = new AMap.Polyline({ path, strokeColor: color, strokeWeight: dash ? 4 : 6, strokeOpacity: 1, isOutline: !dash, outlineColor: '#ffffff', borderWeight: 2,
+      strokeStyle: dash ? 'dashed' : 'solid', strokeDasharray: [2, 8], lineJoin: 'round', lineCap: 'round' });
+    map.add(pl); return pl;
+  }
+  function mapDot(map, c, html, text, dir = 'right', anchor = 'center') {
+    const mk = new AMap.Marker({ position: c, content: html, anchor, zIndex: 120,
+      label: text ? { content: `<div class="lc-maplabel">${text}</div>`, direction: dir, offset: new AMap.Pixel(dir === 'left' ? -6 : dir === 'right' ? 6 : 0, dir === 'bottom' ? 6 : 0) } : undefined });
+    map.add(mk); return mk;
+  }
+  const fitMap = (map, items, pad) => map.setFitView(items.filter(Boolean), true, [pad, pad, pad, pad]);
+  const mapFail = box => { box.innerHTML = `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#EEF1F5;color:${MUTED};font:500 12px Inter,sans-serif">Map needs internet · route details below</div>`; };
+  // kind: 'taxi' | 'metro'；mini：缩略图（不能拖动，点了进详情）
+  async function drawMap(box, kind, mini) {
+    const R = await loadRoutes(), map = await newMap(box, !mini), items = [];
+    if (kind === 'metro') {
+      const m = R.metro, stops = m.stops;
+      items.push(mapLine(map, m.path, m.colour));
+      stops.forEach((st, i) => items.push(mapDot(map, st.c, dotHTML('#fff', m.colour, 16), mini ? '' : i === 0 ? 'PVG T1&T2 station' : "Jing'an Temple", i === 0 ? 'left' : 'bottom')));
+      items.push(mapLine(map, [stops[stops.length - 1].c, R.hotel.c], BLUE, true));
+    } else {
+      items.push(mapLine(map, R.taxi.line, BLUE));
+      items.push(mapDot(map, R.taxi.queue.c, dotHTML('#1BA672', '#fff', 18), mini ? '' : 'Taxi pickup · P2', 'left'));
+    }
+    items.push(mapDot(map, R.hotel.c, PIN, mini ? '' : 'The PuLi', 'right', 'bottom-center'));
+    fitMap(map, items, mini ? 18 : 40);
+    return map;
+  }
+  async function mountMap(key, host, kind, mini) {
+    if (!host) return;
+    if (MAPS[key] && MAPS[key].kind === kind) return;
+    if (MAPS[key]) { MAPS[key].map && MAPS[key].map.destroy(); MAPS[key].box.remove(); }
+    const box = el('div', 'position:absolute;inset:0;z-index:0;background:#EEF1F5');
+    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+    host.style.overflow = 'hidden'; host.prepend(box);
+    MAPS[key] = { kind, box, map: null };
+    try { MAPS[key].map = await drawMap(box, kind, mini); } catch (e) { mapFail(box); }
+  }
+  (() => { const css = document.createElement('style'); css.textContent = '.lc-maplabel{font:600 11px Inter,system-ui,sans-serif;color:#121826;background:#fff;border-radius:6px;padding:3px 7px;box-shadow:0 1px 4px rgba(0,0,0,.2);white-space:nowrap}.amap-marker-label{border:0 !important;background:transparent !important;padding:0 !important}.amap-logo,.amap-copyright{transform:scale(.8);transform-origin:left bottom}'; document.head.appendChild(css); })();
+  // 地铁导航页：设计稿的示意地图换成真实地图（保留 Live Chip 浮在上面）
+  function transitMap() {
+    const host = $$('transit', 'Map'); if (!host) return;
+    [...host.children].forEach(c => { const n = c.getAttribute && c.getAttribute('data-pencil-name'); if (n && n !== 'Live Chip') c.style.visibility = 'hidden'; else if (n === 'Live Chip') c.style.zIndex = 500; });
+    mountMap('transit', host, 'metro', false);
+  }
+  // 第三步：推荐卡片里加一张路线缩略图，点了进详情
+  function step3Map(kind) {
+    const cur = $$('step3', 'Current Task'); if (!cur) return;
+    let wrap = cur.querySelector('.lc-minimap');
+    if (!wrap) { wrap = el('div', 'width:100%;height:150px;border-radius:10px;cursor:pointer;flex-shrink:0'); wrap.className = 'lc-minimap tap'; const go = cur.querySelector('.lc-goto') || $$('step3', 'Primary Button'); cur.insertBefore(wrap, go); }
+    wrap.dataset.act = kind === 'metro' ? 'go:transit' : 'api:route:taxi';
+    mountMap('step3', wrap, kind, true);
+  }
+  // ---------- 所有交通方式 + 路线详情屏（数据：routes.json，由 backend/tools/amap_routes.py 从高德取） ----------
+  const LINE_C = { 'Line 2': '#97D700', 'Line 7': '#ED6B00', 'Line 9': '#71C5E8', 'Line 14': '#827A04', 'Line 18': '#C09453', 'Airport Link': '#2B6CB0', Maglev: '#00A0B0' };
+  const MODE_C = { walk: '#8592A6', metro: '#2C61FE', maglev: '#00A0B0', bus: '#F28C28', airport_bus: '#1F8A70', car: '#2C61FE' };
+  const segC = s => LINE_C[s.name] || MODE_C[s.mode] || BLUE;
+  const SVG = {
+    walk: '<path d="M13 4a1.5 1.5 0 1 0 0-.01M10 21l2-6 2 2v4M9 12l1.5-4 3 1.5 2 3.5M8 21l2.5-7"/>',
+    metro: '<rect x="5" y="3" width="14" height="14" rx="3"/><path d="M5 11h14M9 21l-2-4M15 21l2-4M8.5 14h.01M15.5 14h.01"/>',
+    maglev: '<path d="M4 15l2-8h10a4 4 0 0 1 4 4v4zM4 15h16M7 19h10M8 11h3"/>',
+    bus: '<rect x="4" y="3" width="16" height="15" rx="2"/><path d="M4 11h16M8 21v-3M16 21v-3M8 15h.01M16 15h.01"/>',
+    airport_bus: '<rect x="4" y="3" width="16" height="15" rx="2"/><path d="M4 11h16M8 21v-3M16 21v-3M8 15h.01M16 15h.01"/>',
+    car: '<path d="M5 17h14v-4l-2-5H7l-2 5zM5 17v2M19 17v2M7.5 14h.01M16.5 14h.01"/>',
+  };
+  const ico = (m, c, s = 16) => `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none">${SVG[m] || SVG.car}</svg>`;
+  const chip = s => `<span style="display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:5px;background:${segC(s)};color:#fff;font:700 11px/1.3 Inter,sans-serif;white-space:nowrap">${ico(s.mode, '#fff', 12)}${s.name.replace('Airport Bus Line 4', 'Airport Bus 4')}</span>`;
+  const chain = p => p.segments.filter(s => s.mode !== 'walk').map(chip).join(`<span style="color:${MUTED};font-size:11px">›</span>`);
+  const km = m => m >= 1000 ? (m / 1000).toFixed(1) + ' km' : m + ' m';
+
+  // 路线详情屏
+  const rs = document.createElement('div');
+  rs.className = 'screen'; rs.dataset.route = 'route'; rs.setAttribute('data-pencil-name', 'Route Detail');
+  rs.style.cssText = `background:#fff;width:393px;height:852px;position:relative;margin:0 auto;font-family:Inter,-apple-system,"PingFang SC",sans-serif;color:${INK}`;
+  rs.innerHTML = `
+    <div style="padding:0 16px;height:48px;display:flex;align-items:center;gap:10px;flex:none">
+      <div data-act="back" style="width:32px;height:32px;border-radius:16px;background:${BG};display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></div>
+      <div data-r="title" style="font:700 17px/1.2 Inter,sans-serif;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+    </div>
+    <div class="scroll" style="padding:0 0 16px;background:${BG}">
+      <div data-r="map" style="width:100%;height:260px;position:relative;flex:none"></div>
+      <div style="padding:12px 16px 0;display:flex;flex-direction:column;gap:12px">
+        <div data-r="stats" style="display:flex;gap:8px"></div>
+        <div data-r="chain" style="display:flex;flex-wrap:wrap;align-items:center;gap:4px"></div>
+        <div data-r="steps" style="background:#fff;border-radius:12px;overflow:hidden"></div>
+        <div data-r="tips" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div data-r="src" style="font:400 11px/1.4 Inter,sans-serif;color:${MUTED};padding:0 2px"></div>
+      </div>
+    </div>
+    <div class="pin" style="padding:10px 16px 26px;border-top:1px solid ${LINE};background:#fff"><div data-r="cta" class="tap" style="height:48px;border-radius:24px;background:${BLUE};color:#fff;font:700 16px/48px Inter,sans-serif;text-align:center;cursor:pointer"></div></div>`;
+  (() => { const sb = document.querySelector('.screen[data-route="wifi"] [data-pencil-name="Status Bar"]'); if (sb) { const c = sb.cloneNode(true); c.style.flexShrink = '0'; rs.insertBefore(c, rs.firstChild); } })();
+  { const all = document.querySelectorAll('#phone > .screen'); if (all.length) all[all.length - 1].after(rs); }
+  if (typeof order !== 'undefined' && !order.includes('route')) order.push('route');
+  const RS = k => rs.querySelector(`[data-r="${k}"]`);
+  const stat = (v, l) => `<div style="flex:1;min-width:0;background:#fff;border-radius:10px;padding:10px 10px"><div style="font:700 16px/1.2 Inter,sans-serif;white-space:nowrap">${v}</div><div style="font:400 11px/1.3 Inter,sans-serif;color:${MUTED};margin-top:2px">${l}</div></div>`;
+  const tipBox = (t, warn) => `<div style="display:flex;gap:8px;padding:12px;border-radius:10px;background:${warn ? '#FFF4E5' : '#EAF0FF'};color:${warn ? '#B4650A' : '#1136A6'};font:400 12px/1.45 Inter,sans-serif">${t}</div>`;
+  // 时间线：每段一行，左侧彩色竖线
+  const stepRow = (color, icon, title, desc, cn, last) => `<div style="display:flex;gap:12px;padding:12px 14px;${last ? '' : `border-bottom:1px solid ${LINE}`}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:none"><div style="width:28px;height:28px;border-radius:14px;background:${color}22;display:flex;align-items:center;justify-content:center">${ico(icon, color, 16)}</div></div>
+      <div style="flex:1;min-width:0"><div style="font:600 14px/1.35 Inter,sans-serif">${title}</div>${desc ? `<div style="font:400 12px/1.45 Inter,sans-serif;color:${MUTED};margin-top:3px">${desc}</div>` : ''}${cn ? `<div style="display:inline-block;margin-top:6px;padding:3px 8px;border-radius:6px;background:${BG};font:500 12px/1.4 'Noto Sans SC',sans-serif;color:${INK}">路牌 · ${cn}</div>` : ''}</div></div>`;
+  let routeMap = null;
+  async function drawRoute(spec) {
+    const R = await loadRoutes(), box = RS('map');
+    if (routeMap) { routeMap.destroy(); routeMap = null; }
+    box.innerHTML = '';
+    const inner = el('div', 'position:absolute;inset:0;background:#EEF1F5'); box.appendChild(inner);
+    let map; try { map = routeMap = await newMap(inner, true); } catch (e) { mapFail(box); return; }
+    const items = [];
+    if (spec.car) {
+      items.push(mapLine(map, spec.car.line, BLUE));
+      items.push(mapDot(map, spec.car.start.c, dotHTML('#1BA672', '#fff', 18), spec.car.startLabel, 'left'));
+    } else {
+      spec.plan.segments.forEach(s => items.push(mapLine(map, s.line, segC(s), s.mode === 'walk')));
+      spec.plan.segments.filter(s => s.mode !== 'walk').forEach((s, i) => items.push(mapDot(map, s.from_c, dotHTML('#fff', segC(s), 14), i === 0 ? s.from : `Change · ${s.from}`, i === 0 ? 'left' : 'right')));
+    }
+    items.push(mapDot(map, R.hotel.c, PIN, 'The PuLi', 'right', 'bottom-center'));
+    fitMap(map, items, 36);
+  }
+  async function openRoute(kind, idx) {
+    const R = await loadRoutes();
+    const steps = [], tips = [];
+    let spec;
+    if (kind === 'taxi' || kind === 'didi') {
+      const c = R[kind], taxi = kind === 'taxi', fare = Math.round(c.taxi_cost * (taxi ? 1 : 0.9));
+      txt(RS('title'), taxi ? 'Taxi to The PuLi' : 'DiDi to The PuLi');
+      RS('stats').innerHTML = stat('≈ ¥' + fare, taxi ? 'meter, excl. tolls' : 'estimate in app') + stat(c.duration_min + ' min', 'AMap estimate') + stat(c.distance_km + ' km', 'by road');
+      RS('chain').innerHTML = chip({ mode: 'car', name: taxi ? 'Taxi' : 'DiDi' });
+      if (taxi) {
+        steps.push(stepRow(BLUE, 'walk', 'Go to the official taxi queue', 'From T2 arrivals follow the 出租车 / Taxi signs to the taxi pickup by car park P2. Ignore anyone offering a ride inside the hall — they are unlicensed.', '出租车 · Taxi'));
+        steps.push(stepRow(BLUE, 'car', 'Show the driver your address card', 'Most drivers do not read English. The card has the hotel name, address and phone in Chinese.', '璞丽酒店 · 常德路1号'));
+        steps.push(stepRow(BLUE, 'car', `Ride ${c.distance_km} km · about ${c.duration_min} min`, 'Check the meter is running. Tolls are added at the end. No tip needed.'));
+        steps.push(stepRow(GREEN, 'car', 'Pay and keep the receipt', 'Scan the QR code on the seat back with Alipay or TenPayGo, or pay cash. Ask for a 发票 receipt — it has the taxi number if you leave something behind.', null, true));
+      } else {
+        steps.push(stepRow(BLUE, 'walk', 'Walk to the ride-hailing pickup', 'Follow the 网约车 / Online car-hailing signs to the P2 pickup area.', R.didi.pickup.cn));
+        steps.push(stepRow(BLUE, 'car', 'Order in Alipay › DiDi', 'Set the pickup to the numbered waiting point you are standing at. The destination is already filled in as 璞丽酒店.'));
+        steps.push(stepRow(BLUE, 'car', 'Match the plate number', 'Check the plate shown in the app before you get in.'));
+        steps.push(stepRow(GREEN, 'car', `Ride ${c.distance_km} km · about ${c.duration_min} min`, 'The fare is charged to Alipay automatically when you arrive.', null, true));
+        tips.push(tipBox('DiDi opens inside Alipay. TenPayGo cannot book rides.', true));
+      }
+      RS('cta').textContent = 'Show address to driver'; RS('cta').dataset.act = 'go:driver';
+      spec = { car: { line: c.line, start: taxi ? R.taxi.queue : R.didi.pickup, startLabel: taxi ? 'Taxi pickup · P2' : 'Ride-hailing pickup · P2' } };
+    } else {
+      const p = R.plans[idx], rides = p.segments.filter(s => s.mode !== 'walk');
+      txt(RS('title'), p.label + (p.tag ? ' · ' + p.tag.toLowerCase() : ''));
+      RS('stats').innerHTML = stat(p.duration_min + ' min', 'total') + stat('¥' + p.fare, 'per person') + stat(km(p.walk_m), 'walking') + stat(String(p.transfers), p.transfers === 1 ? 'change' : 'changes');
+      RS('chain').innerHTML = chain(p);
+      p.segments.forEach((s, i) => {
+        const last = i === p.segments.length - 1;
+        if (s.mode === 'walk') {
+          const next = p.segments.slice(i + 1).find(x => x.mode !== 'walk');
+          steps.push(stepRow(MODE_C.walk, 'walk', `Walk ${km(s.distance_m)} · ${s.duration_min} min`, next ? (i === 0 ? `From T2 arrivals to ${next.from}` : `Change to ${next.name} at ${next.from}`) : 'To The PuLi Hotel and Spa, 1 Changde Rd', null, last));
+        } else {
+          const what = s.mode === 'maglev' ? 'Maglev' : s.name;
+          steps.push(stepRow(segC(s), s.mode, `${what} toward ${s.toward || s.to}`, `Board at ${s.from} · ${s.stops} stop${s.stops > 1 ? 's' : ''} · about ${s.duration_min} min · get off at <b>${s.to}</b>`, `${s.cn} · ${s.from_cn} → ${s.to_cn}`, last));
+        }
+      });
+      const modes = new Set(rides.map(s => s.mode));
+      if (modes.has('metro')) tips.push(tipBox('Metro: tap in with Alipay › Transport › Metro QR, or buy a single ticket at the machine (cash or Alipay).'));
+      if (modes.has('bus') || modes.has('airport_bus')) tips.push(tipBox('Bus: scan the Shanghai transport QR code in Alipay at the door, or pay the exact fare in coins — drivers give no change.', true));
+      if (modes.has('maglev')) tips.push(tipBox('Maglev: buy the ticket at the Maglev station counter or machine in the airport. Trains every 15–20 min.'));
+      if (p.walk_m > 1500) tips.push(tipBox(`About ${km(p.walk_m)} of walking with your bags in total.`, true));
+      RS('cta').textContent = 'Start in Maps'; RS('cta').dataset.act = 'toast:Demo：跳转地图 App 开始导航';
+      spec = { plan: p };
+    }
+    RS('steps').innerHTML = steps.join(''); RS('tips').innerHTML = tips.join('');
+    txt(RS('src'), R.source);
+    show('route'); drawRoute(spec);
+  }
+  window.lcOpenRoute = openRoute;
+
+  // 第三步：「All ways to your hotel」——车 + 全部公共交通方案，点任一行进路线详情
+  async function renderWays() {
+    const sl = $$('step3', 'Step List'); if (!sl) return;
+    let R; try { R = await loadRoutes(); } catch (e) { return; }
+    const alt = $$('step3', 'Alt Options'); if (alt) alt.style.display = 'none';
+    let box = sl.parentElement.querySelector('.lc-otherways');
+    if (!box) { box = el('div', 'width:100%;background:#fff;border-radius:12px;overflow:hidden;margin-top:10px'); box.className = 'lc-otherways'; sl.after(box); }
+    const row = (act, icons, title, meta, tag) => `<div class="tap" data-act="${act}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid ${LINE};cursor:pointer">
+        <div style="flex:1;min-width:0"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px">${icons}</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="font:700 15px Inter,sans-serif;color:${INK}">${title}</span>${tag ? `<span style="padding:1px 6px;border-radius:4px;background:#E6F7F0;color:#1BA672;font:700 10px/1.5 Inter,sans-serif">${tag}</span>` : ''}</div>
+        <div style="font:400 12px/1.4 Inter,sans-serif;color:${MUTED};margin-top:2px">${meta}</div></div>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="${MUTED}" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>`;
+    const head = t => `<div style="padding:12px 14px 6px;font:700 13px Inter,sans-serif;color:${MUTED};${t !== 'BY CAR' ? `border-top:1px solid ${LINE};margin-top:4px` : ''}">${t}</div>`;
+    const t = R.taxi, d = R.didi;
+    box.innerHTML = `<div style="padding:14px 14px 0;font:700 16px Inter,sans-serif;color:${INK}">All ways to your hotel</div>` +
+      head('BY CAR') +
+      row('api:route:taxi', chip({ mode: 'car', name: 'Taxi' }), `${t.duration_min} min · ≈ ¥${Math.round(t.taxi_cost)}`, `Door to door · ${t.distance_km} km · pickup at P2`, '') +
+      row('api:route:didi', chip({ mode: 'car', name: 'DiDi' }), `${d.duration_min} min · ≈ ¥${Math.round(d.taxi_cost * 0.9)}`, 'Book in Alipay · pickup at P2', '') +
+      head('PUBLIC TRANSPORT') +
+      R.plans.map((p, i) => row('api:route:' + i, chain(p), `${p.duration_min} min · ¥${p.fare}`, `${p.label} · walk ${km(p.walk_m)}`, p.tag || '')).join('') +
+      `<div style="padding:10px 14px 12px;font:400 11px/1.4 Inter,sans-serif;color:${MUTED};border-top:1px solid ${LINE}">Times for a weekday 08:00 departure · routes by AMap</div>`;
+  }
+  function routeAct(act) {
+    if (!act.startsWith('route:')) return false;
+    const k = act.slice(6); openRoute(k === 'taxi' || k === 'didi' ? k : 'plan', parseInt(k, 10)); return true;
+  }
+  // ---------- TripGenie 小助手（I'm stuck 和首页 Ask AI 共用）：截图或打字提问，答案来自知识库（/stuck/classify），在对话里直接给步骤 ----------
+  const GENIE = {
+    stuck: { hi: 'Stuck at the airport?', sub: 'Send a screenshot of the error, or tell me what went wrong. I answer from a checked guide for foreign visitors.',
+      pool: [['wifi', 'Airport Wi-Fi asks for a Chinese phone number', 'connectivity_airport_wifi_sms'], ['card', "My card won't link to Alipay", 'alipay_card_bind_failed'],
+        ['sim', 'eSIM installed but no internet after landing', 'connectivity_esim_not_working'], ['car', 'Where do I meet my DiDi at the airport?', 'didi_airport_pickup'],
+        ['lock', "Google and WhatsApp won't load", 'connectivity_blocked_services'], ['sms', 'No SMS code from Alipay', 'alipay_sms_code_not_received'],
+        ['card', 'Payment failed at the counter', 'alipay_payment_declined'], ['sim', 'Buy a SIM card at the airport', 'connectivity_buy_sim_at_airport']] },
+    ask: { hi: 'Hi there!', sub: 'Ask me anything about arriving in China — payments, getting online, or getting to your hotel.',
+      pool: [['route', "What's the best way from Pudong Airport to my hotel?", 'route'], ['card', 'How do I pay at a shop with Alipay?', 'alipay_how_to_pay'],
+        ['sim', 'Get a China eSIM before you fly', 'connectivity_esim_before_flight'], ['card', 'Should I set up TenPayGo before I fly?', 'tenpaygo_setup_before_flight'],
+        ['car', 'How do I call a DiDi from inside Alipay?', 'alipay_didi_miniprogram'], ['wifi', 'Get airport Wi-Fi with my passport', 'connectivity_airport_wifi_passport']] },
+  };
+  const GI = { wifi: ['#2C61FE', '<path d="M3 8a14 14 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 16a4 4 0 0 1 6 0M12 20h.01"/>'], card: ['#E8890C', '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/>'],
+    sim: ['#1BA672', '<path d="M7 3h7l4 4v14H7z"/><rect x="10" y="11" width="5" height="6" rx="1"/>'], car: ['#2C61FE', '<path d="M5 17h14v-4l-2-5H7l-2 5zM5 17v2M19 17v2M7.5 14h.01M16.5 14h.01"/>'],
+    lock: ['#C2412D', '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>'], sms: ['#E8890C', '<path d="M4 5h16v11H8l-4 4z"/>'],
+    route: ['#1BA672', '<path d="M12 22s8-8 8-14a8 8 0 0 0-16 0c0 6 8 14 8 14z"/><circle cx="12" cy="8" r="3"/>'] };
+  const gIco = (k, s = 20) => { const [c, p] = GI[k] || GI.wifi; return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none">${p}</svg>`; };
+  const SEND = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round" style="flex:none"><path d="M21 3L3 10.5l7 2.5 2.5 7z"/><path d="M10 13l11-10"/></svg>`;
+  const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const gs = document.createElement('div');
+  gs.className = 'screen'; gs.dataset.route = 'genie'; gs.setAttribute('data-pencil-name', 'TripGenie');
+  gs.style.cssText = `background:#fff;width:393px;height:852px;position:relative;margin:0 auto;font-family:Inter,-apple-system,"PingFang SC",sans-serif;color:${INK}`;
+  gs.innerHTML = `
+    <div style="padding:0 16px;height:48px;display:flex;align-items:center;justify-content:space-between;flex:none">
+      <div data-act="back" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></div>
+      <div style="display:flex;align-items:center;gap:6px"><img src="img/ai-bot.png" alt="" style="width:28px;height:28px"><span style="font:800 18px Inter,sans-serif">TripGenie</span></div>
+      <div style="width:32px;text-align:center;font:700 18px Inter;color:${INK};letter-spacing:1px">···</div>
+    </div>
+    <div class="scroll" data-g="log" style="padding:8px 16px 16px;gap:12px"></div>
+    <div class="pin" style="padding:8px 0 22px;background:linear-gradient(#fff0,#F0F2F5 30%);border:0">
+      <div data-g="chips" style="display:flex;gap:8px;overflow-x:auto;padding:0 16px 10px;scrollbar-width:none"></div>
+      <div style="margin:0 16px;display:flex;align-items:center;gap:10px;background:#fff;border-radius:26px;padding:6px 8px 6px 14px;box-shadow:0 2px 12px rgba(18,24,38,.08)">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linecap="round" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M10 9.5a3.5 3.5 0 0 1 0 5M13 7.5a6.5 6.5 0 0 1 0 9"/></svg>
+        <input data-g="input" type="text" placeholder="Type or hold to speak" enterkeyhint="send" style="flex:1;min-width:0;border:0;outline:0;font:400 16px Inter,sans-serif;color:${INK};background:transparent;height:36px">
+        <div data-g="send" style="width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></div>
+      </div>
+    </div>`;
+  (() => { const sb = document.querySelector('.screen[data-route="wifi"] [data-pencil-name="Status Bar"]'); if (sb) { const c = sb.cloneNode(true); c.style.flexShrink = '0'; gs.insertBefore(c, gs.firstChild); } })();
+  { const all = document.querySelectorAll('#phone > .screen'); if (all.length) all[all.length - 1].after(gs); }
+  if (typeof order !== 'undefined' && !order.includes('genie')) order.push('genie');
+  const G = k => gs.querySelector(`[data-g="${k}"]`);
+  const gpick = document.createElement('input'); gpick.type = 'file'; gpick.id = 'genie-photo'; gpick.accept = 'image/*'; gpick.hidden = true; document.body.appendChild(gpick);
+  const GST = { ctx: 'stuck', page: 0, asked: new Set(), run: 0, entry: null };
+  const chipBtn = (svg, label, act) => `<div class="tap" data-g-act="${act}" style="flex:none;display:flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid ${LINE};border-radius:12px;background:#fff;font:500 14px Inter,sans-serif;cursor:pointer;white-space:nowrap">${svg}${label}</div>`;
+  const CAM = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>`;
+  const CARD = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 10h10M7 14h6"/></svg>`;
+  const HOTEL = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"><path d="M4 21V5h16v16M2 21h20M8 9h2m4 0h2M8 13h2m4 0h2"/></svg>`;
+  G('chips').innerHTML = chipBtn(CAM, 'Recognize image', 'photo') + chipBtn(CARD, 'Show to staff', 'staff') + chipBtn(HOTEL, 'Hotel address', 'hotel') + chipBtn(GI.route ? gIco('route', 20) : '', 'Route to hotel', 'route');
+  const scrollEnd = () => { const l = G('log'); requestAnimationFrame(() => { l.scrollTop = l.scrollHeight; }); };
+  const add = html => { const d = document.createElement('div'); d.innerHTML = html; const n = d.firstElementChild; G('log').appendChild(n); scrollEnd(); return n; };
+  const sugCard = ([ic, q, id]) => `<div class="tap" data-g-ask="${esc(id)}" data-g-q="${esc(q)}" style="display:flex;align-items:center;gap:12px;padding:14px;border:1px solid ${LINE};border-radius:12px;cursor:pointer">${gIco(ic)}<div style="flex:1;font:400 16px/1.35 Inter,sans-serif">${esc(q)}</div>${SEND}</div>`;
+  function renderWelcome() {
+    const c = GENIE[GST.ctx], pool = c.pool, n = 4, start = (GST.page * n) % pool.length;
+    const pick = Array.from({ length: Math.min(n, pool.length) }, (_, i) => pool[(start + i) % pool.length]);
+    G('log').innerHTML = `<div style="padding:8px 0 4px"><div style="font:800 28px/1.2 Inter,sans-serif">${esc(c.hi)}</div><div style="font:400 14px/1.5 Inter,sans-serif;color:${MUTED};margin-top:6px">${esc(c.sub)}</div></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px"><div style="font:800 19px Inter,sans-serif">Explore more</div><div class="tap" data-g-act="refresh" style="width:44px;height:30px;border-radius:15px;background:${BG};display:flex;align-items:center;justify-content:center;cursor:pointer"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/></svg></div></div>
+      <div style="display:flex;flex-direction:column;gap:10px">${pick.map(sugCard).join('')}</div>`;
+  }
+  function openGenie(ctx) {
+    const was = GST.ctx; GST.ctx = ctx === 'ask' ? 'ask' : 'stuck';
+    if (was !== GST.ctx || !G('log').children.length || !G('log').querySelector('[data-g-msg]')) { GST.page = 0; renderWelcome(); }
+    show('genie'); scrollEnd();
+  }
+  window.lcGenie = openGenie;
+  // 对话气泡
+  const userText = t => add(`<div data-g-msg style="align-self:flex-end;max-width:78%;background:#4A5160;color:#fff;border-radius:16px 16px 4px 16px;padding:10px 14px;font:400 16px/1.4 Inter,sans-serif">${esc(t)}</div>`);
+  const userImg = url => add(`<div data-g-msg style="align-self:flex-end;width:140px;height:180px;border-radius:14px;background:${BG} center/cover no-repeat url('${url}');border:1px solid ${LINE}"></div>`);
+  const thinking = t => add(`<div data-g-msg style="display:flex;align-items:center;gap:8px;color:${MUTED};font:400 14px Inter,sans-serif"><span class="lc-dots"><i></i><i></i><i></i></span>${esc(t)}</div>`);
+  const meta = t => `<div style="font:400 12px/1.4 Inter,sans-serif;color:${MUTED};margin-top:10px">${t}</div>`;
+  function followUps(list) {
+    if (!list.length) return;
+    add(`<div data-g-msg style="margin-top:6px"><div style="font:800 19px Inter,sans-serif;margin-bottom:10px">You may also ask</div><div style="display:flex;flex-direction:column;gap:10px">${list.map(([q, id]) => `<div class="tap" data-g-ask="${esc(id)}" data-g-q="${esc(q)}" style="display:flex;align-items:center;gap:12px;padding:14px;border:1px solid ${LINE};border-radius:12px;cursor:pointer"><div style="flex:1;font:400 16px/1.35 Inter,sans-serif">${esc(q)}</div>${SEND.replace(`stroke="${INK}"`, `stroke="${BLUE}"`)}</div>`).join('')}</div></div>`);
+  }
+  async function answerEntry(e, how) {
+    GST.entry = e.id; GST.asked.add(e.id);
+    const steps = (e.steps || []).map((s, i) => `<div style="display:flex;gap:10px;margin-top:10px"><div style="width:22px;height:22px;border-radius:11px;background:${BLUE};color:#fff;font:700 12px/22px Inter,sans-serif;text-align:center;flex:none">${i + 1}</div><div style="font:400 15px/1.45 Inter,sans-serif">${esc(s)}</div></div>`).join('');
+    const n = add(`<div data-g-msg style="max-width:100%">
+      <div style="font:700 11px Inter,sans-serif;letter-spacing:.06em;color:${BLUE}">${esc(how || 'FROM OUR GUIDE')} · ${esc((e.scenario || '').toUpperCase())}</div>
+      <div style="font:700 18px/1.3 Inter,sans-serif;margin-top:4px">${esc(e.title)}</div>
+      ${e.why ? `<div style="font:400 15px/1.5 Inter,sans-serif;color:${INK};margin-top:6px">${esc(e.why)}</div>` : ''}
+      ${steps}
+      ${e.fallback ? `<div style="margin-top:12px;padding:10px 12px;border-radius:10px;background:#FFF4E5;color:#B4650A;font:400 13px/1.45 Inter,sans-serif">If that doesn't work: ${esc(e.fallback)}</div>` : ''}
+      <div data-g-tut style="display:none;margin-top:12px"></div>
+      <div style="display:flex;gap:8px;margin-top:12px"><div class="tap" data-g-act="solved" style="padding:9px 14px;border-radius:18px;background:#E6F7F0;color:#1BA672;font:600 13px Inter,sans-serif;cursor:pointer">✓ Solved</div><div class="tap" data-g-act="human" style="padding:9px 14px;border-radius:18px;background:${BG};color:${INK};font:600 13px Inter,sans-serif;cursor:pointer">Still stuck · chat with support</div></div>
+      ${meta(`From the Landing Check guide${e.sources && e.sources[0] ? ' · ' + esc(e.sources[0].name.split('·')[0].trim()) : ''}${e.verified_at ? ' · verified ' + esc(e.verified_at) : ''}`)}
+    </div>`);
+    if (window.lcHasTutorial) window.lcHasTutorial(e.id).then(has => { if (!has) return; const t = n.querySelector('[data-g-tut]'); t.style.display = ''; t.innerHTML = `<div class="tap" data-g-tutorial="${esc(e.id)}" style="display:inline-flex;align-items:center;gap:6px;color:${BLUE};font:600 14px Inter,sans-serif;cursor:pointer">See it step by step with pictures ›</div>`; });
+    try { const sib = (await get(`/kb/entries?scenario=${encodeURIComponent(e.scenario)}&lang=en`)).filter(x => x.id !== e.id && !GST.asked.has(x.id)).slice(0, 3); followUps(sib.map(x => [x.title, x.id])); } catch (err) {}
+  }
+  // 「怎么去酒店」：本地意图，用 routes.json（高德）的方案回答
+  async function answerRoute() {
+    let R; try { R = await loadRoutes(); } catch (e) { add(`<div data-g-msg>Route data needs internet. Open the offline pack for your hotel address card.</div>`); return; }
+    const best = [['Taxi', `${R.taxi.duration_min} min · ≈ ¥${Math.round(R.taxi.taxi_cost)}`, 'api:route:taxi', 'Door to door, easiest with bags']].concat(
+      R.plans.filter(p => p.tag).map(p => [p.label + ' · ' + p.tag.toLowerCase(), `${p.duration_min} min · ¥${p.fare}`, 'api:route:' + R.plans.indexOf(p), p.segments.filter(s => s.mode !== 'walk').map(s => s.name).join(' › ')]));
+    add(`<div data-g-msg><div style="font:700 11px Inter,sans-serif;letter-spacing:.06em;color:${BLUE}">ROUTES · PVG T2 → THE PULI</div>
+      <div style="font:400 15px/1.5 Inter,sans-serif;margin-top:6px">Here are your best options from Pudong Airport T2 to The PuLi (${R.taxi.distance_km} km). With 2 checked bags, a taxi is the easiest.</div>
+      <div style="margin-top:10px;border:1px solid ${LINE};border-radius:12px;overflow:hidden">${best.map(([t, m, act, d], i) => `<div class="tap" data-act="${act}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;${i ? `border-top:1px solid ${LINE};` : ''}cursor:pointer"><div style="flex:1"><div style="font:600 15px Inter,sans-serif">${esc(t)}</div><div style="font:400 12px/1.4 Inter,sans-serif;color:${MUTED};margin-top:2px">${esc(m)} · ${esc(d)}</div></div><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="${MUTED}" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>`).join('')}</div>
+      <div class="tap" data-act="go:step3" style="margin-top:10px;color:${BLUE};font:600 14px Inter,sans-serif;cursor:pointer">See all ${R.plans.length + 2} ways to your hotel ›</div>
+      ${meta('Routes from AMap for a weekday 08:00 departure')}</div>`);
+  }
+  const ROUTE_Q = /(get|go|way|route|travel)\b.*\b(hotel|city|downtown|jing.?an)|airport to|taxi|metro|subway|maglev|bus\b/i;
+  async function ask(q, entryId) {
+    const run = ++GST.run;
+    userText(q);
+    if (entryId === 'route' || (!entryId && ROUTE_Q.test(q))) { await answerRoute(); return; }
+    const t = thinking('Looking it up…');
+    try {
+      if (entryId) { const e = await get(`/kb/entry/${entryId}?lang=en`); t.remove(); if (run === GST.run) answerEntry(e); return; }
+      const fd = new FormData(); fd.append('text', q); fd.append('lang', 'en');
+      const d = await withTimeout(post('/stuck/classify', fd, true), 15000); t.remove(); if (run === GST.run) answerClassify(d);
+    } catch (e) { t.remove(); offlineReply(); }
+  }
+  function answerClassify(d) {
+    if (d.decision === 'answer') return answerEntry(d.entry, d.ocr_text ? 'RECOGNIZED' : 'FROM OUR GUIDE');
+    if (d.decision === 'ask' && d.candidates && d.candidates.length) {
+      add(`<div data-g-msg><div style="font:400 15px/1.5 Inter,sans-serif">I think it's one of these. Tap the one that matches:</div><div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">${d.candidates.map(c => `<div class="tap" data-g-ask="${esc(c.entry_id)}" data-g-q="${esc(c.title)}" style="padding:12px 14px;border:1px solid ${LINE};border-radius:12px;font:500 15px Inter,sans-serif;cursor:pointer">${esc(c.title)}</div>`).join('')}</div></div>`);
+      return;
+    }
+    add(`<div data-g-msg><div style="font:700 11px Inter,sans-serif;letter-spacing:.06em;color:#B4650A">NOT IN OUR GUIDE YET</div>
+      <div style="font:400 15px/1.5 Inter,sans-serif;margin-top:6px">${d.advice ? esc(d.advice) : "I don't have a checked answer for this one. Show the screen to staff nearby, or chat with Trip.com support in English, 24/7."}</div>
+      <div style="display:flex;gap:8px;margin-top:12px"><div class="tap" data-g-act="human" style="padding:9px 14px;border-radius:18px;background:${BLUE};color:#fff;font:600 13px Inter,sans-serif;cursor:pointer">Chat with support</div><div class="tap" data-g-act="staff" style="padding:9px 14px;border-radius:18px;background:${BG};color:${INK};font:600 13px Inter,sans-serif;cursor:pointer">Show a card to staff</div></div>
+      ${meta(d.advice ? 'Generated by AI · not checked by us' : 'Landing Check guide')}</div>`);
+  }
+  function offlineReply() {
+    add(`<div data-g-msg><div style="font:400 15px/1.5 Inter,sans-serif">I can't reach Trip.com right now. Your offline pack still works without internet:</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"><div class="tap" data-act="go:offline-guide" style="padding:9px 14px;border-radius:18px;background:${BLUE};color:#fff;font:600 13px Inter,sans-serif;cursor:pointer">Get connected guide</div><div class="tap" data-act="go:offline-help" style="padding:9px 14px;border-radius:18px;background:${BG};color:${INK};font:600 13px Inter,sans-serif;cursor:pointer">Offline help & contacts</div></div></div>`);
+  }
+  gpick.onchange = async () => {
+    const f = gpick.files[0]; if (!f) return;
+    const run = ++GST.run;
+    userImg(URL.createObjectURL(f));
+    const t = thinking('Reading your screenshot…');
+    try { const fd = new FormData(); fd.append('image', f); fd.append('lang', 'en'); const d = await withTimeout(post('/stuck/classify', fd, true), 20000); t.remove(); if (run === GST.run) answerClassify(d); }
+    catch (e) { t.remove(); offlineReply(); }
+  };
+  function sendInput() { const i = G('input'), q = i.value.trim(); if (!q) { toast('Demo: hold to speak'); return; } i.value = ''; ask(q); }
+  G('input').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sendInput(); } });
+  G('input').addEventListener('input', () => { G('send').innerHTML = G('input').value.trim() ? SEND.replace(`stroke="${INK}"`, `stroke="${BLUE}"`) : `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="${INK}" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>`; });
+  G('send').onclick = sendInput;
+  gs.addEventListener('click', async ev => {
+    const a = ev.target.closest('[data-g-ask],[data-g-act],[data-g-tutorial]'); if (!a) return;
+    ev.stopPropagation();
+    if (a.dataset.gTutorial) { window.lcTutorial(a.dataset.gTutorial); return; }
+    if (a.dataset.gAsk) { ask(a.dataset.gQ, a.dataset.gAsk); return; }
+    const act = a.dataset.gAct;
+    if (act === 'refresh') { GST.page++; renderWelcome(); }
+    else if (act === 'photo') { gpick.value = ''; gpick.click(); }
+    else if (act === 'staff') show('offline-cards');
+    else if (act === 'hotel') show('offline-hotel');
+    else if (act === 'route') ask("What's the best way from Pudong Airport to my hotel?", 'route');
+    else if (act === 'solved') { a.textContent = '✓ Glad it worked'; if (GST.entry) { try { await post('/kb/feedback', { entry_id: GST.entry, solved: true }); } catch (e) {} } }
+    else if (act === 'human') toast('Demo: opens Trip.com English support with this chat attached');
+  });
+  (() => { const css = document.createElement('style'); css.textContent = '[data-route="genie"] .scroll{display:flex;flex-direction:column}.lc-dots{display:inline-flex;gap:3px}.lc-dots i{width:6px;height:6px;border-radius:3px;background:#8592A6;animation:lcdot 1s infinite}.lc-dots i:nth-child(2){animation-delay:.15s}.lc-dots i:nth-child(3){animation-delay:.3s}@keyframes lcdot{0%,80%,100%{opacity:.3}40%{opacity:1}}[data-g="chips"]::-webkit-scrollbar{display:none}'; document.head.appendChild(css); })();
+  function genieAct(act) {
+    if (act === 'stuck' || act === 'genie:stuck') { openGenie('stuck'); return true; }
+    if (act === 'genie:ask') { openGenie('ask'); return true; }
+    return false;
+  }
   // 静态模式：不调接口，直接显示对应方式的成功页
-  function staticPay(m) { renderPayOk(m); show('payment'); }
+  function staticPay(m) { renderPayOk(m, { donated: SETUP.donate }); show('payment'); }
   window.lcPayStatic = act => {
+    if (setupAct(act) || privacyAct(act) || routeAct(act) || genieAct(act)) return true;
     if (act === 'pay') { staticPay('alipay'); return true; }
-    if (act === 'paypick') { choosePay(PICK_TITLE).then(m => { if (m) staticPay(m); }); return true; }
+    if (act === 'paypick') { openSetup('alipay'); return true; }
+    if (act === 'payconfirm') { staticPay(SETUP.method); return true; }
     if (act.startsWith('payretry:')) { staticPay(act.slice(9)); return true; }
-    if (act === 'pay2') { choosePay().then(m => { if (m) staticPay(m); }); return true; }
+    if (act === 'pay2') { openSetup('alipay', 'step3'); return true; }
     return false;
   };
   const menuList = document.getElementById('list');
@@ -273,13 +703,106 @@
     loadTutorials().then(list => list.forEach(t => { const b = document.createElement('button'); b.textContent = '📖 ' + t.title; b.onclick = () => openTutorial(t.id); menuList.appendChild(b); }));
   }
 
+  // ---------- Community · Explore（探索/社区）：真实数据来自官方 query_content（后端 /content/community）；失败/静态兜底本地示例。骨架屏先行，绝不白屏 ----------
+  (function () {
+    const cs = document.createElement('div');
+    cs.className = 'screen'; cs.dataset.route = 'explore'; cs.setAttribute('data-pencil-name', 'Explore');
+    cs.style.cssText = `background:#fff;width:393px;height:852px;position:relative;margin:0 auto;display:flex;flex-direction:column;font-family:Inter,-apple-system,"PingFang SC",sans-serif;color:${INK}`;
+    const SR = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>`;
+    const GIFT = `<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="${INK}" stroke-width="2" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4"/><path d="M5 12v9h14v-9M12 8v13M12 8S10.5 3 8 3a2 2 0 0 0 0 5zM12 8s1.5-5 4-5a2 2 0 0 1 0 5z"/></svg>`;
+    cs.innerHTML = `
+      <div style="padding:8px 16px 6px;display:flex;align-items:center;justify-content:space-between;flex:none">
+        <div style="display:flex;align-items:center;gap:6px"><span style="font:800 26px Inter,sans-serif">Community</span><span style="font-size:20px">🐱</span><span style="width:8px;height:8px;border-radius:4px;background:#F5B400"></span></div>
+        <div style="display:flex;align-items:center;gap:16px">${SR}${GIFT}</div>
+      </div>
+      <div style="display:flex;border-bottom:1px solid ${LINE};flex:none">
+        <div data-c-tab="explore" style="flex:1;text-align:center;padding:8px 0 0;cursor:pointer"><div style="font:700 18px Inter,sans-serif;color:${INK}">Explore</div><div style="height:3px;width:64px;margin:9px auto 0;border-radius:2px;background:${INK}"></div></div>
+        <div data-c-tab="circles" style="flex:1;text-align:center;padding:8px 0 0;cursor:pointer"><div style="font:500 18px Inter,sans-serif;color:${MUTED}">Circles</div><div style="height:3px;width:64px;margin:9px auto 0"></div></div>
+      </div>
+      <div class="scroll" data-c="feed" style="flex:1;overflow-y:auto;background:#fff"></div>`;
+    (() => { const sb = document.querySelector('.screen[data-route="wifi"] [data-pencil-name="Status Bar"]'); if (sb) { const c = sb.cloneNode(true); c.style.flexShrink = '0'; cs.insertBefore(c, cs.firstChild); } })();
+    (() => {
+      const tb = document.querySelector('.screen .pin [data-pencil-name="Tab Bar"]') || document.querySelector('[data-pencil-name="Tab Bar"]');
+      if (!tb) return;
+      const pin = el('div', 'flex:none'); pin.className = 'pin'; const c = tb.cloneNode(true); pin.appendChild(c); cs.appendChild(pin);
+      const cc = c.querySelector('[data-pencil-name="Tab Community"]');
+      if (cc) { cc.querySelectorAll('svg').forEach(s => s.setAttribute('stroke', BLUE)); const l = cc.querySelector('[data-pencil-name="Tab Label"]'); if (l) l.style.color = BLUE; }
+      [['Tab Home', 'home'], ['Tab My Trips', 'trips']].forEach(([nm, rt]) => { const t = c.querySelector(`[data-pencil-name="${nm}"]`); if (t) { t.style.cursor = 'pointer'; t.onclick = () => show(rt); } });
+    })();
+    { const all = document.querySelectorAll('#phone > .screen'); if (all.length) all[all.length - 1].after(cs); else (document.getElementById('phone') || document.body).appendChild(cs); }
+    if (typeof order !== 'undefined' && !order.includes('explore')) order.push('explore');
+
+    const CF = cs.querySelector('[data-c="feed"]');
+    const sk = () => Array.from({ length: 2 }).map(() => `<div style="padding:16px 0"><div style="display:flex;align-items:center;gap:10px;padding:0 16px"><div style="width:40px;height:40px;border-radius:20px;background:${BG}"></div><div style="width:120px;height:14px;border-radius:7px;background:${BG}"></div></div><div style="margin:12px 16px 0;height:260px;border-radius:12px;background:${BG}"></div><div style="margin:12px 16px 0;height:18px;border-radius:9px;background:${BG};width:80%"></div><div style="margin:8px 16px 0;height:14px;border-radius:7px;background:${BG};width:55%"></div></div>`).join('');
+    const HEART = `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="${MUTED}" stroke-width="2" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.6 8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>`;
+    const CMT = `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="${MUTED}" stroke-width="2" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+    function card(d) {
+      const imgs = (d.images && d.images.length ? d.images : [d.cover]).filter(Boolean).slice(0, 3);
+      const media = imgs.map(u => `<div style="flex:none;width:322px;height:300px;border-radius:12px;background:#eee center/cover no-repeat url('${esc(u)}')"></div>`).join('');
+      const av = d.avatar ? `background:#eee center/cover no-repeat url('${esc(d.avatar)}')` : 'background:#F5B400';
+      return `<div style="padding:16px 0">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 16px"><div style="width:40px;height:40px;border-radius:20px;${av};background-size:cover"></div><div style="font:700 15px Inter,sans-serif">${esc(d.author || 'Traveler')}</div>${d.publishTime ? `<div style="font:400 14px Inter,sans-serif;color:${MUTED}">· ${esc(d.publishTime)}</div>` : ''}</div>
+        <div style="display:flex;gap:6px;padding:12px 0 0 16px;overflow:hidden">${media}</div>
+        <div style="padding:12px 16px 0;font:700 20px/1.3 Inter,sans-serif">${esc(d.title || '')}</div>
+        <div style="display:flex;align-items:center;gap:18px;padding:10px 16px 0;color:${MUTED};font:400 14px Inter,sans-serif"><span style="display:inline-flex;align-items:center;gap:5px">${HEART}${esc(String(d.likes || 0))}</span><span style="display:inline-flex;align-items:center;gap:5px">${CMT}${esc(String(d.comments || 0))}</span></div>
+      </div><div style="height:8px;background:${BG}"></div>`;
+    }
+    const MOCK = [
+      { author: '_TI***56', publishTime: 'Oct 8', title: 'China finally has a brand foreigners line up for', likes: 315, comments: 40, cover: 'img/238deb47d9e8.jpg', images: ['img/238deb47d9e8.jpg', 'img/058fcb22feec.jpg'], avatar: '' },
+      { author: 'Ghana Travel Content', publishTime: 'Sep 20', title: 'Bolt tricycle in Ho, Ghana', likes: 88, comments: 6, cover: 'img/4514a7042483.jpg', images: ['img/4514a7042483.jpg', 'img/1738b1ca3787.jpg'], avatar: 'img/50ddac0b1125.jpg' },
+    ];
+    let loaded = false;
+    async function loadCommunity() {
+      if (loaded) return; loaded = true; CF.innerHTML = sk();
+      let data = null;
+      try { data = await withTimeout(get('/content/community?query=' + encodeURIComponent('上海外滩') + '&size=10', true), 9000); } catch (e) {}
+      const real = data && data.items && data.items.length;
+      const items = real ? data.items : MOCK;
+      CF.innerHTML = items.map(card).join('');
+      status(real ? `探索·真实数据 ${items.length} 条` : '探索·示例数据(接口兜底)', real ? 'rgba(27,166,114,.85)' : 'rgba(232,137,12,.9)');
+    }
+    window.lcExplore = () => { show('explore'); loadCommunity(); };
+    cs.querySelectorAll('[data-c-tab]').forEach(t => t.onclick = () => { if (t.dataset.cTab === 'circles') toast('Demo: Circles'); });
+    // 入口待用户拍板后再接（暂不抢占 stamp.js 的 #community）；本屏经 #explore 到达，或 window.lcExplore() 打开
+    window.addEventListener('hashchange', () => { if ((location.hash.slice(1) || '') === 'explore') loadCommunity(); });
+    if ((location.hash.slice(1) || '') === 'explore') loadCommunity();
+  })();
+
   // Browser history and the visible screen must stay in sync in both modes.
   window.addEventListener('hashchange', () => {
-    if (closeChooser) closeChooser(null);
+    cydf.style.display = 'none';
     const route = location.hash.slice(1) || 'home';
     if (document.querySelector('.screen.on')?.dataset.route !== route) show(route, false);
   });
-  if (!API) { status('静态模式'); window.lcHandle = (act) => staticHandle(act); window.lcOnShow = () => {}; return; }
+  // ---------- 行前检查分组（静态 / 后端模式共用） ----------
+  const ITEM_NODE = { permissions: 'Item Location & notifications', data: 'Item Mobile data in China', alipay: 'Item Alipay payment', transfer: 'Item Ride from the airport', car: 'Item Car rental', tickets: 'Item Palace Museum reservation', passport: 'Item Passport', pack: 'Item Offline landing pack' };
+  // 分组：待办 → Must List，可选 → Optional List，已完成 → 折叠的 Done List（点 Done Toggle 展开）
+  const GROUP = { todo: 'Must List', optional: 'Optional List', done: 'Done List' };
+  const SECTION = { 'Must List': 'Section MUST DO', 'Optional List': 'Section OPTIONAL' };
+  (() => {
+    const tg = $$('preflight', 'Done Toggle'), dl = $$('preflight', 'Done List'); if (!tg || !dl) return;
+    dl.classList.add('lc-hide'); tg.classList.add('tap');
+    const css = document.createElement('style'); css.textContent = '.lc-hide{display:none !important} [data-pencil-name="Must List"] > *{background:#fff;border-radius:12px;outline:1px solid #DADFE6;outline-offset:-1px}'; document.head.appendChild(css);
+    tg.onclick = () => { const open = dl.classList.toggle('lc-hide') === false; const ch = tg.querySelector('[data-pencil-name="Done Chevron"]'); if (ch) ch.style.transform = open ? 'rotate(180deg)' : ''; };
+  })();
+  function regroup(statusOf) {
+    Object.entries(ITEM_NODE).forEach(([id, name]) => {
+      const node = $$('preflight', name), st = statusOf[id], list = st && $$('preflight', GROUP[st]);
+      if (node && list && node.parentElement !== list) list.appendChild(node);
+    });
+    Object.entries(SECTION).forEach(([l, s]) => { const list = $$('preflight', l), sec = $$('preflight', s); if (list && sec) sec.classList.toggle('lc-hide', !list.children.length); });
+    const dl = $$('preflight', 'Done List'), n = dl ? dl.children.length : 0;
+    txt($$('preflight', 'Done Label'), n === 1 ? '1 item ready' : `${n} items ready`);
+    const tg = $$('preflight', 'Done Toggle'); if (tg) tg.classList.toggle('lc-hide', !n);
+  }
+  const PF = { status: {} };
+  // offline.js 每次同步本机保存状态都会回调这里（含下载中）
+  window.lcPackChanged = (saved, done, required) => {
+    PF.status.pack = saved ? 'done' : 'todo'; regroup(PF.status);
+    const left = required - done;
+    txt($$('preflight', 'Hero Title'), left ? `${left} thing${left > 1 ? 's' : ''} left before you fly` : "You're ready for Shanghai");
+  };
+  if (!API) { status('静态模式'); window.lcHandle = (act) => staticHandle(act); window.lcOnShow = route => { if (route === 'preflight') { if (!PRIV.asked) { PRIV.asked = true; renderPriv(); show('privacy'); } else startPack(); } if (route === 'transit') transitMap(); if (route === 'step3') { step3Map('taxi'); renderWays(); } }; return; }
   get('/health').then(() => status('后端已连接 · ' + API.replace(/^https?:\/\//, ''), 'rgba(27,166,114,.85)')).catch(() => status('后端不可达，静态模式', 'rgba(232,137,12,.9)'));
 
   // ---------- 航班信息：把设计稿里写死的 CX 362 / HKG / 时间换成接口里的航班（6 个屏共用） ----------
@@ -307,13 +830,17 @@
     ICONS.todo = todo && todo.querySelector('[data-pencil-name="State"]').outerHTML;
     ICONS.optional = opt && opt.querySelector('[data-pencil-name="State"]').outerHTML;
   }
-  const ITEM_NODE = { permissions: 'Item Location & notifications', data: 'Item Mobile data in China', alipay: 'Item Alipay payment', transfer: 'Item Ride from the airport', car: 'Item Car rental', tickets: 'Item Palace Museum reservation', passport: 'Item Passport', pack: 'Item Offline landing pack' };
   async function renderPreflight() {
     let d; try { d = await get('/rules/preflight'); } catch (e) { return; }
     window.lcPreflightData = d;
     if (!ICONS.done) captureIcons();
+    const left = d.required - d.ready;
+    txt($$('preflight', 'Hero Title'), left ? `${left} thing${left > 1 ? 's' : ''} left before you fly` : "You're ready for Shanghai");
     txt($$('preflight', 'Progress Label'), d.summary); txt($$('preflight', 'Progress Pct'), d.pct + '%');
-    const fill = $$('preflight', 'Fill'); if (fill) fill.style.width = Math.round(337 * d.pct / 100) + 'px';
+    const fill = $$('preflight', 'Fill'); if (fill) fill.style.width = d.pct + '%';
+    const statusOf = PF.status = {};
+    d.items.forEach(it => { if (!(it.group && d.payment)) statusOf[it.id] = it.status; });
+    if (d.payment) statusOf.alipay = d.payment.ready ? 'done' : 'todo';
     const setRow = (node, status, desc) => {
       txt(node.querySelector('[data-pencil-name="Item Desc"]'), desc);
       const st = node.querySelector('[data-pencil-name="State"]');
@@ -324,15 +851,29 @@
       if (it.group && d.payment) return;                       // 支付宝 / TenPayGo 两项合在下面的板块里
       const node = $$('preflight', ITEM_NODE[it.id]); if (!node) return;
       setRow(node, it.status, it.desc);
-      const btn = node.querySelector('[data-pencil-name="Item Button"]'); if (btn) btn.style.visibility = it.status === 'done' ? 'hidden' : 'visible';
+      const btn = node.querySelector('[data-pencil-name="Item Button"]'); if (btn) btn.classList.toggle('lc-hide', it.status === 'done');
     });
     const p = d.payment, row = $$('preflight', 'Item Alipay payment');
     if (p && row) {
       setRow(row, p.ready ? 'done' : 'todo', p.desc);
       const btn = row.querySelector('[data-pencil-name="Item Button"]');
-      if (btn) { btn.style.visibility = p.ready && !p.backup ? 'hidden' : 'visible'; txt(btn.querySelector('[data-pencil-name="Item Button Label"]'), p.ready ? 'Add backup' : 'Verify ¥1'); }
+      if (btn) { btn.classList.toggle('lc-hide', p.ready && !p.backup); txt(btn.querySelector('[data-pencil-name="Item Button Label"]'), p.ready ? 'Add backup' : 'Verify ¥1'); }
     }
+    regroup(statusOf);
     if (window.lcOfflineReadiness) window.lcOfflineReadiness(d);
+  }
+
+  // 同意授权：记到后端，回到行前检查，离线包开始自动下载
+  async function consent() {
+    PRIV.asked = true;
+    try { await post('/mock/consent', PRIV.on); } catch (e) { toast('后端不可达'); }
+    show('preflight'); startPack();
+  }
+  // 首次进入行前检查：还没做过授权选择就先去授权页（本次会话选过"Not now"就不再拦）
+  async function privacyGate() {
+    if (PRIV.asked) return false;
+    try { if ((await get('/mock/consent')).consent) { PRIV.asked = true; return false; } } catch (e) { return false; }
+    PRIV.asked = true; renderPriv(); show('privacy'); return true;
   }
 
   // ---------- 支付验证（文案切换见前面"支付方式"一节） ----------
@@ -342,7 +883,7 @@
     method = PAY_NAME[method] ? method : 'alipay';
     toast(`Charging ¥1 via ${PAY_NAME[method]}…`);
     try {
-      const r = await withTimeout(post('/mock/pay-test?method=' + method), 15000);
+      const r = await withTimeout(post(`/mock/pay-test?method=${method}&donate=${SETUP.donate}`), 15000);
       if (r.status === 'verified') {
         renderPayOk(method, r); show('payment'); renderPreflight();
         if (S.payReturn) { const to = S.payReturn; S.payReturn = null; const btn = $$('payment', 'Done Button'); if (btn) { btn.dataset.act = 'go:' + to; txt($$('payment', 'Done Label'), 'Continue to step 3 · Get to your hotel'); } }
@@ -360,14 +901,13 @@
   async function payPick() {
     S.payReturn = null;
     let p = null; try { p = (await get('/rules/preflight')).payment; } catch (e) {}
-    if (p && p.ready && p.backup) { pay(p.backup); return; }
-    const m = await choosePay(PICK_TITLE); if (m) pay(m);
+    openSetup(p && p.ready && p.backup ? p.backup : 'alipay');
   }
   // 落地流程里支付未就绪：先选方式再验证，成功后回到第三步
-  async function payFirst() { const m = await choosePay(); if (!m) return; S.payReturn = 'step3'; pay(m); }
+  function payFirst() { openSetup('alipay', 'step3'); }
   // 支付组状态；旧后端没有 payment 字段时只看支付宝
   function payState(pf) {
-    if (pf && pf.payment) return { ready: !!pf.payment.ready, method: pf.payment.primary, name: pf.payment.primary_name, at: pf.payment.verified_at };
+    if (pf && pf.payment) return { ready: !!pf.payment.ready, method: pf.payment.primary, name: pf.payment.primary_name, at: pf.payment.verified_at, fate: (pf.payment.donated || []).includes(pf.payment.primary) ? 'donated to CYDF' : 'refunded' };
     const a = pf && pf.items.find(i => i.id === 'alipay'), okA = !!a && a.status === 'done';
     return { ready: okA, method: okA ? 'alipay' : null, name: okA ? 'Alipay' : null, at: null };
   }
@@ -473,21 +1013,8 @@
     if (cur && !go) { go = el('div', 'width:100%;background:#EAF0FF;border-radius:10px;padding:14px 16px;box-sizing:border-box;font-family:Inter,system-ui,sans-serif'); go.className = 'lc-goto'; cur.insertBefore(go, $$('step3', 'Primary Button')); }
     if (go) { go.replaceChildren(el('div', 'font-size:11px;font-weight:700;letter-spacing:.06em;color:#2C61FE', 'WHERE TO GO'), el('div', 'font-size:18px;font-weight:700;color:#121826;margin:4px 0 6px', g.title || r.title), el('div', 'font-size:14px;line-height:1.4;color:#121826', g.where || r.where)); if (g.verified === false) go.appendChild(el('div', 'font-size:11px;color:#8592A6;margin-top:6px', 'Location to be verified on site')); if (r.pay_note) go.appendChild(payNote(r.pay_note)); }
     const alt = $$('step3', 'Alt Options'); if (alt) alt.style.display = 'none';
-    const sl = $$('step3', 'Step List');
-    if (sl) {
-      let ow = sl.parentElement.querySelector('.lc-otherways');
-      if (!ow) { ow = el('div', 'width:100%;background:#fff;border-radius:8px;overflow:hidden;margin-top:10px'); ow.className = 'lc-otherways'; sl.after(ow); }
-      ow.replaceChildren(el('div', 'padding:12px 14px 4px;font:700 13px Inter,system-ui,sans-serif;color:#6F7685', 'Other ways'));
-      d.alternatives.forEach(a => {
-        const row = el('div', 'display:flex;align-items:center;gap:12px;padding:12px 14px;border-top:1px solid #DADFE6;font-family:Inter,system-ui,sans-serif;cursor:pointer'); row.className = 'tap';
-        row.dataset.act = a.action === 'transit' ? 'go:transit' : a.action === 'transfer' ? 'go:transfers' : 'toast:Demo：打开支付宝里的滴滴小程序';
-        const left = el('div', 'flex:1;min-width:0');
-        left.append(el('div', 'font-size:15px;font-weight:700;color:#121826', a.title), el('div', 'font-size:13px;color:#6F7685;margin-top:2px', `${a.price} · ${a.min} min`), el('div', 'font-size:13px;color:#121826;margin-top:4px;line-height:1.35', (a.go_to && a.go_to.where) || a.where));
-        if (a.pay_note) left.append(payNote(a.pay_note));
-        row.append(left, el('div', 'flex-shrink:0;border:1px solid #2C61FE;color:#2C61FE;border-radius:4px;padding:7px 12px;font-size:12px;font-weight:700', a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'));
-        ow.appendChild(row);
-      });
-    }
+    renderWays();
+    step3Map(r.id === 'metro' || r.id === 'maglev' ? 'metro' : 'taxi');
     const pb = $$('step3', 'Primary Button'); if (pb) pb.dataset.act = r.id === 'metro' || r.id === 'maglev' ? 'go:transit' : 'go:driver';
     txt($$('step3', 'Primary Label'), r.id === 'transfer' ? 'Show my booking to the driver' : r.id === 'metro' || r.id === 'maglev' ? 'Open the route' : 'Show address to driver');
     try { const pf = await get('/rules/preflight'); if (!payState(pf).ready && pb) { pb.dataset.act = 'api:pay2'; txt($$('step3', 'Primary Label'), 'Verify payment first · ¥1 test'); } } catch (e) {}
@@ -528,7 +1055,10 @@
 
   // ---------- 动作分发 ----------
   window.lcHandle = (act, el) => {
-    if (act === 'pay') { S.payReturn = null; pay('alipay'); }
+    if (setupAct(act) || privacyAct(act) || routeAct(act) || genieAct(act)) return;
+    if (act === 'consent') { consent(); return; }
+    if (act === 'payconfirm') { S.payReturn = SETUP.ret; pay(SETUP.method); }
+    else if (act === 'pay') { S.payReturn = null; pay('alipay'); }
     else if (act === 'paypick') payPick();                              // 行前检查"Payment in China"的按钮
     else if (act.startsWith('payretry:')) pay(act.slice(9));             // 失败页：重试或改用另一种，保留回到第三步
     else if (act === 'pay2') payFirst();
@@ -585,7 +1115,7 @@
     applyStep(rows[0], onlineDone ? 'done' : 'now',
       onlineDone ? (dataOk ? 'Passed automatically · own data works' : `Done${S0.online ? ' ' + S0.online : ''} · PVG free Wi-Fi`) : 'Checking own data first · Wi-Fi only if needed', '1');
     const payOk = S0.paid.ready, paidToday = payOk && S0.paid.at && S0.landedDay && S0.paid.at.slice(0, 10) === S0.landedDay;
-    applyStep(rows[1], payOk ? 'done' : 'now', payOk ? (paidToday ? `${S0.paid.name} verified at ${hh(S0.paid.at)} · ¥1 test refunded` : `${S0.paid.name} verified before you flew · ¥1 test refunded`) : 'Not verified yet · ¥1 test with Alipay or TenPayGo', '2');
+    applyStep(rows[1], payOk ? 'done' : 'now', payOk ? (paidToday ? `${S0.paid.name} verified at ${hh(S0.paid.at)} · ¥1 test ${S0.paid.fate || 'refunded'}` : `${S0.paid.name} verified before you flew · ¥1 test ${S0.paid.fate || 'refunded'}`) : 'Not verified yet · ¥1 test with Alipay or TenPayGo', '2');
     const carState = route === 'step3' ? 'now' : 'next';
     applyStep(rows[2], carState, route === 'step3' ? 'In progress · tap “I\'m in the car” when moving' : 'Up next · we\'ll recommend a ride once you\'re online', '3');
     const landedTxt = S0.landed ? `Landed at PVG T2 · ${S0.landed} local` : 'Not landed yet · preview';
@@ -621,8 +1151,9 @@
   window.lcOnShow = route => {
     if (route === 'trips') renderTripsCard();
     if (route === 'step1' || route === 'online' || route === 'step3') renderSteps(route);
-    if (route === 'preflight') renderPreflight();
+    if (route === 'preflight') privacyGate().then(gated => { if (!gated) { renderPreflight(); startPack(); } });
     if (route === 'step3') renderTransport();
+    if (route === 'transit') transitMap();
     if (route === 'done') renderDone();
     if (route === 'online' || route === 'wifi' || route === 'step3') post('/mock/event', { event: 'online' }).then(() => { if (route === 'step3') renderSteps('step3'); if (route === 'wifi') renderSteps('wifi'); }).catch(() => {});
   };
