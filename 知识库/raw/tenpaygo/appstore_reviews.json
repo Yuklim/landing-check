@@ -1,0 +1,434 @@
+[
+ {
+  "store": "us",
+  "stars": 2,
+  "date": "2026-09-30",
+  "title": "我付了钱、商家没收到",
+  "text": "扫码支付的、订单没记录，apple pay扣费了、银行卡扣费了，等了20分钟 商家没收到钱，也没退，我只能换支付宝又付款了",
+  "version": "1.1.2",
+  "author": "peter-wx"
+ },
+ {
+  "store": "gb",
+  "stars": 5,
+  "date": "2026-09-29",
+  "title": "It works",
+  "text": "Was a bit skeptical about this for being new but it works.",
+  "version": "1.1.2",
+  "author": "Pearingpear"
+ },
+ {
+  "store": "gb",
+  "stars": 5,
+  "date": "2026-09-27",
+  "title": "Fingers crossed",
+  "text": "I gave it a five. Not travelling until 15 October. Great idea. Will remover barriers. Great concept. I hope it works x",
+  "version": "1.1.2",
+  "author": "Ga22zaf"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-09-26",
+  "title": "Remove the gesture password",
+  "text": "Remove the gesture password nobody needs it.",
+  "version": "1.1.2",
+  "author": "Mr.Feng"
+ },
+ {
+  "store": "gb",
+  "stars": 5,
+  "date": "2026-09-26",
+  "title": "Works perfectly",
+  "text": "Best app for China it lets you choose which card you want to pay from so when vendor scans my Code I can choose different credit cards or debit cards accordingly to how much I want to spend . Yet  sometimes if you have a VPN on it will delay, but if you’re using Internet on its own then it works perfectly.",
+  "version": "1.1.2",
+  "author": "Unsy7"
+ },
+ {
+  "store": "hk",
+  "stars": 1,
+  "date": "2026-09-25",
+  "title": "What limit?",
+  "text": "Can you guys tell me what is the payment limit of you guys set? Could u tell me how can I unlimited my account?",
+  "version": "1.1.2",
+  "author": "Yuriy Tsang"
+ },
+ {
+  "store": "gb",
+  "stars": 1,
+  "date": "2026-09-25",
+  "title": "Does not work",
+  "text": "Tried yesterday at some coffee shop in Chongqing and generated QR didn’t seem to work with either Apple Pay or direct linked card. F",
+  "version": "1.1.2",
+  "author": "FiskieXL"
+ },
+ {
+  "store": "my",
+  "stars": 3,
+  "date": "2026-09-25",
+  "title": "Issues with Malaysian e-wallet linking",
+  "text": "For some reason, I can't link the Malaysian Boost e-wallet on my iPhone. Is anyone else experiencing this?",
+  "version": "1.1.2",
+  "author": "Jeff 19"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-09-24",
+  "title": "failed",
+  "text": "Not able to pay with apple pay",
+  "version": "1.1.2",
+  "author": "AlanXWang"
+ },
+ {
+  "store": "hk",
+  "stars": 1,
+  "date": "2026-09-24",
+  "title": "世界上絕大多數的郵箱都不支援",
+  "text": "僅支援幾個郵箱域名登入，而且支援outlook.com不支援hotmail.com和live.hk，支援zoho.com不支援zohomail.com，真是很奇怪的設定。",
+  "version": "1.1.2",
+  "author": "Patrick.Ko"
+ },
+ {
+  "store": "hk",
+  "stars": 1,
+  "date": "2026-09-24",
+  "title": "支援email少",
+  "text": "仅支援gmail，icloud，yahoo ，outlook，zoho",
+  "version": "1.1.2",
+  "author": "wouniashh"
+ },
+ {
+  "store": "de",
+  "stars": 1,
+  "date": "2026-09-24",
+  "title": "yahoo email not supported",
+  "text": "some email domains banned in China are not supported",
+  "version": "1.1.2",
+  "author": "Tombinski"
+ },
+ {
+  "store": "us",
+  "stars": 5,
+  "date": "2026-09-20",
+  "title": "I like this design, and I can find tons of payment options.High-quality clean interface",
+  "text": "Guys, China can make payments.",
+  "version": "1.1.0",
+  "author": "Ficushilton"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-09-15",
+  "title": "Signature verification failed",
+  "text": "When log in it shows error",
+  "version": "1.1.0",
+  "author": "不评论不给看-"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-09-13",
+  "title": "安装包体积是越来越大了",
+  "text": "安装包体积越来越大，非常符合腾讯的风格，里面到底塞了多少东西进去？",
+  "version": "1.1.0",
+  "author": "optipu"
+ },
+ {
+  "store": "us",
+  "stars": 5,
+  "date": "2026-08-30",
+  "title": "This is a great App for foreigners who’s traveling in China!!",
+  "text": "Give it a try and you won’t regret!!",
+  "version": "1.0.12",
+  "author": "MrRay1995"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-08-23",
+  "title": "每次支付都需要跳转到银行3ds",
+  "text": "applepay只支持万事达visa 用绑定的卡支付1元都需要3ds验证",
+  "version": "1.0.10",
+  "author": "nullkkkkksk"
+ },
+ {
+  "store": "us",
+  "stars": 5,
+  "date": "2026-08-18",
+  "title": "Very nice",
+  "text": "Good",
+  "version": "1.0.10",
+  "author": "卡布奇诺Mike"
+ },
+ {
+  "store": "ca",
+  "stars": 1,
+  "date": "2026-08-12",
+  "title": "Does Not Work in China",
+  "text": "Completely useless when I returned to China. The app claims to support QR code payments, but in actual use, the QR code is not accepted by merchants. I tried to use it for everyday payments and simply could not pay. If the main purpose is to use this service for payments in China, it failed completely for me. Very disappointing.",
+  "version": "1.0.10",
+  "author": "XU B"
+ },
+ {
+  "store": "nz",
+  "stars": 5,
+  "date": "2026-08-12",
+  "title": "Easy setup, easy to use",
+  "text": "Clean UI no distractions, straight to business and very easy to use, it also offers voice Translation! Convenient!",
+  "version": "1.0.10",
+  "author": "no name-chan"
+ },
+ {
+  "store": "kr",
+  "stars": 5,
+  "date": "2026-08-05",
+  "title": "Tenpay go review (Just traveler)",
+  "text": "I went to China a few days ago. My WeChat accounts are registered with a VISA card and Apple Pay, respectively. However, the VISA card did not work properly, and an error occurred. So I searched the internet and found the Tenpay Go app. It is much more convenient and works better than a regular VISA card. However, a couple of times—2 or 3 times—I had an embarrassing experience for no apparent reason: money was paid from my Apple Pay-linked account, but the store’s system didn’t show the payment, so I had to pay in cash. However, fortunately, it was refunded later. I definitely want to use Tenpay Go on my next trip to China, and I hope this app works without any errors. It seems like a really good app. Thank you for making it.",
+  "version": "1.0.8",
+  "author": "JANGGW"
+ },
+ {
+  "store": "ca",
+  "stars": 1,
+  "date": "2026-07-30",
+  "title": "no",
+  "text": "Making purchases in China is such a hassle. They’ve made things like credit cards and Apple Pay—which should be simple—so complicated. It honestly makes me afraid to go spend money in China. Charging customers a 3% transaction fee for WeChat Pay transactions over 200 is ridiculous!",
+  "version": "1.0.8",
+  "author": "airita2000"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-07-29",
+  "title": "never reply email",
+  "text": "Payment successful but store said didn't receive money this app don't have any customer support",
+  "version": "1.0.7",
+  "author": "TenPayGo the worst app"
+ },
+ {
+  "store": "au",
+  "stars": 1,
+  "date": "2026-07-28",
+  "title": "It’s invite-only!",
+  "text": "Nowhere on the store listing, description, or screenshots does it say this is invite-only — I only found out after going through the whole login/registration process and hitting a wall.\n\nIf this is a closed test, please say so upfront. A simple line like “Invite-only beta — request access here” would save people the wasted download and signup attempt. As it stands, it feels like false advertising, even if unintentional.",
+  "version": "1.0.7",
+  "author": "i am Not a Nerd"
+ },
+ {
+  "store": "au",
+  "stars": 1,
+  "date": "2026-07-26",
+  "title": "根本不能用！",
+  "text": "不管你操作什么都让你填写邮箱的验证码！不好用已经试过了",
+  "version": "1.0.7",
+  "author": "哈哈 d d d x z z"
+ },
+ {
+  "store": "jp",
+  "stars": 5,
+  "date": "2026-07-25",
+  "title": "使いやすい",
+  "text": "WeChatのアカウントを作らなくても、現地の人と同じようにWeChat Payが使えるのは本当に便利です。アプリ自体も中国系アプリとは思えないほどシンプルで、メールアドレスだけでApple Payに登録したクレジットカードから支払いができます。この仕様をぜひ維持してほしいです！",
+  "version": "1.0.7",
+  "author": "RTX5090"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-07-18",
+  "title": "payment failed",
+  "text": "I attempted to pay using Apple Pay, but the payment page showed that the transaction had failed. However, the payment was actually processed successfully through Apple Pay, and my bank card has already been charged.",
+  "version": "1.0.6",
+  "author": "kslah"
+ },
+ {
+  "store": "us",
+  "stars": 5,
+  "date": "2026-07-13",
+  "title": "pefect",
+  "text": "perfect for wechat pay",
+  "version": "1.0.5",
+  "author": "Bitcoin:3"
+ },
+ {
+  "store": "us",
+  "stars": 5,
+  "date": "2026-07-12",
+  "title": "Evaluation&handbook/测评与使用指南",
+  "text": "界面：\n整体相当精简。完美适配 Apple Pay，也支持直接绑定主流国际信用卡（Visa/Mastercard）。支付操作灵活，既能向商家出示付款码，也支持主动扫描商家的收款码。\n注册：\n流程极简，体验非常友好。仅需邮箱加设置 PIN 码即可完成，完全无需繁琐的 KYC（身份实名）认证，真正做到了开箱即用。\n使用范围：\n仅限中国大陆境内商户使用，暂不支持向个人收款码转账。不过，由于国内日常消费场景（餐饮、零售、出行等）绝大多数都是商户码，因此实际线下消费基本不受影响，完全能满足日常出行需求。\n费率：\n单笔消费在 200 RMB 以下免收国际卡手续费；200 RMB 及以上则需加收 3% 的手续费。\n总评：\n总体而言，这是一款注册零门槛、日常覆盖广的便捷支付工具。它完美解决了海外用户在境内“支付难”的痛点，是短期来华旅游、探亲或出差的境外用户首选的轻量支付App。\n\nInterface:\nClean and minimalist. It works seamlessly with Apple Pay and also allows you to link a bank card (Visa/Mastercard) for payments. You can either present your payment QR code to merchants or scan their codes to pay.\nRegistration:\nHassle-free—only requires an email address and a PIN setup. No KYC (Know Your Customer) verification is required, which is extremely convenient.\nUsage Scope:\nRestricted to merchants in mainland China; peer-to-peer (P2P) transfers to personal QR codes are not supported. However, since almost all QR codes encountered for daily spending are merchant codes, it functions smoothly for everyday use.\nFees:\nInternational card transaction fees are waived for amounts under 200 RMB. A 3% fee applies to transactions of 200 RMB and above.\nOverall Verdict:\nA highly practical payment app featuring an easy registration process and broad daily acceptance. It is a fantastic, hassle-free digital wallet tailored primarily for international travelers visiting mainland China.",
+  "version": "1.0.5",
+  "author": "Vivienne808"
+ },
+ {
+  "store": "us",
+  "stars": 2,
+  "date": "2026-07-11",
+  "title": "Unable to use Apple Pay on iPhone 7 Plus.",
+  "text": "Unable to use Apple Pay on iPhone 7 Plus.",
+  "version": "1.0.5",
+  "author": "xykk7275"
+ },
+ {
+  "store": "us",
+  "stars": 2,
+  "date": "2026-07-10",
+  "title": "The QR code cannot be used",
+  "text": "QR code payment can‘t be used at all, which makes me very embarrassed when paying 😅",
+  "version": "1.0.5",
+  "author": "Rose.Midnight"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-07-05",
+  "title": "Me",
+  "text": "Hope it really works.",
+  "version": "1.0.4",
+  "author": "f-u-Baidu-8888"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-07-05",
+  "title": "Closed-beta phase?",
+  "text": "what’s the point of putting this app on AppStore when it’s still in the CLOSED-BETA phase? and i only see this until the verification code period. really disappointing…",
+  "version": "1.0.4",
+  "author": "Sky Kingdom"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-07-05",
+  "title": "进不去",
+  "text": "说我缺失头部文件，搞不懂什么情况",
+  "version": "1.0.4",
+  "author": "是军事基地觉得就像经济学家"
+ },
+ {
+  "store": "hk",
+  "stars": 1,
+  "date": "2026-07-04",
+  "title": "不好用",
+  "text": "不好用",
+  "version": "1.0.4",
+  "author": "ccvv3333"
+ },
+ {
+  "store": "us",
+  "stars": 3,
+  "date": "2026-07-03",
+  "title": "还行吧 鹅厂也能和简洁干净挂上钩了",
+  "text": "不过银联卡就不用想了 毕竟是给外币卡使用的",
+  "version": "1.0.4",
+  "author": "没事就好001"
+ },
+ {
+  "store": "hk",
+  "stars": 3,
+  "date": "2026-07-03",
+  "title": "部分二次跳轉的無法支付",
+  "text": "部分內地二維碼，掃描後會出現一個網頁網頁裡輸入金額，然後可以wechat支付，但是這個不行",
+  "version": "1.0.4",
+  "author": "𠼻所得就可以啦"
+ },
+ {
+  "store": "us",
+  "stars": 5,
+  "date": "2026-07-02",
+  "title": "Easy to connect Apple Pay and credit card",
+  "text": "Amazing app!!! Hopefully they waive the 3% fee or increase the cap to 1000rmb",
+  "version": "1.0.4",
+  "author": "Jb鱼豪华版"
+ },
+ {
+  "store": "jp",
+  "stars": 1,
+  "date": "2026-07-02",
+  "title": "Android works, iOS fails with the same account.",
+  "text": "My account can register and log in successfully on Android, but the same account fails to log in on iOS. The iOS app shows: “resp verify error, missing header field”. I have tried reinstalling the app, changing email, restarting the phone, resetting network settings, and using mobile data, but the issue still exists.",
+  "version": "1.0.4",
+  "author": "サクラ モモ"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-06-30",
+  "title": "Under internal testing",
+  "text": "沒開放服務上什麼架？沒開放服務不會在輸入郵箱之際就提示嗎，非要輸了驗證碼才說 under internal testing.",
+  "version": "1.0.3",
+  "author": "JudahXIII"
+ },
+ {
+  "store": "ca",
+  "stars": 1,
+  "date": "2026-06-29",
+  "title": "It's not working",
+  "text": "I installed the app, but kept getting a message \"internal testing\" after entered the verification code sent to my email. Why have an app that is still at internal testing phase available in the app store?",
+  "version": "1.0.1",
+  "author": "Sabrinawaves"
+ },
+ {
+  "store": "au",
+  "stars": 5,
+  "date": "2026-06-29",
+  "title": "Name of App",
+  "text": "Tencent Pay would be much better name, considering Apple Pay / Google Pay.",
+  "version": "1.0.3",
+  "author": "wcui97"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-06-26",
+  "title": "Under internal testing",
+  "text": "It's so frustrating that it's still only in internal testing! What's the plan? The app is already live, but somehow still stuck in internal testing!",
+  "version": "1.0.1",
+  "author": "Mr.walkerchew"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-06-25",
+  "title": "使用不了",
+  "text": "咋过审核的？",
+  "version": "1.0.1",
+  "author": "sdcvf21211222"
+ },
+ {
+  "store": "sg",
+  "stars": 1,
+  "date": "2026-06-24",
+  "title": "内部测试为啥放出来",
+  "text": "害得我激动一阵",
+  "version": "1.0.1",
+  "author": "Lionheart.sg"
+ },
+ {
+  "store": "us",
+  "stars": 1,
+  "date": "2026-06-23",
+  "title": "Under internal testing",
+  "text": "Doesn’t work. What does “under internal testing” mean? Can’t get past sign up page.",
+  "version": "1.0.1",
+  "author": "High on lifeeee"
+ },
+ {
+  "store": "hk",
+  "stars": 1,
+  "date": "2026-06-23",
+  "title": "Can not register",
+  "text": "Can not register",
+  "version": "1.0",
+  "author": "Ryoma Dev"
+ },
+ {
+  "store": "my",
+  "stars": 3,
+  "date": "2026-06-23",
+  "title": "Verification Error",
+  "text": "After key in the verification code received from email, it prompt me “Under Internal Testing”.",
+  "version": "1.0",
+  "author": "Loke KC"
+ }
+]
