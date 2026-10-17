@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "version": "2026.10.16.3",
-  "revision": "581c2482319664e50137",
+  "revision": "a4dc9ebfe62694451b8c",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "3e5b89facbb3a2c3addcf04ca2f2e69875a9083a09de5bf959d9f9d70ed675ab",
-      "bytes": 145344
+      "sha256": "0a780c881fce17ce65328e8f93f2effe17354c44a9032e9dd107c00fbf913d37",
+      "bytes": 145917
     },
     {
       "path": "data/first-stamp.json",
@@ -149,14 +149,39 @@
       "bytes": 854
     },
     {
+      "path": "img/stamp/beijing.jpg",
+      "sha256": "2ec05864bbfc17eef6ffcd0244104cd0c96cca3056915f4eda75acf090188df3",
+      "bytes": 110335
+    },
+    {
+      "path": "img/stamp/chengdu.jpg",
+      "sha256": "3bf14271713df67018916a76c8f65e29947ea330d67ccf1d5e93279049bbb096",
+      "bytes": 239658
+    },
+    {
       "path": "img/stamp/discover-qr.png",
       "sha256": "52186a258a9b2bf94d376c0a9a6f20944a5d1afdc33f01fd92b1ce022de593a7",
       "bytes": 1249
     },
     {
+      "path": "img/stamp/guangzhou.jpg",
+      "sha256": "609207a4510625b100d300490403fe75c110fbf9090886949105da75f244d376",
+      "bytes": 123886
+    },
+    {
+      "path": "img/stamp/hangzhou.jpg",
+      "sha256": "16add0c786ce350a0e75a152918634605df6cdd03bb26db0e85dc22baf70d77b",
+      "bytes": 92950
+    },
+    {
       "path": "img/stamp/shanghai-dusk.png",
       "sha256": "5b46dc51f2ed65cb36a6afcb6d253d603ba39b2bf613aeb7dc1f8084916d38e0",
       "bytes": 3166699
+    },
+    {
+      "path": "img/stamp/xian.jpg",
+      "sha256": "1acbadb4981e3b91291778d0641ab7bd6f0766dca7c4830860d2df8ca106d2c1",
+      "bytes": 108175
     },
     {
       "path": "index.html",
@@ -195,13 +220,13 @@
     },
     {
       "path": "stamp.css",
-      "sha256": "a99fb230d4996d8ec81c64e6b573d48afbb843adcece66ae5d2538d437a27b7f",
-      "bytes": 10596
+      "sha256": "093aeed9e8efd337fd0f92f01e66833661cb6d3bee04e13b082f412fed3e89f6",
+      "bytes": 13322
     },
     {
       "path": "stamp.js",
-      "sha256": "5c8988ba49387ce6619bced113d86a1e0e8ea7589f18654acf098ccaa5c7eb33",
-      "bytes": 33023
+      "sha256": "0529c0d7a1aed5af2213b8f9cc4f83b66b1200312f4aa7ad14ad3bf5ea8abc8f",
+      "bytes": 38831
     },
     {
       "path": "tutorials.json",

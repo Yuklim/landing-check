@@ -14,7 +14,8 @@ def build():
     html = (HERE / 'index.html').read_text()
     paths.update(re.findall(r'''(?:src=["']|url\(["']?)(img/[^"'\s)]+)''', html))
     paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'img' / 'offline').glob('*.svg'))
-    paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'img' / 'stamp').glob('*.png'))
+    for ext in ('*.png', '*.jpg', '*.jpeg'):
+        paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'img' / 'stamp').glob(ext))
     paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'fonts').glob('*') if p.is_file())
     assets = []
     for path in sorted(paths):
