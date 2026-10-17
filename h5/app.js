@@ -1544,14 +1544,15 @@
   })();
   // 落地联网三屏（没网 / 已联网 / 浦东 Wi-Fi）：右上角放「离线包」+「Help」两个入口。
   // 这里的 Help 是离线求助，和离线包页头的 Help 一样进离线包求助页（双语求助卡、服务点、机场热线），可以「Return to my task」回到本屏；
-  // 两个按钮都交给 offline.js 的 data-op 处理（nav / help），它会记住从哪一屏进来的
+  // 两个按钮都交给 offline.js 的 data-op 处理（nav / help），它会记住从哪一屏进来的。
+  // 还没联网的两屏（第一步·联网、Wi-Fi 引导）点 Offline pack 直接进离线包的 Get online 联网向导；已联网那屏进离线包首页
   (() => {
     const PACK_SVG = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="${BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>`;
     ['step1', 'online', 'wifi'].forEach(r => {
       const help = $$(r, 'Stuck FAB'); if (!help) return;
       help.removeAttribute('data-act'); help.dataset.op = 'help'; help.setAttribute('role', 'button'); help.setAttribute('aria-label', 'Help · works offline');
       const pack = help.cloneNode(true);
-      pack.setAttribute('data-pencil-name', 'Offline Pack Entry'); pack.dataset.op = 'nav'; pack.dataset.value = 'offline'; pack.setAttribute('aria-label', 'Offline pack');
+      pack.setAttribute('data-pencil-name', 'Offline Pack Entry'); pack.dataset.op = 'nav'; pack.dataset.value = r === 'online' ? 'offline' : 'offline-guide'; pack.setAttribute('aria-label', 'Offline pack');
       [pack, ...pack.querySelectorAll('[data-pencil-id]')].forEach(n => n.removeAttribute('data-pencil-id'));
       const bot = pack.querySelector('[data-pencil-name="FAB Bot"]'); if (bot) bot.outerHTML = PACK_SVG;
       txt(pack.querySelector('[data-pencil-name="FAB Label"]'), 'Offline pack');

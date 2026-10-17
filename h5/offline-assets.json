@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "version": "2026.10.17.4",
-  "revision": "c2bd118d9ab0da4b3da1",
+  "revision": "ae8e25cd76cf5f9038d7",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "5d41fbe847c335ba4e4b91ebcb95c877930f4c51b17cf4066867f79e67dcd4ee",
-      "bytes": 201213
+      "sha256": "123af51f4058964ad67086f5de50252492a0c5cdb891eb3c2ab16109c6b12226",
+      "bytes": 201414
     },
     {
       "path": "data/first-stamp.json",
@@ -30,8 +30,8 @@
     },
     {
       "path": "guide.js",
-      "sha256": "c882be2618513215982dc9ee74629155d310b6061b01911902dde2d8153650d4",
-      "bytes": 33021
+      "sha256": "4f6f62a0476603cfb5bd22e5618bcf5b54db8a2f997ee0a1b088cf3f530f8c58",
+      "bytes": 33051
     },
     {
       "path": "icon-180.png",
@@ -220,8 +220,8 @@
     },
     {
       "path": "offline.js",
-      "sha256": "5ade754da6f31202e34d9de8d26e1090e9ee87fc1734bcdb27b140fb305a1f7a",
-      "bytes": 48583
+      "sha256": "e0cab945c8b8b3f70d98748c34f4c50c46901f5efede2f63ef9fd6aefab92a0b",
+      "bytes": 48535
     },
     {
       "path": "stamp-renderer.js",

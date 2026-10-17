@@ -79,10 +79,10 @@
     const status = state.busy ? `Saving ${state.progress?.done || 0} of ${state.progress?.total || '…'} files` : p ? `Public guide saved · ${mb} MB` : 'Not downloaded yet';
     const continuing = state.guide.step !== 'wifi';
     const d = state.data;
-    // 出发前只有一件事需要用户动手：确认酒店；酒店存好后，若联网向导做到一半，就提示继续
-    const next = !state.hotel ? 'offline-hotel' : continuing ? 'offline-guide' : '';
+    // 首页四个入口平铺，不默认高亮任何一个；只有联网向导做到一半时，才在 Get online 上提示继续
+    const next = continuing ? 'offline-guide' : '';
     const modules = [
-      { icon: 'hotel', tone: 'hotel', title: 'Show my hotel', meta: state.hotel ? state.hotel.name_en : 'From your booking · 1 tap', route: 'offline-hotel', badge: 'Do this' },
+      { icon: 'hotel', tone: 'hotel', title: 'Show my hotel', meta: state.hotel ? state.hotel.name_en : 'From your booking · 1 tap', route: 'offline-hotel' },
       { icon: 'chat', tone: 'phrases', title: 'Find local help', meta: `${d.places.length} desks · ${d.phrases.length} phrases`, route: 'offline-cards' },
       { icon: 'wifi', tone: 'internet', title: 'Get online', meta: continuing ? 'In progress · ' + (d.guide.steps[state.guide.step]?.label || '') : 'Wi-Fi, SIM or eSIM', route: 'offline-guide', badge: 'Continue' },
       { icon: 'phone', tone: 'support', title: 'Ask for help', meta: 'Airport hotline saved', route: 'offline-help' },
