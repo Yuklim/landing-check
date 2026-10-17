@@ -1,0 +1,44 @@
+/* 03 落地体验版面（section.js 生成的 DOM）。根节点 .d3s 是 1440×810 的定位容器：独立页的 .stage，或 deck 的 #demo 页。 */
+.d3s{--d3-blue:#2454ed;--d3-blue-soft:#eaf0ff;--d3-ink:#18202e;--d3-muted:#626b79;--d3-line:#e3e7ee;--d3-mono:"SFMono-Regular",Consolas,monospace}
+
+/* 顶部：章节 + 五个功能 */
+.d3s-top{position:absolute;left:84px;right:84px;top:38px;display:flex;align-items:center;gap:22px}
+.d3s-kicker{font-family:var(--d3-mono);font-size:14px;letter-spacing:.14em;color:var(--d3-blue);font-weight:600;display:flex;align-items:center;gap:12px;white-space:nowrap}
+.d3s-kicker::before{content:"";width:26px;height:2px;background:var(--d3-blue)}
+.d3s-tabs{display:flex;gap:10px;flex:1}
+.d3s-tab{flex:1;border:0;background:none;font-family:inherit;font-size:16px;font-weight:600;color:#9aa3b2;text-align:left;padding:0 0 10px;cursor:pointer;position:relative;white-space:nowrap}
+.d3s-tab::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:2px;background:#dfe5f0}
+.d3s-tab .bar{position:absolute;left:0;bottom:0;height:4px;border-radius:2px;background:var(--d3-blue);width:0;z-index:1}
+.d3s-tab[aria-selected=true]{color:var(--d3-ink)}
+.d3s-tab .n{font-family:var(--d3-mono);font-size:13px;color:var(--d3-blue);margin-right:8px}
+
+.d3s-phone{position:absolute;left:84px;top:104px;width:430px;height:676px}
+
+/* 右侧讲解 */
+.d3s-copy{position:absolute;left:600px;right:84px;top:118px;bottom:44px;display:flex;flex-direction:column;color:var(--d3-ink)}
+.d3s .cp-head{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-bottom:18px;border-bottom:1px solid var(--d3-line)}
+.d3s .cp-fn{display:flex;align-items:baseline;gap:14px;font-size:22px;font-weight:700;letter-spacing:-.3px}
+.d3s .cp-fn .n{font-family:var(--d3-mono);font-size:15px;font-weight:600;color:var(--d3-blue);letter-spacing:.08em}
+.d3s .cp-need{display:flex;align-items:center;gap:10px;font-size:15px;color:var(--d3-muted);white-space:nowrap}
+.d3s .cp-need b{color:var(--d3-ink);font-weight:650}
+.d3s .cp-meter{width:96px;height:6px;border-radius:3px;background:#e4e9f2;overflow:hidden}
+.d3s .cp-meter i{display:block;height:100%;border-radius:3px;background:var(--d3-blue)}
+.d3s .cp-pct{font-family:var(--d3-mono);font-size:16px;font-weight:700;color:var(--d3-blue)}
+.d3s .cp-title{margin:26px 0;font-size:42px;line-height:1.22;letter-spacing:-1.2px;font-weight:760}
+.d3s .cp-title em{font-style:normal;color:var(--d3-blue)}
+
+.d3s .cp-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.d3s .cp-item{position:relative;display:grid;grid-template-columns:40px 1fr;gap:16px;align-items:start;padding:16px 22px 16px 18px;border-radius:16px;border:1px solid transparent;opacity:.42;transition:opacity .35s,background-color .35s,box-shadow .35s,border-color .35s}
+.d3s .cp-item::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:4px;border-radius:2px;background:var(--d3-blue);transform:scaleY(0);transition:transform .35s}
+.d3s .cp-dot{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font:700 15px var(--d3-mono);color:var(--d3-blue);background:var(--d3-blue-soft);margin-top:1px;transition:background-color .35s,color .35s}
+.d3s .cp-item b{display:block;font-size:22px;font-weight:700;letter-spacing:-.3px;line-height:1.3}
+.d3s .cp-item p{margin:4px 0 0;font-size:16.5px;line-height:1.5;color:var(--d3-muted)}
+.d3s .cp-item.done{opacity:.72}
+.d3s .cp-item.done .cp-dot{font-size:0}
+.d3s .cp-item.done .cp-dot::after{content:"";width:12px;height:7px;border-left:2.5px solid var(--d3-blue);border-bottom:2.5px solid var(--d3-blue);transform:translateY(-2px) rotate(-45deg)}
+.d3s .cp-item.on{opacity:1;background:#fff;border-color:#dbe4fb;box-shadow:0 10px 30px -12px rgba(36,84,237,.28)}
+.d3s .cp-item.on::before{transform:scaleY(1)}
+.d3s .cp-item.on .cp-dot{background:var(--d3-blue);color:#fff}
+
+.d3s .cp-note{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:13.5px;color:#8a93a3}
+.d3s .cp-note::before{content:"";width:6px;height:6px;border-radius:50%;background:#b8c4dc}

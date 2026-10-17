@@ -157,12 +157,6 @@ html[lang="en"] .zh{display:none !important}
 
 /* ---------- product stages (in-page switch) ---------- */
 .prod-wrap{display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:center}
-.prod-nav{display:grid;gap:10px}
-.prod-nav button{display:flex;align-items:center;gap:13px;text-align:left;padding:15px 17px;border:1px solid var(--line);border-radius:12px;background:#fff;transition:.2s}
-.prod-nav button .pn{font-family:var(--mono);font-size:13px;color:#9aa4b4}
-.prod-nav button .pt{font-size:17px;font-weight:600}
-.prod-nav button[aria-selected="true"]{border-color:var(--blue);background:#f2f6ff;box-shadow:0 6px 18px #2454ed1a}
-.prod-nav button[aria-selected="true"] .pn{color:var(--blue)}
 .prod-view{display:grid;grid-template-columns:230px 1fr;gap:40px;align-items:center}
 .prod-phone{border:6px solid #202833;border-radius:28px;overflow:hidden;box-shadow:0 16px 34px #18264519;width:230px}
 .prod-phone img{width:100%;height:auto}
@@ -490,20 +484,9 @@ html[lang="en"] .zh{display:none !important}
 .feat-card p{font-size:14.5px;color:var(--muted);line-height:1.7}
 .feat-foot{margin-top:20px;text-align:center;font-size:19px;font-weight:700;color:var(--ink)}
 
-/* 03 demo scene switcher */
-.demo-wrap{display:grid;grid-template-columns:230px 1fr;gap:40px;align-items:center;margin-top:14px}
-.demo-wrap .prod-nav{gap:8px}
-.demo-wrap .prod-nav button{padding:13px 15px}
-.demo-view{display:grid;grid-template-columns:232px 1fr;gap:40px;align-items:center}
+/* 手机截图框（#growth 好友裂变示意） */
 .demo-phone{width:232px;border:6px solid #202833;border-radius:28px;overflow:hidden;box-shadow:0 16px 34px #18264519;background:#fff}
 .demo-phone img{width:100%;height:auto;display:block}
-.demo-steps .demo-sc{font-family:var(--mono);font-size:13px;color:var(--blue);letter-spacing:.04em}
-.demo-steps h3{font-size:25px;letter-spacing:-.5px;margin:7px 0 14px}
-.demo-ol{display:grid;gap:13px;counter-reset:d}
-.demo-ol li{position:relative;padding-left:40px;font-size:15px;line-height:1.6;color:var(--ink)}
-.demo-ol li::before{counter-increment:d;content:counter(d,decimal-leading-zero);position:absolute;left:0;top:0;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--blue);background:#eef3ff;width:27px;height:27px;border-radius:8px;display:grid;place-items:center}
-.demo-ol li b{font-weight:700}
-.demo-ol li span{display:block;font-size:13px;color:var(--muted);margin-top:2px}
 
 /* placeholder frame (screenshots to drop in later) */
 .ph{border:2px dashed #b9c6e0;border-radius:14px;background:repeating-linear-gradient(45deg,#f6f9fe,#f6f9fe 10px,#f1f5fc 10px,#f1f5fc 20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;padding:18px;color:#8a93a3}
