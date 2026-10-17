@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2454ed">
+  <meta name="description" content="Landing Check 为首次来华的自由行游客衔接行前准备、落地联网、支付和前往酒店。查看需求研究、产品原型与技术实现。">
+  <title>Landing Check · 落地中国的第一小时</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="readability.css">
+  <script src="content-config.js" defer></script>
+  <script src="evidence.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">跳到正文</a>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Landing Check"><span class="brand-symbol" aria-hidden="true">L<span>✓</span></span>Landing Check<span class="brand-edition">PROJECT / 2026</span></a>
+    <nav class="header-nav" aria-label="主导航" data-aria-key="navigation"><a href="#needs" data-i18n="navResearch">问题与需求</a><a href="#product" data-i18n="navProduct">产品体验</a><a href="#build" data-i18n="navBuild">技术栈</a></nav>
+    <div class="header-actions"><button class="language-switch" id="languageSwitch" type="button" aria-label="Switch to English"><span class="language-current">中</span><span class="language-divider">/</span><span class="language-other">EN</span></button><a class="button button-small demo-link" href="https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com" target="_blank" rel="noopener" data-i18n="tryDemo">体验原型</a></div>
+  </header>
+
+  <main id="main">
+    <section class="hero page-width" id="top">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="tiny-square"></span> TRIP HACKATHON 2026 <span class="eyebrow-divider">/</span><span data-i18n="heroCategory">入境游 AI 创新</span></div>
+        <h1><span data-i18n="heroTitle1">第一次来中国，</span><span class="blue" data-i18n="heroTitle2">落地后该做什么？</span></h1>
+        <p class="hero-description" data-i18n="heroDescription">机票和酒店已经订好，接下来还要确认手机能否上网、支付应用怎么用，以及如何从机场到酒店。Landing Check 希望把这些准备和操作放进 Trip.com，在游客需要时，告诉他接下来可以怎么做。</p>
+        <div class="hero-actions"><a class="button demo-link" href="https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com" target="_blank" rel="noopener"><span data-i18n="tryDemo">体验原型</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7h8v8M17 7 7 17"/></svg></a><a class="text-button video-link" href="#demoVideo"><span class="play-small" aria-hidden="true">▶</span><span data-i18n="seeProduct">项目演示</span></a></div>
+        <div class="hero-facts"><div><strong>01</strong><span data-i18n="factWindow">聚焦落地第一小时</span></div><div><strong>03</strong><span data-i18n="factTasks">上网 · 支付 · 到酒店</span></div><div><strong>05</strong><span data-i18n="factScenarios">知识库场景</span></div></div>
+      </div>
+      <div class="hero-visual" aria-label="产品原型界面" data-aria-key="prototypeScreens">
+        <div class="visual-grid" aria-hidden="true"></div>
+        <div class="hero-visual-label"><span class="mono">FIRST HOUR, SORTED.</span><span class="prototype-tag" data-i18n="prototypeTag">可交互原型</span></div>
+        <div class="phone phone-side phone-left"><img src="assets/preflight.png" width="786" height="1704" alt="行前准备检查界面" data-alt-key="altPreflight" fetchpriority="high"></div>
+        <div class="phone phone-main"><img src="assets/landing.png" width="786" height="1704" alt="落地后的第一步联网界面" data-alt-key="altLanding" fetchpriority="high"></div>
+        <div class="phone phone-side phone-right"><img src="assets/driver.png" width="786" height="1704" alt="给司机看的中文酒店地址卡" data-alt-key="altDriver" fetchpriority="high"></div>
+        <div class="visual-note"><span class="check-icon" aria-hidden="true">✓</span><span data-i18n="visualNote">准备在起飞前，指引在需要时。</span></div>
+      </div>
+    </section>
+    <div class="project-strip"><div class="page-width strip-inner"><span><span class="strip-label" data-i18n="stripFor">为谁而做</span><strong data-i18n="stripAudience">首次来华 · 自由行 · 主动做准备</strong></span><span><span class="strip-label" data-i18n="stripForm">产品形态</span><strong data-i18n="stripShape">面向 Trip.com 的嵌入式功能设计</strong></span><span class="strip-status"><span class="status-ring"></span><span data-i18n="stripStatus">当前：H5 + API 演示</span></span></div></div>
+
+    <div class="page-width story-layout">
+      <aside class="story-sidebar"><div class="sidebar-inner"><span class="sidebar-label" data-i18n="contents">项目介绍</span><nav id="sectionNav" aria-label="章节目录" data-aria-key="sectionNavigation"><a href="#needs" class="active"><span>01</span><span data-i18n="sectionNeeds">问题与需求</span></a><a href="#product"><span>02</span><span data-i18n="sectionProduct">产品形态</span></a><a href="#build"><span>03</span><span data-i18n="sectionBuild">技术栈</span></a><a href="#thoughts"><span>04</span><span data-i18n="sectionThoughts">我们的思考</span></a><a href="#next"><span>05</span><span data-i18n="sectionNext">接下来做什么</span></a></nav><div class="sidebar-footer"><span class="mono">LANDING CHECK</span><p data-i18n="sidebarNote">为首次来华的自由行游客设计。</p><a href="https://github.com/Yuklim/landing-check" target="_blank" rel="noopener">GitHub <span aria-hidden="true">↗</span></a></div></div></aside>
+
+      <div class="story-content">
+        <section class="story-section" id="needs">
+          <div class="section-heading"><span class="section-number">01 / THE NEED</span><h2 data-i18n="needsTitle">为什么做 Landing Check</h2><p data-i18n="needsDescription">在公开旅行社区里，我们看到一些游客已经查过攻略、装好应用，甚至完成了绑卡，却仍然担心到了中国不能付款。也有人在落地后才发现，自己不知道怎样完成买水这样简单的一笔消费。这些具体的提问让我们开始关注：游客做过准备之后，怎样才能在现场把工具用起来？</p></div>
+          <div class="evidence-toolbar"><div class="segmented" id="evidenceFilters" role="group" aria-label="按需求筛选" data-aria-key="filterNeeds"></div><span class="interaction-hint" data-i18n="clickEvidence">点击卡片查看原话与出处</span></div>
+          <div class="social-cloud" id="socialCloud"></div>
+          <div class="evidence-foot"><p data-i18n="evidenceFoot">卡片标题为公开原帖的释义。点击查看具体情境、已知后续与原始来源。</p><button class="text-button" type="button" id="openArchive"><span data-i18n="allEvidence">查看完整来源</span> ↗</button></div>
+          <aside class="guide-context" aria-labelledby="guideContextTitle"><div class="guide-context-heading"><h3 id="guideContextTitle" data-i18n="guideContextTitle">攻略已经帮游客做了不少准备</h3><p data-i18n="guideContextBody">Instagram 上的创作者会介绍来华前需要安装哪些应用、准备哪些东西。这类攻略是有用的起点。我们把它们和游客自己的追问放在一起看，想弄清楚哪些信息已经讲明白了，哪些操作到了实际使用时还会让人犹豫。</p></div><div class="guide-sources" id="guideSources"></div></aside>
+          <div class="article-prose needs-context"><p data-i18n="needsContext1">因此，我们把目标用户收窄为首次来华、能够自己安排机票和酒店的外国自由行游客。他们通常愿意做准备，需要的是知道自己的设备和账户适用哪种办法，以及出问题后还能怎么办。我们选择从起飞前到离开机场这一段开始，把上网、支付和去酒店的步骤放到同一个行程里。</p><p data-i18n="needsContext2">这个选择也有边界。社区里的求助说明问题确实存在，但不能告诉我们有多少游客会遇到，也不能证明一套连续引导一定比攻略更好。“第一小时”只是我们用来控制产品范围的说法，实际是否能减少摸索，还需要让目标用户完成具体任务来比较。</p></div>
+          <details class="research-method"><summary><span data-i18n="methodTitle">调研资料与核对方式</span><span aria-hidden="true">+</span></summary><div><p data-i18n="methodBody">我们对照公开原帖、评论和作者后续回复，保留具体情境和原始链接。游客的求助、个人经历和创作者攻略分别使用；如果问题后来已经解决，来源记录也会保留这个结果。这里展示的是定向收集的案例，没有把帖子热度换算成需求发生率。</p><div class="source-links"><a href="research/demand-review-2026-10-07.md" target="_blank" rel="noopener" data-i18n="researchDoc">阅读需求判断</a><a href="research/demand-review-2026-10-07.json" target="_blank" rel="noopener" data-i18n="sourceRecords">来源与后续记录</a></div></div></details>
+        </section>
+
+        <section class="story-section" id="product">
+          <div class="section-heading"><span class="section-number">02 / THE EXPERIENCE</span><h2 data-i18n="productTitle">产品怎么用</h2><p data-i18n="productDescription">Landing Check 被设计为 Trip.com 内的一项功能。我们希望利用用户已有的航班和酒店信息，在起飞前提醒他确认准备情况，落地后再按当前需要给出联网、支付和交通指引。下面的 H5 原型展示了这条流程；点击不同阶段，可以查看具体页面和操作方式。</p></div>
+          <div class="product-demo"><div class="product-tabs" id="productTabs" role="tablist" aria-label="产品流程" data-aria-key="productFlow"></div><div class="product-stage" id="productStage" role="tabpanel" tabindex="0"></div></div>
+          <div class="article-prose product-summary"><h3 data-i18n="paymentTaskTitle">支付准备按一件事来检查</h3><p data-i18n="paymentTaskBody">行前检查里，支付宝和 TenPayGo 放在同一个“境内支付”板块。用户选择一种方式完成小额测试后，这项任务就显示为已完成，另一种可以作为备用；如果测试失败，页面会解释对应错误，并提供切换方式的入口。当前测试使用模拟交易，正式使用前仍需确认支付渠道、退款和结果回调是否能够接入。</p><p data-i18n="paymentTransportBody">支付任务完成后，交通页还会检查具体方案需要什么。例如，支付宝里的滴滴不能通过 TenPayGo 叫车，所以只验证了 TenPayGo 时，页面会提醒用户准备支付宝，或者选择可以付现金的交通方式。我们希望这些条件直接出现在需要做决定的地方。</p></div>
+          <div class="video-heading" id="demoVideo"><h3 id="videoTitle" data-i18n="videoTitle">演示视频</h3><span data-i18n="videoDescription">约 57 秒 · 英文配音 · 中英字幕</span></div>
+          <div class="video-panel" id="videoPanel"><div class="video-placeholder"><span class="video-mark" aria-hidden="true">▶</span><span class="mono">LANDING CHECK / THE FIRST HOUR</span><p data-i18n="videoPending">跟随一位第一次来中国的旅客，看看 Landing Check 如何串起行前准备和落地后的几个步骤。</p><a class="button demo-link" href="https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com" target="_blank" rel="noopener" data-i18n="openFullDemo">打开交互原型</a></div></div>
+          <p class="small-note" data-i18n="prototypeBoundary">当前在线原型包含支付宝与 TenPayGo，支付验证、航班与行程使用模拟数据。动画说明产品思路，具体操作以在线原型为准；正式 App 集成、真实扣款和自动推送尚未接入。界面截图保留原型中的英文。</p>
+        </section>
+
+        <section class="story-section concise-section" id="build">
+          <div class="section-heading"><span class="section-number">03 / TECH STACK</span><h2 data-i18n="buildTitle">技术栈</h2><p data-i18n="buildDescription">H5 前端承载任务和教程，Python 后端负责规则、识别与知识库。</p></div>
+          <div class="article-prose tech-prose">
+            <article><h3 data-i18n="stackFrontendTitle">前端与原型</h3><p data-i18n="stackFrontendBody">HTML、CSS、JavaScript 构建交互界面。appearance.pen 经 pen.dev 导出，由 Python 脚本组装为 H5；后端不可用时可体验静态流程。</p></article>
+            <article><h3 data-i18n="stackBackendTitle">后端与规则</h3><p data-i18n="stackBackendBody">Python + FastAPI 提供接口，Uvicorn 运行服务，Pydantic 校验数据，HTTPX 调用模型。行前检查和交通推荐采用规则计算。</p></article>
+            <article><h3 data-i18n="stackModelTitle">AI 场景识别</h3><p data-i18n="stackModelBody">DeepSeek（deepseek-flash）匹配截图或文字中的问题，再从知识库读取步骤。不确定时提供候选，模型不可用时回退到关键词规则；库外建议标注为未经核验。</p></article>
+            <article><h3 data-i18n="stackKnowledgeTitle">知识库与教程</h3><p data-i18n="stackKnowledgeBody">JSON 维护 5 类场景、41 条记录，保存步骤、备用办法、来源和核验日期。Python 脚本校验内容并导出图文教程。</p></article>
+            <article><h3 data-i18n="stackTestingTitle">测试与部署</h3><p data-i18n="stackTestingBody">pytest + Playwright 检查接口和完整流程。GitHub Pages 托管展示页与 H5，Render 运行后端，模型密钥保留在服务端。</p></article>
+          </div>
+        </section>
+
+        <section class="story-section concise-section" id="thoughts">
+          <div class="section-heading"><span class="section-number">04 / OUR REFLECTIONS</span><h2 data-i18n="thoughtsTitle">我们的思考</h2></div>
+          <ul class="article-prose next-list reflections-prose">
+            <li><strong data-i18n="thoughtFocusTitle">范围收窄，才能把流程做完整。</strong> <span data-i18n="thoughtFocusBody">聚焦上网、支付和到酒店后，我们才把准备与现场操作接了起来。做取舍时，要先看游客当前要完成什么，以及现有办法还缺什么，避免功能越来越多，重点却越来越模糊。</span></li>
+            <li><strong data-i18n="thoughtPaymentTitle">多一种选择，也要理清前后关系。</strong> <span data-i18n="thoughtPaymentBody">接入 TenPayGo 后，合并支付待办只是一步，还要检查交通方案能否衔接。这提醒我们，新增功能要沿着用户的操作走一遍，看看有没有把额外的判断和麻烦留给用户。</span></li>
+            <li><strong data-i18n="thoughtRecognitionTitle">用真实场景检验自己的判断。</strong> <span data-i18n="thoughtRecognitionBody">真实截图暴露了攻略样本没呈现的问题。评测要多看错例，判断模糊时让用户确认；还要继续验证，给出的指引是否真的能帮人解决问题。</span></li>
+            <li><strong data-i18n="thoughtKnowledgeTitle">指引要能照着做，也要持续更新。</strong> <span data-i18n="thoughtKnowledgeBody">整理知识库时，我们发现解释报错之后，还要写清按哪里、做不下去怎么办。内容积累以后，核对步骤是否仍适用，就和补充新条目一样重要。</span></li>
+            <li><strong data-i18n="thoughtFlowTitle">把失败后的路也设计好。</strong> <span data-i18n="thoughtFlowBody">联调中的超时和重复操作提醒我们，等待多久、怎样重试、退出后怎么接着做，都需要提前想清楚。检查流程时，也要主动走一遍这些不顺利的情况。</span></li>
+          </ul>
+        </section>
+
+        <section class="story-section concise-section" id="next">
+          <div class="section-heading"><span class="section-number">05 / WHAT'S NEXT</span><h2 data-i18n="nextTitle">接下来做什么</h2></div>
+          <ul class="article-prose next-list">
+            <li><strong data-i18n="nextTestTitle">真实用户测试。</strong> <span data-i18n="nextTestBody">请首次来华的游客完成联网、支付和到酒店的任务，比较原型与现有攻略，补充真实失败案例。</span></li>
+            <li><strong data-i18n="nextStuckTitle">知识库与多模态。</strong> <span data-i18n="nextStuckBody">完善 I’m Stuck 的知识库，补充常见卡点、失败案例和解决步骤，并接入现场照片、语音等多模态能力，让游客更方便地描述问题。</span></li>
+            <li><strong data-i18n="nextOfflineTitle">离线与多语言。</strong> <span data-i18n="nextOfflineBody">行前缓存联网指引、酒店地址和常用教程，预翻译并复核关键步骤，让弱网时也能查看。</span></li>
+            <li><strong data-i18n="nextIntegrationTitle">平台与支付接入。</strong> <span data-i18n="nextIntegrationBody">确认 Trip.com 行程、航班通知和客服转接能力，以及真实支付、退款和结果回调。上述接入尚待确认，演示继续使用模拟数据。</span></li>
+          </ul>
+          <div class="final-cta"><div><span class="mono">LANDING CHECK / PROTOTYPE</span><h3 data-i18n="ctaTitle">打开原型，试走一遍落地流程</h3></div><a class="button demo-link" href="https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com" target="_blank" rel="noopener" data-i18n="tryDemo">体验原型</a></div>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="page-width site-footer"><a class="brand footer-brand" href="#top"><span class="brand-symbol" aria-hidden="true">L<span>✓</span></span>Landing Check</a><span data-i18n="footerNote">Trip Hackathon 2026 · 面向入境游的产品探索</span><a href="https://github.com/Yuklim/landing-check" target="_blank" rel="noopener" data-i18n="viewSource">查看源代码</a></footer>
+
+  <dialog id="evidenceDialog" aria-labelledby="dialogTitle"><div class="dialog-top"><span class="mono">RESEARCH / SOURCE</span><button class="icon-button" id="closeDialog" type="button" aria-label="关闭" data-aria-key="close">×</button></div><div id="dialogContent"></div></dialog>
+  <noscript><p class="noscript-note">此页面的语言切换和交互卡片需要 JavaScript。可直接阅读<a href="research/demand-review-2026-10-07.md">需求判断文档</a>或<a href="https://yuklim.github.io/landing-check/h5/">打开原型</a>。</p></noscript>
+</body>
+</html>

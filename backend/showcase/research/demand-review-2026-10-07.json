@@ -1,0 +1,719 @@
+{
+  "purpose": "Assess demand for the existing Landing Check feature embedded in Trip.com; no product or showcase changes authorized in this phase.",
+  "reviewed_at": "2026-10-07",
+  "audience": "Project owner; homepage candidates intended for hackathon judges.",
+  "sampling": "Purposeful discovery through YouTube travel-preparation/arrival searches and tutorial follow-ups, plus Instagram and X public source checks.",
+  "queries": [
+    "China first time travel tips Alipay esim",
+    "Shanghai airport arrival China foreigner taxi payment"
+  ],
+  "scope_notes": [
+    "A public qualitative assessment, not an incidence estimate or verification of real user identities.",
+    "User needs and the effectiveness of a particular implementation are assessed separately.",
+    "Alternatives do not negate demand; a material reduction in task cost could justify a feature.",
+    "User questions may have received useful replies. Resolution status is recorded where visible.",
+    "Upload dates are distinct from comment dates. Exact YouTube comment dates are not published.",
+    "The six prior showcase candidates are retained as historical research selections, not approved copy.",
+    "No production UI or application behavior was modified."
+  ],
+  "sources": [
+    {
+      "id": "Y01",
+      "platform": "YouTube",
+      "author": "@TestServer-e7i",
+      "creator": "Lyn | China Travel Made Simple",
+      "video_id": "dleZ1EaHgog",
+      "video_upload_date": "2025-07-06",
+      "comment_id": "Ugw85HSHmQ96MvHGddF4AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=dleZ1EaHgog&lc=Ugw85HSHmQ96MvHGddF4AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "payment",
+      "quote": "when i do its face id it Fails",
+      "paraphrase": {
+        "zh": "护照验证过了，人脸识别失败，接下来却要中国银行卡。我该怎么办？",
+        "en": "Passport checked, face verification failed. Now it asks for a mainland bank card. What next?"
+      },
+      "need_inference": "识别当前验证步骤，解释有依据的下一步或官方求助入口。",
+      "limits": "用户自述具体界面；不证明所有游客都会遇到，也不证明产品能够解除风控。",
+      "resolution_status": "Not established; the question may have received a helpful reply or been resolved through existing tools.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "e6fcb73274a7e6e59ab90b8a9627c776bca6218f9ca464350c27866dab909a0b"
+    },
+    {
+      "id": "Y02",
+      "platform": "YouTube",
+      "author": "@snepp010",
+      "creator": "Lyn | China Travel Made Simple",
+      "video_id": "dleZ1EaHgog",
+      "video_upload_date": "2025-07-06",
+      "comment_id": "Ugz3fW90d2kM6O34zU54AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=dleZ1EaHgog&lc=Ugz3fW90d2kM6O34zU54AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "payment",
+      "quote": "can’t transfer funds to Alipay",
+      "paraphrase": {
+        "zh": "没有中国银行卡，不能向支付宝转入资金，是哪里设置错了吗？",
+        "en": "I cannot transfer funds into Alipay without a Chinese bank account. Is my setup wrong?"
+      },
+      "need_inference": "解释转入余额、转账和商户付款之间的区别。",
+      "limits": "这是转入资金的问题，不能扩写成商户付款失败。",
+      "resolution_status": "Not established; the question may have received a helpful reply or been resolved through existing tools.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "e6fcb73274a7e6e59ab90b8a9627c776bca6218f9ca464350c27866dab909a0b"
+    },
+    {
+      "id": "Y03",
+      "platform": "YouTube",
+      "author": "@ignisnativus",
+      "creator": "Lyn | China Travel Made Simple",
+      "video_id": "a8cBz3iyJws",
+      "video_upload_date": "2026-07-11",
+      "comment_id": "UgyfeC308dK-C_bkjw54AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=a8cBz3iyJws&lc=UgyfeC308dK-C_bkjw54AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "payment",
+      "quote": "and if in China then it doesn't work?",
+      "paraphrase": {
+        "zh": "测试成功了！可到了中国又不能用怎么办？",
+        "en": "The test worked! What if it stops working once I am in China?"
+      },
+      "need_inference": "测试结果之后仍保留备用方案和失败处理入口。",
+      "limits": "同一留言先报告成功再追问备用方案；不是在中国已经支付失败的报告。",
+      "resolution_status": "Creator replied with backup payment methods and cash; original commenter reported test success. Subsequent outcome unknown.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "905ff595ad48f2874826857f41921d83ff58cf2b54acae6ecaec90da0b039574"
+    },
+    {
+      "id": "Y04",
+      "platform": "YouTube",
+      "author": "@tzadikel",
+      "creator": "Lyn | China Travel Made Simple",
+      "video_id": "a8cBz3iyJws",
+      "video_upload_date": "2026-07-11",
+      "comment_id": "UgzDHstSdHh-p2olq-p4AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=a8cBz3iyJws&lc=UgzDHstSdHh-p2olq-p4AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "payment",
+      "quote": "My biggest concern is arriving in China",
+      "paraphrase": {
+        "zh": "已经实名绑卡，境外向导游付款仍受限。我分不清是地点、交易类型还是账号问题。",
+        "en": "Verified and linked, but a payment to my guide from overseas was restricted. Which condition matters?"
+      },
+      "need_inference": "按地区、交易类型、账号状态解释测试范围，再提供继续路径。",
+      "limits": "评论转述的客服与导游解释均是二手信息，不能用来确定官方支付规则。",
+      "resolution_status": "Not established; the question may have received a helpful reply or been resolved through existing tools.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "905ff595ad48f2874826857f41921d83ff58cf2b54acae6ecaec90da0b039574"
+    },
+    {
+      "id": "Y05",
+      "platform": "YouTube",
+      "author": "@thimmccarthy",
+      "creator": "Maggie Ye",
+      "video_id": "3gAW2Sz579o",
+      "video_upload_date": "2025-07-09",
+      "comment_id": "UgzN2h6cSDOqP5XJOHp4AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=3gAW2Sz579o&lc=UgzN2h6cSDOqP5XJOHp4AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "prep",
+      "quote": "confirm that the eSIM is working properly",
+      "paraphrase": {
+        "zh": "eSIM 什么时候激活？怎么确认它真的能用？",
+        "en": "When should I activate my eSIM, and how do I check that it works?"
+      },
+      "need_inference": "根据套餐条件说明启用时机和检查方法。",
+      "limits": "留言者明确计划旅行，但首次来华身份不明；没有报告实际断网。",
+      "resolution_status": "Not established; the question may have received a helpful reply or been resolved through existing tools.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "c9956526c94027a67a1155da16b4f6c6717dbf8aa4c4ea55941b058b2a0c3549"
+    },
+    {
+      "id": "Y06",
+      "platform": "YouTube",
+      "author": "@michaelsun4118",
+      "creator": "Lyn | China Travel Made Simple",
+      "video_id": "wbtwPDSx-hs",
+      "video_upload_date": "2026-01-27",
+      "comment_id": "UgymJU7gGyp8gjdTACt4AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=wbtwPDSx-hs&lc=UgymJU7gGyp8gjdTACt4AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "payment",
+      "quote": "I can't log on to Alipay",
+      "paraphrase": {
+        "zh": "支付宝一直说发了短信验证码，可我收不到，无法登录。",
+        "en": "Alipay says a verification code was sent, but I never receive it and cannot sign in."
+      },
+      "need_inference": "区分收码、登录和实名步骤，为无法继续的情况提供帮助。",
+      "limits": "作者自述在洛杉矶准备年底旅行；具体收码失败原因尚未核实。",
+      "resolution_status": "Creator replied with suggestions; subsequent outcome unknown. Suggestions are not treated as official technical guidance.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "45a5e31d5b3214b352646bd17332f922923658c3b023327cf7cf7fa271ca9b76"
+    },
+    {
+      "id": "Y07",
+      "platform": "YouTube",
+      "author": "@TM-qj4yr",
+      "creator": "UnlockingChina",
+      "video_id": "ycc5a7lR0II",
+      "video_upload_date": "2025-10-10",
+      "comment_id": "UgwB0x9qnnJ9vIbYnwN4AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=ycc5a7lR0II&lc=UgwB0x9qnnJ9vIbYnwN4AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "connectivity",
+      "quote": "My main concern is accessing verification code",
+      "paraphrase": {
+        "zh": "订好的行程要发验证码，我现在的网络方案能收到吗？",
+        "en": "Can my connection setup receive confirmation codes for the tours I booked?"
+      },
+      "need_inference": "确认验证码通过短信、邮件还是应用消息送达，再检查对应条件。",
+      "limits": "原留言涉及 Gmail 和 WeChat，不可简化成已经发生的短信接收失败。",
+      "resolution_status": "Not established; the question may have received a helpful reply or been resolved through existing tools.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "49b9150fd3fda7b848b66311981b36a6fad3325ea508ce3c47370f2607c3185d"
+    },
+    {
+      "id": "Y08",
+      "platform": "YouTube",
+      "author": "@Wanderernirvana",
+      "creator": "Zi Lens",
+      "video_id": "SLeQYHVN110",
+      "video_upload_date": "2025-06-15",
+      "comment_id": "UgxEG2AK66dv3S8FF654AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=SLeQYHVN110&lc=UgxEG2AK66dv3S8FF654AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "transport",
+      "quote": "Can I use Didi with an Esim",
+      "paraphrase": {
+        "zh": "只有 eSIM，能用滴滴吗？还需要中国手机号吗？",
+        "en": "Can I use DiDi with an eSIM, or do I need a Chinese phone number?"
+      },
+      "need_inference": "把网络选择与注册、叫车和联系司机的任务连接起来。",
+      "limits": "这是适用性提问，不是叫车失败报告；答案需以当前产品条件核实。",
+      "resolution_status": "Creator replied with pre-departure registration and an Alipay mini-program route; subsequent outcome unknown.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "9cbf5bd6446b4999ac8331cf05470efa059856f11affb6ae6fcacbebfb6e7ba5"
+    },
+    {
+      "id": "Y09",
+      "platform": "YouTube",
+      "author": "@bazb2591",
+      "creator": "Zi Lens",
+      "video_id": "SLeQYHVN110",
+      "video_upload_date": "2025-06-15",
+      "comment_id": "Ugz3mbX4Cg3EacMLLHx4AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=SLeQYHVN110&lc=Ugz3mbX4Cg3EacMLLHx4AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "prep",
+      "quote": "I can’t get past this stage",
+      "paraphrase": {
+        "zh": "微信注册要别人扫码，我没有认识的用户，卡在这里了。",
+        "en": "WeChat registration asks another user to scan a QR code. I cannot get past this step."
+      },
+      "need_inference": "说明适用的官方求助或替代工具，帮助继续完成必要任务。",
+      "limits": "用户表示其他应用已经正常工作；不代表每位注册者都需辅助验证，也不授权绕过验证。",
+      "resolution_status": "Not established; the question may have received a helpful reply or been resolved through existing tools.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "9cbf5bd6446b4999ac8331cf05470efa059856f11affb6ae6fcacbebfb6e7ba5"
+    },
+    {
+      "id": "Y10",
+      "platform": "YouTube",
+      "author": "@fabianprioux1136",
+      "creator": "UnlockingChina",
+      "video_id": "ycc5a7lR0II",
+      "video_upload_date": "2025-10-10",
+      "comment_id": "UgwOTwFv6YggcyW3vAl4AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact date not established; extractor timestamps derived from relative dates are not published.",
+      "url": "https://www.youtube.com/watch?v=ycc5a7lR0II&lc=UgwOTwFv6YggcyW3vAl4AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "connectivity",
+      "quote": "none of them explain excatly what to do",
+      "paraphrase": {
+        "zh": "不同攻略推荐不同的网络方案，我不知道哪个适合自己。",
+        "en": "The guides recommend different connection options. I do not know which one fits me."
+      },
+      "need_inference": "按设备、出发地、现有号码和停留时间选择适用方案。",
+      "limits": "同账号在另一条视频重复表达类似意见，只算一个人的反馈；长住和技术理解困难超出首页核心情境。",
+      "resolution_status": "Not established; the question may have received a helpful reply or been resolved through existing tools.",
+      "evidence_scope": "A question or reported friction, not validation of demand for Landing Check.",
+      "traveler_identity": "Public account; real identity and first-visit status not independently verified.",
+      "snapshot_sha256": "49b9150fd3fda7b848b66311981b36a6fad3325ea508ce3c47370f2607c3185d"
+    },
+    {
+      "id": "Y11",
+      "platform": "YouTube",
+      "author": "@fayknight1779",
+      "creator": "Maggie Ye",
+      "video_id": "i6fYB22OaRA",
+      "video_upload_date": "2026-03-05",
+      "comment_id": "Ugy8juSoi6ePoa6IJfx4AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact publication time is not established.",
+      "url": "https://www.youtube.com/watch?v=i6fYB22OaRA&lc=Ugy8juSoi6ePoa6IJfx4AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "arrival",
+      "quote": "we struggled to figure out exactly how to pay for water",
+      "paraphrase": {
+        "zh": "看过攻略、装好应用后，长途飞行抵达时仍不知道怎样买水付款，花了很久查找答案，希望有逐步操作说明。",
+        "en": "After watching guides and installing apps, the travelers struggled to pay for water on arrival and asked for step-by-step instructions."
+      },
+      "need_inference": "有准备仍可能存在实际操作断层；需要在当前任务中找到适用步骤。",
+      "limits": "丈夫首次来华，留言者是多年后重访；未明确说明完整行程是否自由行。后来自行弄清付款方式。未量化耗时，没有证明任何新工具一定更快。",
+      "resolution_status": "Eventually self-resolved, as reported by the commenter.",
+      "evidence_scope": "Reported task cost or question; does not establish the effectiveness of Landing Check.",
+      "traveler_identity": "Public account; real identity not independently verified.",
+      "snapshot_sha256": "bb27c6130c2b386cd3d70510d55b6782c36d947d4fa70ed98bae75af8d37abf1"
+    },
+    {
+      "id": "Y12",
+      "platform": "YouTube",
+      "author": "@Jennifercgarcia",
+      "creator": "Maggie Ye",
+      "video_id": "i6fYB22OaRA",
+      "video_upload_date": "2026-03-05",
+      "comment_id": "Ugyzc2t_QfVwcQ98b8l4AaABAg",
+      "comment_published_at": null,
+      "comment_date_note": "Exact publication time is not established.",
+      "url": "https://www.youtube.com/watch?v=i6fYB22OaRA&lc=Ugyzc2t_QfVwcQ98b8l4AaABAg",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_comment",
+      "topic": "connectivity",
+      "quote": "I have a locked phone",
+      "paraphrase": {
+        "zh": "手机有运营商锁，不能按通常的 SIM 或 eSIM 方案准备，询问机场有没有随身 Wi-Fi。",
+        "en": "My phone is carrier-locked. Is pocket Wi-Fi available at the airport as an alternative?"
+      },
+      "need_inference": "准备方案需要适应设备条件。",
+      "limits": "这是计划中的适用性问题，不是实际断网案例；随身 Wi-Fi 的可用性未核实。",
+      "resolution_status": "Not established.",
+      "evidence_scope": "Reported task cost or question; does not establish the effectiveness of Landing Check.",
+      "traveler_identity": "Public account; real identity not independently verified.",
+      "snapshot_sha256": "bb27c6130c2b386cd3d70510d55b6782c36d947d4fa70ed98bae75af8d37abf1"
+    }
+  ],
+  "context_sources": [
+    {
+      "id": "CX01",
+      "platform": "X",
+      "author": "@KseniiaBaziian",
+      "date": "2026-07-12",
+      "url": "https://x.com/KseniiaBaziian/status/2076309943364506055",
+      "verification": "live_public_embed_and_syndication_excerpt",
+      "verified_at": "2026-10-07",
+      "paraphrase": "作者说行前因为别人描述而紧张，实际主要是适应翻译工具。",
+      "role": "Counterevidence against describing all inbound travel as difficult.",
+      "limits": "只使用公开接口可见的开头，不采纳未展示的长文部分；用户自述不能普遍化。"
+    },
+    {
+      "id": "CI01",
+      "platform": "Instagram",
+      "author": "@lily_tripbook_chinatravel",
+      "url": "https://www.instagram.com/p/DdJdnktiHrG/",
+      "verification": "live_public_caption_and_embed",
+      "verified_at": "2026-10-07",
+      "paraphrase": "创作者发布微信行前清单，覆盖注册、支付、小程序，并引导口令领取资料。",
+      "role": "Travel-preparation content context, not an independent traveler complaint.",
+      "limits": "领取资料口令不计作需求；旧缓存里具体注册追问未在线复核。"
+    },
+    {
+      "id": "CI02",
+      "platform": "Instagram",
+      "author": "@our.whereabouts",
+      "url": "https://www.instagram.com/p/DQ614SEjEFA/",
+      "verification": "live_public_caption_metadata",
+      "verified_at": "2026-10-07",
+      "paraphrase": "旅行账号介绍赴华旅行的应用准备。",
+      "role": "Travel-preparation content context.",
+      "limits": "不把作者的技术概括当成官方规则，也不以攻略存在直接证明未满足需求。"
+    },
+    {
+      "id": "CX02",
+      "platform": "X",
+      "author": "@tilmannschatz",
+      "date": "2026-09-02",
+      "url": "https://x.com/tilmannschatz/status/2095037821530587206",
+      "verification": "live_full_public_post_html_via_user_provided_proxy_pool",
+      "verified_at": "2026-10-07",
+      "paraphrase": "作者提到叫车环节遇到中国号码要求，并给出支付宝内滴滴的既有解决办法。",
+      "role": "Existing workaround; assess whether a separate product adds value.",
+      "limits": "个人经验不是普遍规则；需核实其当前适用范围。",
+      "snapshot_sha256": "9623d20d760f2fdf8212bd0317c8ff67bd1abe364846c16bc0a19a3f828ade4e"
+    }
+  ],
+  "unverified_candidates": [
+    {
+      "id": "PIG01",
+      "platform": "Instagram",
+      "author": "@nilushidilshani",
+      "url": "https://www.instagram.com/p/DdJdnktiHrG/",
+      "verification": "local_comment_snapshot_only",
+      "parent_post_verified_at": "2026-10-07",
+      "comment_verified_at": null,
+      "paraphrase": "询问微信注册需要其他用户扫码时如何继续。",
+      "homepage_candidate": false
+    },
+    {
+      "id": "PIG02",
+      "platform": "Instagram",
+      "author": "@_yeojo",
+      "url": "https://www.instagram.com/p/Dc7bp3nB9oy/",
+      "verification": "local_comment_snapshot_only",
+      "parent_post_note": "Main page metadata was available; embed returned unavailable. Recheck needed.",
+      "comment_verified_at": null,
+      "paraphrase": "询问 ID validated 与 authenticated 的状态区别，以及是否足够赴华使用。",
+      "homepage_candidate": false
+    }
+  ],
+  "legacy_reference": {
+    "id": "R09",
+    "url": "https://www.reddit.com/r/travelchina/comments/1j2ztfs/is_there_a_way_to_test_wechat_alipay_online/",
+    "verification": "Reverified live in this pass; see validation_sources R09."
+  },
+  "audit": {
+    "videos": [
+      {
+        "video_id": "1aYcFjsEULM",
+        "creator": "Ken Abroad",
+        "upload_date": "20231114",
+        "comments_fetched": 60,
+        "use": "Reviewed, not selected"
+      },
+      {
+        "video_id": "3gAW2Sz579o",
+        "creator": "Maggie Ye",
+        "upload_date": "20250709",
+        "comments_fetched": 61,
+        "use": "Selected comment source"
+      },
+      {
+        "video_id": "a8cBz3iyJws",
+        "creator": "Lyn | China Travel Made Simple",
+        "upload_date": "20260711",
+        "comments_fetched": 54,
+        "use": "Selected comment source"
+      },
+      {
+        "video_id": "dleZ1EaHgog",
+        "creator": "Lyn | China Travel Made Simple",
+        "upload_date": "20250706",
+        "comments_fetched": 60,
+        "use": "Selected comment source"
+      },
+      {
+        "video_id": "efDOVVDy0iA",
+        "creator": "Joel and Emilia",
+        "upload_date": "20240901",
+        "comments_fetched": 60,
+        "use": "Reviewed, not selected"
+      },
+      {
+        "video_id": "i6fYB22OaRA",
+        "creator": "Maggie Ye",
+        "upload_date": "20260305",
+        "comments_fetched": 100,
+        "use": "Selected comment source"
+      },
+      {
+        "video_id": "SLeQYHVN110",
+        "creator": "Zi Lens",
+        "upload_date": "20250615",
+        "comments_fetched": 32,
+        "use": "Selected comment source"
+      },
+      {
+        "video_id": "vBM-3csp8gY",
+        "creator": "Hugh Abroad",
+        "upload_date": "20251123",
+        "comments_fetched": 100,
+        "use": "Reviewed, not selected"
+      },
+      {
+        "video_id": "vYo7skSw3yg",
+        "creator": "thelittlebasket",
+        "upload_date": "20260131",
+        "comments_fetched": 0,
+        "use": "Reviewed, not selected"
+      },
+      {
+        "video_id": "wbtwPDSx-hs",
+        "creator": "Lyn | China Travel Made Simple",
+        "upload_date": "20260127",
+        "comments_fetched": 100,
+        "use": "Selected comment source"
+      },
+      {
+        "video_id": "ycc5a7lR0II",
+        "creator": "UnlockingChina",
+        "upload_date": "20251010",
+        "comments_fetched": 60,
+        "use": "Selected comment source"
+      }
+    ],
+    "comments_fetched": 687,
+    "verbatim_excerpt_words_per_video": {
+      "dleZ1EaHgog": 13,
+      "a8cBz3iyJws": 15,
+      "3gAW2Sz579o": 7,
+      "wbtwPDSx-hs": 6,
+      "ycc5a7lR0II": 15,
+      "SLeQYHVN110": 13,
+      "i6fYB22OaRA": 16
+    },
+    "raw_snapshots": "Kept outside the repository in the task temporary directory.",
+    "selection_exclusions": [
+      "Keyword comments used to request promotional materials",
+      "Generic praise without a task or question",
+      "Product promotions without concrete personal context",
+      "Long text beyond the publicly verified excerpt",
+      "Unverified cached comments for homepage use"
+    ],
+    "reply_review": [
+      {
+        "source_id": "Y01",
+        "captured_reply_ids": [],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y02",
+        "captured_reply_ids": [],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y03",
+        "captured_reply_ids": [
+          "UgyfeC308dK-C_bkjw54AaABAg.Aa7eDoFeTliAa8W8yxG52J"
+        ],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y04",
+        "captured_reply_ids": [],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y05",
+        "captured_reply_ids": [],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y06",
+        "captured_reply_ids": [
+          "UgymJU7gGyp8gjdTACt4AaABAg.AbMwG82ZEgtAbOAdhaNdzY"
+        ],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y07",
+        "captured_reply_ids": [],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y08",
+        "captured_reply_ids": [
+          "UgxEG2AK66dv3S8FF654AaABAg.AMeS5SiISr2AMejIwlNpLr"
+        ],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y09",
+        "captured_reply_ids": [],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y10",
+        "captured_reply_ids": [],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y11",
+        "captured_reply_ids": [],
+        "note": "No captured reply does not establish that no reply exists."
+      },
+      {
+        "source_id": "Y12",
+        "captured_reply_ids": [],
+        "note": "No captured reply does not establish that no reply exists."
+      }
+    ]
+  },
+  "assessment_scope": {
+    "product": "Existing preparation, payment test, arrival task flow, and screenshot-help concept.",
+    "form": "Feature within Trip.com; H5 is a demonstration. New app downloads or paid subscriptions are not demand criteria.",
+    "user_instruction": "Only judge whether the existing product demand holds; do not change the product direction or page."
+  },
+  "assessment": {
+    "overall": "partially_supported",
+    "core_need": "Bridge the gap between preparing local tools and knowing how to use them in the next real travel task.",
+    "supported": [
+      "Explicit desire to confirm preparation beyond app installation",
+      "Reported operational confusion on arrival despite preparation",
+      "Need to interpret specific restrictions and find a next step"
+    ],
+    "not_established": [
+      "Effectiveness advantage over a clear guide, existing support, or TripGenie",
+      "A fixed first-hour window or universal network-payment-transport order",
+      "Automatic proactive prompts and screenshot AI as the best delivery mechanism"
+    ],
+    "decision": "There is a real demand basis for the current direction. The complete integrated solution is not validated by public material alone."
+  },
+  "validation_sources": [
+    {
+      "id": "P01",
+      "platform": "Reddit",
+      "author": "u/kovac031",
+      "published_at": "2025-07-31",
+      "url": "https://www.reddit.com/r/travelchina/comments/1me3lj7/any_way_to_check_if_alipaywechat_payments_will/",
+      "observation": "发帖者已绑卡、能打开付款码，仍主动询问出发前如何确认实际支付；回复者自报使用小额测试。",
+      "supports": "Preparation confirmation demand; self-reported use of an existing alternative.",
+      "limits": "用户自述而非独立核实的交易记录；推荐者与网站有无商业关系未核实。",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    },
+    {
+      "id": "P02",
+      "platform": "Reddit",
+      "author": "u/Softlifemoe",
+      "published_at": "2026-09-20",
+      "url": "https://www.reddit.com/r/travelchina/comments/1wlbhh1/testing_alipaywechat/",
+      "observation": "即将赴华的用户询问已设置支付应用后如何测试；回复中有人说明不放心境外测试选择，改在机场买咖啡和水测试。",
+      "supports": "Confirmation demand and trust concerns around existing test options.",
+      "limits": "这是跨帖分享，原帖与分享帖不算两个独立请求；回复代表个人经验。",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    },
+    {
+      "id": "R09",
+      "platform": "Reddit",
+      "published_at": "2025-03-04",
+      "url": "https://www.reddit.com/r/travelchina/comments/1j2ztfs/is_there_a_way_to_test_wechat_alipay_online/",
+      "observation": "为家人配置支付应用后，用户主动寻找可用于小额测试的真实交易；另一回复者自报完成测试。",
+      "supports": "Explicit request for practical verification beyond installation.",
+      "limits": "接受小额测试金额不等于愿意为 Landing Check 付费；自报成功不保证未来交易。",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    },
+    {
+      "id": "P03",
+      "platform": "Reddit",
+      "author": "u/Fun_Personality9082",
+      "published_at": "2026-04-16",
+      "url": "https://www.reddit.com/r/chinatravel/comments/1sn03lg/first_time_trying_to_use_alipay_in_china_it_did/",
+      "observation": "抵达上海后把向朋友转账失败理解为支付宝不可用；讨论后本人报告向商户付款正常。",
+      "supports": "Need to interpret a restriction correctly and choose the appropriate next action.",
+      "limits": "已通过现有社区解释解决；不能宣传成无法支付，也不能据此证明 AI 必不可少。",
+      "resolution": "Author reports merchant payments working after clarification.",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    },
+    {
+      "id": "P04",
+      "platform": "Reddit",
+      "author": "u/BlacksmithOk9693",
+      "published_at": "2025-09-23",
+      "url": "https://www.reddit.com/r/travelchina/comments/1noe5vq/nice_to_know_info_when_visiting_china_regarding/",
+      "observation": "用户说先看 YouTube 和帖子准备，之后完成旅行，并分享已有支付、联网与交通办法。",
+      "supports": "Counterevidence: existing preparation can be sufficient.",
+      "limits": "其网络和支付技术判断没有作为官方规则采用；不是所有游客都会卡住。",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    },
+    {
+      "id": "A01",
+      "platform": "Product publisher",
+      "url": "https://testchinapay.com/",
+      "observation": "页面提供支付宝和微信的小额二维码测试说明。",
+      "supports": "Existing preparation-test alternative.",
+      "limits": "页面说明不能证明采用量、合规性、所有二维码可用性或测试能保证后续支付。未进行交易。",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    },
+    {
+      "id": "A02",
+      "platform": "Product publisher",
+      "url": "https://chinatripcheck.com/how-it-works",
+      "observation": "自述按准备情况提问，通过确定性规则输出按阻碍与备用方案排序的报告，并说明不使用 AI。",
+      "supports": "Existing rule-based preparation-check alternative.",
+      "limits": "仅核对公开介绍；未完成交互评测，没有其用户采用或效果数据。",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    },
+    {
+      "id": "A03",
+      "platform": "Trip.com official product page",
+      "url": "https://www.trip.com/tripgenie/",
+      "observation": "官方介绍旅行问答、个性化建议及旅途中的支持。",
+      "supports": "Existing travel-assistance entry within the same platform.",
+      "limits": "没有比较真实报错任务，不推定它能处理或不能处理 Landing Check 的全部场景。",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    },
+    {
+      "id": "A04",
+      "platform": "Shanghai municipal government",
+      "url": "https://english.shanghai.gov.cn/en-PaymentsInShanghai/20260920/f22b7e0f606c407e9da9d26b089eac48.html",
+      "observation": "上海机场一站式服务中心提供支付、通信、交通和常用应用设置帮助。",
+      "supports": "Existing human support for the same arrival tasks.",
+      "limits": "只能说明已公布的上海服务，不推广到所有机场、时段与具体账户问题。",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    },
+    {
+      "id": "A05",
+      "platform": "Shanghai municipal government",
+      "published_at": "2026-09-22",
+      "url": "https://english.shanghai.gov.cn/en-Latest-WhatsNew/20260922/6b2652ecb722400e97fe0d2b0ba353bd.html",
+      "observation": "报道荷兰旅客 Robert Bogers 抵达后设置支付宝遇到困难，机场人员提供帮助。",
+      "supports": "Reported arrival-stage need and use of an existing help channel.",
+      "limits": "官方服务报道中的选定个案；没有独立访谈或代表性统计。",
+      "verified_at": "2026-10-07",
+      "verification": "live_public_source_read"
+    }
+  ],
+  "prior_showcase_candidate_ids": [
+    "Y01",
+    "Y03",
+    "Y05",
+    "Y07",
+    "Y08",
+    "Y09"
+  ]
+}
