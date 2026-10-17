@@ -704,7 +704,7 @@
     loadTutorials().then(list => list.forEach(t => { const b = document.createElement('button'); b.textContent = '📖 ' + t.title; b.onclick = () => openTutorial(t.id); menuList.appendChild(b); }));
   }
 
-  // ---------- Community · Explore（探索/社区）：真实数据来自官方 query_content（后端 /content/community）；失败/静态兜底本地示例。骨架屏先行，绝不白屏 ----------
+  // ---------- Community · Explore（探索/社区）：英文 Trip.com Moments 帖（first-stamp.json，经 stamp.js 载入）；载入前骨架屏，绝不白屏 ----------
   (function () {
     const cs = document.createElement('div');
     cs.className = 'screen'; cs.dataset.route = 'explore'; cs.setAttribute('data-pencil-name', 'Explore');
@@ -741,7 +741,7 @@
     if (typeof order !== 'undefined' && !order.includes('explore')) order.push('explore');
 
     const CF = cs.querySelector('[data-c="feed"]');
-    // 上：我发的帖子（stamp.js 本地帖，带票根）；下：真实内容流
+    // 上：我发的帖子（stamp.js 本地帖，带票根）；下：英文 Trip.com Moments 帖
     CF.innerHTML = '<div data-c="mine"></div><div data-c="list"></div>';
     const MINE = CF.querySelector('[data-c="mine"]'), LIST = CF.querySelector('[data-c="list"]');
     (() => { const st = document.createElement('style'); st.textContent = '.lc-swipe{scrollbar-width:none;-webkit-overflow-scrolling:touch}.lc-swipe::-webkit-scrollbar{display:none}.lc-posted{margin:12px 16px 0;padding:10px 14px;border-radius:12px;background:#E9F8F1;color:#11865A;font:600 13px Inter,sans-serif}.lc-hl{animation:lcHl 2.4s ease}@keyframes lcHl{0%{background:#EAF0FF}100%{background:#fff}}'; document.head.appendChild(st); })();
@@ -759,20 +759,15 @@
         <div style="display:flex;align-items:center;gap:18px;padding:10px 16px 0;color:${MUTED};font:400 14px Inter,sans-serif"><span style="display:inline-flex;align-items:center;gap:5px">${HEART}${esc(String(d.likes || 0))}</span><span style="display:inline-flex;align-items:center;gap:5px">${CMT}${esc(String(d.comments || 0))}</span></div>
       </div><div style="height:8px;background:${BG}"></div>`;
     }
-    const MOCK = [
-      { author: '_TI***56', publishTime: 'Oct 8', title: 'China finally has a brand foreigners line up for', likes: 315, comments: 40, cover: 'img/238deb47d9e8.jpg', images: ['img/238deb47d9e8.jpg', 'img/058fcb22feec.jpg'], avatar: '' },
-      { author: 'Ghana Travel Content', publishTime: 'Sep 20', title: 'Bolt tricycle in Ho, Ghana', likes: 88, comments: 6, cover: 'img/4514a7042483.jpg', images: ['img/4514a7042483.jpg', 'img/1738b1ca3787.jpg'], avatar: 'img/50ddac0b1125.jpg' },
-    ];
-    let loaded = false;
-    async function loadCommunity() {
-      if (loaded) return; loaded = true; LIST.innerHTML = sk();
-      let data = null;
-      try { data = await withTimeout(get('/content/community?query=' + encodeURIComponent('上海外滩') + '&size=10', true), 9000); } catch (e) {}
-      const real = data && data.items && data.items.length;
-      const items = real ? data.items : MOCK;
-      LIST.innerHTML = items.map(card).join('');
-      status(real ? `探索·真实数据 ${items.length} 条` : '探索·示例数据(接口兜底)', real ? 'rgba(27,166,114,.85)' : 'rgba(232,137,12,.9)');
+    // 内容流 = stamp.js 载入的英文 Trip.com Moments 帖（first-stamp.json），点进去是帖子详情（多图轮播 + 评论）
+    const fmtTime = ms => { const t = new Date(Number(ms)); return isNaN(t) ? '' : t.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); };
+    function renderList() {
+      const api = window.LCStamp, items = api ? api.samplePosts() : [];
+      if (!items.length) { LIST.innerHTML = sk(); return; }   // stamp.js 还在载入配置，载完会发 lc-posts-changed
+      LIST.innerHTML = items.map(p => `<div data-post-id="${esc(p.id)}" style="cursor:pointer">${card({ author: p.author, publishTime: fmtTime(p.publishTime), title: p.title, likes: p.likeCount || p.likes, comments: p.commentCount || p.comments, images: p.images, cover: p.image, avatar: p.authorImage })}</div>`).join('');
+      LIST.querySelectorAll('[data-post-id]').forEach(n => n.onclick = () => api.openPost(n.dataset.postId));
     }
+    const loadCommunity = renderList;
     // 我发的帖子（share / 完成页 / 图鉴一键发出），置顶；刚发的那条高亮并给提示
     const YOU = `<div style="width:40px;height:40px;border-radius:20px;background:${BLUE};display:flex;align-items:center;justify-content:center;flex:none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>`;
     const when = iso => { const t = new Date(iso); if (isNaN(t)) return ''; return Date.now() - t < 120000 ? 'Just now' : t.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); };
@@ -796,7 +791,7 @@
     window.lcExplore = () => { show('explore'); loadCommunity(); renderMine(); };
     cs.querySelectorAll('[data-c-tab]').forEach(t => t.onclick = () => { if (t.dataset.cTab === 'circles') toast('Demo: Circles'); });
     // 本屏经底部 Community tab（#explore）到达；离开时清掉「刚发帖」标记
-    window.addEventListener('lc-posts-changed', renderMine);
+    window.addEventListener('lc-posts-changed', () => { renderMine(); renderList(); });
     window.addEventListener('hashchange', () => { if ((location.hash.slice(1) || '') === 'explore') { loadCommunity(); renderMine(); } else window.__lcJustPosted = null; });
     if ((location.hash.slice(1) || '') === 'explore') loadCommunity();
   })();

@@ -485,6 +485,8 @@
   // 给底部 Community（app.js 的 #explore）用：读我的帖子、画票根、打开详情
   window.LCStamp={
     myPosts:()=>state.ready?myPosts():[],
+    // 底部 Community 的内容流：first-stamp.json 里的英文 Trip.com Moments 帖（含多图 / 评论，详情见 story()）
+    samplePosts:()=>state.ready&&state.config?state.config.samplePosts:[],
     drawPost(canvas,id){const post=state.personal.posts.find(p=>p.id===id);return post&&post.card&&state.config?renderer.draw(canvas,post.card,state.config):Promise.reject(new Error('Post not found'));},
     openPost(id){state.postId=id;go('community-post');}
   };
