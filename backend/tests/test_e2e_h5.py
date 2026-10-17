@@ -45,9 +45,9 @@ def browser():
 
 @pytest.fixture(autouse=True)
 def _fast_pay(monkeypatch):
-    from app import trip
     from mock import MockTrip
-    monkeypatch.setattr(trip, 'pay_test', functools.partial(MockTrip.pay_test, trip, delay=0))
+    # 浏览器带 X-LC-Visitor，每个访问者一份 MockTrip，所以在类上去掉支付等待
+    monkeypatch.setattr(MockTrip, 'pay_test', functools.partialmethod(MockTrip.pay_test, delay=0))
 
 
 @pytest.fixture
