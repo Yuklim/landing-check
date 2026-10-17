@@ -142,6 +142,17 @@ body.stamp-open #lcdot,body.stamp-open #hint{display:none}
 .fs-stuck{position:absolute;right:16px;bottom:81px;z-index:20;display:flex;align-items:center;gap:6px;padding:6px 16px 6px 8px;border-radius:24px;background:#fff;border:1px solid #C9D6FF;box-shadow:0 4px 16px #2C61FE33;color:var(--blue);font:700 14px Inter,-apple-system,sans-serif}
 .fs-stuck img{width:30px;height:30px}
 .lc-stamp[data-route="share"] .fs-body{padding-bottom:28px}
+/* ---- share ↔ 底部 Community 联动 ---- */
+.fs-post-cta{display:flex;flex-direction:column;align-items:stretch}
+.fs-post-cta .fs-btn{min-height:50px;font-size:15px!important;box-shadow:0 6px 16px rgba(44,97,254,.22)}
+.fs-post-cta .fs-btn.secondary{box-shadow:none}
+.fs-edit-first{text-align:center!important;padding:6px 0 0!important;min-height:30px!important}
+.fs-done-post{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;margin:12px 0 0;border:0;border-radius:24px;background:#2C61FE;color:#fff;font:700 15px Inter,-apple-system,sans-serif;cursor:pointer;box-shadow:0 6px 16px rgba(44,97,254,.25)}
+.fs-done-post svg{width:18px;height:18px;flex:none}
+.fs-done-post.done{background:#EAF0FF;color:#2C61FE;box-shadow:none}
+.fs-acard-meta{position:relative;display:block}
+.lc-stamp .fs-acard-post{position:absolute;right:8px;top:8px;border:0;border-radius:14px;background:#2C61FE;color:#fff;font:700 12px Inter,-apple-system,sans-serif;padding:5px 12px;cursor:pointer;box-shadow:0 2px 8px rgba(18,24,38,.25)}
+.lc-stamp .fs-acard-post.done{background:rgba(255,255,255,.92);color:#2C61FE}
 
 /* ---- Community post detail (fs-pd-*) · 对应 design/post-detail-spec.html ---- */
 .fs-pd{--pdblue:#2C61FE;--pdink:#121826;--pdmuted:#8A8F99;--pdline:#ECEFF3}
