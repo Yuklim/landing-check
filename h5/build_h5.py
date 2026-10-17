@@ -291,6 +291,14 @@ page = f'''<!doctype html>
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="stylesheet" href="offline.css">
 <link rel="stylesheet" href="stamp.css">
+<!-- 脚本在 body 末尾，默认要等 HTML 全部下完才开始下载：预加载让它们和 HTML 一起下，首页一出来就能点、教程气泡同时出现 -->
+<link rel="preload" href="app.js" as="script">
+<link rel="preload" href="offline-db.js" as="script">
+<link rel="preload" href="offline.js" as="script">
+<link rel="preload" href="stamp-renderer.js" as="script">
+<link rel="preload" href="stamp.js" as="script">
+<link rel="preload" href="motion.js" as="script">
+<link rel="preload" href="guide.js" as="script">
 <title>Trip.com Landing Check · H5 Demo</title>
 <!-- Inter 随包发布（h5/fonts，OFL，fontsource 5.3.0 可变字体）：国内常连不上 Google Fonts，外链样式表会卡住首屏。中文用系统苹方 / 思源 -->
 <style>
