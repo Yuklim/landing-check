@@ -7,8 +7,11 @@
 <meta name="description" content="Clickable commercialization prototype: how Landing Check connects to Trip.com flights, hotels, eSIM, airport transfer and Trip Moments. Demo data only.">
 <style>
   :root{
-    --blue:#2C61FE; --blue-d:#1E49C8; --ink:#1A1F2E; --muted:#6F7685; --line:#E4E8EE;
-    --bg:#EDEFF3; --card:#fff; --green:#1BA672; --amber:#B25E00; --lightblue:#EEF3FF; --soft:#F6F8FC;
+    /* Real Trip.com flight palette — extracted from the app's RN flight bundle (rn_xtaro_flight_search) */
+    --blue:#2C61FE; --blue2:#7099FF; --blue-d:#173CD2; --bluebg:#F1F5FF; --bluechip:#C6D7FF;
+    --ink:#1F242E; --ink2:#4F5563; --muted:#6F7685;
+    --line:#E7EAF1; --line2:#D4D7DE; --bg:#F6F7FA; --card:#fff; --soft:#F6F7FA;
+    --green:#1BA672; --gold:#FFB400; --svc:#C74401; --amber:#C74401; --red:#D02C2A; --lightblue:#F1F5FF;
     --F:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
   }
   *{box-sizing:border-box}
@@ -111,19 +114,33 @@
         <div class="big">Booking confirmed!</div>
         <div class="muted" style="margin-top:4px">Your trip is booked. Confirmation sent to your email.</div>
       </div>
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div class="hd">San Francisco → Shanghai</div>
-          <span class="pill ok">Confirmed</span>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bluebg)">
+          <div style="font:700 13px var(--F);color:var(--blue)">E-ticket issued</div>
+          <div class="muted" style="font-size:12px">Order No. TRIP8872305</div>
         </div>
-        <div class="hr"></div>
-        <div class="row" style="justify-content:space-between">
-          <div><div class="big" style="font-size:20px">SFO</div><div class="muted">13:00 · Oct 18</div></div>
-          <div style="text-align:center;color:var(--muted)"><div style="font-size:12px">UA 857 · 12h25m</div><div>———✈———</div><div style="font-size:12px">Nonstop</div></div>
-          <div style="text-align:right"><div class="big" style="font-size:20px">PVG</div><div class="muted">17:25 · Oct 19 <sup>+1</sup></div></div>
+        <div style="padding:16px">
+          <div class="row" style="align-items:center;gap:10px">
+            <div style="width:30px;height:30px;border-radius:7px;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font:800 11px var(--F);color:var(--blue)">UA</div>
+            <div style="flex:1"><div style="font:700 14px var(--F)">United Airlines · UA 857</div><div class="muted" style="font-size:12px">Economy · Nonstop</div></div>
+            <span class="pill ok">Confirmed</span>
+          </div>
+          <div class="hr"></div>
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <div><div class="big" style="font-size:22px">13:00</div><div style="font:700 13px var(--F)">SFO</div><div class="muted" style="font-size:12px">Sat, Oct 18</div></div>
+            <div style="text-align:center;color:var(--muted);flex:1;padding:0 6px"><div style="font-size:11px">12h 25m</div><div style="color:var(--line2);letter-spacing:1px">●───✈───●</div><div style="font-size:11px">Nonstop</div></div>
+            <div style="text-align:right"><div class="big" style="font-size:22px">17:25<sup style="color:var(--svc);font-size:11px"> +1</sup></div><div style="font:700 13px var(--F)">PVG · T2</div><div class="muted" style="font-size:12px">Sun, Oct 19</div></div>
+          </div>
+          <div class="hr"></div>
+          <div class="row" style="justify-content:space-between"><span class="muted">Passenger</span><b>Alex Carter · Adult</b></div>
+          <div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted">Baggage</span><b>1 × 23 kg checked</b></div>
+          <div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted">Total paid</span><b>US$842.00</b></div>
+          <div class="row" style="gap:8px;margin-top:14px">
+            <button class="btn ghost sm" style="flex:1" onclick="toast('Demo: online check-in')">Check-in</button>
+            <button class="btn ghost sm" style="flex:1" onclick="toast('Demo: manage booking')">Manage</button>
+            <button class="btn ghost sm" style="flex:1" onclick="toast('Demo: flight details')">Details</button>
+          </div>
         </div>
-        <div class="muted" style="margin-top:8px">Passenger: Alex Carter · Terminal 2 · Economy</div>
-        <button class="link" onclick="toast('Demo: flight details')">View flight details ›</button>
       </div>
 
       <div class="sect">You may also need</div>
@@ -152,11 +169,11 @@
       <span class="tag demo">DEMO DATA</span>
       <div class="card" style="margin-top:10px"><div class="row" style="gap:12px">
         <div style="width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#6a8dff,#2C61FE);flex:none"></div>
-        <div style="flex:1"><div class="hd" style="font-size:15px">The PuLi Hotel and Spa</div><div class="muted" style="font-size:12px">Jing'an · 1.2 km from city center · ★ 4.8</div><div style="margin-top:6px"><span class="price">¥1,880</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
+        <div style="flex:1"><div class="hd" style="font-size:15px">The PuLi Hotel and Spa</div><div class="muted" style="font-size:12px">Jing'an · 1.2 km to center · <span style="color:var(--gold)">★</span> 4.8</div><div style="margin-top:6px"><span class="price">¥1,880</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
       </div><button class="btn ghost" style="margin-top:12px" onclick="bookHotel()">Reserve (demo)</button></div>
       <div class="card"><div class="row" style="gap:12px">
         <div style="width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#59c3a3,#1BA672);flex:none"></div>
-        <div style="flex:1"><div class="hd" style="font-size:15px">Jing'an Shangri-La</div><div class="muted" style="font-size:12px">Jing'an · near metro · ★ 4.7</div><div style="margin-top:6px"><span class="price">¥1,450</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
+        <div style="flex:1"><div class="hd" style="font-size:15px">Jing'an Shangri-La</div><div class="muted" style="font-size:12px">Jing'an · near metro · <span style="color:var(--gold)">★</span> 4.7</div><div style="margin-top:6px"><span class="price">¥1,450</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
       </div><button class="btn ghost" style="margin-top:12px" onclick="bookHotel()">Reserve (demo)</button></div>
       <div class="note">Prototype preview. No real inventory, pricing or payment.</div>
     </div>
