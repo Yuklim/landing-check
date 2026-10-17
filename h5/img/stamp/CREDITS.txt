@@ -6,7 +6,7 @@ chengdu.jpg   — "Chengdu-pandas-d10" · CC BY-SA 2.5 · Wikimedia Commons
 hangzhou.jpg  — "West Lake and Hangzhou Skyline" · CC BY-SA 4.0 · Wikimedia Commons
 guangzhou.jpg — "Canton Tower 20241027" · CC BY-SA 4.0 · Wikimedia Commons
 xian.jpg      — "Big Wild Goose Pagoda 2" · CC0（公有领域）· Wikimedia Commons
-shanghai-dusk.png — 项目既有素材（上海黄昏天际线）
+shanghai-dusk.png — 项目既有素材（上海黄昏天际线）；shanghai-dusk.jpg 为其 1200 宽压缩版，H5 实际使用
 
 注：图片已裁压到约 760px 宽以适配卡片缩略图与离线包体积。
 如需替换为自有版权实景图，直接替换同名文件再跑 `python3 h5/build_offline.py` 即可。

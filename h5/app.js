@@ -333,6 +333,40 @@
     sc.onload = () => window.AMap ? res(window.AMap) : rej(new Error('AMap')); sc.onerror = () => { AMAP = null; rej(new Error('AMap')); };
     document.head.appendChild(sc);
   }));
+  // Trip.com 图床的原图是 1288×1920（约 300 KB），手机上用图床按宽度缩好的版本（800 宽约 150 KB）。
+  // 图床只认部分宽度：480/540/600/640/800/960/1080
+  const tripImg = (u, w = 800) => /^https:\/\/[\w-]+\.tripcdn\.com\/images\//.test(u || '') ? u.split('?')[0] + `?proc=resize/m_w,w_${w},h_10000` : u;
+  window.lcTripImg = tripImg;
+  // 预热：地图、图鉴照片、社区图原本点到那一屏才开始下载，演示时会卡一下。
+  // 首页加载完、浏览器空闲时先把它们下好，之后进到那一屏直接显示。省流量模式和离线时不预热
+  function warmUp() {
+    if (!navigator.onLine || (navigator.connection && navigator.connection.saveData)) return;
+    loadRoutes().catch(() => {});
+    // 城市图鉴（stamp.js）复用这一个加载，不再插第二个高德脚本
+    window.__lcAMapPromise = window.__lcAMapPromise || loadAMap();
+    window.__lcAMapPromise.then(A => A.plugin('AMap.DistrictSearch', () => {})).catch(() => {});
+    const queue = ['shanghai-dusk.jpg', 'beijing.jpg', 'chengdu.jpg', 'hangzhou.jpg', 'guangzhou.jpg', 'xian.jpg'].map(f => 'img/stamp/' + f);
+    // 每条帖子：列表首图 + 详情首图 + 头像（详情后面几张图滑到时再下）
+    const addPosts = () => (window.LCStamp ? window.LCStamp.samplePosts() : []).forEach(p => {
+      const first = (p.images && p.images[0]) || p.image;
+      if (first) queue.push(tripImg(first, 640), tripImg(first, 800));
+      if (p.authorImage) queue.push(p.authorImage);
+    });
+    if (window.LCStamp && window.LCStamp.samplePosts().length) addPosts();
+    else window.addEventListener('lc-posts-changed', function once() { window.removeEventListener('lc-posts-changed', once); addPosts(); pump(); });
+    // 同时只下 3 张，不跟当前页面抢带宽
+    let active = 0;
+    function pump() {
+      while (active < 3 && queue.length) {
+        const img = new Image(); active++;
+        img.referrerPolicy = 'no-referrer';
+        img.onload = img.onerror = () => { active--; pump(); };
+        img.src = queue.shift();
+      }
+    }
+    pump();
+  }
+  window.addEventListener('load', () => (window.requestIdleCallback || setTimeout)(warmUp, { timeout: 2000 }));
   const dotHTML = (bg, ring, size = 14) => `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${bg};border:3px solid ${ring};box-sizing:border-box;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div>`;
   const PIN = '<svg width="28" height="36" viewBox="0 0 28 36" style="display:block"><path d="M14 35s12-11.5 12-21A12 12 0 0 0 2 14c0 9.5 12 21 12 21z" fill="#2C61FE" stroke="#fff" stroke-width="2"/><circle cx="14" cy="14" r="4.5" fill="#fff"/></svg>';
   // 小工具：新建地图 / 画线 / 打点，返回覆盖物，最后 setFitView
@@ -783,7 +817,7 @@
     const HEART = `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="${MUTED}" stroke-width="2" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.6 8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>`;
     const CMT = `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="${MUTED}" stroke-width="2" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
     function card(d) {
-      const imgs = (d.images && d.images.length ? d.images : [d.cover]).filter(Boolean).slice(0, 3);
+      const imgs = (d.images && d.images.length ? d.images : [d.cover]).filter(Boolean).slice(0, 3).map(u => tripImg(u, 640));
       const media = imgs.map(u => `<div style="flex:none;width:322px;height:300px;border-radius:12px;scroll-snap-align:start;background:#eee center/cover no-repeat url('${esc(u)}')"></div>`).join('');
       const av = d.avatar ? `background:#eee center/cover no-repeat url('${esc(d.avatar)}')` : 'background:#F5B400';
       return `<div style="padding:16px 0">
