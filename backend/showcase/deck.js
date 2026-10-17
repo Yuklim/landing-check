@@ -47,7 +47,23 @@
     dots.forEach(function (d, i) { d.classList.toggle("on", i === cur); });
     counter.textContent = (cur + 1) + " / " + N;
     gsap.to(progress, { width: (N > 1 ? cur / (N - 1) * 100 : 100) + "%", duration: .4, ease: "power2.out" });
+    syncDock();
   }
+
+  // ---------- docked QR: top-right on every slide after the cover, except slides with their own QR ----------
+  var dock = document.querySelector(".qr-dock");
+  var dockFrom = slides.indexOf(document.getElementById("cover"));
+  function syncDock() {
+    if (!dock) return;
+    var on = dockFrom >= 0 && cur > dockFrom && !slides[cur].querySelector(".qr");
+    dock.classList.toggle("on", on);
+    dock.classList.remove("big");   // a zoomed QR never carries over to the next slide
+  }
+  function zoomDock(big) { if (dock && dock.classList.contains("on")) dock.classList.toggle("big", big); }
+  if (dock) dock.addEventListener("click", function () {
+    if (!document.documentElement.classList.contains("deck-editing")) zoomDock(!dock.classList.contains("big"));
+    dock.blur();
+  });
 
   // ---------- fragments ----------
   function frags(i) { return [].slice.call(slides[i].querySelectorAll(".frag")); }
@@ -175,6 +191,8 @@
     else if (e.key === "End") { e.preventDefault(); goto(N - 1, 1); }
     else if (e.key === "f" || e.key === "F") { toggleFS(); }
     else if (e.key === "a" || e.key === "A") { revealAll(); }
+    else if (e.key === "q" || e.key === "Q") { zoomDock(!(dock && dock.classList.contains("big"))); }
+    else if (e.key === "Escape") { zoomDock(false); }
   });
   var pv = document.querySelector(".deck-arrows .prev"), nx = document.querySelector(".deck-arrows .next");
   if (pv) pv.addEventListener("click", prev); if (nx) nx.addEventListener("click", next);
