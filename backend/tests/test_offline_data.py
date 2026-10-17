@@ -18,7 +18,7 @@ def test_offline_manifest_matches_all_delivered_bytes():
         content = path.read_bytes()
         assert len(content) == asset['bytes'], asset['path']
         assert hashlib.sha256(content).hexdigest() == asset['sha256'], 'Run python h5/build_offline.py: ' + asset['path']
-    assert {'index.html', 'app.js', 'offline.js', 'offline.css', 'offline-db.js', 'data/offline-pvg-t2.json', 'stamp.js', 'stamp-renderer.js', 'stamp.css', 'data/first-stamp.json', 'img/stamp/shanghai-dusk.png', 'img/stamp/discover-qr.png', 'fonts/cormorant-garamond.ttf'} <= paths
+    assert {'index.html', 'app.js', 'offline.js', 'offline.css', 'offline-db.js', 'data/offline-pvg-t2.json', 'stamp.js', 'stamp-renderer.js', 'stamp.css', 'data/first-stamp.json', 'img/stamp/shanghai-dusk.jpg', 'img/stamp/discover-qr.png', 'fonts/cormorant-garamond.ttf'} <= paths
     assert not any(path.startswith(('backend/', 'api/')) for path in paths)
 
 

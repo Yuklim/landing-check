@@ -1,16 +1,16 @@
 {
   "schema": 1,
   "version": "2026.10.17.4",
-  "revision": "5d720580e5063e205404",
+  "revision": "6dc485291fe8df8bc623",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "9eae3b3587315599438c21f478f063002fa9743fc2840afa20e792895c503f4c",
-      "bytes": 192831
+      "sha256": "a0de3ad48c2a00dd6d60760c9dcb8e8fa7f28c0da6bb440e38ee8b0fe6c6733f",
+      "bytes": 195097
     },
     {
       "path": "data/first-stamp.json",
-      "sha256": "fac2be3bdc84c6a90f987345b65fb45824b83893c623e915fcdc31b041a6ef55",
+      "sha256": "6b7757b07a0b1a06eb48c74407cbf9142a01a0af031f992bd66c473eb26c8f5b",
       "bytes": 18669
     },
     {
@@ -174,9 +174,9 @@
       "bytes": 92950
     },
     {
-      "path": "img/stamp/shanghai-dusk.png",
-      "sha256": "5b46dc51f2ed65cb36a6afcb6d253d603ba39b2bf613aeb7dc1f8084916d38e0",
-      "bytes": 3166699
+      "path": "img/stamp/shanghai-dusk.jpg",
+      "sha256": "48e6924598f8fe88cf3eb457a76c0515740c5686ba66afade50dbe4c96b0cbd8",
+      "bytes": 413625
     },
     {
       "path": "img/stamp/xian.jpg",
@@ -190,7 +190,7 @@
     },
     {
       "path": "index.html",
-      "sha256": "4916091402370ef773525d92ecb984c2bc8ebfed13e885af53f242fd278d7bbe",
+      "sha256": "2ae7d891b173db516add6fef98a9146c76f07a92ac6a7a6fe18ff70783a90a51",
       "bytes": 1101448
     },
     {
@@ -230,8 +230,8 @@
     },
     {
       "path": "stamp.js",
-      "sha256": "f7e0a5dc8dd69c536e5c59b91f89688531f79d96da36dbaa8297c1b72212c565",
-      "bytes": 51626
+      "sha256": "c0efbd55cebb99395a8f0740110226b1775d22d5dc3c081887fbaddfc28694f6",
+      "bytes": 51777
     },
     {
       "path": "tutorials.json",
