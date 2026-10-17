@@ -154,8 +154,9 @@
     tl.set({}, {}, t + D.endHold);
 
     function resize() {
-      const r = mount.getBoundingClientRect();
-      const s = Math.min(r.width / (W + 28), r.height / (H + 28));
+      // 用版面尺寸（clientWidth/Height）而不是 getBoundingClientRect：外层 deck / 预览页整体 scale 过，
+      // 后者拿到的是缩放后的尺寸，手机会被再缩放一次（1920×1080 下放大 1.33 倍，冲出屏幕底部）
+      const s = Math.min(mount.clientWidth / (W + 28), mount.clientHeight / (H + 28));
       phone.style.transform = 'translate(-50%,-50%) scale(' + (s > 0 ? s : 1) + ')';
     }
     resize();
