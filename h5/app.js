@@ -1099,6 +1099,10 @@
   // 行前检查一屏一个重点：待办里第一项是「Do this next」大卡，其余压成一行 + 右侧小按钮；可选项收成一行
   (() => { const st = document.createElement('style'); st.textContent = `
     .screen[data-route="preflight"] .lc-pf-next{outline:2px solid #2C61FE!important;outline-offset:-2px;border-radius:16px!important}
+    .screen[data-route="preflight"] .lc-pf-next{flex-direction:column!important;align-items:stretch!important;gap:10px!important;padding:14px!important}
+    .screen[data-route="preflight"] .lc-pf-next>[data-pencil-name="Row"]{width:100%}
+    .screen[data-route="preflight"] .lc-pf-next [data-pencil-name="Item Button"]{width:100%!important;height:44px!important;padding:0!important;border-radius:22px!important;background:#2C61FE!important;align-self:stretch}
+    .screen[data-route="preflight"] .lc-pf-next [data-pencil-name="Item Button Label"]{color:#fff!important;font-size:15px!important}
     .screen[data-route="preflight"] .lc-pf-compact{flex-direction:row!important;align-items:center!important;gap:10px!important;outline:0!important;border-radius:16px!important;padding:12px 14px!important}
     .screen[data-route="preflight"] .lc-pf-compact>[data-pencil-name="Row"]{flex:1;min-width:0}
     .screen[data-route="preflight"] .lc-pf-compact [data-pencil-name="Sub Row"],.screen[data-route="preflight"] .lc-pf-compact [data-pencil-name="Item Guide Link"]{display:none!important}
@@ -1110,6 +1114,7 @@
   function tidyPreflight() {
     const list = $$('preflight', 'Must List'); if (!list) return;
     list.querySelectorAll(':scope > .lc-pf-still').forEach(n => n.remove());
+    document.querySelectorAll('.screen[data-route="preflight"] .lc-pf-next, .screen[data-route="preflight"] .lc-pf-compact').forEach(n => n.classList.remove('lc-pf-next', 'lc-pf-compact'));   // 移到「已完成」里的项不再带大卡样式
     const items = [...list.children].filter(n => !n.classList.contains('lc-hide') && n.style.display !== 'none');
     items.forEach((n, i) => { n.classList.toggle('lc-pf-next', i === 0); n.classList.toggle('lc-pf-compact', i > 0); });
     if (items.length > 1) { const still = el('div', '', 'STILL TO DO'); still.className = 'lc-pf-still'; items[1].before(still); }
@@ -1137,6 +1142,55 @@
     if (row) { row.classList.add('tap'); row.style.cursor = 'pointer'; row.addEventListener('click', () => { open = !open; sync(); }); }
     if (title) title.textContent = 'No SMS code?';
     sync();
+  })();
+  // 行前检查底部「Plan your first days」：官方 MCP 真实数据——热门景点门票（query_ticket）+ 第一次来的旅游笔记（query_content）。
+  // 骨架先行；接口失败或静态模式整块不显示。笔记点开走社区详情页（英文标题 / 摘要 + 中文原文）。
+  (() => {
+    const body = $$('preflight', 'Body'); if (!body || !API) return;
+    const st = document.createElement('style'); st.textContent = `
+      .lc-plan{width:100%;display:flex;flex-direction:column;gap:12px;margin-top:6px;font-family:Inter,-apple-system,"PingFang SC",sans-serif}
+      .lc-plan-h{font:700 13px/1 Inter,sans-serif;color:#6F7685;letter-spacing:.02em;margin:6px 2px 0}
+      .lc-plan-card{background:#fff;border-radius:16px;padding:14px 0 14px}
+      .lc-plan-top{display:flex;align-items:baseline;gap:8px;padding:0 14px 10px}
+      .lc-plan-top b{font:700 16px Inter,sans-serif;color:${INK};flex:1}
+      .lc-plan-top span{font:500 11px Inter,sans-serif;color:${MUTED}}
+      .lc-tix{display:flex;gap:10px;overflow-x:auto;padding:0 14px;scrollbar-width:none}.lc-tix::-webkit-scrollbar{display:none}
+      .lc-tik{flex:none;width:136px;text-decoration:none;color:${INK}}
+      .lc-tik i{display:block;height:96px;border-radius:12px;background:#E9EDF2 center/cover no-repeat}
+      .lc-tik b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:700 13px/1.3 Inter,sans-serif;margin-top:7px;min-height:34px}
+      .lc-tik small{display:block;font:400 11px/1.4 "PingFang SC",sans-serif;color:${MUTED}}
+      .lc-tik em{display:flex;justify-content:space-between;font-style:normal;font:600 12px/1.5 Inter,sans-serif;margin-top:3px}
+      .lc-tik em span:last-child{color:${BLUE}}
+      .lc-guide{display:flex;gap:12px;padding:10px 14px;border-top:1px solid ${LINE};cursor:pointer;align-items:flex-start}
+      .lc-guide:first-of-type{border-top:0}
+      .lc-guide i{flex:none;width:76px;height:76px;border-radius:10px;background:#E9EDF2 center/cover no-repeat}
+      .lc-guide div{min-width:0;flex:1}
+      .lc-guide b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:700 14px/1.3 Inter,sans-serif;color:${INK}}
+      .lc-guide p{margin:3px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font:400 12px/1.4 Inter,sans-serif;color:${MUTED}}
+      .lc-guide small{display:block;margin-top:4px;font:500 11px Inter,"PingFang SC",sans-serif;color:#8A8F99;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+      .lc-sk{background:linear-gradient(90deg,#EEF1F5,#F6F8FA,#EEF1F5);background-size:200% 100%;animation:lcsk 1.2s infinite}
+      @keyframes lcsk{to{background-position:-200% 0}}`; document.head.appendChild(st);
+    const box = el('section', ''); box.className = 'lc-plan';
+    const sk = n => Array.from({ length: n }, () => '<div class="lc-tik"><i class="lc-sk"></i><b class="lc-sk" style="height:16px;border-radius:4px"></b></div>').join('');
+    box.innerHTML = `<div class="lc-plan-h">PLAN YOUR FIRST DAYS</div>
+      <div class="lc-plan-card" data-plan="tickets"><div class="lc-plan-top"><b>Top sights in Shanghai</b><span>Tickets · Trip.com</span></div><div class="lc-tix">${sk(3)}</div></div>
+      <div class="lc-plan-card" data-plan="guides"><div class="lc-plan-top"><b>Guides for first-timers</b><span>Traveler notes · Trip.com</span></div><div class="lc-guides"><div class="lc-guide"><i class="lc-sk"></i><div><b class="lc-sk" style="height:16px;border-radius:4px"></b></div></div></div></div>`;
+    body.appendChild(box);
+    const k = n => n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'k' : String(n || 0);
+    const drop = name => { const c = box.querySelector(`[data-plan="${name}"]`); if (c) c.remove(); if (!box.querySelector('.lc-plan-card')) box.remove(); };
+    withTimeout(get('/content/tickets', true), 20000).then(d => {
+      const items = (d.items || []).filter(t => t.cover); if (!items.length) return drop('tickets');
+      box.querySelector('.lc-tix').innerHTML = items.map(t => `<a class="lc-tik tap" href="${esc(t.url)}" target="_blank" rel="noopener noreferrer">
+        <i style="background-image:url('${esc(t.cover)}')"></i><b>${esc(t.name_en || t.name)}</b><small>${esc(t.name)}</small>
+        <em><span>★ ${t.score || '–'} · ${k(t.comments)}</span><span>${t.price_from ? 'from ¥' + Math.round(t.price_from) : t.free ? 'Free' : ''}</span></em></a>`).join('');
+    }).catch(() => drop('tickets'));
+    withTimeout(get('/content/guides', true), 30000).then(d => {
+      const items = (d.items || []).slice(0, 3); if (!items.length) return drop('guides');
+      const list = box.querySelector('.lc-guides');
+      list.innerHTML = items.map((g, i) => `<div class="lc-guide tap" data-guide="${i}"><i style="background-image:url('${esc(g.cover || (g.images || [])[0] || '')}')"></i>
+        <div><b>${esc(g.title_en || g.title)}</b>${g.summary_en ? `<p>${esc(g.summary_en)}</p>` : ''}<small>♡ ${k(g.likes)} · ${esc(g.author)}${g.title_en ? ' · translated' : ''}</small></div></div>`).join('');
+      list.querySelectorAll('[data-guide]').forEach(n => n.onclick = () => { const g = items[+n.dataset.guide]; if (window.LCStamp && LCStamp.openGuide) LCStamp.openGuide(g); });
+    }).catch(() => drop('guides'));
   })();
   function syncOpt() {
     const sec = $$('preflight', 'Section OPTIONAL'), opt = $$('preflight', 'Optional List'); if (!sec || !opt) return;
