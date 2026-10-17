@@ -740,16 +740,20 @@
     if (typeof order !== 'undefined' && !order.includes('explore')) order.push('explore');
 
     const CF = cs.querySelector('[data-c="feed"]');
+    // 上：我发的帖子（stamp.js 本地帖，带票根）；下：真实内容流
+    CF.innerHTML = '<div data-c="mine"></div><div data-c="list"></div>';
+    const MINE = CF.querySelector('[data-c="mine"]'), LIST = CF.querySelector('[data-c="list"]');
+    (() => { const st = document.createElement('style'); st.textContent = '.lc-swipe{scrollbar-width:none;-webkit-overflow-scrolling:touch}.lc-swipe::-webkit-scrollbar{display:none}.lc-posted{margin:12px 16px 0;padding:10px 14px;border-radius:12px;background:#E9F8F1;color:#11865A;font:600 13px Inter,sans-serif}.lc-hl{animation:lcHl 2.4s ease}@keyframes lcHl{0%{background:#EAF0FF}100%{background:#fff}}'; document.head.appendChild(st); })();
     const sk = () => Array.from({ length: 2 }).map(() => `<div style="padding:16px 0"><div style="display:flex;align-items:center;gap:10px;padding:0 16px"><div style="width:40px;height:40px;border-radius:20px;background:${BG}"></div><div style="width:120px;height:14px;border-radius:7px;background:${BG}"></div></div><div style="margin:12px 16px 0;height:260px;border-radius:12px;background:${BG}"></div><div style="margin:12px 16px 0;height:18px;border-radius:9px;background:${BG};width:80%"></div><div style="margin:8px 16px 0;height:14px;border-radius:7px;background:${BG};width:55%"></div></div>`).join('');
     const HEART = `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="${MUTED}" stroke-width="2" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.6 8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>`;
     const CMT = `<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="${MUTED}" stroke-width="2" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
     function card(d) {
       const imgs = (d.images && d.images.length ? d.images : [d.cover]).filter(Boolean).slice(0, 3);
-      const media = imgs.map(u => `<div style="flex:none;width:322px;height:300px;border-radius:12px;background:#eee center/cover no-repeat url('${esc(u)}')"></div>`).join('');
+      const media = imgs.map(u => `<div style="flex:none;width:322px;height:300px;border-radius:12px;scroll-snap-align:start;background:#eee center/cover no-repeat url('${esc(u)}')"></div>`).join('');
       const av = d.avatar ? `background:#eee center/cover no-repeat url('${esc(d.avatar)}')` : 'background:#F5B400';
       return `<div style="padding:16px 0">
         <div style="display:flex;align-items:center;gap:10px;padding:0 16px"><div style="width:40px;height:40px;border-radius:20px;${av};background-size:cover"></div><div style="font:700 15px Inter,sans-serif">${esc(d.author || 'Traveler')}</div>${d.publishTime ? `<div style="font:400 14px Inter,sans-serif;color:${MUTED}">· ${esc(d.publishTime)}</div>` : ''}</div>
-        <div style="display:flex;gap:6px;padding:12px 0 0 16px;overflow:hidden">${media}</div>
+        <div class="lc-swipe" style="display:flex;gap:6px;padding:12px 16px 0;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding-left:16px">${media}</div>
         <div style="padding:12px 16px 0;font:700 20px/1.3 Inter,sans-serif">${esc(d.title || '')}</div>
         <div style="display:flex;align-items:center;gap:18px;padding:10px 16px 0;color:${MUTED};font:400 14px Inter,sans-serif"><span style="display:inline-flex;align-items:center;gap:5px">${HEART}${esc(String(d.likes || 0))}</span><span style="display:inline-flex;align-items:center;gap:5px">${CMT}${esc(String(d.comments || 0))}</span></div>
       </div><div style="height:8px;background:${BG}"></div>`;
@@ -760,18 +764,39 @@
     ];
     let loaded = false;
     async function loadCommunity() {
-      if (loaded) return; loaded = true; CF.innerHTML = sk();
+      if (loaded) return; loaded = true; LIST.innerHTML = sk();
       let data = null;
       try { data = await withTimeout(get('/content/community?query=' + encodeURIComponent('上海外滩') + '&size=10', true), 9000); } catch (e) {}
       const real = data && data.items && data.items.length;
       const items = real ? data.items : MOCK;
-      CF.innerHTML = items.map(card).join('');
+      LIST.innerHTML = items.map(card).join('');
       status(real ? `探索·真实数据 ${items.length} 条` : '探索·示例数据(接口兜底)', real ? 'rgba(27,166,114,.85)' : 'rgba(232,137,12,.9)');
     }
-    window.lcExplore = () => { show('explore'); loadCommunity(); };
+    // 我发的帖子（share / 完成页 / 图鉴一键发出），置顶；刚发的那条高亮并给提示
+    const YOU = `<div style="width:40px;height:40px;border-radius:20px;background:${BLUE};display:flex;align-items:center;justify-content:center;flex:none"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div>`;
+    const when = iso => { const t = new Date(iso); if (isNaN(t)) return ''; return Date.now() - t < 120000 ? 'Just now' : t.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); };
+    function renderMine() {
+      const api = window.LCStamp, mine = api ? api.myPosts() : [], just = window.__lcJustPosted;
+      if (!mine.length) { MINE.innerHTML = ''; return; }
+      const banner = just && just.fresh ? '<div class="lc-posted">✓ Posted to Community · only visible on this device</div>' : '';
+      // 正文开头就是标题时只显示剩下的部分，避免重复
+      const rest = p => { const b = (p.body || '').trim(), t = (p.title || '').trim(); return t && b.startsWith(t) ? b.slice(t.length).replace(/^[.!?。！？\s]+/, '') : b; };
+      MINE.innerHTML = banner + mine.map(p => `<div class="${just && just.id === p.id ? 'lc-hl' : ''}" data-mine="${esc(p.id)}" style="padding:16px 0;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:10px;padding:0 16px">${YOU}<div style="font:700 15px Inter,sans-serif">You</div><div style="font:400 14px Inter,sans-serif;color:${MUTED}">· ${esc(when(p.savedAt))}</div><span style="margin-left:auto;font:600 11px Inter,sans-serif;color:${BLUE};background:#EAF0FF;border-radius:10px;padding:3px 8px">On this device</span></div>
+          <div style="padding:12px 16px 0"><canvas data-post="${esc(p.id)}" width="1080" height="1350" style="display:block;width:240px;height:300px;border-radius:12px;background:${BG}"></canvas></div>
+          <div style="padding:12px 16px 0;font:700 20px/1.3 Inter,sans-serif">${esc(p.title || '')}</div>
+          ${rest(p) ? `<div style="padding:6px 16px 0;font:400 14px/1.5 Inter,sans-serif;color:#4A5160;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${esc(rest(p))}</div>` : ''}
+          <div style="display:flex;align-items:center;gap:18px;padding:10px 16px 0;color:${MUTED};font:400 14px Inter,sans-serif"><span style="display:inline-flex;align-items:center;gap:5px">${HEART}0</span><span style="display:inline-flex;align-items:center;gap:5px">${CMT}0</span></div>
+        </div><div style="height:8px;background:${BG}"></div>`).join('');
+      MINE.querySelectorAll('canvas[data-post]').forEach(cv => api.drawPost(cv, cv.dataset.post).catch(() => {}));
+      MINE.querySelectorAll('[data-mine]').forEach(n => n.onclick = () => api.openPost(n.dataset.mine));
+      if (just) CF.scrollTop = 0;
+    }
+    window.lcExplore = () => { show('explore'); loadCommunity(); renderMine(); };
     cs.querySelectorAll('[data-c-tab]').forEach(t => t.onclick = () => { if (t.dataset.cTab === 'circles') toast('Demo: Circles'); });
-    // 入口待用户拍板后再接（暂不抢占 stamp.js 的 #community）；本屏经 #explore 到达，或 window.lcExplore() 打开
-    window.addEventListener('hashchange', () => { if ((location.hash.slice(1) || '') === 'explore') loadCommunity(); });
+    // 本屏经底部 Community tab（#explore）到达；离开时清掉「刚发帖」标记
+    window.addEventListener('lc-posts-changed', renderMine);
+    window.addEventListener('hashchange', () => { if ((location.hash.slice(1) || '') === 'explore') { loadCommunity(); renderMine(); } else window.__lcJustPosted = null; });
     if ((location.hash.slice(1) || '') === 'explore') loadCommunity();
   })();
 

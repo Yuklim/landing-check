@@ -1,5 +1,6 @@
 /* The First Stamp: local keepsakes shown after the landing steps are done.
-   底部 Community 是官方内容页（#explore）；本地演示社区（community / community-compose / community-post）已不在演示流程里，代码保留但没有入口。 */
+   底部 Community 是官方内容页（#explore）。share 页 / 落地完成页 / 城市图鉴可一键发帖：帖子只存本机，置顶显示在 #explore；
+   community-compose 是「先编辑再发」的写帖页，community-post 是帖子详情。旧的本地 Shanghai Community 页（#community）仍没有入口。 */
 (function () {
   'use strict';
   const ROUTES = ['share', 'community', 'community-compose', 'community-post', 'city-passport'];
@@ -19,10 +20,15 @@
   const btn = (text, action, value = '', tone = '', disabled = false) => `<button type="button" class="fs-btn ${tone}" data-fs="${H(action)}" data-value="${H(value)}" ${disabled ? 'disabled' : ''}>${text}</button>`;
   const stamp = () => state.personal.stamps.find(item => item.cityId === state.config?.city.id);
   const card = () => renderer.publicCard(state.config, state.personal.draft, stamp());
+  // share ↔ 底部 Community 联动：用户自己发的带票根的帖子（只存本机，不发往 Trip.com）
+  const myPosts = () => state.personal.posts.filter(post => post.card && !post.demo);
+  const defaultCaption = () => state.config?.storyPrompts?.[0] || 'Hello, Shanghai. My China story starts here.';
+  const postsChanged = () => window.dispatchEvent(new CustomEvent('lc-posts-changed'));
   function feedback(message, good = false) {
     state.notice = message; state.good = good;
     const el = screens[current()]?.querySelector('.fs-feedback');
     if (el) { el.textContent = message; el.classList.toggle('good', good); }
+    else if (message && typeof window.toast === 'function') window.toast(message);   // 完成页 / 图鉴外的入口没有提示条
   }
   function releaseImage() {
     if (state.imageUrl) URL.revokeObjectURL(state.imageUrl);
@@ -60,7 +66,8 @@
   }
   function tabBar(route) {
     if (!appTabs) return '';
-    const active = 'Tab My Trips';
+    // 帖子 / 写帖页属于 Community（从底部 Community 进来）；集章、图鉴属于 My Trips
+    const active = ['community','community-compose','community-post'].includes(route) ? 'Tab Community' : 'Tab My Trips';
     const bar = appTabs.cloneNode(true);
     bar.querySelectorAll('[data-pencil-name^="Tab "]').forEach(tab => {
       const name = tab.dataset.pencilName; if (name === 'Tab Icon' || name === 'Tab Label') return;
@@ -81,9 +88,13 @@
     return `<figure class="fs-preview"><canvas data-fs-card role="img" aria-label="${H(`${publicCard.unlocked ? 'Unlocked' : 'Preview'} Shanghai souvenir. Traveler: ${publicCard.traveler}. Arrival: ${renderer.formatDate(publicCard.arrival)}.`)}" width="1080" height="1350"></canvas><figcaption>1080 × 1350 · Your digital city ticket</figcaption><div class="fs-preview-status" role="status">Preparing your keepsake…</div></figure>`;
   }
   function share() {
-    const d = state.personal.draft, unlocked = stamp();
+    const d = state.personal.draft, unlocked = stamp(), mine = myPosts()[0];
+    // 主动作：一键发到底部 Community；发过之后变成「去 Community 看我的帖子」
+    const postCta = mine
+      ? `<div class="fs-post-cta">${btn(icon('check')+' Posted · View in Community','view-community',mine.id,'secondary')}</div>`
+      : `<div class="fs-post-cta">${btn(icon('community')+' Post to Community','quick-post','share')}<button type="button" class="fs-text-btn fs-edit-first" data-fs="compose">Edit caption before posting</button></div>`;
     return `<div class="fs-intro"><div><div class="fs-eyebrow">THE FIRST STAMP · SHANGHAI EDITION</div><p>${unlocked ? 'Your China story has begun.' : 'Every journey has a first page.'}</p></div><span class="fs-number">${unlocked ? '01' : '✦'}</span></div>
-      ${preview()}<div class="fs-actions">${btn(icon('download')+' Save image','save-image')}${btn(icon('share')+' Share','share-image','','outline')}</div>
+      ${preview()}${postCta}<div class="fs-actions">${btn(icon('download')+' Save image','save-image','','outline')}${btn(icon('share')+' Share','share-image','','outline')}</div>
       <details class="fs-panel" data-fs-customize><summary>Make it yours · choose what to share</summary><form id="fs-customize"><label class="fs-field">Traveler nickname<input name="name" maxlength="40" value="${H(d.name)}" placeholder="Your name, if you choose" autocomplete="off"></label><label class="fs-check"><input name="showName" type="checkbox" ${d.showName?'checked':''}><span>Show my nickname on the card<small>Off by default. Otherwise your card says “A traveler”.</small></span></label><label class="fs-field">Arrival date · Shanghai local date<input name="arrival" type="date" value="${H(d.arrival)}" min="2000-01-01" max="2100-12-31" required></label><label class="fs-check"><input name="showDate" type="checkbox" ${d.showDate?'checked':''}><span>Show my arrival date<small>Off by default. The date stays private unless selected.</small></span></label></form><p class="fs-small">Only your selected nickname and date appear. Hotel details, live location, payment information and booking references are never included. Previously saved images and posts keep the information you chose at that time.</p></details>
       ${unlocked ? `<section class="fs-panel"><div class="fs-eyebrow">CITY NO. 001 · COLLECTED</div><h2>Shanghai is in your atlas.</h2><p class="fs-small">Collected when you finished your landing steps. No location tracking.</p>${btn('View my city atlas','nav','city-passport','secondary')}</section>` : ''}
       <section class="fs-panel"><div class="fs-eyebrow">THE NEXT CHAPTER</div><h2>Stories are better shared.</h2><p class="fs-small">See what other travelers are discovering in China right now.</p><div style="margin-top:12px">${btn(icon('community')+' See what other travelers share','nav','explore','secondary')}</div></section>${btn('Copy share caption','copy-caption','','outline')}`;
@@ -108,7 +119,7 @@
   function compose() {
     const draft = state.personal.composer;
     return `<div class="fs-demo">Local Community demo</div><div><h2>A first line for your story.</h2><p class="fs-small">Review your card and caption before saving a local post. No content is sent to Trip.com or another service.</p></div>${preview()}
-      <form id="fs-compose-form" class="fs-panel"><label class="fs-field">Your story<textarea name="caption" maxlength="1000" required placeholder="What does the beginning feel like?">${H(draft.caption)}</textarea></label><label class="fs-field">Story topic<select name="topic">${state.config.topics.filter(t=>t!=='All stories').map(topic=>`<option ${draft.topic===topic?'selected':''}>${H(topic)}</option>`).join('')}</select></label><button type="button" class="fs-text-btn" data-fs="suggest-caption">Try a different opening line</button><p class="fs-small">Include only what you want others to read. Do not add hotel addresses, contact details or payment information.</p><label class="fs-check"><input type="checkbox" name="reviewed" required><span>I have reviewed the image and text for sharing.</span></label><button class="fs-btn" type="submit" ${!stamp()?'disabled':''}>Save post to this demo Community</button>${!stamp()?'<p class="fs-small" style="margin-top:10px">This card is a preview. Confirm your arrival essentials to unlock it before creating a post.</p>':''}</form>
+      <form id="fs-compose-form" class="fs-panel"><label class="fs-field">Your story<textarea name="caption" maxlength="1000" required placeholder="What does the beginning feel like?">${H(draft.caption)}</textarea></label><label class="fs-field">Story topic<select name="topic">${state.config.topics.filter(t=>t!=='All stories').map(topic=>`<option ${draft.topic===topic?'selected':''}>${H(topic)}</option>`).join('')}</select></label><button type="button" class="fs-text-btn" data-fs="suggest-caption">Try a different opening line</button><p class="fs-small">Include only what you want others to read. Do not add hotel addresses, contact details or payment information.</p><label class="fs-check"><input type="checkbox" name="reviewed" required><span>I have reviewed the image and text for sharing.</span></label><button class="fs-btn" type="submit" ${!stamp()?'disabled':''}>Post to Community</button>${!stamp()?'<p class="fs-small" style="margin-top:10px">This card is a preview. Confirm your arrival essentials to unlock it before creating a post.</p>':''}</form>
       ${btn('Edit card & public fields','edit-card','','outline')}<p class="fs-small">Draft saved on this device. Official Trip.com publishing requires a separate integration.</p>`;
   }
   function story() {
@@ -117,7 +128,7 @@
     state.postId = post.id;
     return `<div class="fs-demo">${post.source?('From '+H(post.source)):(post.demo?'Illustrative sample story':'Local demo post · on this browser only')}</div><div><div class="fs-eyebrow">${H(post.topic)} · SHANGHAI</div><h2 style="font-size:38px;margin-top:9px">${H(post.title)}</h2><p class="fs-story-author">by ${H(post.author)}</p></div>${post.card?preview(post.card):cover(post)}<p class="fs-story-body">${H(post.body)}</p>${post.sourceUrl?`<p class="fs-small"><a href="${H(post.sourceUrl)}" target="_blank" rel="noopener noreferrer">View the original on Trip.com ↗</a></p>`:''}
       ${btn(icon('bookmark')+(state.personal.bookmarks.includes(post.id)?' Saved to my atlas':' Save this story'),'bookmark',post.id,'outline')}${post.topic==='Local Tips'?btn('Open my offline travel pack','nav','offline','secondary'):''}
-      ${!post.demo?btn('Delete this local post','delete-post',post.id,'danger'):''}${btn('Back to Shanghai Community','nav','community','secondary')}`;
+      ${!post.demo?btn('Delete this local post','delete-post',post.id,'danger'):''}${btn('Back to Community','nav','explore','secondary')}`;
   }
   // 到访认证章（护照盖章风）——仿高德城市卡片右下角的 ARRIVAL 印章
   const ARRIVAL_SEAL = `<svg width="68" height="68" viewBox="0 0 120 120" aria-hidden="true"><g style="transform:rotate(-9deg);transform-origin:60px 60px;opacity:.74">
@@ -132,14 +143,20 @@
     const litCount = ATLAS_CITIES.filter(c => c.lit).length;
     const tile = c => {
       if (c.lit) {
-        const shLink = c.hero && real;                       // 上海真集到章才跳到票根导出页
-        const date = shLink ? H(renderer.formatDate(real.arrival)) : H(c.date || '');
-        const open = shLink ? '<button class="fs-acard" type="button" data-fs="nav" data-value="share"' : '<div class="fs-acard"';
-        const close = shLink ? '</button>' : '</div>';
+        // 上海有票根：卡片点进票根导出页，并带一键发帖（没集过章时 share / 一键发帖都会先补集）
+        const shLink = Boolean(c.hero);
+        // 日期统一用高德卡片的 MM.DD 样式；集过章就用真实到访日期（YYYY-MM-DD → MM.DD）
+        const date = c.hero && real && /^\d{4}-\d{2}-\d{2}$/.test(real.arrival || '') ? real.arrival.slice(5).replace('-', '.') : H(c.date || '');
+        // 卡片本身点进票根；右下角小按钮一键发到 Community（按钮在内层，事件委托取最近的 data-fs，不会触发卡片跳转）
+        const open = shLink ? '<div class="fs-acard" role="button" tabindex="0" data-fs="nav" data-value="share"' : '<div class="fs-acard"';
+        const mine = shLink ? myPosts()[0] : null;
+        const chip = !shLink ? '' : mine
+          ? `<button type="button" class="fs-acard-post done" data-fs="view-community" data-value="${H(mine.id)}">Posted ✓</button>`
+          : `<button type="button" class="fs-acard-post" data-fs="quick-post" data-value="city-passport">Post</button>`;
         return `${open} aria-label="${H(c.name)}">
-          <span class="fs-acard-photo"><img src="${H(c.photo)}" alt="${H(c.name)}" loading="lazy"><span class="fs-acard-cn">CHINA</span><span class="fs-acard-seal">${ARRIVAL_SEAL}</span></span>
+          <span class="fs-acard-photo"><img src="${H(c.photo)}" alt="${H(c.name)}" loading="lazy"><span class="fs-acard-cn">CHINA</span><span class="fs-acard-seal">${ARRIVAL_SEAL}</span>${chip}</span>
           <span class="fs-acard-meta"><strong>${H(c.name)}</strong><span class="fs-acard-dt lit">Arrived · ${date}</span></span>
-        ${close}`;
+        </div>`;
       }
       return `<div class="fs-acard notyet">
           <span class="fs-acard-photo gray"><img src="${H(c.photo)}" alt="${H(c.name)}" loading="lazy"><span class="fs-acard-cn">CHINA</span><span class="fs-acard-add" aria-hidden="true">+</span></span>
@@ -180,7 +197,7 @@
   let atlasMap = null;
   const ATLAS_CITIES = [
     { name:'Shanghai',  pos:[121.47,31.23], ds:'上海市', photo:'img/stamp/shanghai-dusk.png', lit:true,  date:'10.16', hero:true },
-    { name:'Beijing',   pos:[116.40,39.90], ds:'北京市', photo:'img/stamp/beijing.jpg',  lit:true,  date:'10.14' },
+    { name:'Beijing',   pos:[116.40,39.90], ds:'北京市', photo:'img/stamp/beijing.jpg',  lit:true,  date:'10.14', label:'right' },
     { name:'Chengdu',   pos:[104.07,30.57], ds:'成都市', photo:'img/stamp/chengdu.jpg',  lit:true,  date:'10.11' },
     { name:'Hangzhou',  pos:[120.15,30.27], photo:'img/stamp/hangzhou.jpg',  lit:false },
     { name:'Guangzhou', pos:[113.26,23.13], photo:'img/stamp/guangzhou.jpg', lit:false },
@@ -205,8 +222,9 @@
     loadAMapForAtlas().then(A => {
       if (current() !== 'city-passport' || !box.isConnected) return;
       try { if (atlasMap) { atlasMap.destroy(); atlasMap = null; } } catch (_) {}
-      atlasMap = new A.Map(box, { lang:'en', mapStyle:'amap://styles/whitesmoke', zoom:4.1,
-        center:[113,30], viewMode:'2D', features:['bg','road','building'], showLabel:true });
+      // 框住北京(39.9N)到广州(23.1N)、成都(104E)到上海(121.5E)，6 城都在 250px 高的地图里
+      atlasMap = new A.Map(box, { lang:'en', mapStyle:'amap://styles/whitesmoke', zoom:3.9,
+        center:[112.5,32.3], viewMode:'2D', features:['bg','road','building'], showLabel:true });
       const anyLitWithDs = ATLAS_CITIES.some(c => c.lit && c.ds);
       if (anyLitWithDs) {
         A.plugin('AMap.DistrictSearch', function () {
@@ -226,7 +244,7 @@
         if (c.lit) {
           new A.Marker({ position:c.pos, anchor:'center', zIndex:120, map:atlasMap,
             content:'<div class="fs-mk-lit"><span class="fs-mk-halo"></span><span class="fs-mk-dot"></span></div>',
-            label:{ content:'<div class="fs-mk-label lit">'+c.name+'</div>', direction:'top' } });
+            label:{ content:'<div class="fs-mk-label lit">'+c.name+'</div>', direction:c.label||'top' } });
         } else {
           new A.CircleMarker({ center:c.pos, radius:6, strokeColor:'#fff', strokeWeight:2, fillColor:'#B7BECB', fillOpacity:1, zIndex:60, map:atlasMap });
           new A.Marker({ position:c.pos, anchor:'middle-left', offset:new A.Pixel(8,0), zIndex:61, map:atlasMap,
@@ -318,6 +336,8 @@
       if(!state.personal.composer.caption) state.personal.composer.caption=state.config.storyPrompts[0];
       await flush(); go('community-compose');
     } else if(type==='edit-card') { go('share'); const section=screens.share.querySelector('[data-fs-customize]'); section.open=true; section.scrollIntoView({block:'center',behavior:'smooth'}); }
+    else if(type==='quick-post') await quickPost(value||current());
+    else if(type==='view-community') openCommunity(value);
     else if(type==='filter') { state.filter=value; render(); }
     else if(type==='open-post') { state.postId=value; go('community-post'); }
     else if(type==='bookmark') {
@@ -334,7 +354,7 @@
       const previous=structuredClone(state.personal);
       state.personal.posts=state.personal.posts.filter(post=>post.id!==value);state.personal.bookmarks=state.personal.bookmarks.filter(id=>id!==value);
       try {await flush();} catch(error) {state.personal=previous;throw error;}
-      go('community'); feedback('Local post deleted.',true);
+      postsChanged(); go('explore');
     } else if(type==='clear-stamps') {
       if(!confirm('Clear your city stamps, local posts, saved stories and sharing drafts? Your offline hotel and contacts will remain.'))return;
       clearTimeout(saveTimer); await saveQueue.catch(()=>{}); epoch++; await db.put(KEY,fresh()); reset(); render(); feedback('Stamps, posts and sharing drafts cleared. Your hotel and contacts are kept.',true);
@@ -349,12 +369,27 @@
       const post={id,topic:state.personal.composer.topic,title:Array.from(body.split(/[\n.!?]/)[0] || 'Hello, Shanghai.').slice(0,85).join(''),body,author:snapshot.traveler,card:snapshot,demo:false,savedAt:new Date().toISOString()};
       state.personal.posts.unshift(post);state.personal.composer={caption:'',topic:'First Stamp'};
       try {await flush();} catch(error) {state.personal=previous;throw error;}
-      state.postId=id;go('community-post');feedback('Saved to this demo Community on this browser. Not published to Trip.com.',true);
+      openCommunity(id,true);
     }
   }
+  // 一键发帖：当前票根 + 默认文案（编辑页里写过的草稿优先）；发完跳到底部 Community 并高亮这条
+  async function quickPost(from) {
+    if(!state.ready || state.error || !state.config) throw new Error('Your stamp is still loading. Try again in a moment.');
+    collect();   // 入口只在 done / share / 图鉴，落地流程已经确认完成：没集过章就先集
+    if(!stamp()) throw new Error('Finish your landing steps to collect your stamp before posting.');
+    const snapshot=card(), previous=structuredClone(state.personal), id=crypto.randomUUID();
+    const body=(state.personal.composer.caption||'').trim()||defaultCaption();
+    const post={id,topic:'First Stamp',title:Array.from(body.split(/[\n.!?]/)[0] || 'Hello, Shanghai.').slice(0,85).join(''),body,author:snapshot.traveler,card:snapshot,demo:false,savedAt:new Date().toISOString(),from};
+    state.personal.posts.unshift(post);state.personal.composer={caption:'',topic:'First Stamp'};
+    try {await flush();} catch(error) {state.personal=previous;throw error;}
+    openCommunity(id,true);
+  }
+  // fresh=true 是刚发出的帖子（Community 顶部给「Posted」提示）；false 只是去看看
+  function openCommunity(id,fresh=false) { window.__lcJustPosted=id?{id,fresh}:null; postsChanged(); go('explore'); }
   function reset() {
     epoch++;clearTimeout(saveTimer);releaseImage();state.preparedShare=null;state.personal=fresh();state.notice='';state.postId=null;state.filter='All stories';renderToken++;
     for(const screen of Object.values(screens))screen.replaceChildren();
+    syncDonePost();postsChanged();
   }
   async function load() {
     state.ready=false;state.error='';render();const version=epoch;
@@ -366,7 +401,7 @@
       const saved=results[1].value;
       if(saved?.schema===1)state.personal={...fresh(),...saved,draft:{...fresh().draft,...saved.draft},confirmations:{...fresh().confirmations,...saved.confirmations},composer:{...fresh().composer,...saved.composer}};
     } else state.storageError='Local storage is unavailable. You can preview and export, but stamps and stories cannot be saved until site storage is enabled.';
-    state.ready=true;render();
+    state.ready=true;render();syncDonePost();postsChanged();
   }
   document.addEventListener('click',event=>{
     const external=event.target.closest('[data-fs-online]');
@@ -388,10 +423,28 @@
   const done=document.querySelector('.screen[data-route="done"]');
   const title=done?.querySelector('[data-pencil-name="Share Title"]');if(title)title.textContent='Collect your first city stamp';
   const sub=done?.querySelector('[data-pencil-name="Share Sub"]');if(sub)sub.textContent='A Shanghai keepsake, made for your story.';
+  // 落地完成页：「Collect your first city stamp」卡下面加一键发到 Community；发过之后变成去看帖子
+  const shareCard=done?.querySelector('[data-pencil-name="Share Card"]');
+  let donePost=null;
+  if(shareCard){donePost=document.createElement('button');donePost.type='button';donePost.className='fs-done-post';shareCard.after(donePost);}
+  function syncDonePost(){
+    if(!donePost)return;
+    const mine=state.ready?myPosts()[0]:null;
+    donePost.dataset.fs=mine?'view-community':'quick-post';donePost.dataset.value=mine?mine.id:'done';
+    donePost.classList.toggle('done',Boolean(mine));
+    donePost.innerHTML=icon(mine?'check':'community')+`<span>${mine?'Posted · View in Community':'Post my stamp to Community'}</span>`;
+  }
+  syncDonePost();
   // 分享页是落地全部完成后的独立页面：只从完成页的「Share Card」进入，首页 / My Trips 不再放入口
   const menu=document.getElementById('list');if(menu)for(const [text,route]of[['The First Stamp · 城市票根','share'],['My city atlas · 城市图鉴','city-passport']]){const button=document.createElement('button');button.textContent=text;button.dataset.fs='nav';button.dataset.value=route;menu.append(button);}
   const previousShow=window.lcOnShow;
-  window.lcOnShow=route=>{if(!ROUTES.includes(route) && previousShow)previousShow(route);render();};
+  window.lcOnShow=route=>{if(!ROUTES.includes(route) && previousShow)previousShow(route);if(route==='done')syncDonePost();render();};
+  // 给底部 Community（app.js 的 #explore）用：读我的帖子、画票根、打开详情
+  window.LCStamp={
+    myPosts:()=>state.ready?myPosts():[],
+    drawPost(canvas,id){const post=state.personal.posts.find(p=>p.id===id);return post&&post.card&&state.config?renderer.draw(canvas,post.card,state.config):Promise.reject(new Error('Post not found'));},
+    openPost(id){state.postId=id;go('community-post');}
+  };
   window.addEventListener('hashchange',()=>{if(current()!==rendered)render();});
   window.addEventListener('online',()=>{document.querySelectorAll('[data-fs-network]').forEach(el=>el.hidden=true);});
   window.addEventListener('offline',()=>{document.querySelectorAll('[data-fs-network]').forEach(el=>el.hidden=false);});
