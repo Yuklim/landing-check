@@ -40,5 +40,5 @@
 .d3s .cp-item.on::before{transform:scaleY(1)}
 .d3s .cp-item.on .cp-dot{background:var(--d3-blue);color:#fff}
 
-.d3s .cp-note{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:13.5px;color:#8a93a3}
+.d3s .cp-note{margin-top:26px;display:flex;align-items:center;gap:8px;font-size:13.5px;color:#8a93a3}
 .d3s .cp-note::before{content:"";width:6px;height:6px;border-radius:50%;background:#b8c4dc}
