@@ -7,8 +7,11 @@
 <meta name="description" content="Clickable commercialization prototype: how Landing Check connects to Trip.com flights, hotels, eSIM, airport transfer and Trip Moments. Demo data only.">
 <style>
   :root{
-    --blue:#2C61FE; --blue-d:#1E49C8; --ink:#1A1F2E; --muted:#6F7685; --line:#E4E8EE;
-    --bg:#EDEFF3; --card:#fff; --green:#1BA672; --amber:#B25E00; --lightblue:#EEF3FF; --soft:#F6F8FC;
+    /* Real Trip.com flight palette — extracted from the app's RN flight bundle (rn_xtaro_flight_search) */
+    --blue:#2C61FE; --blue2:#7099FF; --blue-d:#173CD2; --bluebg:#F1F5FF; --bluechip:#C6D7FF;
+    --ink:#1F242E; --ink2:#4F5563; --muted:#6F7685;
+    --line:#E7EAF1; --line2:#D4D7DE; --bg:#F6F7FA; --card:#fff; --soft:#F6F7FA;
+    --green:#1BA672; --gold:#FFB400; --svc:#C74401; --amber:#C74401; --red:#D02C2A; --lightblue:#F1F5FF;
     --F:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
   }
   *{box-sizing:border-box}
@@ -25,57 +28,57 @@
   /* nav */
   .nav{display:flex;align-items:center;gap:10px;height:52px;padding:0 14px;background:var(--blue);color:#fff;flex:none}
   .nav .back{font-size:22px;line-height:1;cursor:pointer;width:26px}
-  .nav .brand{font-weight:800;letter-spacing:.2px;font-size:17px}
+  .nav .brand{font-weight:700;letter-spacing:.2px;font-size:17px}
   .nav .brand small{font-weight:600;opacity:.85;font-size:12px;margin-left:2px}
   .nav .sp{flex:1}
   .nav .ic{opacity:.9;font-size:16px}
   .body{flex:1;overflow-y:auto;padding:16px 16px 28px}
-  .sect{font:700 13px/1.3 var(--F);color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin:20px 2px 10px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+  .sect{font:600 13px/1.3 var(--F);color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin:20px 2px 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:12px}
   .muted{color:var(--muted)}
   .row{display:flex;gap:12px}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:46px;padding:0 18px;border-radius:24px;
-       background:var(--blue);color:#fff;font:700 15px var(--F);border:0;cursor:pointer;width:100%;text-decoration:none}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:44px;padding:0 18px;border-radius:8px;
+       background:var(--blue);color:#fff;font:600 15px var(--F);border:0;cursor:pointer;width:100%;text-decoration:none}
   .btn:active{background:var(--blue-d)}
-  .btn.sm{height:38px;font-size:13px;border-radius:19px;width:auto;padding:0 16px}
+  .btn.sm{height:36px;font-size:13px;border-radius:8px;width:auto;padding:0 14px}
   .btn.ghost{background:#fff;color:var(--blue);border:1.5px solid var(--blue)}
   .btn.plain{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
   .link{color:var(--blue);font-weight:700;font-size:13px;cursor:pointer;background:none;border:0;padding:8px 0}
-  .tag{display:inline-block;font:800 10px var(--F);letter-spacing:.5px;padding:3px 7px;border-radius:5px}
+  .tag{display:inline-block;font:700 10px var(--F);letter-spacing:.5px;padding:3px 6px;border-radius:4px}
   .tag.free{background:#E7F6EF;color:var(--green)}
   .tag.rec{background:var(--lightblue);color:var(--blue)}
   .tag.svc{background:#FFF3E6;color:var(--amber)}
   .tag.demo{background:#F0F1F4;color:var(--muted)}
   .pill{display:inline-flex;align-items:center;gap:5px;font:700 12px var(--F);padding:4px 10px;border-radius:20px;background:var(--soft);color:var(--muted);border:1px solid var(--line)}
   .pill.ok{background:#E7F6EF;color:var(--green);border-color:#CDEBDD}
-  .hd{font:800 18px/1.3 var(--F)}
-  .big{font:800 22px/1.25 var(--F)}
-  .price{font:800 16px var(--F)}
+  .hd{font:600 18px/1.3 var(--F)}
+  .big{font:700 22px/1.25 var(--F)}
+  .price{font:700 16px var(--F)}
   .hr{height:1px;background:var(--line);margin:12px 0}
   .confirmwrap{background:linear-gradient(180deg,#2C61FE 0%, #2C61FE 120px, transparent 120px);padding-top:0}
   .checkmark{width:56px;height:56px;border-radius:50%;background:#fff;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px;box-shadow:0 6px 18px rgba(0,0,0,.12)}
   /* two-col service cards */
   .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .svccard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px}
+  .svccard{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:6px}
   .svccard .emoji{font-size:26px}
-  .svccard .t{font:700 15px var(--F)}
+  .svccard .t{font:600 15px var(--F)}
   .svccard .d{font:400 12px/1.4 var(--F);color:var(--muted);min-height:32px}
   /* landing check hero card */
-  .lc{background:linear-gradient(135deg,#EEF3FF 0%, #E3ECFF 100%);border:1px solid #CFDBFF;border-radius:18px;padding:18px;margin-top:14px}
+  .lc{background:linear-gradient(135deg,#F1F5FF 0%, #E3ECFF 100%);border:1px solid #CFDBFF;border-radius:10px;padding:16px;margin-top:14px}
   .lc .top{display:flex;align-items:center;gap:12px}
   .lc .plane{width:46px;height:46px;border-radius:13px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
-  .offer{display:flex;gap:14px;align-items:flex-start;background:var(--lightblue);border:1px solid #D7E2FF;border-radius:14px;padding:14px}
+  .offer{display:flex;gap:14px;align-items:flex-start;background:var(--lightblue);border:1px solid #D7E2FF;border-radius:8px;padding:14px}
   .offer .vis{width:48px;height:48px;border-radius:12px;background:#fff;border:1px solid #D7E2FF;display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
   /* item (preflight-style row) */
-  .item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px}
   .dot{width:22px;height:22px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;margin-top:1px}
   .dot.todo{background:#E89A3C}.dot.done{background:var(--green)}.dot.opt{background:#B6BECC}
   /* bottom sheet */
   .mask{position:absolute;inset:0;background:rgba(18,24,38,.45);display:none;align-items:flex-end;z-index:50}
   .mask.on{display:flex}
-  .sheet{background:#fff;width:100%;border-radius:20px 20px 0 0;padding:20px 18px 26px;max-height:88%;overflow-y:auto;animation:up .26s ease}
+  .sheet{background:#fff;width:100%;border-radius:16px 16px 0 0;padding:20px 18px 26px;max-height:88%;overflow-y:auto;animation:up .26s ease}
   @keyframes up{from{transform:translateY(100%)}to{transform:none}}
-  .plan{border:1.5px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;cursor:pointer}
+  .plan{border:1.5px solid var(--line);border-radius:8px;padding:14px;margin-top:10px;cursor:pointer}
   .plan.sel{border-color:var(--blue);background:var(--lightblue)}
   .plan .pt{display:flex;justify-content:space-between;align-items:center}
   .toast{position:absolute;left:50%;bottom:74px;transform:translateX(-50%);background:#121826;color:#fff;font:600 13px var(--F);padding:10px 16px;border-radius:22px;opacity:0;transition:opacity .25s;z-index:80;max-width:88%;text-align:center}
@@ -93,8 +96,8 @@
   #dbg .ev{color:#8fb;white-space:nowrap}
   .note{font:400 11px/1.5 var(--F);color:var(--muted);margin-top:8px}
   .demobadge{position:absolute;top:10px;right:10px;z-index:40}
-  .photo{width:100%;height:120px;border-radius:14px;object-fit:cover;background:linear-gradient(135deg,#4b6cb7,#182848);display:flex;align-items:flex-end;color:#fff;padding:12px;font:800 18px var(--F)}
-  .stampcard{border-radius:18px;padding:18px;background:radial-gradient(120% 120% at 20% 0%, #2b3a67 0%, #141d33 100%);color:#fff;position:relative;overflow:hidden}
+  .photo{width:100%;height:120px;border-radius:8px;object-fit:cover;background:linear-gradient(135deg,#4b6cb7,#182848);display:flex;align-items:flex-end;color:#fff;padding:12px;font:700 18px var(--F)}
+  .stampcard{border-radius:10px;padding:18px;background:radial-gradient(120% 120% at 20% 0%, #2b3a67 0%, #141d33 100%);color:#fff;position:relative;overflow:hidden}
   .stampcard .seal{position:absolute;right:14px;top:14px;width:62px;height:62px;border-radius:50%;border:2px solid #f0c674;color:#f0c674;display:flex;align-items:center;justify-content:center;font:800 10px var(--F);text-align:center;transform:rotate(-12deg)}
 </style>
 </head>
@@ -111,19 +114,33 @@
         <div class="big">Booking confirmed!</div>
         <div class="muted" style="margin-top:4px">Your trip is booked. Confirmation sent to your email.</div>
       </div>
-      <div class="card">
-        <div style="display:flex;align-items:center;justify-content:space-between">
-          <div class="hd">San Francisco → Shanghai</div>
-          <span class="pill ok">Confirmed</span>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bluebg)">
+          <div style="font:700 13px var(--F);color:var(--blue)">E-ticket issued</div>
+          <div class="muted" style="font-size:12px">Order No. TRIP8872305</div>
         </div>
-        <div class="hr"></div>
-        <div class="row" style="justify-content:space-between">
-          <div><div class="big" style="font-size:20px">SFO</div><div class="muted">13:00 · Oct 18</div></div>
-          <div style="text-align:center;color:var(--muted)"><div style="font-size:12px">UA 857 · 12h25m</div><div>———✈———</div><div style="font-size:12px">Nonstop</div></div>
-          <div style="text-align:right"><div class="big" style="font-size:20px">PVG</div><div class="muted">17:25 · Oct 19 <sup>+1</sup></div></div>
+        <div style="padding:16px">
+          <div class="row" style="align-items:center;gap:10px">
+            <div style="width:30px;height:30px;border-radius:7px;background:var(--soft);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font:800 11px var(--F);color:var(--blue)">UA</div>
+            <div style="flex:1"><div style="font:700 14px var(--F)">United Airlines · UA 857</div><div class="muted" style="font-size:12px">Economy · Nonstop</div></div>
+            <span class="pill ok">Confirmed</span>
+          </div>
+          <div class="hr"></div>
+          <div class="row" style="justify-content:space-between;align-items:center">
+            <div><div class="big" style="font-size:22px">13:00</div><div style="font:700 13px var(--F)">SFO</div><div class="muted" style="font-size:12px">Sat, Oct 18</div></div>
+            <div style="text-align:center;color:var(--muted);flex:1;padding:0 6px"><div style="font-size:11px">12h 25m</div><div style="color:var(--line2);letter-spacing:1px">●───✈───●</div><div style="font-size:11px">Nonstop</div></div>
+            <div style="text-align:right"><div class="big" style="font-size:22px">17:25<sup style="color:var(--svc);font-size:11px"> +1</sup></div><div style="font:700 13px var(--F)">PVG · T2</div><div class="muted" style="font-size:12px">Sun, Oct 19</div></div>
+          </div>
+          <div class="hr"></div>
+          <div class="row" style="justify-content:space-between"><span class="muted">Passenger</span><b>Alex Carter · Adult</b></div>
+          <div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted">Baggage</span><b>1 × 23 kg checked</b></div>
+          <div class="row" style="justify-content:space-between;margin-top:6px"><span class="muted">Total paid</span><b>US$842.00</b></div>
+          <div class="row" style="gap:8px;margin-top:14px">
+            <button class="btn ghost sm" style="flex:1" onclick="toast('Demo: online check-in')">Check-in</button>
+            <button class="btn ghost sm" style="flex:1" onclick="toast('Demo: manage booking')">Manage</button>
+            <button class="btn ghost sm" style="flex:1" onclick="toast('Demo: flight details')">Details</button>
+          </div>
         </div>
-        <div class="muted" style="margin-top:8px">Passenger: Alex Carter · Terminal 2 · Economy</div>
-        <button class="link" onclick="toast('Demo: flight details')">View flight details ›</button>
       </div>
 
       <div class="sect">You may also need</div>
@@ -152,11 +169,11 @@
       <span class="tag demo">DEMO DATA</span>
       <div class="card" style="margin-top:10px"><div class="row" style="gap:12px">
         <div style="width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#6a8dff,#2C61FE);flex:none"></div>
-        <div style="flex:1"><div class="hd" style="font-size:15px">The PuLi Hotel and Spa</div><div class="muted" style="font-size:12px">Jing'an · 1.2 km from city center · ★ 4.8</div><div style="margin-top:6px"><span class="price">¥1,880</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
+        <div style="flex:1"><div class="hd" style="font-size:15px">The PuLi Hotel and Spa</div><div class="muted" style="font-size:12px">Jing'an · 1.2 km to center · <span style="color:var(--gold)">★</span> 4.8</div><div style="margin-top:6px"><span class="price">¥1,880</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
       </div><button class="btn ghost" style="margin-top:12px" onclick="bookHotel()">Reserve (demo)</button></div>
       <div class="card"><div class="row" style="gap:12px">
         <div style="width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#59c3a3,#1BA672);flex:none"></div>
-        <div style="flex:1"><div class="hd" style="font-size:15px">Jing'an Shangri-La</div><div class="muted" style="font-size:12px">Jing'an · near metro · ★ 4.7</div><div style="margin-top:6px"><span class="price">¥1,450</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
+        <div style="flex:1"><div class="hd" style="font-size:15px">Jing'an Shangri-La</div><div class="muted" style="font-size:12px">Jing'an · near metro · <span style="color:var(--gold)">★</span> 4.7</div><div style="margin-top:6px"><span class="price">¥1,450</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
       </div><button class="btn ghost" style="margin-top:12px" onclick="bookHotel()">Reserve (demo)</button></div>
       <div class="note">Prototype preview. No real inventory, pricing or payment.</div>
     </div>
@@ -182,6 +199,7 @@
             <div><span class="tag rec">RECOMMENDED · TRIP.COM</span></div>
             <div style="font:700 16px var(--F);margin-top:6px">Stay connected in China</div>
             <div class="muted" style="font-size:13px;margin-top:3px">Get mobile data ready before your flight.</div>
+            <div style="margin-top:8px"><span class="price">From US$4.90</span> <span class="muted" style="font-size:12px">· instant eSIM · no physical SIM</span></div>
             <button class="btn" style="margin-top:12px" onclick="openEsimPlans()">View eSIM plans →</button>
             <button class="link" style="display:block" onclick="go('esimAlt')">Already covered? See other options</button>
           </div>
