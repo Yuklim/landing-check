@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "version": "2026.10.17.4",
-  "revision": "cd11de0edf7a728c7a00",
+  "revision": "65862bac30d34097788a",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "8b4105f8b55fba0fbfae05b09d17013e1962dcd31bc693fb4a7e6eb1deff952d",
-      "bytes": 152403
+      "sha256": "2c890632fc695212261b775930d34c905df77d276d8e37920e43d5b814350512",
+      "bytes": 158593
     },
     {
       "path": "data/first-stamp.json",
@@ -225,13 +225,13 @@
     },
     {
       "path": "stamp.css",
-      "sha256": "e39890ae85ead840ec93920475dc2579a3a9e7fa4c46664c79e78421712855ae",
-      "bytes": 23853
+      "sha256": "8f53ff5b6f336ac24f35cb13c63db09ed9260ada21c63e497d95bb2ea5aa3a25",
+      "bytes": 23970
     },
     {
       "path": "stamp.js",
-      "sha256": "ae11726f668c311a29126f7ff782a3f5bde382c3b35c7a79dfa16c79dae2d7aa",
-      "bytes": 50045
+      "sha256": "f7e0a5dc8dd69c536e5c59b91f89688531f79d96da36dbaa8297c1b72212c565",
+      "bytes": 51626
     },
     {
       "path": "tutorials.json",
