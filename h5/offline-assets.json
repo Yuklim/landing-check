@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "version": "2026.10.17.4",
-  "revision": "6196c3a8ed78ef2f4667",
+  "revision": "bdd8c3837f6589bac9e8",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "cd1059ecb800d6031a6d5a8b91ea90e8af4a09e53d74eaab0cae9973feec49be",
-      "bytes": 144050
+      "sha256": "505e658ed43e7d4d3d9587f9413a804a133e637004aa9ec15e27c684ec697526",
+      "bytes": 151787
     },
     {
       "path": "data/first-stamp.json",
@@ -184,9 +184,14 @@
       "bytes": 108175
     },
     {
+      "path": "img/tutorial/connectivity/connectivity_airport_wifi_sms/step2.jpg",
+      "sha256": "a975d45b1376ac5956a15b0d9e33ac710e248e6209a9a6c4506ccc20c770e0b9",
+      "bytes": 123568
+    },
+    {
       "path": "index.html",
-      "sha256": "ca6668a03ee02190291f7e965fbaa09cf1e0ec0dc1800cacc27f62c0b74188a3",
-      "bytes": 1175983
+      "sha256": "11af1fab457de3afe7e13e5bc3e009502266ac01a9140b970f2dda11e9389bf4",
+      "bytes": 1103532
     },
     {
       "path": "manifest.json",
@@ -210,8 +215,8 @@
     },
     {
       "path": "offline.js",
-      "sha256": "dc5fef5693ed781318b8f34a3ba4dc5e1bfc7699fab97ecdd174e62226d9a863",
-      "bytes": 48353
+      "sha256": "55432654006b72af72e0e0b1abae2665743458b0952de39292d5e7cc40a1458e",
+      "bytes": 47858
     },
     {
       "path": "stamp-renderer.js",
@@ -220,13 +225,13 @@
     },
     {
       "path": "stamp.css",
-      "sha256": "7ba2d1a06dfda2a9b23b45b2344742650bcbf0bec8b9553783430b9a47b1821f",
-      "bytes": 17994
+      "sha256": "e39890ae85ead840ec93920475dc2579a3a9e7fa4c46664c79e78421712855ae",
+      "bytes": 23853
     },
     {
       "path": "stamp.js",
-      "sha256": "60225ef6e6513664fabc9ed34c3371003adf85da689ecb32d6e3343c1df11f29",
-      "bytes": 48148
+      "sha256": "ae11726f668c311a29126f7ff782a3f5bde382c3b35c7a79dfa16c79dae2d7aa",
+      "bytes": 50045
     },
     {
       "path": "tutorials.json",

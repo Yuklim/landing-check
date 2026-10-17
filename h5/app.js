@@ -162,6 +162,7 @@
     PAY_BASE.done = true;
   }
   snapPay();
+  setPayTone(false);   // 设计稿里失败说明卡也在，默认按成功态收起
   const PAY_COPY = {
     tenpaygo: {
       'Result Title': 'Your TenPayGo works in China',
@@ -169,7 +170,7 @@
       how2: ['TenPayGo is linked to that card on this phone', 'Installed is not enough. This proves the link is live.'],
       'Fail Title': "If the test fails, we read TenPayGo's error for you",
       'Fail Desc': "ISSUER_DECLINED → allow international online payments in your bank app\nAUTH_FAILED → approve your bank's 3-D Secure check\nREGION_UNAVAILABLE → retest after landing, or verify Alipay now",
-      'Source': 'Test uses a Trip.com WeChat Pay code that TenPayGo pays · no new permissions',
+      'Source': 'Tested through a Trip.com WeChat Pay code · no new permissions',
     },
   };
   // 失败原因：错误码 -> [标题, 原因, 第一步, 说明, 第二步, 说明]，填进"What we just tested"的三行
@@ -192,6 +193,9 @@
     const chip = $$('payment', 'Verified Chip'); if (chip) chip.style.backgroundColor = fail ? '#FFF4E5' : '#E6F7F0';
     const ci = $$('payment', 'Chip Icon'); if (ci) ci.style.display = fail ? 'none' : '';
     const cl = $$('payment', 'Chip Label'); if (cl) cl.style.color = fail ? '#E8890C' : '#1BA672';
+    // 成功只给三个图标格；失败才展开「这个错误是什么意思」和错误码说明
+    const shown = (n, on) => { const e = $$('payment', n); if (e) e.style.display = on ? 'flex' : 'none'; };
+    shown('Checks Row', !fail); shown('Fail Explain Card', fail); shown('Fail Codes Card', fail);
   }
   // 失败时在结果卡片里给"改用另一种"的入口（结果页底栏是横排，放不下第二个按钮）
   const paySwitch = el('div', `display:none;margin-top:12px;font:600 13px/1.3 Inter,system-ui,sans-serif;color:${BLUE};cursor:pointer;text-align:center`);
@@ -210,6 +214,8 @@
     }
     const btn = $$('payment', 'Done Button'); if (btn) btn.dataset.act = 'go:preflight';
     paySwitch.style.display = 'none';
+    const checks = $all('payment', 'Check Label');
+    txt(checks[1], `${PAY_NAME[method] || 'Alipay'} linked`); txt(checks[2], 'Refund works');
   }
   function renderPayOk(method, r) {
     applyPayCopy(method); setPayTone(false);
@@ -219,7 +225,7 @@
       txt($$('payment', 'Chip Label'), 'VERIFIED · ' + r.verified_at.slice(5, 10).replace('-', '/'));
     } else if (r && r.donated) multiline('Result Sub', `¥1.00 charged via ${PAY_NAME[method]} · Visa ••4471\n${fate}`);
     // 捐赠时没有退款，"What we just tested"第三行不能再写退款路径
-    if (r && r.donated) { txt($all('payment', 'How Item Title')[2], 'Your ¥1 went to CYDF'); txt($all('payment', 'How Item Desc')[2], 'Instead of a refund, the test payment supports young people in China.'); }
+    if (r && r.donated) { txt($all('payment', 'Check Label')[2], 'Donated to CYDF'); txt($all('payment', 'How Item Title')[2], 'Your ¥1 went to CYDF'); txt($all('payment', 'How Item Desc')[2], 'Instead of a refund, the test payment supports young people in China.'); }
   }
   // otherVerified：另一种方式已经验证过时，不再引导去重复验证（会再扣一次 ¥1）
   function renderPayFail(method, r, otherVerified) {
@@ -379,9 +385,11 @@
   }
   // 第三步：推荐卡片里加一张路线缩略图，点了进详情
   function step3Map(kind) {
-    const cur = $$('step3', 'Current Task'); if (!cur) return;
-    let wrap = cur.querySelector('.lc-minimap');
-    if (!wrap) { wrap = el('div', 'width:100%;height:150px;border-radius:10px;cursor:pointer;flex-shrink:0'); wrap.className = 'lc-minimap tap'; const go = cur.querySelector('.lc-goto') || $$('step3', 'Primary Button'); cur.insertBefore(wrap, go); }
+    // 地图放在推荐卡上方的 Map Box 里（设计稿留了位置和「57 min · 48 km」小标签）
+    const box = $$('step3', 'Map Box'); if (!box) return;
+    box.style.position = 'relative'; box.style.overflow = 'hidden';
+    let wrap = box.querySelector('.lc-minimap');
+    if (!wrap) { wrap = el('div', 'position:absolute;inset:0;cursor:pointer'); wrap.className = 'lc-minimap tap'; box.prepend(wrap); const chip = $$('step3', 'Map Chip'); if (chip) { chip.style.position = 'relative'; chip.style.zIndex = '2'; chip.style.pointerEvents = 'none'; } }
     wrap.dataset.act = kind === 'metro' ? 'go:transit' : 'api:route:taxi';
     mountMap('step3', wrap, kind, true);
   }
@@ -504,11 +512,10 @@
 
   // 第三步：「All ways to your hotel」——车 + 全部公共交通方案，点任一行进路线详情
   async function renderWays() {
-    const sl = $$('step3', 'Step List'); if (!sl) return;
+    const anchor = $$('step3', 'Pay Note') || $$('step3', 'Current Task'); if (!anchor) return;
     let R; try { R = await loadRoutes(); } catch (e) { return; }
-    const alt = $$('step3', 'Alt Options'); if (alt) alt.style.display = 'none';
-    let box = sl.parentElement.querySelector('.lc-otherways');
-    if (!box) { box = el('div', 'width:100%;background:#fff;border-radius:12px;overflow:hidden;margin-top:10px'); box.className = 'lc-otherways'; sl.after(box); }
+    let box = anchor.parentElement.querySelector('.lc-otherways');
+    if (!box) { box = document.createElement('details'); box.style.cssText = 'width:100%;background:#fff;border-radius:16px;overflow:hidden'; box.className = 'lc-otherways'; anchor.after(box); }
     const row = (act, icons, title, meta, tag) => `<div class="tap" data-act="${act}" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-top:1px solid ${LINE};cursor:pointer">
         <div style="flex:1;min-width:0"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px">${icons}</div>
         <div style="display:flex;align-items:center;gap:6px;margin-top:6px"><span style="font:700 15px Inter,sans-serif;color:${INK}">${title}</span>${tag ? `<span style="padding:1px 6px;border-radius:4px;background:#E6F7F0;color:#1BA672;font:700 10px/1.5 Inter,sans-serif">${tag}</span>` : ''}</div>
@@ -516,7 +523,12 @@
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="${MUTED}" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>`;
     const head = t => `<div style="padding:12px 14px 6px;font:700 13px Inter,sans-serif;color:${MUTED};${t !== 'BY CAR' ? `border-top:1px solid ${LINE};margin-top:4px` : ''}">${t}</div>`;
     const t = R.taxi, d = R.didi;
-    box.innerHTML = `<div style="padding:14px 14px 0;font:700 16px Inter,sans-serif;color:${INK}">All ways to your hotel</div>` +
+    const total = R.plans.length + 2, cheapest = R.plans.slice().sort((a, b) => a.fare - b.fare)[0], maglev = R.plans.find(p => p.modes.includes('maglev'));
+    const pill = (txt0, c) => `<span style="padding:3px 8px;border-radius:8px;background:${c}22;color:${c};font:700 12px Inter,sans-serif;white-space:nowrap">${txt0}</span>`;
+    box.innerHTML = `<summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:14px">
+        <div style="flex:1;min-width:0"><div style="font:700 15px Inter,sans-serif;color:${INK}">Other ways · ${total} options</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px">${cheapest ? pill(`Metro ¥${cheapest.fare}`, '#4B7A00') : ''}${pill(`DiDi ¥${Math.round(d.taxi_cost * 0.9)}`, '#B85F00')}${maglev ? pill(`Maglev ¥${maglev.fare}`, '#007986') : ''}</div></div>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="${MUTED}" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></summary>` +
       head('BY CAR') +
       row('api:route:taxi', chip({ mode: 'car', name: 'Taxi' }), `${t.duration_min} min · ≈ ¥${Math.round(t.taxi_cost)}`, `Door to door · ${t.distance_km} km · pickup at P2`, '') +
       row('api:route:didi', chip({ mode: 'car', name: 'DiDi' }), `${d.duration_min} min · ≈ ¥${Math.round(d.taxi_cost * 0.9)}`, 'Book in Alipay · pickup at P2', '') +
@@ -742,13 +754,15 @@
       const pin = el('div', 'flex:none'); pin.className = 'pin'; const c = tb.cloneNode(true); pin.appendChild(c); cs.appendChild(pin);
       // 克隆来的 Tab Bar 原本是首页那份，Home 仍高亮；先把每个 tab 复位成未选中灰，再单独点亮 Community，避免 Home+Community 一起亮
       const INACT = '#8A8F99';
+      // 设计稿导出的图标是填充形状：只改原本的填充 / 描边颜色，不给整个 svg 加描边（否则线条会变粗）
+      const tint = (tab, c) => { tab.querySelectorAll('svg [fill]:not([fill="none"])').forEach(p => p.setAttribute('fill', c)); tab.querySelectorAll('svg [stroke]:not([stroke="none"])').forEach(p => p.setAttribute('stroke', c)); };
       ['Tab Home', 'Tab Messages', 'Tab Community', 'Tab My Trips', 'Tab Sign In'].forEach(nm => {
         const t = c.querySelector(`[data-pencil-name="${nm}"]`); if (!t) return;
-        t.querySelectorAll('svg').forEach(s => s.setAttribute('stroke', INACT));
+        tint(t, INACT);
         const l = t.querySelector('[data-pencil-name="Tab Label"]'); if (l) l.style.color = INACT;
       });
       const cc = c.querySelector('[data-pencil-name="Tab Community"]');
-      if (cc) { cc.querySelectorAll('svg').forEach(s => s.setAttribute('stroke', BLUE)); const l = cc.querySelector('[data-pencil-name="Tab Label"]'); if (l) l.style.color = BLUE; }
+      if (cc) { tint(cc, BLUE); const l = cc.querySelector('[data-pencil-name="Tab Label"]'); if (l) l.style.color = BLUE; }
       [['Tab Home', 'home'], ['Tab My Trips', 'trips']].forEach(([nm, rt]) => { const t = c.querySelector(`[data-pencil-name="${nm}"]`); if (t) { t.style.cursor = 'pointer'; t.onclick = () => show(rt); } });
     })();
     { const all = document.querySelectorAll('#phone > .screen'); if (all.length) all[all.length - 1].after(cs); else (document.getElementById('phone') || document.body).appendChild(cs); }
@@ -1080,6 +1094,55 @@
     const dl = $$('preflight', 'Done List'), n = dl ? dl.children.length : 0;
     txt($$('preflight', 'Done Label'), n === 1 ? '1 item ready' : `${n} items ready`);
     const tg = $$('preflight', 'Done Toggle'); if (tg) tg.classList.toggle('lc-hide', !n);
+    tidyPreflight();
+  }
+  // 行前检查一屏一个重点：待办里第一项是「Do this next」大卡，其余压成一行 + 右侧小按钮；可选项收成一行
+  (() => { const st = document.createElement('style'); st.textContent = `
+    .screen[data-route="preflight"] .lc-pf-next{outline:2px solid #2C61FE!important;outline-offset:-2px;border-radius:16px!important}
+    .screen[data-route="preflight"] .lc-pf-compact{flex-direction:row!important;align-items:center!important;gap:10px!important;outline:0!important;border-radius:16px!important;padding:12px 14px!important}
+    .screen[data-route="preflight"] .lc-pf-compact>[data-pencil-name="Row"]{flex:1;min-width:0}
+    .screen[data-route="preflight"] .lc-pf-compact [data-pencil-name="Sub Row"],.screen[data-route="preflight"] .lc-pf-compact [data-pencil-name="Item Guide Link"]{display:none!important}
+    .screen[data-route="preflight"] .lc-pf-compact [data-pencil-name="Item Desc"]{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .screen[data-route="preflight"] .lc-pf-compact [data-pencil-name="Item Button"]{width:auto!important;height:32px!important;padding:0 14px!important;border-radius:16px!important;background:#EAF0FF!important;outline:0!important;border:0!important;flex:none}
+    .screen[data-route="preflight"] .lc-pf-compact [data-pencil-name="Item Button Label"]{color:#2C61FE!important;font-size:13px!important}
+    .screen[data-route="preflight"] .lc-pf-still{border:0!important;outline:0!important;background:none!important;padding:0!important;width:100%;font:700 13px/1 Inter,system-ui,sans-serif;color:#6F7685;letter-spacing:.02em;margin:6px 0 -2px}
+    .screen[data-route="preflight"] .lc-pf-opt-closed [data-pencil-name="Optional List"]{display:none!important}`; document.head.appendChild(st); })();
+  function tidyPreflight() {
+    const list = $$('preflight', 'Must List'); if (!list) return;
+    list.querySelectorAll(':scope > .lc-pf-still').forEach(n => n.remove());
+    const items = [...list.children].filter(n => !n.classList.contains('lc-hide') && n.style.display !== 'none');
+    items.forEach((n, i) => { n.classList.toggle('lc-pf-next', i === 0); n.classList.toggle('lc-pf-compact', i > 0); });
+    if (items.length > 1) { const still = el('div', '', 'STILL TO DO'); still.className = 'lc-pf-still'; items[1].before(still); }
+    // 可选项：标题改成可点的一行，列表默认收起
+    const sec = $$('preflight', 'Section OPTIONAL'), opt = $$('preflight', 'Optional List'), body = sec && sec.parentElement;
+    if (sec && opt && body && !sec.dataset.lcToggle) {
+      sec.dataset.lcToggle = '1'; sec.classList.add('tap'); sec.style.cursor = 'pointer'; body.classList.add('lc-pf-opt-closed');
+      sec.addEventListener('click', () => { body.classList.toggle('lc-pf-opt-closed'); syncOpt(); });
+    }
+    syncOpt();
+  }
+  tidyPreflight();   // 静态模式没有接口回调，先按设计稿顺序排一次
+  // Wi-Fi 页：网络名一键复制；「收不到验证码」默认收成一行，点开再看两个备选
+  (() => {
+    const copy = $$('wifi', 'No Password'), ssid = $$('wifi', 'SSID');
+    if (copy && ssid) { copy.classList.add('tap'); copy.style.cursor = 'pointer'; copy.addEventListener('click', e => { e.stopPropagation(); const name = ssid.textContent.trim(); (navigator.clipboard ? navigator.clipboard.writeText(name) : Promise.reject()).then(() => toast('Wi-Fi name copied'), () => toast(name)); }); }
+    const card = $$('wifi', 'No SMS Card'); if (!card) return;
+    const hide = ['Alt Desc', 'Backup Row', 'Timer Chip'].map(n => card.querySelector(`[data-pencil-name="${n}"]`)).filter(Boolean);
+    const title = card.querySelector('[data-pencil-name="Alt Title"]'), row = card.querySelector('[data-pencil-name="Alt Title Row"]');
+    const chev = el('span', `margin-left:auto;font:600 13px Inter,sans-serif;color:${MUTED}`, '2 backups ›');
+    if (row) row.appendChild(chev);
+    let open = false;
+    const shown = hide.map(n => n.style.display || 'flex');   // 设计稿导出的节点都写了内联 display，收起后要原样恢复
+    const sync = () => { hide.forEach((n, i) => { n.style.display = open ? shown[i] : 'none'; }); chev.textContent = open ? 'Hide ⌃' : '2 backups ›'; };
+    if (row) { row.classList.add('tap'); row.style.cursor = 'pointer'; row.addEventListener('click', () => { open = !open; sync(); }); }
+    if (title) title.textContent = 'No SMS code?';
+    sync();
+  })();
+  function syncOpt() {
+    const sec = $$('preflight', 'Section OPTIONAL'), opt = $$('preflight', 'Optional List'); if (!sec || !opt) return;
+    const names = [...opt.children].map(n => (n.querySelector('[data-pencil-name="Item Title"]') || {}).textContent || '').filter(Boolean).map(t => t.toLowerCase().replace(/ from the airport$/, ''));
+    const closed = sec.parentElement.classList.contains('lc-pf-opt-closed');
+    txt(sec.querySelector('[data-pencil-name="Section Title"]'), `OPTIONAL${names.length ? ' · ' + names.join(', ').toUpperCase() : ''} ${closed ? '›' : '⌄'}`);
   }
   const PF = { status: {} };
   // offline.js 每次同步本机保存状态都会回调这里（含下载中）
@@ -1284,26 +1347,39 @@
   // ---------- 第三步交通 ----------
   // 只验证了 TenPayGo 时，依赖支付宝的方式（支付宝里的滴滴、地铁售票机）带一行提示（后端 rules.transport 给 pay_note）
   const payNote = t => el('div', 'font-size:12px;line-height:1.35;color:#B25E00;margin-top:6px', t);
+  // 第三步一屏只放「地图 + 推荐方式 + 一个按钮」：理由缩成一行小标签，找上车点的说明收进折叠，付款没验证单独一条提醒
+  const MODE_NAME = { taxi: 'Taxi', metro: 'Metro', transfer: 'Your booked transfer', didi: 'DiDi', maglev: 'Maglev' };
   async function renderTransport() {
     let d; try { d = await get('/rules/transport' + (S.night ? '?landed_at=23:40' : '')); } catch (e) { return; }
-    const r = d.recommended;
-    txt($$('step3', 'Task Title'), 'We recommend ' + ({ taxi: 'a taxi', metro: 'the metro', transfer: 'your booked transfer', didi: 'a DiDi ride', maglev: 'the Maglev' }[r.id] || r.title));
-    txt($$('step3', 'Task Sub'), `About ${r.price} · ${r.min} min · ${r.where}`); txt($$('step3', 'Task Desc'), 'Why: ' + r.why);
-    $all('step3', 'Chip Label').forEach((c, i) => txt(c, d.facts[i]));
-    const rows = [$$('step3', 'Option Metro Line 2'), $$('step3', 'Option Trip.com transfer')];
-    rows.forEach((row, i) => { const a = d.alternatives[i]; if (!row) return; row.style.display = a ? '' : 'none'; if (!a) return; txt(row.querySelector('[data-pencil-name="Opt Title"]'), a.title); txt(row.querySelector('[data-pencil-name="Opt Meta"]'), `${a.price} · ${a.min} min · ${a.where}`); txt(row.querySelector('[data-pencil-name="Opt Button Label"]'), a.action === 'transit' ? 'Route' : a.action === 'transfer' ? 'Book' : 'Open'); row.querySelector('[data-pencil-name="Opt Button"]').dataset.act = a.action === 'transit' ? 'go:transit' : a.action === 'transfer' ? 'go:transfers' : 'toast:Demo：打开支付宝里的滴滴小程序'; });
+    const r = d.recommended, facts = d.facts || [];
+    txt($$('step3', 'Task Title'), MODE_NAME[r.id] || r.title);
+    txt($$('step3', 'Task Sub'), r.where);
+    txt($$('step3', 'Status Label'), r.price);
+    const reason = facts.find(f => /bag|child|adult|night|late/i.test(f) && !/^1 adult$/i.test(f));
+    txt($$('step3', 'Task Kicker'), 'BEST FOR YOU' + (reason ? ' · ' + reason.toUpperCase() : ''));
+    const dist = (facts.find(f => /km/i.test(f)) || '').replace(/^Hotel\s*/i, '');
+    txt($$('step3', 'Map Chip Label'), `${r.min} min${dist ? ' · ' + dist : ''}`);
     const g = r.go_to || {};
-    txt($$('step3', 'Task Desc'), 'Why: ' + r.why);
     const cur = $$('step3', 'Current Task');
     let go = cur && cur.querySelector('.lc-goto');
-    if (cur && !go) { go = el('div', 'width:100%;background:#EAF0FF;border-radius:10px;padding:14px 16px;box-sizing:border-box;font-family:Inter,system-ui,sans-serif'); go.className = 'lc-goto'; cur.insertBefore(go, $$('step3', 'Primary Button')); }
-    if (go) { go.replaceChildren(el('div', 'font-size:11px;font-weight:700;letter-spacing:.06em;color:#2C61FE', 'WHERE TO GO'), el('div', 'font-size:18px;font-weight:700;color:#121826;margin:4px 0 6px', g.title || r.title), el('div', 'font-size:14px;line-height:1.4;color:#121826', g.where || r.where)); if (g.verified === false) go.appendChild(el('div', 'font-size:11px;color:#8592A6;margin-top:6px', 'Location to be verified on site')); if (r.pay_note) go.appendChild(payNote(r.pay_note)); }
-    const alt = $$('step3', 'Alt Options'); if (alt) alt.style.display = 'none';
+    if (cur && !go) { go = document.createElement('details'); go.className = 'lc-goto'; go.style.cssText = 'width:100%;font-family:Inter,system-ui,sans-serif;text-align:center'; cur.appendChild(go); }
+    if (go) {
+      const sum = el('summary', `list-style:none;cursor:pointer;font:600 13px/1.4 Inter,sans-serif;color:${BLUE};padding:2px 0`, `How to find ${(g.title || r.title || 'it').replace(/^(the|an?)\s/i, '').toLowerCase()} ›`);
+      const body = el('div', `margin-top:8px;padding:12px 14px;border-radius:10px;background:#F0F2F5;text-align:left;font:400 13px/1.45 Inter,sans-serif;color:${INK}`, g.where || r.where);
+      if (g.verified === false) body.appendChild(el('div', 'font-size:11px;color:#8592A6;margin-top:6px', 'Location to be verified on site'));
+      if (r.pay_note) body.appendChild(payNote(r.pay_note));
+      go.replaceChildren(sum, body);
+    }
     renderWays();
     step3Map(r.id === 'metro' || r.id === 'maglev' ? 'metro' : 'taxi');
     const pb = $$('step3', 'Primary Button'); if (pb) pb.dataset.act = r.id === 'metro' || r.id === 'maglev' ? 'go:transit' : 'go:driver';
     txt($$('step3', 'Primary Label'), r.id === 'transfer' ? 'Show my booking to the driver' : r.id === 'metro' || r.id === 'maglev' ? 'Open the route' : 'Show address to driver');
-    try { const pf = await get('/rules/preflight'); if (!payState(pf).ready && pb) { pb.dataset.act = 'api:pay2'; txt($$('step3', 'Primary Label'), 'Verify payment first · ¥1 test'); } } catch (e) {}
+    try { step3PayNote(payState(await get('/rules/preflight'))); } catch (e) {}
+  }
+  // 付款没验证：推荐卡下面一条琥珀色提醒，点了去验 ¥1；验过就收起
+  function step3PayNote(ps) {
+    const note = $$('step3', 'Pay Note'); if (!note) return;
+    note.style.display = ps.ready ? 'none' : 'flex'; note.dataset.act = 'api:pay2'; note.classList.add('tap');
   }
   async function incar() { try { await post('/mock/event', { event: 'in_car' }); } catch (e) {} show('done'); }
 
@@ -1320,7 +1396,7 @@
       if (prow) {
         const payAt = ps.at || (tl.find(x => x.event === 'payment' && (!x.method || x.method === ps.method)) || {}).at;
         const sameDay = payAt && landed && payAt.slice(0, 10) === landed.slice(0, 10);
-        txt(prow.querySelector('[data-pencil-name="Event Title"]'), !ps.ready ? 'Payment not verified' : sameDay ? `${ps.name} verified · ¥1 test` : `${ps.name} verified before flight`);
+        txt(prow.querySelector('[data-pencil-name="Event Title"]'), ps.ready ? 'Paid' : 'Not paid');   // 页头横向时间线：标签只放两三个词
         txt(prow.querySelector('[data-pencil-name="Event Time"]'), ps.ready ? (sameDay ? hhmm(payAt) : 'before flight') : '—');
         const sp = $$('share', 'TL Paid'); if (sp) txt(sp.querySelector('[data-pencil-name="TL Time"]'), ps.ready ? (sameDay ? hhmm(payAt) : 'pre-flight') : '—');
       }
@@ -1395,21 +1471,33 @@
     snapStepStyles(route);
     const payOk0 = S0.paid.ready;
     if (route === 'wifi') { const ob = $$('wifi', 'Open Settings'); if (ob) { ob.dataset.act = payOk0 ? 'go:step3' : 'api:pay2'; txt($$('wifi', 'Open Label'), payOk0 ? "I'm online · continue to step 3" : "I'm online · verify payment next"); } return S0; }
-    const rows = stepList(route); if (!rows) return;
+    const rows = stepList(route) || [];
     const onlineDone = route === 'step3' || route === 'online' || !!S0.online;
     const dataOk = route === 'online' || (S0.by.data && S0.by.data.status === 'done');
-    applyStep(rows[0], onlineDone ? 'done' : 'now',
+    // 页头三段进度条代替原来的任务清单：完成=薄荷绿，付款没验证=琥珀，当前=白，未到=半透明
+    const segs = $all(route, 'Seg 1').concat($all(route, 'Seg 2'), $all(route, 'Seg 3'));
+    const segC = st => ({ done: '#7CE0B6', warn: '#FFC56B', now: '#FFFFFF', next: '#FFFFFF55' }[st]);
+    if (segs.length === 3) {
+      const st = route === 'step3' ? ['done', S0.paid.ready ? 'done' : 'warn', 'now'] : ['now', S0.paid.ready ? 'done' : 'next', 'next'];
+      segs.forEach((g, i) => { g.style.backgroundColor = segC(st[i]); });
+    }
+    if (route === 'online') {
+      txt($$('online', 'Up Next Title'), S0.paid.ready ? 'Get to your hotel' : 'Pay like a local');
+      txt($$('online', 'Up Next Sub'), S0.paid.ready ? `${S0.paid.name} already verified · we'll pick your ride` : '¥1 test with Alipay or TenPayGo · 10 s');
+    }
+    if (route === 'step3') step3PayNote(S0.paid);
+    if (rows.length) applyStep(rows[0], onlineDone ? 'done' : 'now',
       onlineDone ? (dataOk ? 'Passed automatically · own data works' : `Done${S0.online ? ' ' + S0.online : ''} · PVG free Wi-Fi`) : 'Checking own data first · Wi-Fi only if needed', '1');
     const payOk = S0.paid.ready, paidToday = payOk && S0.paid.at && S0.landedDay && S0.paid.at.slice(0, 10) === S0.landedDay;
-    applyStep(rows[1], payOk ? 'done' : 'now', payOk ? (paidToday ? `${S0.paid.name} verified at ${hh(S0.paid.at)} · ¥1 test ${S0.paid.fate || 'refunded'}` : `${S0.paid.name} verified before you flew · ¥1 test ${S0.paid.fate || 'refunded'}`) : 'Not verified yet · ¥1 test with Alipay or TenPayGo', '2');
+    if (rows.length) applyStep(rows[1], payOk ? 'done' : 'now', payOk ? (paidToday ? `${S0.paid.name} verified at ${hh(S0.paid.at)} · ¥1 test ${S0.paid.fate || 'refunded'}` : `${S0.paid.name} verified before you flew · ¥1 test ${S0.paid.fate || 'refunded'}`) : 'Not verified yet · ¥1 test with Alipay or TenPayGo', '2');
     const carState = route === 'step3' ? 'now' : 'next';
-    applyStep(rows[2], carState, route === 'step3' ? 'In progress · tap “I\'m in the car” when moving' : 'Up next · we\'ll recommend a ride once you\'re online', '3');
+    if (rows.length) applyStep(rows[2], carState, route === 'step3' ? 'In progress · tap “I\'m in the car” when moving' : 'Up next · we\'ll recommend a ride once you\'re online', '3');
     const landedTxt = S0.landed ? `Landed at PVG T2 · ${S0.landed} local` : 'Not landed yet · preview';
     if (route === 'step1') { txt($$('step1', 'Subtitle'), landedTxt + ' · one thing at a time'); txt($$('step1', 'Task Sub'), `Checked eSIM and roaming · no connection${S0.landed ? ' at ' + S0.landed : ''}`); }
     if (route === 'online') {
       txt($$('online', 'Subtitle'), landedTxt + (payOk ? ' · nothing to do here' : ' · one thing left before your ride'));
       const pb = $$('online', 'Primary Button'), pl = $$('online', 'Primary Label');
-      if (pb && pl) { pb.dataset.act = payOk ? 'go:step3' : 'api:pay2'; txt(pl, payOk ? 'Continue to step 3 · Get to your hotel' : 'Continue to step 2 · Verify payment'); pb.style.backgroundColor = payOk ? '#1BA672' : '#2C61FE'; }
+      if (pb && pl) { pb.dataset.act = payOk ? 'go:step3' : 'api:pay2'; txt(pl, payOk ? 'Next · Get to your hotel' : 'Next · Verify payment'); pb.style.backgroundColor = payOk ? '#1BA672' : '#2C61FE'; }
       txt($$('online', 'Task Desc'), payOk ? 'We checked: mobile data is on, pages load, and international services respond. You can skip airport Wi-Fi.' : 'We checked: mobile data is on and pages load. Next, run the ¥1 payment test so you can pay at the taxi queue.');
     }
     if (route === 'step3') { txt($$('step3', 'Subtitle'), `${S0.online ? 'Online since ' + S0.online : 'Online'} · ${payOk ? 'payment verified' : 'payment not verified'} · last step`); }
