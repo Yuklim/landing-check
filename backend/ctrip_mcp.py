@@ -149,3 +149,101 @@ def query_train(from_city, to_city, depart_date, size=20):
     if not trains:
         return {'items': [], 'note': data if isinstance(data, str) else ''}
     return {'items': [_norm_train(t) for t in trains[:size]]}
+
+
+# ---------------- query_hotel：酒店 ----------------
+def _num(v):
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def _norm_hotel(h):
+    b = h.get('basicInfo') or {}
+    a = h.get('additionalInfo') or {}
+    u = h.get('urlInfo') or {}
+    return {
+        'id': h.get('productID') or b.get('productID'),
+        'name': b.get('name', ''),
+        'cover': b.get('imageURL', ''),
+        'price': b.get('price'),
+        'score': b.get('score'),
+        'star': a.get('star'),
+        'comments': a.get('commentsCount') or a.get('showCommentsCount') or 0,
+        'address': b.get('address', ''),
+        'cityName': b.get('cityName', ''),
+        'zone': a.get('zoneName', ''),
+        'district': a.get('locationName', ''),
+        'tags': a.get('typeTags') or a.get('tags') or [],
+        'recommend': (a.get('recommendText') or '').strip('“”"'),
+        'url': u.get('h5Url') or u.get('pcUrl') or '',
+    }
+
+
+def query_hotel(city='', keyword='', hotel_name='', landmark='', tags='',
+                stars='', check_in='', check_out='', sort_type='1', size=10):
+    """酒店列表，归一化成卡片。参数组合按官方优先级，详见工具描述。
+
+    常用：单 keyword / cityName(+tags/+stars/+hotelName/+landmarkName)。
+    """
+    args = {k: v for k, v in dict(
+        keyword=keyword, cityName=city, hotelName=hotel_name,
+        landmarkName=landmark, tags=tags, stars=stars,
+        checkInDate=check_in, checkOutDate=check_out, sortType=sort_type,
+    ).items() if v}
+    if not args:
+        args = {'cityName': '上海', 'sortType': '1'}
+    data = call_tool('query_hotel', args)
+    # keyword 查询返回结构不同（只给 H5/App 地址），这里只处理标准列表
+    if not isinstance(data, list):
+        return {'items': [], 'note': data if isinstance(data, str) else ''}
+    return {'items': [_norm_hotel(h) for h in data[:size]]}
+
+
+# ---------------- car_rental：租车 ----------------
+def _norm_cars(groups, size):
+    """返回按车型分组，拍平成一辆辆车的列表，UI 好渲染。"""
+    out = []
+    for g in groups or []:
+        gname = g.get('vehicleGroupName', '')
+        gcode = g.get('vehiclegroupCode', '')
+        for v in (g.get('vechileInfos') or []):
+            vendors = v.get('vendorInfos') or []
+            out.append({
+                'group': gname,
+                'groupCode': gcode,
+                'name': v.get('productName', ''),
+                'image': v.get('productImg', ''),
+                'brand': v.get('brandName', ''),
+                'brandLogo': v.get('brandlogo', ''),
+                'type': v.get('carriageDesc', ''),
+                'trans': v.get('trans', ''),
+                'seat': v.get('seat', ''),
+                'doors': v.get('doorNo', ''),
+                'fuel': v.get('fuel', ''),
+                'displacement': v.get('displacement', ''),
+                'price': _num(v.get('dailyPrice') or g.get('dailyPrice')),
+                'url': vendors[0].get('h5ListUrl', '') if vendors else '',
+            })
+            if len(out) >= size:
+                return out
+    return out
+
+
+def query_car_rental(pick_up_city, return_city='', vehicle_group_ids='',
+                     pick_up_time='', return_time='', size=12):
+    """租车：按取车城市查，归一化成车辆列表（品牌/座位/变速箱/日租价/下单链接）。"""
+    args = {'pickUpCity': pick_up_city}
+    if return_city:
+        args['returnCity'] = return_city
+    if vehicle_group_ids:
+        args['vehiclegroupIds'] = vehicle_group_ids
+    if pick_up_time:
+        args['pickUpTime'] = pick_up_time
+    if return_time:
+        args['returnTime'] = return_time
+    data = call_tool('car_rental', args)
+    if not isinstance(data, list):
+        return {'items': [], 'note': data if isinstance(data, str) else ''}
+    return {'items': _norm_cars(data, size)}
