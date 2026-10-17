@@ -226,6 +226,14 @@ html[lang="en"] .zh{display:none !important}
 #commercial .mock-caption{margin-top:8px}
 #commercial .mock-app{font-size:12px;white-space:nowrap}
 #demandBubbles .db-title{display:none}
+/* word cloud slide (static, clean) */
+.wc-box{margin-top:4px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.wc-img{display:block;width:100%;height:auto}
+.wc-foot{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-top:13px;flex-wrap:wrap}
+.wc-legend{display:flex;flex-wrap:wrap;gap:8px 15px}
+.wc-legend span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.wc-legend i{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
+.wc-note{font-size:12.5px;color:#8a93a3;white-space:nowrap}
 
 /* commercial expansion row */
 .expand{border-top:1px dashed #c9d2e2;margin-top:26px;padding-top:22px}
