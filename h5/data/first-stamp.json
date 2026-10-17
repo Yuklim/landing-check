@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.10.16.1",
+  "version": "2026.10.17.3-realimg",
   "city": {
     "id": "shanghai",
     "name": "Shanghai",
@@ -23,7 +23,12 @@
     "publicUrl": "https://yuklim.github.io/landing-check/h5/#community",
     "qr": "img/stamp/discover-qr.png"
   },
-  "topics": ["All stories", "First Stamp", "Travel Stories", "Local Tips"],
+  "topics": [
+    "All stories",
+    "First Stamp",
+    "Travel Stories",
+    "Local Tips"
+  ],
   "storyPrompts": [
     "Thousands of miles away from home, and a new story has just begun. Hello, Shanghai.",
     "My first city stamp in China. Here’s to getting a little lost and finding something wonderful.",
@@ -31,31 +36,88 @@
   ],
   "samplePosts": [
     {
-      "id": "sample-first-light",
+      "id": "trip-151888430",
       "topic": "First Stamp",
-      "author": "Maya",
-      "title": "A little nervous. A lot curious.",
-      "body": "An illustrated example of a first-arrival story. Imagine your first glimpse of the Huangpu River after finding your way into the city. What would your first line be?",
+      "author": "_TI***37",
+      "title": "I specifically flew to Shanghai ✈️ just for these 18 photos. Was it worth it?",
+      "body": "A single road can span a century. A single window can frame the entire Lujiazui area. This is the Magic City—Shanghai 🏙️ I've curated 18 of the most worth-saving photo spots in Shanghai 📍 If it's your first time in Shanghai, just follow this guide. ❶ Intersection of Changzhi Road and Jiulong Road Sit here to easily avoid the crowds and get the Oriental Pearl Tower and the…",
       "cover": "city",
-      "demo": true
+      "image": "https://ak-d.tripcdn.com/images/1mi5z12000tqk3hi91818.jpg?proc=source/trip",
+      "demo": true,
+      "source": "Trip.com Moments",
+      "sourceUrl": "https://www.trip.com/moments/detail/shanghai-2-151888430/",
+      "likes": 173,
+      "comments": 896
     },
     {
-      "id": "sample-small-moments",
-      "topic": "Travel Stories",
-      "author": "Leo",
-      "title": "Leave room for the unplanned.",
-      "body": "A sample travel journal: one slow walk, a riverside view, and a page left blank for tomorrow. Add your own moments when you are ready to share.",
+      "id": "trip-148287455",
+      "topic": "First Stamp",
+      "author": "_TI***fl",
+      "title": "Shanghai is a cyberpunk city",
+      "body": "As soon as I arrived in Shanghai, I rushed to The Stage at White Magnolia Plaza. The Stage is really underrated. It's a 360° open-air observation deck at an altitude of 320m, where you can see the Huangpu River, the Bund, and Lujiazui all at once. It feels completely different from the usual view of Shanghai from the Bund—it's like unlocking a new perspective on the city.…",
       "cover": "journal",
-      "demo": true
+      "image": "https://ak-d.tripcdn.com/images/1mi2p12000t66a5haEF34.jpg?proc=source/trip",
+      "demo": true,
+      "source": "Trip.com Moments",
+      "sourceUrl": "https://www.trip.com/moments/detail/shanghai-2-148287455/",
+      "likes": 291,
+      "comments": 673
     },
     {
-      "id": "sample-right-words",
+      "id": "trip-120089663",
       "topic": "Local Tips",
-      "author": "Landing Check",
-      "title": "Keep the right words close.",
-      "body": "Before you fly, save your hotel’s confirmed Chinese address and your offline travel pack. If you get stuck, show a bilingual request to someone nearby. Open the offline pack to prepare your own cards.",
+      "author": "Sofia.Harrison*68",
+      "title": "I finally moved into this Disney Mars B&B",
+      "body": "· Finally went to this dreamy Disney Mars B&B The moment I moved in, it felt like I had traveled to Santorini Pure white castle➕exotic doors and windows➕Mars theme I would be sad if anyone missed this B&B when they come to Disney💔 · · 🏰Travel tips: ✔️You can see Disney's Yantai from the terrace of the B&B~ ✔️Friends going to Disney can also get a free shuttle~ ✔️The infinity…",
       "cover": "tip",
-      "demo": true
+      "image": "https://ak-d.tripcdn.com/images/1mi2c12000d53iv9p0382.jpg?proc=source/trip",
+      "demo": true,
+      "source": "Trip.com Moments",
+      "sourceUrl": "https://www.trip.com/moments/detail/shanghai-2-120089663/",
+      "likes": 5150,
+      "comments": 1802
+    },
+    {
+      "id": "trip-144701559",
+      "topic": "Local Tips",
+      "author": "Babysaruda",
+      "title": "\"1000 Trees Shanghai\"—A Must-Visit Epic Photo Spot.",
+      "body": "🌿 A lush landmark right in the heart of the city! \"1000 Trees Shanghai\" is an epic photo spot you absolutely have to check out. If you're heading to Shanghai and looking for a totally unique location, you need to pin \"1000 Trees.\" This ultra-futuristic building looks just like a mountain covered in thousands of cascading trees. Sitting right next to Suzhou Creek, it perfectly…",
+      "cover": "tip",
+      "image": "https://ak-d.tripcdn.com/images/1mi0b224x992ilpg0D202.jpg?proc=source/trip",
+      "demo": true,
+      "source": "Trip.com Moments",
+      "sourceUrl": "https://www.trip.com/moments/detail/shanghai-2-144701559/",
+      "likes": 2143,
+      "comments": 1723
+    },
+    {
+      "id": "trip-151847411",
+      "topic": "Travel Stories",
+      "author": "Meowsvacation",
+      "title": "Crazy good value 24 hour spa in Shanghai!",
+      "body": "This is one of the best-value 24-hour spas that I’ve found in Shanghai. For $40 USD, you get 8 hours of access, including buffet meal plus unlimited fruit, drinks, and ice cream. And unlike many of the viral luxury spas, where meals can cost extra, food is already included here. The buffet isn’t lobster-and-caviar level, but there’s still plenty: crawfish, clams, fish,…",
+      "cover": "journal",
+      "image": "https://ak-d.tripcdn.com/images/1mi2x324x9ajw0tr49D1F.jpg?proc=source/trip",
+      "demo": true,
+      "source": "Trip.com Moments",
+      "sourceUrl": "https://www.trip.com/moments/detail/shanghai-2-151847411/",
+      "likes": 1374,
+      "comments": 1621
+    },
+    {
+      "id": "trip-141552077",
+      "topic": "Travel Stories",
+      "author": "Crazy.traveler เที่ยวจะเครซี่",
+      "title": "Shanghai Warehouse No.3: A Futuristic Space-Themed Restaurant",
+      "body": "Located at Shanghai No.3 Warehouse (上海3号仓库餐厅) on Songze Avenue in Xujing Town, this unique dining spot can be found on the 4th floor (Roof Garden). To reach it, you need to take the escalator from the 3rd floor. 🚇 Easy to get there: Take Line 17 to Xu Ying Road Station (徐盈路), exit at Exit 4, and it's just a short walk away. Initially, my friends told me we were going to eat…",
+      "cover": "journal",
+      "image": "https://ak-d.tripcdn.com/images/1mi1l224x989d0pvv2866.jpg?proc=source/trip",
+      "demo": true,
+      "source": "Trip.com Moments",
+      "sourceUrl": "https://www.trip.com/moments/detail/shanghai-2-141552077/",
+      "likes": 977,
+      "comments": 737
     }
   ]
 }
