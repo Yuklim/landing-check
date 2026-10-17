@@ -1,0 +1,50 @@
+{
+  "preflight": {
+    "src": "shots/preflight.png",
+    "scroll": {
+      "src": "shots/preflight-scroll.png",
+      "x": 0,
+      "y": 54,
+      "w": 393,
+      "h": 728,
+      "contentH": 915
+    }
+  },
+  "esim": {
+    "src": "shots/esim.png",
+    "scroll": {
+      "src": "shots/esim-scroll.png",
+      "x": 0,
+      "y": 0,
+      "w": 393,
+      "h": 852,
+      "contentH": 1244
+    }
+  },
+  "esim-toast": {
+    "src": "shots/esim-toast.png"
+  },
+  "lock": {
+    "src": "shots/lock.png"
+  },
+  "step1": {
+    "src": "shots/step1.png"
+  },
+  "wifi": {
+    "src": "shots/wifi.png"
+  },
+  "offline-guide": {
+    "src": "shots/offline-guide.png",
+    "scroll": {
+      "src": "shots/offline-guide-scroll.png",
+      "x": 0,
+      "y": 134,
+      "w": 393,
+      "h": 718,
+      "contentH": 727
+    }
+  },
+  "offline-help": {
+    "src": "shots/offline-help.png"
+  }
+}

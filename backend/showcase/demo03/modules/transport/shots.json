@@ -1,0 +1,30 @@
+{
+  "step3": {
+    "src": "shots/step3.png"
+  },
+  "ways": {
+    "src": "shots/ways.png",
+    "scroll": {
+      "src": "shots/ways-scroll.png",
+      "x": 0,
+      "y": 54,
+      "w": 393,
+      "h": 728,
+      "contentH": 1827
+    }
+  },
+  "route": {
+    "src": "shots/route.png",
+    "scroll": {
+      "src": "shots/route-scroll.png",
+      "x": 0,
+      "y": 102,
+      "w": 393,
+      "h": 665,
+      "contentH": 948
+    }
+  },
+  "driver": {
+    "src": "shots/driver.png"
+  }
+}

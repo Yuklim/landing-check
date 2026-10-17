@@ -1,0 +1,123 @@
+{
+  "shots": {
+    "preflight": {
+      "src": "shots/preflight.png",
+      "scroll": {
+        "src": "shots/preflight-scroll.png",
+        "x": 0,
+        "y": 54,
+        "w": 393,
+        "h": 728,
+        "contentH": 915
+      }
+    },
+    "paysetup": {
+      "src": "shots/paysetup.png"
+    },
+    "cydf": {
+      "src": "shots/cydf.png"
+    },
+    "paying": {
+      "src": "shots/paying.png"
+    },
+    "payment": {
+      "src": "shots/payment.png"
+    },
+    "preflight_done": {
+      "src": "shots/preflight_done.png",
+      "scroll": {
+        "src": "shots/preflight_done-scroll.png",
+        "x": 0,
+        "y": 54,
+        "w": 393,
+        "h": 728,
+        "contentH": 818
+      }
+    }
+  },
+  "points": {
+    "row": [
+      16,
+      528,
+      361,
+      60
+    ],
+    "verify": [
+      322,
+      558
+    ],
+    "alipay": [
+      16,
+      232,
+      361,
+      83
+    ],
+    "tpg": [
+      16,
+      325,
+      361,
+      83
+    ],
+    "donate": [
+      16,
+      456,
+      361,
+      83
+    ],
+    "refund": [
+      16,
+      549,
+      361,
+      68
+    ],
+    "confirm": [
+      16,
+      772,
+      361,
+      48
+    ],
+    "learn": [
+      344,
+      647
+    ],
+    "gotit": [
+      196,
+      800
+    ],
+    "card": [
+      16,
+      106,
+      361,
+      283
+    ],
+    "sub": [
+      34,
+      273,
+      325,
+      60
+    ],
+    "chip": [
+      134,
+      345,
+      125,
+      22
+    ],
+    "checks": [
+      16,
+      401,
+      361,
+      114
+    ],
+    "done": [
+      196,
+      751
+    ],
+    "scroll2": 90,
+    "ready": [
+      16,
+      725,
+      361,
+      52
+    ]
+  }
+}

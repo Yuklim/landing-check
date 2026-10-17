@@ -1,0 +1,32 @@
+/* 03 Demo 手机动画：手机外框、截图层、手指、高亮。尺寸按 393×852 设计，由 player.js 整体缩放到容器里。 */
+.d3-fit{position:relative;width:100%;height:100%;overflow:visible}
+.d3-phone{
+  position:absolute;left:50%;top:50%;width:393px;height:852px;border-radius:58px;padding:0;
+  box-shadow:0 0 0 12px #0d1426,0 0 0 13.5px #2a3550,0 36px 80px -20px rgba(10,20,60,.55);
+  background:#0d1426;transform-origin:center center;
+}
+.d3-screen{position:absolute;inset:0;border-radius:48px;overflow:hidden;background:#fff;isolation:isolate}
+.d3-cam{position:absolute;left:0;top:0;width:393px;height:852px;transform-origin:0 0}
+.d3-shot{position:absolute;left:0;top:0;width:393px;height:852px;overflow:hidden;background:#fff;visibility:hidden;will-change:transform}
+.d3-img{display:block;max-width:none;user-select:none;-webkit-user-drag:none}
+.d3-scroll{position:absolute;overflow:hidden}
+.d3-scroll>.d3-img{will-change:transform}
+.d3-fx{position:absolute;inset:0;z-index:10;pointer-events:none}
+.d3-cam>.d3-finger{z-index:16}
+.d3-hl{
+  position:absolute;border-radius:14px;border:3px solid #2454ed;
+  box-shadow:0 0 0 5px rgba(36,84,237,.18),0 6px 22px rgba(36,84,237,.28);visibility:hidden;
+}
+.d3-hl-label{
+  position:absolute;left:-3px;bottom:calc(100% + 8px);white-space:nowrap;
+  background:#2454ed;color:#fff;font:700 15px/1 Inter,"PingFang SC",sans-serif;padding:8px 12px;border-radius:9px;
+  box-shadow:0 6px 16px rgba(36,84,237,.35);
+}
+.d3-hl-label.below{bottom:auto;top:calc(100% + 8px)}
+.d3-hl-label.right{left:auto;right:-3px}
+.d3-ripple{position:absolute;left:-36px;top:-36px;width:72px;height:72px;border-radius:50%;border:3px solid rgba(36,84,237,.85);background:rgba(36,84,237,.18);visibility:hidden}
+.d3-finger{
+  position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;z-index:15;pointer-events:none;visibility:hidden;
+  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.95) 0 38%,rgba(255,255,255,.55) 39% 100%);
+  border:2px solid rgba(20,30,60,.35);box-shadow:0 6px 18px rgba(10,20,50,.35);
+}
