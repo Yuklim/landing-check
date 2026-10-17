@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "version": "2026.10.17.4",
-  "revision": "6dc485291fe8df8bc623",
+  "revision": "e9f66c87cff11ca7aecc",
   "assets": [
     {
       "path": "app.js",
@@ -27,6 +27,11 @@
       "path": "fonts/cormorant-garamond.ttf",
       "sha256": "b20b7d9626dd956b2c5e558692ad328b1f19e3275e2782db4fa07670d83f35e0",
       "bytes": 1195560
+    },
+    {
+      "path": "guide.js",
+      "sha256": "e7773841269e49b2c3b5d5cd6c88cd13d7743d220545c374673e38f60dc73323",
+      "bytes": 29567
     },
     {
       "path": "icon-180.png",
@@ -190,8 +195,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "2ae7d891b173db516add6fef98a9146c76f07a92ac6a7a6fe18ff70783a90a51",
-      "bytes": 1101448
+      "sha256": "3f7b63660d203c897d24df36b91c7e35b83b9c662a250244fc38155b56718af2",
+      "bytes": 1101481
     },
     {
       "path": "manifest.json",

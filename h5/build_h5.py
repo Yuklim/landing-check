@@ -457,6 +457,7 @@ if (/island=3/.test(location.search)) {{ const n = $('#notif'); n.style.transiti
 <script src="stamp-renderer.js"></script>
 <script src="stamp.js"></script>
 <script src="motion.js"></script>
+<script src="guide.js"></script>
 </body>
 </html>'''
 open(OUT, 'w', encoding='utf-8').write(page)
