@@ -1054,9 +1054,9 @@
     const sb = cs.querySelector('[data-pencil-name="Status Bar"]');
     B.style.background = '#fff';
     B.innerHTML = `
-      <div style="position:relative;height:250px;background:#1d2a44 center/cover no-repeat url('img/ea229737645d.jpg')">
+      <div style="position:relative;height:290px;background:#1d2a44 center/cover no-repeat url('img/ea229737645d.jpg')">
         <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.05) 45%,rgba(0,0,0,.35))"></div>
-        <div style="position:absolute;left:16px;right:16px;top:12px;display:flex;align-items:center;gap:10px">
+        <div style="position:absolute;left:16px;right:16px;top:58px;display:flex;align-items:center;gap:10px">
           <div class="tap" data-lc-back style="width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.35);display:grid;place-items:center;cursor:pointer"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg></div>
           <span style="flex:1"></span>
           <span style="width:30px;height:30px;border-radius:50%;background:#F5B400;color:#fff;display:grid;place-items:center;font:700 14px Inter,sans-serif">T</span>
@@ -1079,7 +1079,8 @@
       <div style="display:flex;justify-content:space-around;padding:22px 8px 6px">${QUICK.map(([t, p]) => `<div class="tap" data-lc-quick style="text-align:center;cursor:pointer"><div style="width:56px;height:56px;border-radius:50%;background:#EEF3FF;display:grid;place-items:center;margin:0 auto"><svg viewBox="0 0 24 24" width="28" height="28">${p}</svg></div><div style="font:400 13px Inter,sans-serif;color:${INK};margin-top:6px">${t}</div></div>`).join('')}</div>
       <div style="padding:22px 16px 12px;font:700 22px Inter,sans-serif;color:${INK}" data-lc-think></div>
       <div style="display:flex;gap:12px;padding:0 16px 28px">${IDEAS.map((d, i) => `<div class="tap" data-lc-idea="${i}" style="flex:1;height:190px;border-radius:12px;background:#1d2a44 center/cover no-repeat url('${d.img}');position:relative;overflow:hidden;cursor:pointer"><div style="position:absolute;inset:auto 0 0 0;padding:28px 12px 12px;background:linear-gradient(transparent,rgba(0,0,0,.6));font:700 16px/1.25 Inter,sans-serif;color:#fff">${d.t}</div></div>`).join('')}</div>`;
-    if (sb) { sb.style.position = 'absolute'; sb.style.zIndex = '2'; sb.style.width = '100%'; sb.querySelectorAll('*').forEach(n => { if (n.style.color) n.style.color = '#fff'; }); }
+    // 状态栏叠在大图上（沉浸式），按钮行放在它下面；状态栏不接点击，免得挡住返回键
+    if (sb) { sb.style.position = 'absolute'; sb.style.zIndex = '2'; sb.style.width = '100%'; sb.style.pointerEvents = 'none'; sb.querySelectorAll('*').forEach(n => { if (n.style.color) n.style.color = '#fff'; }); }
     cs.querySelector('[data-lc="top"]').style.display = 'none';
     const $ = sel => cs.querySelector(sel);
     $('[data-lc-back]').onclick = () => back();
@@ -1444,7 +1445,23 @@
     .screen[data-route="preflight"] .lc-pf-compact [data-pencil-name="Item Button"]{width:auto!important;height:32px!important;padding:0 14px!important;border-radius:16px!important;background:#EAF0FF!important;outline:0!important;border:0!important;flex:none}
     .screen[data-route="preflight"] .lc-pf-compact [data-pencil-name="Item Button Label"]{color:#2C61FE!important;font-size:13px!important}
     .screen[data-route="preflight"] .lc-pf-still{border:0!important;outline:0!important;background:none!important;padding:0!important;width:100%;font:700 13px/1 Inter,system-ui,sans-serif;color:#6F7685;letter-spacing:.02em;margin:6px 0 -2px}
-    .screen[data-route="preflight"] .lc-pf-opt-closed [data-pencil-name="Optional List"]{display:none!important}`; document.head.appendChild(st); })();
+    .screen[data-route="preflight"] .lc-pf-opt-closed [data-pencil-name="Optional List"]{display:none!important}
+    .screen[data-route="preflight"] .lc-opt-card{width:100%;box-sizing:border-box;background:#fff;border-radius:16px;padding:14px 14px 4px;display:flex;flex-direction:column}
+    .screen[data-route="preflight"] .lc-opt-card.lc-pf-opt-closed{padding-bottom:14px}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Section OPTIONAL"]{padding:0!important}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Section Title"]{font:700 16px Inter,system-ui,sans-serif!important;color:#121826!important}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Optional List"]{flex-direction:column!important;gap:0!important;margin-top:6px}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Optional List"]>*{flex-direction:row!important;align-items:center!important;gap:12px!important;background:none!important;border-radius:0!important;outline:0!important;padding:12px 0!important;width:100%!important;border-top:1px solid #EEF0F3}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Optional List"]>:first-child{border-top:0}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Row"]{flex-direction:row!important;align-items:center!important;gap:12px!important;flex:1;min-width:0}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="State"]{width:40px!important;height:40px!important;border-radius:12px!important;background:#EEF3FF!important;flex:none;display:grid!important;place-items:center}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="State Icon"]{width:20px!important;height:20px!important}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="State Icon"] path{fill:#2C61FE}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Item Texts"]{flex:1;min-width:0}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Item Title"]{font-size:15px!important;font-weight:600!important}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Item Desc"]{font-size:13px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Item Button"]{width:auto!important;height:32px!important;padding:0 14px!important;border-radius:16px!important;background:#EAF0FF!important;outline:0!important;border:0!important;flex:none;align-items:center!important;justify-content:center!important;display:flex!important}
+    .screen[data-route="preflight"] .lc-opt-card [data-pencil-name="Item Button Label"]{color:#2C61FE!important;font-size:13px!important;font-weight:600!important}`; document.head.appendChild(st); })();
   function tidyPreflight() {
     const list = $$('preflight', 'Must List'); if (!list) return;
     list.querySelectorAll(':scope > .lc-pf-still').forEach(n => n.remove());
@@ -1452,11 +1469,13 @@
     const items = [...list.children].filter(n => !n.classList.contains('lc-hide') && n.style.display !== 'none');
     items.forEach((n, i) => { n.classList.toggle('lc-pf-next', i === 0); n.classList.toggle('lc-pf-compact', i > 0); });
     if (items.length > 1) { const still = el('div', '', 'STILL TO DO'); still.className = 'lc-pf-still'; items[1].before(still); }
-    // 可选项：默认展开（收起时只剩一行标题，用户以为没有可选项）；标题右侧 Hide / Show 可收起
-    const sec = $$('preflight', 'Section OPTIONAL'), opt = $$('preflight', 'Optional List'), body = sec && sec.parentElement;
-    if (sec && opt && body && !sec.dataset.lcToggle) {
+    // 可选项：标题和列表装进一张卡片，默认展开（收起时只剩一行标题，用户以为没有可选项）；标题右侧 Hide / Show 可收起
+    const sec = $$('preflight', 'Section OPTIONAL'), opt = $$('preflight', 'Optional List');
+    if (sec && opt && !sec.dataset.lcToggle) {
+      const card = el('div'); card.className = 'lc-opt-card';
+      sec.before(card); card.append(sec, opt);
       sec.dataset.lcToggle = '1'; sec.classList.add('tap'); sec.style.cursor = 'pointer';
-      sec.addEventListener('click', () => { body.classList.toggle('lc-pf-opt-closed'); syncOpt(); });
+      sec.addEventListener('click', () => { card.classList.toggle('lc-pf-opt-closed'); syncOpt(); });
     }
     syncOpt();
   }
@@ -1481,28 +1500,30 @@
   (() => {
     const st = document.createElement('style'); st.textContent = `
       .lc-sk{background:linear-gradient(90deg,#EEF1F5,#F6F8FA,#EEF1F5);background-size:200% 100%;animation:lcsk 1.2s infinite}
-      @keyframes lcsk{to{background-position:-200% 0}}
-      .screen[data-route="preflight"] [data-pencil-name="Optional List"]{flex-wrap:wrap!important}
-      .screen[data-route="preflight"] [data-pencil-name="Optional List"]>*{flex:1 1 calc(50% - 6px)!important;min-width:0}`; document.head.appendChild(st);
+      @keyframes lcsk{to{background-position:-200% 0}}`; document.head.appendChild(st);
     const proto = $$('preflight', 'Item Car rental'), list = $$('preflight', 'Optional List'); if (!proto || !list) return;
-    [['Item Attractions', 'Attractions & tickets', 'Must-sees with live prices · The Bund, Disney, Yu Garden', 'Explore', 'go:attractions', '🎡'],
-     ['Item Travel guides', 'Travel guides', 'First-timer routes and tips from travelers', 'Read', 'go:guides', '📖']].forEach(([name, title, desc, label, act, emoji]) => {
+    const icon = d => `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="${BLUE}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+    // 景点、旅行指南排在接机 / 租车前面
+    const added = [['Item Attractions', 'Attractions & tickets', 'Must-sees with live prices · The Bund, Disney, Yu Garden', 'Explore', 'go:attractions', icon('<path d="M3 9V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v3a3 3 0 0 0 0 6v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a3 3 0 0 0 0-6z"/><path d="M14 5v14" stroke-dasharray="2 2.5"/>')],
+     ['Item Travel guides', 'Travel guides', 'First-timer routes and tips from travelers', 'Read', 'go:guides', icon('<path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z"/><path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z"/>')]].map(([name, title, desc, label, act, svg]) => {
       const n = proto.cloneNode(true);
       n.setAttribute('data-pencil-name', name);
       n.querySelectorAll('[data-pencil-id]').forEach(e => e.removeAttribute('data-pencil-id')); n.removeAttribute('data-pencil-id');
       n.querySelectorAll('[data-act]').forEach(e => e.removeAttribute('data-act'));
       txt(n.querySelector('[data-pencil-name="Item Title"]'), title); txt(n.querySelector('[data-pencil-name="Item Desc"]'), desc);
-      const ic = n.querySelector('[data-pencil-name="State Icon"]'); if (ic) ic.outerHTML = `<span style="font-size:14px;line-height:1">${emoji}</span>`;
+      const ic = n.querySelector('[data-pencil-name="State Icon"]'); if (ic) ic.outerHTML = svg;
       const btn = n.querySelector('[data-pencil-name="Item Button"]'); if (btn) { btn.dataset.act = act; btn.classList.add('tap'); txt(btn.querySelector('[data-pencil-name="Item Button Label"]'), label); }
       n.dataset.act = act; n.classList.add('tap'); n.style.cursor = 'pointer';
-      list.appendChild(n);
+      return n;
     });
+    list.prepend(...added);
     syncOpt();
   })();
   function syncOpt() {
     const sec = $$('preflight', 'Section OPTIONAL'), opt = $$('preflight', 'Optional List'); if (!sec || !opt) return;
     const n = opt.children.length, closed = sec.parentElement.classList.contains('lc-pf-opt-closed');
-    txt(sec.querySelector('[data-pencil-name="Section Title"]'), n ? `OPTIONAL · ${n}` : 'OPTIONAL');
+    sec.parentElement.classList.toggle('lc-hide', !n);   // 可选项都做完了（移到 Done）就整张卡片收掉
+    txt(sec.querySelector('[data-pencil-name="Section Title"]'), n ? `Optional · ${n}` : 'Optional');
     let tg = sec.querySelector('.lc-opt-tg');
     if (!tg) { tg = el('span', `font:600 13px Inter,sans-serif;color:${BLUE}`); tg.className = 'lc-opt-tg'; sec.appendChild(tg); }
     tg.textContent = closed ? 'Show ›' : 'Hide ⌃';
