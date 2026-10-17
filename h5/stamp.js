@@ -118,11 +118,32 @@
       ${btn(icon('bookmark')+(state.personal.bookmarks.includes(post.id)?' Saved to my atlas':' Save this story'),'bookmark',post.id,'outline')}${post.topic==='Local Tips'?btn('Open my offline travel pack','nav','offline','secondary'):''}
       ${!post.demo?btn('Delete this local post','delete-post',post.id,'danger'):''}${btn('Back to Shanghai Community','nav','community','secondary')}`;
   }
+  // 到访认证章（护照盖章风）——仿高德城市卡片右下角的 ARRIVAL 印章
+  const ARRIVAL_SEAL = `<svg width="68" height="68" viewBox="0 0 120 120" aria-hidden="true"><g style="transform:rotate(-9deg);transform-origin:60px 60px;opacity:.74">
+    <defs><path id="fsSealTop" d="M 22,60 A 38,38 0 0 1 98,60" fill="none"/><path id="fsSealBot" d="M 24,60 A 36,36 0 0 0 96,60" fill="none"/></defs>
+    <circle cx="60" cy="60" r="50" fill="none" stroke="#3B63D6" stroke-width="2.5"/><circle cx="60" cy="60" r="41" fill="none" stroke="#3B63D6" stroke-width="1"/>
+    <text font-family="Inter,sans-serif" font-size="9.5" font-weight="700" letter-spacing="2" fill="#3B63D6"><textPath href="#fsSealTop" startOffset="50%" text-anchor="middle">LANDING CHECK</textPath></text>
+    <text font-family="Inter,sans-serif" font-size="8" font-weight="600" letter-spacing="2.5" fill="#3B63D6"><textPath href="#fsSealBot" startOffset="50%" text-anchor="middle">★ CHINA 2026 ★</textPath></text>
+    <text x="60" y="54" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="20" font-weight="700" fill="#3B63D6">Arrival</text>
+    <path d="M44 64 h32 M48 70 h24" stroke="#3B63D6" stroke-width="1.6" stroke-linecap="round"/></g></svg>`;
   function atlas() {
-    const collected = stamp();
-    return `<section class="fs-atlas"><div class="fs-count">${collected?'01':'00'}</div><div class="fs-eyebrow">MY CITY ATLAS</div><h2>Places become<br>part of you.</h2><p class="fs-small">${collected?'One city collected. A thousand stories ahead.':'Your first China stamp is waiting.'}</p></section>
-      <button class="fs-city-tile ${collected?'':'locked'}" type="button" ${collected?'data-fs="nav" data-value="share"':'disabled'}><span class="fs-seal">沪<small>${collected?'UNLOCKED':'WAITING'}</small></span><span><span class="fs-eyebrow">CITY NO. 001</span><strong>Shanghai</strong><p>${collected?'First arrival · '+H(renderer.formatDate(collected.arrival)):'Finish your landing steps to light up Shanghai.'}</p><p>${collected?'View & export my keepsake →':'Not collected yet'}</p></span></button><p class="fs-milestone">“Thousands of miles away from home,<br>and a new story has just begun.”</p>
-      <section class="fs-panel"><h3>Your collection stays with you.</h3><p class="fs-small">Stored on this browser, without location tracking. Clearing site data or switching browsers removes this local collection. More city editions are planned; only Shanghai is available in this version.</p></section><div class="fs-clear-row"><button type="button" class="fs-text-btn" data-fs="clear-stamps">Clear my stamps, posts & sharing drafts</button><p class="fs-small">Your offline hotel and contacts will be kept. The offline pack’s “Clear my personal data” option clears everything together.</p></div>`;
+    const collected = stamp(), lit = Boolean(collected), art = H(state.config.city.art);
+    const shCard = lit
+      ? `<button class="fs-acard" type="button" data-fs="nav" data-value="share" aria-label="View my Shanghai keepsake">
+           <span class="fs-acard-photo"><img src="${art}" alt="Shanghai"><span class="fs-acard-cn">CHINA</span><span class="fs-acard-seal">${ARRIVAL_SEAL}</span></span>
+           <span class="fs-acard-meta"><strong>Shanghai</strong><span class="fs-acard-dt lit">Arrived · ${H(renderer.formatDate(collected.arrival))}</span></span>
+         </button>`
+      : `<div class="fs-acard notyet">
+           <span class="fs-acard-photo gray"><img src="${art}" alt="Shanghai"><span class="fs-acard-cn">CHINA</span><span class="fs-acard-add" aria-hidden="true">+</span></span>
+           <span class="fs-acard-meta"><strong>Shanghai</strong><span class="fs-acard-dt">Not collected yet</span></span>
+         </div>`;
+    const lock = (ch, name) => `<div class="fs-alock"><span class="fs-alock-ring">${ch}</span><strong>${name}</strong><small>Coming soon</small></div>`;
+    return `<section class="fs-atlas2">
+      <div class="fs-atlas-map" id="fs-atlas-map"><div class="fs-atlas-maptip">Connect to the internet to see the map.</div></div>
+      <div class="fs-atlas-stat"><div><div class="fs-eyebrow">MY CITY ATLAS</div><div class="fs-atlas-big">${lit?'Shanghai is <em>lit</em>':'Light up <em>Shanghai</em>'}</div></div><div class="fs-atlas-count"><b>${lit?1:0}/6</b>cities lit</div></div>
+      <div class="fs-atlas-bar"><i style="width:${lit?16:4}%"></i></div>
+      <div class="fs-atlas-grid">${shCard}${lock('京','Beijing')}${lock('蓉','Chengdu')}${lock('杭','Hangzhou')}${lock('穗','Guangzhou')}${lock('西',"Xi'an")}</div>
+      <div class="fs-atlas-foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A8F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Saved on this device · no location tracking</span><button type="button" class="fs-text-btn" data-fs="clear-stamps">Clear my stamps</button></div>`;
   }
   function drawPreviews() {
     const token = ++renderToken, route = current(), host = screens[route];
@@ -147,6 +168,60 @@
     state.personal.stamps.push({cityId:state.config.city.id,sequence:1,arrival:state.personal.draft.arrival,confirmedAt:new Date().toISOString(),source:'landing-flow'});
     if (!state.storageError) flush().catch(()=>{});
   }
+  // ---- 城市图鉴地图（高德）：上海点亮=蓝，其它城市灰点待点亮；离线/失败则静默保留下方卡片 ----
+  let atlasMap = null;
+  const ATLAS_CITIES = [
+    {name:'Shanghai',pos:[121.47,31.23],hero:true},{name:'Beijing',pos:[116.40,39.90]},
+    {name:'Chengdu',pos:[104.07,30.57]},{name:'Hangzhou',pos:[120.15,30.27]},
+    {name:'Guangzhou',pos:[113.26,23.13]},{name:"Xi'an",pos:[108.94,34.34]}
+  ];
+  function loadAMapForAtlas() {
+    if (window.AMap) return Promise.resolve(window.AMap);
+    if (window.__lcAMapPromise) return window.__lcAMapPromise;
+    window._AMapSecurityConfig = { securityJsCode: '66c2eb31034482e3a0477b1f23af4224' };
+    window.__lcAMapPromise = new Promise((res, rej) => {
+      const sc = document.createElement('script');
+      sc.src = 'https://webapi.amap.com/maps?v=2.0&key=de3704da02953bb4e6f7484b75f5749a&plugin=AMap.DistrictSearch';
+      sc.onload = () => window.AMap ? res(window.AMap) : rej(new Error('AMap'));
+      sc.onerror = () => { window.__lcAMapPromise = null; rej(new Error('AMap')); };
+      document.head.appendChild(sc);
+    });
+    return window.__lcAMapPromise;
+  }
+  function initAtlas() {
+    const box = screens['city-passport'] && screens['city-passport'].querySelector('#fs-atlas-map');
+    if (!box) return;
+    const lit = Boolean(stamp());
+    loadAMapForAtlas().then(A => {
+      if (current() !== 'city-passport' || !box.isConnected) return;
+      try { if (atlasMap) { atlasMap.destroy(); atlasMap = null; } } catch (_) {}
+      atlasMap = new A.Map(box, { lang:'en', mapStyle:'amap://styles/whitesmoke', zoom:4.2,
+        center:[114,29], viewMode:'2D', features:['bg','road','building'], showLabel:true });
+      if (lit) {
+        A.plugin('AMap.DistrictSearch', function () {
+          new A.DistrictSearch({ subdistrict:0, extensions:'all', level:'city' }).search('上海市', function (st, res) {
+            if (st === 'complete' && res.districtList && res.districtList[0]) {
+              (res.districtList[0].boundaries || []).forEach(function (p) {
+                new A.Polygon({ path:p, map:atlasMap, strokeColor:'#2C61FE', strokeWeight:2, fillColor:'#2C61FE', fillOpacity:0.35, zIndex:20 });
+              });
+            }
+          });
+        });
+      }
+      ATLAS_CITIES.forEach(function (c) {
+        const on = c.hero && lit;
+        if (on) {
+          new A.Marker({ position:c.pos, anchor:'center', zIndex:120, map:atlasMap,
+            content:'<div class="fs-mk-lit"><span class="fs-mk-halo"></span><span class="fs-mk-dot"></span></div>',
+            label:{ content:'<div class="fs-mk-label lit">'+c.name+'</div>', direction:'top' } });
+        } else {
+          new A.CircleMarker({ center:c.pos, radius:6, strokeColor:'#fff', strokeWeight:2, fillColor:'#B7BECB', fillOpacity:1, zIndex:60, map:atlasMap });
+          new A.Marker({ position:c.pos, anchor:'middle-left', offset:new A.Pixel(8,0), zIndex:61, map:atlasMap,
+            content:'<div class="fs-mk-label off">'+c.name+'</div>' });
+        }
+      });
+    }).catch(function () { box.classList.add('fs-atlas-map-off'); });
+  }
   function render() {
     if(rendered && rendered!==current()){state.notice='';state.good=false;}
     rendered = current();
@@ -160,6 +235,7 @@
     screens[rendered].innerHTML=header(titles[rendered],rendered)+`<main class="scroll fs-body"><div class="fs-feedback fs-notice ${state.good?'good':''}" role="status">${H(state.notice)}</div>${state.storageError?`<div class="fs-notice">${H(state.storageError)}</div>`:''}<div class="fs-offline-label" data-fs-network ${navigator.onLine?'hidden':''}>Offline · saved artwork, cards & drafts still work</div>${body}</main>`+footer(rendered);
     if (statusBar) screens[rendered].querySelector('.fs-head').prepend(statusBar.cloneNode(true));
     if (state.ready && !state.error) drawPreviews();
+    if (rendered === 'city-passport' && state.ready && !state.error) initAtlas();
   }
   function capture(form) {
     if (form.id==='fs-customize') {
