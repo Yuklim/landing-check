@@ -644,6 +644,9 @@ html[lang="en"] .zh{display:none !important}
 .cx-ql{font-size:15px;color:#cfe0ff}
 .cx-q b{font-size:25px;font-weight:800;letter-spacing:-.5px}
 .cx-qn{margin-left:auto;font-family:var(--mono);font-size:13px;color:#a9c0ff}
+#commercial .s-sub{font-size:17px;margin-top:8px;max-width:1120px}
+.cx-left{display:flex;flex-direction:column;justify-content:center;gap:9px}
+.cx-cap{font-size:14.5px;font-weight:750;color:var(--ink);letter-spacing:-.2px}
 
 /* P12 growth: 前链路 → Landing Check → 后链路, closed by the loop line */
 #growth .s-title{margin-bottom:0}
@@ -677,6 +680,10 @@ html[lang="en"] .zh{display:none !important}
 .gl-to{font-size:12.5px;font-weight:700;color:var(--blue);margin-top:7px}
 .gl-loop{margin-top:16px;align-self:center;display:flex;align-items:center;gap:6px;font-size:16.5px;font-weight:600;color:var(--ink);background:#eef3ff;border:1px dashed #b9cdf8;border-radius:999px;padding:11px 26px}
 .gl-loop b{color:var(--blue);font-weight:800}
+#growth .s-sub{font-size:16.5px;margin-top:5px;max-width:1120px}
+#growth .gl-wrap{margin-top:9px}
+.gl-hl{font-size:13px;font-weight:800;color:var(--blue);background:#e9f0ff;border:1px solid #d3e0ff;border-radius:9px;padding:9px 12px;line-height:1.4}
+.gl-hl i{font-style:normal;color:#9bb0e6;margin:0 3px}
 
 /* P13 philosophy: closes 平台价值 */
 .phil-title .hl{color:var(--blue)}
