@@ -375,5 +375,489 @@
    "on_sale_from": null,
    "link": "https://m.ctrip.com/webapp/train/list?ticketType=0&dDate=2026-10-20&aStation=%E5%8C%97%E4%BA%AC&dStation=%E4%B8%8A%E6%B5%B7"
   }
+ },
+ "content": {
+  "fetched_at": "2026-10-16 21:30",
+  "query": {
+   "query": "上海",
+   "size": 10
+  },
+  "data": {
+   "city_zh": "上海",
+   "count": 10,
+   "notes": [
+    {
+     "title": "整理了国内20座宝藏城市，存下直接出发！",
+     "author": "添甜爱旅游",
+     "author_image": "https://dimg04.c-ctrip.com/images/1me3712000ry380373B66_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me6e12000tu0224h55FD.jpg?proc=source/tripcommunity",
+     "images": [
+      "https://dimg04.c-ctrip.com/images/1me6e12000tu0224h55FD.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me2x12000tu09k7q645B.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me2112000tu09k7p90DC.jpg?proc=source/tripcommunity"
+     ],
+     "summary": "第一图\n \n上海\n \n📍必打卡景点\n外滩\n东方明珠\n南京路步行街\n豫园\n上海迪士尼度假区\n \n📷旅游攻略\n✅地铁出行，方便高效\n✅外滩建议傍晚去，夜景更美\n✅迪士尼提前购票，合理安排时间\n✅南京路与豫园可安排在同一天\n \n杭州\n \n📍必打卡景点\n西湖\n灵隐寺\n雷峰塔\n宋城\n西溪湿",
+     "pois": [
+      {
+       "id": 10524119,
+       "name": "南京路步行街",
+       "district": "上海"
+      },
+      {
+       "id": 10524156,
+       "name": "户部巷",
+       "district": "武汉"
+      },
+      {
+       "id": 10524162,
+       "name": "鼓浪屿",
+       "district": "厦门"
+      },
+      {
+       "id": 10524171,
+       "name": "天涯海角",
+       "district": "三亚"
+      },
+      {
+       "id": 10537250,
+       "name": "天鹅湖体育公园",
+       "district": "合肥"
+      },
+      {
+       "id": 10537657,
+       "name": "南昌之星摩天轮",
+       "district": "南昌"
+      },
+      {
+       "id": 10558596,
+       "name": "玄武湖景区",
+       "district": "南京"
+      },
+      {
+       "id": 10558611,
+       "name": "大东海",
+       "district": "三亚"
+      }
+     ],
+     "likes": 39,
+     "comments": 8,
+     "reads": 1592,
+     "published": "2026-09-12",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    },
+    {
+     "title": "国内34城旅行完整版攻略✨涵盖山海古都｜新手出行直接参考",
+     "author": "丫丫带你看世界",
+     "author_image": "https://dimg04.c-ctrip.com/images/1h65s12000theg6qjB59B_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me6012000txr7obx2EFE.jpg?proc=source/tripcommunity",
+     "images": [
+      "https://dimg04.c-ctrip.com/images/1me6012000txr7obx2EFE.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me3312000txqy8edE8ED.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me4c12000txrbtok4F69.jpg?proc=source/tripcommunity"
+     ],
+     "summary": "每次计划旅行都纠结去哪？\n整理34座国内高适配旅行城市，按「古都人文、都市烟火、江南山水、滨海度假、自然秘境、草原高原」六大类别精细分类。\n \n不管是周末短途散心、情侣出游、家庭度假、长线深度旅行，都能快速匹配适合自己的目的地，不用盲目做攻略✅\n \n🏯千年古都人文线｜沉浸式感受历",
+     "pois": [
+      {
+       "id": 10524162,
+       "name": "鼓浪屿",
+       "district": "厦门"
+      },
+      {
+       "id": 10524171,
+       "name": "天涯海角",
+       "district": "三亚"
+      },
+      {
+       "id": 10557626,
+       "name": "大唐不夜城",
+       "district": "西安"
+      },
+      {
+       "id": 10558614,
+       "name": "蜈支洲岛",
+       "district": "三亚"
+      },
+      {
+       "id": 10558656,
+       "name": "环岛路",
+       "district": "厦门"
+      },
+      {
+       "id": 10558666,
+       "name": "东湖生态旅游风景区",
+       "district": "武汉"
+      },
+      {
+       "id": 98986,
+       "name": "婺源风景区",
+       "district": "婺源"
+      },
+      {
+       "id": 92373,
+       "name": "太平老街",
+       "district": "长沙"
+      }
+     ],
+     "likes": 542,
+     "comments": 536,
+     "reads": 15249,
+     "published": "2026-09-22",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    },
+    {
+     "title": "一生必去的八大城市？这些都是吹爆朋友圈的地方",
+     "author": "逐步环游",
+     "author_image": "https://dimg04.c-ctrip.com/images/1h63w12000t8bf9spAEE9_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me4o12000ti4z8e34032.jpg?proc=source/tripcommunity",
+     "images": [
+      "https://dimg04.c-ctrip.com/images/1me4o12000ti4z8e34032.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me5z12000ti4wq9h608E.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me5h12000ti4txns27A0.jpg?proc=source/tripcommunity"
+     ],
+     "summary": "1.拉萨\n \n推荐文案\n日光之城拉萨，无数人心中向往的远方。雄伟的布达拉宫矗立山间，大昭寺香火绵长，随处可见虔诚朝拜的信徒。漫步八廓街，感受浓郁藏地人文气息。澄澈蓝天触手可及，慢下来感受高原独有的宁静。奔赴雪域圣城，寻一份内心安宁，是一生值得奔赴的旅程。\n \n2.敦煌\n \n推荐文",
+     "pois": [
+      {
+       "id": 10558753,
+       "name": "凤凰古城",
+       "district": "凤凰县"
+      },
+      {
+       "id": 10558957,
+       "name": "洪崖洞民俗风貌区",
+       "district": "重庆"
+      },
+      {
+       "id": 10559135,
+       "name": "沱江",
+       "district": "凤凰县"
+      },
+      {
+       "id": 24302219,
+       "name": "陆家嘴",
+       "district": "上海"
+      },
+      {
+       "id": 24302858,
+       "name": "外滩万国建筑博览群",
+       "district": "上海"
+      },
+      {
+       "id": 24650650,
+       "name": "嘉陵江",
+       "district": "重庆"
+      },
+      {
+       "id": 75595,
+       "name": "故宫博物院",
+       "district": "北京"
+      },
+      {
+       "id": 75611,
+       "name": "外滩",
+       "district": "上海"
+      }
+     ],
+     "likes": 112,
+     "comments": 105,
+     "reads": 5240,
+     "published": "2026-08-13",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    },
+    {
+     "title": "🍁上海枫叶岛｜赴一场深秋之约，邂逅漫山红枫",
+     "author": "闲步赴远方",
+     "author_image": "https://dimg04.c-ctrip.com/images/1h66w12000typ5mjd94AA_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me3p12000u0q8d0n5426.jpg?proc=source/tripcommunity",
+     "images": [],
+     "summary": "📍1.景区简介：上海金山廊下镇，三百亩北美红枫林，深秋红叶遍野，上海免费郊野赏枫好去处￼￼￼。\n🚶2.游玩路线【2‑3小时半日路线，最佳11月中下旬‑12月初】\n景区入口→枫叶大道打卡枫叶隧道→林间木栈道漫步→枫林湖畔拍枫叶水面倒影→落叶小径深度逛枫林；游玩结束顺路逛山塘古村、山",
+     "pois": [
+      {
+       "id": 18150080,
+       "name": "枫叶岛",
+       "district": "上海"
+      },
+      {
+       "id": 22901345,
+       "name": "金山北站",
+       "district": "上海"
+      },
+      {
+       "id": 2,
+       "name": "上海",
+       "district": "上海"
+      }
+     ],
+     "likes": 335,
+     "comments": 37,
+     "reads": 5693,
+     "published": "2026-10-01",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    },
+    {
+     "title": "江浙沪亲子2天1晚｜暑假不想跑远，这份遛娃地图直接抄作业",
+     "author": "茜茜爱旅游哦",
+     "author_image": "https://dimg04.c-ctrip.com/images/1h61s12000tcwhqpc8574_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me4e12000tm128heFCBD.jpg?proc=source/tripcommunity",
+     "images": [
+      "https://dimg04.c-ctrip.com/images/1me4e12000tm128heFCBD.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me0512000tm12cejB6CE.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me0i12000tm135b42D14.jpg?proc=source/tripcommunity"
+     ],
+     "summary": "避暑胜地：\n【莫干山】天然森林氧吧！清幽竹林秘境，治愈夏日燥热～\n上海出发3.5小时\n \n【安吉竹海】卧虎藏龙取景圣地，沉浸式竹筏漂流，趣味满分\n上海出发3.5小时\n \n【天目湖】游船揽湖景+温柔温泉，是江浙沪亲子度假首选！\n上海出发3.5小时\n \n【千岛湖】超多趣味水上项目，夏",
+     "pois": [
+      {
+       "id": 97450,
+       "name": "中国大竹海景区",
+       "district": "安吉"
+      },
+      {
+       "id": 97439,
+       "name": "莫干山风景名胜区",
+       "district": "德清"
+      },
+      {
+       "id": 91408,
+       "name": "周庄",
+       "district": "昆山"
+      },
+      {
+       "id": 79986,
+       "name": "西塘古镇",
+       "district": "嘉善"
+      },
+      {
+       "id": 79311,
+       "name": "中华恐龙园",
+       "district": "常州"
+      },
+      {
+       "id": 56373243,
+       "name": "芜湖方特旅游区",
+       "district": "芜湖"
+      },
+      {
+       "id": 13412802,
+       "name": "上海迪士尼度假区",
+       "district": "上海"
+      },
+      {
+       "id": 10758519,
+       "name": "象山影视城",
+       "district": "象山"
+      }
+     ],
+     "likes": 414,
+     "comments": 203,
+     "reads": 24755,
+     "published": "2026-08-22",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    },
+    {
+     "title": "带老人慢游天花板！4座温柔小城不爬山不暴走🚶",
+     "author": "生花看世界",
+     "author_image": "https://dimg04.c-ctrip.com/images/1h64l12000ther8uaF1B4_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me1g12000u5tf1ic244F.jpg?proc=source/tripcommunity",
+     "images": [
+      "https://dimg04.c-ctrip.com/images/1me1g12000u5tf1ic244F.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me1l12000u5t7o7cD670.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me1h12000u5syjfxB62D.jpg?proc=source/tripcommunity"
+     ],
+     "summary": "带长辈出门，标准跟年轻人不一样：景可以不惊艳，路要平、椅子要多、中午能回去歇一觉最好。下面这四处都在江浙沪，出站到落脚点不必走远，一天只逛一处也不嫌少。\n选这四处的门道\n先看路，平路和无障碍做得好的往前提；再看坐，两步一张长椅、随处能歇脚的优先；最后看节奏，车程短、不赶场的最省心",
+     "pois": [
+      {
+       "id": 10530646,
+       "name": "天目湖旅游度假区",
+       "district": "溧阳"
+      },
+      {
+       "id": 95618,
+       "name": "龙兴岛",
+       "district": "溧阳"
+      },
+      {
+       "id": 57719355,
+       "name": "中国茶岛",
+       "district": "溧阳"
+      },
+      {
+       "id": 90075,
+       "name": "天目湖南山竹海",
+       "district": "溧阳"
+      },
+      {
+       "id": 10520148,
+       "name": "鸡鸣村",
+       "district": "溧阳"
+      },
+      {
+       "id": 10758140,
+       "name": "西津渡历史文化街区",
+       "district": "镇江"
+      },
+      {
+       "id": 10535954,
+       "name": "宋夹城体育休闲公园",
+       "district": "扬州"
+      },
+      {
+       "id": 75802,
+       "name": "绍兴柯岩风景区",
+       "district": "绍兴"
+      }
+     ],
+     "likes": 6,
+     "comments": 0,
+     "reads": 62,
+     "published": "2026-10-15",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    },
+    {
+     "title": "暑假必去的20个城市！你最想去哪个？这是景点火爆了",
+     "author": "小吴旅游博主",
+     "author_image": "https://dimg04.c-ctrip.com/images/0Z86612000jxx9g1q46A4_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me4o12000t5sb7se0DA1.jpg?proc=source/tripcommunity",
+     "images": [
+      "https://dimg04.c-ctrip.com/images/1me4o12000t5sb7se0DA1.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me4b12000t5t1bo4909F.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me6512000t5slmsu7537.jpg?proc=source/tripcommunity"
+     ],
+     "summary": "- 上海：外滩、东方明珠、豫园、南京路步行街、田子坊\n- 北京：故宫、天安门广场、长城、颐和园、天坛公园\n- 深圳：深圳湾公园、世界之窗、东门老街、华侨城创意园、大梅沙海滨公园\n- 广州：广州塔、沙面岛、陈家祠、北京路步行街、越秀公园\n- 杭州：西湖、灵隐寺、西溪湿地、雷峰塔、宋",
+     "pois": [
+      {
+       "id": 10524091,
+       "name": "田子坊",
+       "district": "上海"
+      },
+      {
+       "id": 2,
+       "name": "上海",
+       "district": "上海"
+      }
+     ],
+     "likes": 649,
+     "comments": 50,
+     "reads": 59346,
+     "published": "2026-07-15",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    },
+    {
+     "title": "中国必去的 25 个城市，这些景点火爆了，你最想去哪个？",
+     "author": "小王爱旅游8888",
+     "author_image": "https://dimg04.c-ctrip.com/images/1h63v12000t9k446o9993_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me4a12000trg5sskE566.jpg?proc=source/tripcommunity",
+     "images": [
+      "https://dimg04.c-ctrip.com/images/1me4a12000trg5sskE566.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me0u12000trgl43b1785.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me5912000trg56xjDA8A.jpg?proc=source/tripcommunity"
+     ],
+     "summary": "宁波\n \n必打卡景点：天一阁、东钱湖、老外滩、鼓楼步行街、象山影视城\n推荐行程：3天2晚\n必打卡：天一阁、东钱湖、老外滩\n交通建议：栎社国际机场；宁波站/宁波东站\n游玩Tips\n•东钱湖环湖风景优美，可骑行或漫步\n•老外滩夜景迷人，适合散步拍照\n \n郑州\n \n必打卡景点：二七广场",
+     "pois": [
+      {
+       "id": 13412802,
+       "name": "上海迪士尼度假区",
+       "district": "上海"
+      },
+      {
+       "id": 2,
+       "name": "上海",
+       "district": "上海"
+      }
+     ],
+     "likes": 347,
+     "comments": 31,
+     "reads": 23177,
+     "published": "2026-09-05",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    },
+    {
+     "title": "中国必去的24 个城市，这些景点火爆了，你最想去哪个",
+     "author": "添甜爱旅行",
+     "author_image": "https://dimg04.c-ctrip.com/images/1me7312000s2o28ibFC78_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me2j12000tsw5b65BE61.jpg?proc=source/tripcommunity",
+     "images": [
+      "https://dimg04.c-ctrip.com/images/1me2j12000tsw5b65BE61.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me4212000tsvj1wi6758.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me0l12000tsvhtdk2F89.jpg?proc=source/tripcommunity"
+     ],
+     "summary": "三亚\n \n景点旅游攻略\n \n- 亚龙湾：碧海蓝天，沙滩细腻，适合度假放松\n- 蜈支洲岛：海水清澈，水上项目丰富，适合游玩\n- 天涯海角：海景壮丽，浪漫打卡地标\n- 南山文化旅游区：参观108米海上观音，感受自然与人文景观\n \n \n \n哈尔滨\n \n景点旅游攻略\n \n- 中央大街：百",
+     "pois": [
+      {
+       "id": 10524119,
+       "name": "南京路步行街",
+       "district": "上海"
+      },
+      {
+       "id": 10524162,
+       "name": "鼓浪屿",
+       "district": "厦门"
+      },
+      {
+       "id": 10524171,
+       "name": "天涯海角",
+       "district": "三亚"
+      },
+      {
+       "id": 10524172,
+       "name": "骑楼老街",
+       "district": "海口"
+      },
+      {
+       "id": 10558608,
+       "name": "假日海滩",
+       "district": "海口"
+      },
+      {
+       "id": 10558612,
+       "name": "亚龙湾国家旅游度假区",
+       "district": "三亚"
+      },
+      {
+       "id": 10558614,
+       "name": "蜈支洲岛",
+       "district": "三亚"
+      },
+      {
+       "id": 10558619,
+       "name": "杭州宋城",
+       "district": "杭州"
+      }
+     ],
+     "likes": 21,
+     "comments": 12,
+     "reads": 1116,
+     "published": "2026-09-09",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    },
+    {
+     "title": "中国必去的 24 个城市，这些景点火爆了，你最想去哪个？",
+     "author": "添甜爱旅游",
+     "author_image": "https://dimg04.c-ctrip.com/images/1me3712000ry380373B66_R_180_180.jpg",
+     "image": "https://dimg04.c-ctrip.com/images/1me6012000trfm2zwB101.jpg?proc=source/tripcommunity",
+     "images": [
+      "https://dimg04.c-ctrip.com/images/1me6012000trfm2zwB101.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me5t12000trfkpu20FC8.jpg?proc=source/tripcommunity",
+      "https://dimg04.c-ctrip.com/images/1me5812000trg1micF206.jpg?proc=source/tripcommunity"
+     ],
+     "summary": "北京\n \n必打卡景点\n故宫博物院\n天安门广场\n八达岭长城\n颐和园\n \n旅游攻略\n最佳时间：春秋季（4-5月、9-10月）\n建议游玩：3-4天\n交通建议：地铁覆盖广，景点间地铁+公交更便捷\n预约建议：故宫、国家博物馆等需提前预约\n出行建议：备好防晒用品，夏季注意防暑\n \n上海\n \n",
+     "pois": [
+      {
+       "id": 13412802,
+       "name": "上海迪士尼度假区",
+       "district": "上海"
+      },
+      {
+       "id": 2,
+       "name": "上海",
+       "district": "上海"
+      }
+     ],
+     "likes": 193,
+     "comments": 20,
+     "reads": 18581,
+     "published": "2026-09-05",
+     "link": "https://m.ctrip.com/webapp/you/community/noteList?articleToken=b437fe5b91f983084c52e1431c4a72d1"
+    }
+   ]
+  }
  }
 }

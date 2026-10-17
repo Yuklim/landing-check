@@ -18,7 +18,7 @@ import tripmcp
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SNAPSHOT = os.path.join(HERE, 'mock', 'live_snapshot.json')
-KEYS = ('flight', 'hotel', 'tickets', 'car', 'train')
+KEYS = ('flight', 'hotel', 'tickets', 'car', 'train', 'content')
 
 AIRPORT_LL = {'PVG': (31.1443, 121.8083), 'SHA': (31.1979, 121.3363), 'PEK': (40.0799, 116.6031), 'PKX': (39.5098, 116.4105), 'CAN': (23.3924, 113.2988)}
 AIRPORT_ZH = {'PVG': '浦东', 'SHA': '虹桥', 'PEK': '首都', 'PKX': '大兴', 'CAN': '白云'}
@@ -291,8 +291,35 @@ def n_train(trip, raw, now: datetime = None):
             'trains': pick, 'on_sale_from': on_sale, 'link': raw.get('h5ListUrl')}
 
 
+# ---------------- 旅游笔记 query_content ----------------
+_POI_TAG = re.compile(r'<poi\b[^>]*>(.*?)</poi>', re.S)       # 正文里 POI 用 <poi ...>地名</poi> 包着，只留地名
+
+
+def q_content(trip):
+    """按目的地城市查公开旅游笔记/攻略。size 走营销 MCP 默认 10，LC_CONTENT_SIZE 可调（检索有范围，不是整库拉取）。"""
+    city = (trip.get('hotel') or {}).get('city_zh') or (trip.get('flight') or {}).get('to', {}).get('city_zh') or ''
+    return 'query_content', {'query': city, 'size': int(os.environ.get('LC_CONTENT_SIZE', '10'))}
+
+
+def _note(it):
+    body = re.sub(r'\n{2,}', '\n', _POI_TAG.sub(r'\1', it.get('content') or '')).strip()
+    return {'title': it.get('title'), 'author': it.get('authorName'), 'author_image': it.get('authorImage'),
+            'image': it.get('imageURL'), 'images': (it.get('imageList') or [])[:3], 'summary': body[:140],
+            'pois': [{'id': p.get('poiid'), 'name': p.get('poiName'), 'district': p.get('districtName')} for p in (it.get('poiList') or [])[:8]],
+            'likes': it.get('likeCount'), 'comments': it.get('commentCount'), 'reads': it.get('readCount'),
+            'published': it.get('publishTime'), 'link': it.get('listUrl') or (it.get('urlInfo') or {}).get('h5Url')}
+
+
+def n_content(trip, raw):
+    items = raw if isinstance(raw, list) else []
+    if not items:
+        raise tripmcp.McpError('no travel notes')
+    city = (trip.get('hotel') or {}).get('city_zh') or (trip.get('flight') or {}).get('to', {}).get('city_zh')
+    return {'city_zh': city, 'count': len(items), 'notes': [_note(x) for x in items]}
+
+
 # ---------------- 存储：缓存 + 后台刷新 + 快照 ----------------
-SIMPLE = {'flight': (q_flight, n_flight), 'hotel': (q_hotel, n_hotel), 'car': (q_car, n_car), 'train': (q_train, n_train)}
+SIMPLE = {'flight': (q_flight, n_flight), 'hotel': (q_hotel, n_hotel), 'car': (q_car, n_car), 'train': (q_train, n_train), 'content': (q_content, n_content)}
 
 
 class LiveStore:
@@ -458,5 +485,9 @@ def enrich(trip: dict, store: LiveStore, wait: bool = False) -> dict:
         if e and e.get('data'):
             t['next_leg']['timetable_date'] = e['data'].get('date')
             src['train'] = _meta(e)
+    e = store.get('content', t, wait)
+    if e and e.get('data'):
+        t['content'] = e['data']
+        src['content'] = _meta(e)
     t['live'] = src
     return t
