@@ -81,23 +81,42 @@
   }
   function footer(route) {
     if (route === 'share') return '';
-    return `${help()}<div class="fs-tabs">${tabBar(route)}</div>`;
+    if (route === 'community-post') return postBar();
+    return `<div class="fs-tabs">${tabBar(route)}</div>`;
   }
-  function help() { return `<button type="button" class="fs-stuck tap" data-act="api:stuck"><img src="img/ai-bot.png" alt="">I'm stuck</button>`; }
+  // 帖子详情底部：像真 App 一样固定一条「评论框 + 点赞 + 评论 + 收藏」，不再放两个大按钮
+  function postBar() {
+    const post = state.ready && state.config ? posts().find(item=>item.id===state.postId) : null;
+    if (!post || post.card) return `<div class="fs-tabs">${tabBar('community-post')}</div>`;
+    const saved = state.personal.bookmarks.includes(post.id);
+    const say = post.sourceUrl ? `<a class="fs-pb-say" data-fs-online href="${H(post.sourceUrl)}" target="_blank" rel="noopener noreferrer">Say something…</a>` : '<span class="fs-pb-say">Say something…</span>';
+    return `<div class="fs-postbar">${say}<span>👍 ${fmtNum(post.likeCount||post.likes||0)}</span><span>💬 ${fmtNum(post.commentCount||post.comments||0)}</span><button type="button" class="fs-pb-save" data-fs="bookmark" data-value="${H(post.id)}" aria-pressed="${saved}" aria-label="${saved?'Saved to my atlas':'Save this story'}">${icon('bookmark')}</button></div>`;
+  }
   function preview(publicCard = card()) {
     return `<figure class="fs-preview"><canvas data-fs-card role="img" aria-label="${H(`${publicCard.unlocked ? 'Unlocked' : 'Preview'} Shanghai souvenir. Traveler: ${publicCard.traveler}. Arrival: ${renderer.formatDate(publicCard.arrival)}.`)}" width="1080" height="1350"></canvas><figcaption>1080 × 1350 · Your digital city ticket</figcaption><div class="fs-preview-status" role="status">Preparing your keepsake…</div></figure>`;
   }
   function share() {
-    const d = state.personal.draft, unlocked = stamp(), mine = myPosts()[0];
+    const d = state.personal.draft, mine = myPosts()[0];
     // 主动作：一键发到底部 Community；发过之后变成「去 Community 看我的帖子」
     const postCta = mine
       ? `<div class="fs-post-cta">${btn(icon('check')+' Posted · View in Community','view-community',mine.id,'secondary')}</div>`
-      : `<div class="fs-post-cta">${btn(icon('community')+' Post to Community','quick-post','share')}<button type="button" class="fs-text-btn fs-edit-first" data-fs="compose">Edit caption before posting</button></div>`;
-    return `<div class="fs-intro"><div><div class="fs-eyebrow">THE FIRST STAMP · SHANGHAI EDITION</div><p>${unlocked ? 'Your China story has begun.' : 'Every journey has a first page.'}</p></div><span class="fs-number">${unlocked ? '01' : '✦'}</span></div>
-      ${preview()}${postCta}<div class="fs-actions">${btn(icon('download')+' Save image','save-image','','outline')}${btn(icon('share')+' Share','share-image','','outline')}</div>
+      : `<div class="fs-post-cta">${btn(icon('community')+' Post to Community','quick-post','share')}</div>`;
+    return `${preview()}${postCta}<div class="fs-actions">${btn(icon('download')+' Save image','save-image','','outline')}${btn(icon('share')+' Share','share-image','','outline')}</div>
+      <div class="fs-share-links">${mine?'':'<button type="button" class="fs-text-btn" data-fs="compose">Edit caption</button><span aria-hidden="true">·</span>'}<button type="button" class="fs-text-btn" data-fs="edit-card">Customize card</button></div>
+      ${miniAtlas()}
       <details class="fs-panel" data-fs-customize><summary>Make it yours · choose what to share</summary><form id="fs-customize"><label class="fs-field">Traveler nickname<input name="name" maxlength="40" value="${H(d.name)}" placeholder="Your name, if you choose" autocomplete="off"></label><label class="fs-check"><input name="showName" type="checkbox" ${d.showName?'checked':''}><span>Show my nickname on the card<small>Off by default. Otherwise your card says “A traveler”.</small></span></label><label class="fs-field">Arrival date · Shanghai local date<input name="arrival" type="date" value="${H(d.arrival)}" min="2000-01-01" max="2100-12-31" required></label><label class="fs-check"><input name="showDate" type="checkbox" ${d.showDate?'checked':''}><span>Show my arrival date<small>Off by default. The date stays private unless selected.</small></span></label></form><p class="fs-small">Only your selected nickname and date appear. Hotel details, live location, payment information and booking references are never included. Previously saved images and posts keep the information you chose at that time.</p></details>
-      ${unlocked ? `<section class="fs-panel"><div class="fs-eyebrow">CITY NO. 001 · COLLECTED</div><h2>Shanghai is in your atlas.</h2><p class="fs-small">Collected when you finished your landing steps. No location tracking.</p>${btn('View my city atlas','nav','city-passport','secondary')}</section>` : ''}
-      <section class="fs-panel"><div class="fs-eyebrow">THE NEXT CHAPTER</div><h2>Stories are better shared.</h2><p class="fs-small">See what other travelers are discovering in China right now.</p><div style="margin-top:12px">${btn(icon('community')+' See what other travelers share','nav','explore','secondary')}</div></section>${btn('Copy share caption','copy-caption','','outline')}`;
+`;
+  }
+  // 分享页下面的城市章：和城市图鉴同一批实景照片与数据——集过的彩色 + 对勾 + 到访日期，没集的灰照片 + 「+」
+  function miniAtlas() {
+    const lit = ATLAS_CITIES.filter(c => c.lit).length;
+    const badge = c => `<span class="fs-ma-city ${c.lit?'lit':''}"><span class="fs-ma-photo"><img src="${H(c.photo)}" alt="" loading="lazy">${c.lit?`<i>${icon('check')}</i>`:'<b aria-hidden="true">+</b>'}</span><strong>${H(c.name)}</strong><small>${c.lit?H(atlasDate(c)):'Not yet'}</small></span>`;
+    return `<button type="button" class="fs-mini-atlas" data-fs="nav" data-value="city-passport" aria-label="My city atlas, ${lit} of 6 cities lit"><span class="fs-ma-head"><strong>My city atlas</strong><span>· ${lit} of 6 lit</span><em>View ›</em></span><span class="fs-ma-row">${ATLAS_CITIES.map(badge).join('')}</span></button>`;
+  }
+  // 日期统一用高德卡片的 MM.DD 样式；上海集过章就用真实到访日期
+  function atlasDate(c) {
+    const real = stamp();
+    return c.hero && real && /^\d{4}-\d{2}-\d{2}$/.test(real.arrival || '') ? real.arrival.slice(5).replace('-', '.') : (c.date || '');
   }
   const posts = () => [...state.personal.posts, ...state.config.samplePosts];
   function cover(post) {
@@ -117,10 +136,17 @@
       <section class="fs-panel"><h3>Keep exploring with Trip.com</h3><p class="fs-small">Browse the official Trip Moments community. This opens an external site and needs internet; posting there follows its own sign-in and publishing flow.</p><a class="fs-btn outline" style="margin-top:12px" data-fs-online href="https://www.trip.com/moments/" target="_blank" rel="noopener noreferrer">Open Trip Moments ↗</a></section>`;
   }
   function compose() {
-    const draft = state.personal.composer;
-    return `<div class="fs-demo">Local Community demo</div><div><h2>A first line for your story.</h2><p class="fs-small">Review your card and caption before saving a local post. No content is sent to Trip.com or another service.</p></div>${preview()}
-      <form id="fs-compose-form" class="fs-panel"><label class="fs-field">Your story<textarea name="caption" maxlength="1000" required placeholder="What does the beginning feel like?">${H(draft.caption)}</textarea></label><label class="fs-field">Story topic<select name="topic">${state.config.topics.filter(t=>t!=='All stories').map(topic=>`<option ${draft.topic===topic?'selected':''}>${H(topic)}</option>`).join('')}</select></label><button type="button" class="fs-text-btn" data-fs="suggest-caption">Try a different opening line</button><p class="fs-small">Include only what you want others to read. Do not add hotel addresses, contact details or payment information.</p><label class="fs-check"><input type="checkbox" name="reviewed" required><span>I have reviewed the image and text for sharing.</span></label><button class="fs-btn" type="submit" ${!stamp()?'disabled':''}>Post to Community</button>${!stamp()?'<p class="fs-small" style="margin-top:10px">This card is a preview. Confirm your arrival essentials to unlock it before creating a post.</p>':''}</form>
-      ${btn('Edit card & public fields','edit-card','','outline')}<p class="fs-small">Draft saved on this device. Official Trip.com publishing requires a separate integration.</p>`;
+    const draft = state.personal.composer, unlocked = stamp();
+    const topics = state.config.topics.filter(t=>t!=='All stories').map(topic=>`<label class="fs-tag fs-topic"><input type="radio" name="topic" value="${H(topic)}" ${draft.topic===topic?'checked':''}><span>${H(topic)}</span></label>`).join('');
+    const lines = state.config.storyPrompts.slice(0,3).map(line=>`<button type="button" class="fs-line" data-fs="use-line" data-value="${H(line)}">“${H(line)}”</button>`).join('');
+    return `<form id="fs-compose-form" class="fs-compose">
+      <div class="fs-compose-top"><canvas data-fs-card class="fs-compose-thumb" width="1080" height="1350" role="img" aria-label="Your Shanghai souvenir card"></canvas><textarea name="caption" maxlength="1000" required aria-label="Your story" placeholder="What does the beginning feel like?">${H(draft.caption)}</textarea></div>
+      <div class="fs-compose-label">Need a first line?</div><div class="fs-lines">${lines}</div>
+      <div class="fs-compose-label">Topic</div><div class="fs-tags fs-topics" role="radiogroup" aria-label="Story topic">${topics}</div>
+      <button type="button" class="fs-compose-row" data-fs="edit-card">${icon('stamp')}<strong>Edit card</strong><span>Name, date shown</span>›</button>
+      <details class="fs-fine"><summary>🔒 Demo · saved on this phone only · <u>Learn more</u></summary><p>Posts stay in this browser and are not sent to Trip.com or any other service. Include only what you want others to read: no hotel address, contact details or payment information. Official Trip.com publishing would need a separate integration.</p></details>
+      ${unlocked?'':'<p class="fs-small">This card is a preview. Finish your landing steps to unlock it before posting.</p>'}
+      <button class="fs-btn fs-compose-submit" type="submit" ${unlocked?'':'disabled'}>Post to Community</button></form>`;
   }
   function fmtDate(ms){ try{ return new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(new Date(Number(ms))); }catch(_){ return ''; } }
   function fmtNum(n){ n=Number(n)||0; return n>=1000?(n/1000).toFixed(n>=10000?0:1).replace(/\.0$/,'')+'k':String(n); }
@@ -139,27 +165,26 @@
       ${btn(icon('bookmark')+(state.personal.bookmarks.includes(post.id)?' Saved to my atlas':' Save this story'),'bookmark',post.id,'outline')}${btn('Delete this local post','delete-post',post.id,'danger')}${btn('Back to Community','nav','explore','secondary')}`;
     const imgs = (post.images && post.images.length) ? post.images : (post.image ? [post.image] : []);
     const slides = imgs.map(u=>`<div class="fs-pd-slide"><img src="${H(u)}" alt="" loading="lazy" referrerpolicy="no-referrer"></div>`).join('');
-    const dots = imgs.length>1 ? `<div class="fs-pd-dots" data-fs-dots>${imgs.map((_,k)=>`<i class="${k===0?'on':''}"></i>`).join('')}</div>` : '';
     const paras = String(post.body||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
     const body = (paras.length?paras:[String(post.body||'')]).map(p=>`<p>${H(p)}</p>`).join('');
     const av = post.authorImage?`<img src="${H(post.authorImage)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:'';
-    const badge = post.authorBadge?`<span class="fs-pd-badge">🔥 ${H(post.authorBadge)}</span>`:'';
     const cmts = post.comments_list || [];
-    const cmtSec = cmts.length ? `<div class="fs-pd-divider"></div><div class="fs-pd-csec"><div class="fs-pd-ctitle">${post.commentCount?Number(post.commentCount).toLocaleString('en-US')+' comments':'Comments'}</div>${cmts.map(commentItem).join('')}${(post.commentCount||0)>cmts.length?`<a class="fs-pd-more" href="${H(post.sourceUrl||'#')}" target="_blank" rel="noopener noreferrer">View all comments on Trip.com ›</a>`:''}</div>` : '';
+    const cmtSec = cmts.length ? `<div class="fs-pd-csec"><div class="fs-pd-ctitle">${post.commentCount?Number(post.commentCount).toLocaleString('en-US')+' comments':'Comments'}</div>${cmts.map(commentItem).join('')}${(post.commentCount||0)>cmts.length?`<a class="fs-pd-more" href="${H(post.sourceUrl||'#')}" target="_blank" rel="noopener noreferrer">View all comments on Trip.com ›</a>`:''}</div>` : '';
+    const meta = [post.publishTime?fmtDate(post.publishTime):'', post.location?'📍 '+post.location:''].filter(Boolean).map(H).join(' · ');
+    const src = post.sourceUrl?`<a class="fs-pd-src-link" data-fs-online href="${H(post.sourceUrl)}" target="_blank" rel="noopener noreferrer">From ${H(post.source||'Trip.com')} · view original ↗</a>`:'';
     return `<article class="fs-pd">
-      <div class="fs-pd-author"><div class="fs-pd-av">${av}</div><div class="fs-pd-who"><div class="fs-pd-nm">${H(post.author)}</div>${badge}</div><a class="fs-pd-follow" href="${H(post.sourceUrl||'#')}" target="_blank" rel="noopener noreferrer">Follow</a></div>
-      ${imgs.length?`<div class="fs-pd-car"><div class="fs-pd-track" data-fs-track>${slides}</div>${imgs.length>1?`<div class="fs-pd-count" data-fs-count>1/${imgs.length}</div>`:''}</div>${dots}`:''}
-      <div class="fs-pd-pad">
-        ${post.location?`<div class="fs-pd-loc">📍 ${H(post.location)}</div>`:''}
-        <h1 class="fs-pd-title">${H(post.title)}</h1>
-        <div class="fs-pd-body">${body}</div>
-        ${post.sourceUrl?`<p class="fs-small"><a href="${H(post.sourceUrl)}" target="_blank" rel="noopener noreferrer">View the original on Trip.com ↗</a></p>`:''}
-        <div class="fs-pd-acts"><span>👍 ${fmtNum(post.likeCount||post.likes||0)}</span><span>💬 ${fmtNum(post.commentCount||post.comments||0)}</span><span class="fs-pd-src">${H(post.source||'')}</span></div>
-        ${post.publishTime?`<div class="fs-pd-posted">Posted · ${fmtDate(post.publishTime)}</div>`:''}
-      </div>
+      ${imgs.length?`<div class="fs-pd-car"><div class="fs-pd-track" data-fs-track>${slides}</div>${imgs.length>1?`<div class="fs-pd-count" data-fs-count>1/${imgs.length}</div>`:''}</div>`:''}
+      <div class="fs-pd-author"><div class="fs-pd-av">${av}</div><div class="fs-pd-who"><div class="fs-pd-nm">${H(post.author)}</div>${meta?`<div class="fs-pd-meta">${meta}</div>`:''}</div><a class="fs-pd-follow" data-fs-online href="${H(post.sourceUrl||'#')}" target="_blank" rel="noopener noreferrer">Follow</a></div>
+      <h1 class="fs-pd-title">${H(post.title)}</h1>
+      <div class="fs-pd-body" data-fs-clamp>${body}</div><button type="button" class="fs-pd-moretext" data-fs="expand-body">more</button>
+      ${src}
       ${cmtSec}
-      </article>
-      <div class="fs-pd-cta">${btn(icon('bookmark')+(state.personal.bookmarks.includes(post.id)?' Saved to my atlas':' Save this story'),'bookmark',post.id,'outline')}${post.topic==='Local Tips'?btn('Open my offline travel pack','nav','offline','secondary'):''}${btn('Back to Community','nav','explore','secondary')}</div>`;
+      </article>`;
+  }
+  // 正文本来就不到三行时，不显示「more」
+  function fitBody(){
+    const host = screens['community-post'], body = host?.querySelector('[data-fs-clamp]');
+    if (body && body.scrollHeight <= body.clientHeight + 1) { body.removeAttribute('data-fs-clamp'); host.querySelector('.fs-pd-moretext')?.remove(); }
   }
   function initCarousel(){
     const host = screens['community-post']; if(!host) return;
@@ -181,14 +206,13 @@
     <text x="60" y="54" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="20" font-weight="700" fill="#3B63D6">Arrival</text>
     <path d="M44 64 h32 M48 70 h24" stroke="#3B63D6" stroke-width="1.6" stroke-linecap="round"/></g></svg>`;
   function atlas() {
-    const real = stamp();
     const litCount = ATLAS_CITIES.filter(c => c.lit).length;
     const tile = c => {
       if (c.lit) {
         // 上海有票根：卡片点进票根导出页，并带一键发帖（没集过章时 share / 一键发帖都会先补集）
         const shLink = Boolean(c.hero);
         // 日期统一用高德卡片的 MM.DD 样式；集过章就用真实到访日期（YYYY-MM-DD → MM.DD）
-        const date = c.hero && real && /^\d{4}-\d{2}-\d{2}$/.test(real.arrival || '') ? real.arrival.slice(5).replace('-', '.') : H(c.date || '');
+        const date = H(atlasDate(c));
         // 卡片本身点进票根；右下角小按钮一键发到 Community（按钮在内层，事件委托取最近的 data-fs，不会触发卡片跳转）
         const open = shLink ? '<div class="fs-acard" role="button" tabindex="0" data-fs="nav" data-value="share"' : '<div class="fs-acard"';
         const mine = shLink ? myPosts()[0] : null;
@@ -309,13 +333,13 @@
     if (statusBar) screens[rendered].querySelector('.fs-head').prepend(statusBar.cloneNode(true));
     if (state.ready && !state.error) drawPreviews();
     if (rendered === 'city-passport' && state.ready && !state.error) initAtlas();
-    if (rendered === 'community-post' && state.ready && !state.error) initCarousel();
+    if (rendered === 'community-post' && state.ready && !state.error) { initCarousel(); fitBody(); }
   }
   function capture(form) {
     if (form.id==='fs-customize') {
       state.personal.draft={name:form.elements.name.value,arrival:form.elements.arrival.value,showName:form.elements.showName.checked,showDate:form.elements.showDate.checked};
       releaseImage(); drawPreviews();
-    } else if(form.id==='fs-compose-form') state.personal.composer={caption:form.elements.caption.value,topic:form.elements.topic.value};
+    } else if(form.id==='fs-compose-form') state.personal.composer={caption:form.elements.caption.value,topic:form.elements.topic.value||'First Stamp'};
     autosave();
   }
   function caption() {
@@ -382,12 +406,16 @@
     else if(type==='quick-post') await quickPost(value||current());
     else if(type==='view-community') openCommunity(value);
     else if(type==='filter') { state.filter=value; render(); }
+    else if(type==='expand-body') { const host=screens[current()]; host.querySelector('[data-fs-clamp]')?.removeAttribute('data-fs-clamp'); host.querySelector('.fs-pd-moretext')?.remove(); }
     else if(type==='open-post') { state.postId=value; go('community-post'); }
     else if(type==='bookmark') {
       const previous=state.personal.bookmarks.slice();
       state.personal.bookmarks=previous.includes(value)?previous.filter(id=>id!==value):[...previous,value];
       try {await flush();} catch(error) {state.personal.bookmarks=previous;throw error;}
       render(); feedback(state.personal.bookmarks.includes(value)?'Story saved to your city atlas.':'Story removed from saved stories.',true);
+    } else if(type==='use-line') {
+      state.personal.composer.caption=value;
+      const input=screens[current()].querySelector('[name=caption]');if(input){input.value=value;input.focus();}autosave();
     } else if(type==='suggest-caption') {
       const lines=state.config.storyPrompts, at=lines.indexOf(state.personal.composer.caption);
       state.personal.composer.caption=lines[(at+1)%lines.length];
@@ -464,18 +492,22 @@
   // 底部「Community」是官方内容页（#explore），本地 Shanghai Community 只从分享流程里进入
   document.querySelectorAll('[data-pencil-name="Tab Community"]').forEach(tab=>{tab.dataset.act='go:explore';tab.classList.add('tap');tab.setAttribute('role','button');tab.tabIndex=0;tab.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();go('explore');}});});
   const done=document.querySelector('.screen[data-route="done"]');
-  const title=done?.querySelector('[data-pencil-name="Share Title"]');if(title)title.textContent='Collect your first city stamp';
-  const sub=done?.querySelector('[data-pencil-name="Share Sub"]');if(sub)sub.textContent='A Shanghai keepsake, made for your story.';
-  // 落地完成页：「Collect your first city stamp」卡下面加一键发到 Community；发过之后变成去看帖子
+  // 落地完成页：印章卡是这一页的主角（设计稿里实景图 + 「Your first stamp is ready」+ 发帖按钮）；发过之后按钮变成去看帖子
+  let donePost=done?.querySelector('[data-pencil-name="Post Button"]')||null;
   const shareCard=done?.querySelector('[data-pencil-name="Share Card"]');
-  let donePost=null;
-  if(shareCard){donePost=document.createElement('button');donePost.type='button';donePost.className='fs-done-post';shareCard.after(donePost);}
+  if(!donePost&&shareCard){donePost=document.createElement('button');donePost.type='button';donePost.className='fs-done-post';shareCard.after(donePost);}
+  if(donePost){donePost.classList.add('tap');donePost.setAttribute('role','button');donePost.tabIndex=0;}
   function syncDonePost(){
     if(!donePost)return;
     const mine=state.ready?myPosts()[0]:null;
     donePost.dataset.fs=mine?'view-community':'quick-post';donePost.dataset.value=mine?mine.id:'done';
-    donePost.classList.toggle('done',Boolean(mine));
-    donePost.innerHTML=icon(mine?'check':'community')+`<span>${mine?'Posted · View in Community':'Post my stamp to Community'}</span>`;
+    const text=mine?'Posted · View in Community':'Post my stamp to Community';
+    const label=donePost.querySelector('[data-pencil-name="Post Label"]');
+    if(label){
+      if(!donePost.dataset.bg){donePost.dataset.bg=donePost.style.backgroundColor;label.dataset.color=label.style.color;}   // 设计稿内联颜色，发过帖再切回来时要恢复
+      label.textContent=text;label.style.color=mine?'#2C61FE':label.dataset.color;donePost.style.backgroundColor=mine?'#EAF0FF':donePost.dataset.bg;
+    }
+    else{donePost.classList.toggle('done',Boolean(mine));donePost.innerHTML=icon(mine?'check':'community')+`<span>${text}</span>`;}
   }
   syncDonePost();
   // 分享页是落地全部完成后的独立页面：只从完成页的「Share Card」进入，首页 / My Trips 不再放入口
