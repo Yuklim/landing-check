@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "version": "2026.10.16.3",
-  "revision": "a4dc9ebfe62694451b8c",
+  "revision": "ae744a1ca731a20ad35d",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "0a780c881fce17ce65328e8f93f2effe17354c44a9032e9dd107c00fbf913d37",
-      "bytes": 145917
+      "sha256": "51ff1b3d73990e3969647ec752d8c30a0f1971547fccb4c16038567b10da0cde",
+      "bytes": 139184
     },
     {
       "path": "data/first-stamp.json",
