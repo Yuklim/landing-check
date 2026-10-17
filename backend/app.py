@@ -5,7 +5,7 @@
 """
 import os, re
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -18,6 +18,7 @@ import live
 from rules import PAY_METHODS
 import stuck
 import rules
+import recommend
 
 app = FastAPI(title='Landing Check API', version='0.1')
 app.add_middleware(CORSMiddleware,
@@ -241,6 +242,42 @@ def rules_transport(landed_at: Optional[str] = None, bags: Optional[int] = None,
     if landed_at is None and trip.landed_at:
         landed_at = trip.landed_at[11:16]
     return rules.transport(t, landed_at=landed_at, airport=airport, weather=weather, paid=rules.verified_methods(t, trip.done_items))
+
+
+# ---------------- F 推荐引擎（前链路 + 后链路） ----------------
+def _client_ip(request: Request):
+    xff = request.headers.get('x-forwarded-for')
+    if xff:
+        return xff.split(',')[0].strip()
+    return request.client.host if request.client else None
+
+
+def _resolve_geo(geo: str, ip):
+    """geo=abroad|in_china 为显式覆盖；geo=auto 时按 IP（未接 geoip 库时回落 LC_GEO_DEFAULT）。"""
+    if geo in recommend.GEO:
+        return geo, 'override'
+    g = recommend.geo_from_ip(ip)
+    if g:
+        return g, 'ip'
+    return (os.environ.get('LC_GEO_DEFAULT', 'abroad'), 'default')
+
+
+@app.get('/recommend')
+def recommend_api(request: Request, geo: str = 'auto', profile: str = 'auto',
+                  landed_at: Optional[str] = None, airport: str = 'PVG',
+                  night: Optional[int] = None, n: int = 3):
+    """按 地理 × 行程 × 画像 排序的可下单推荐，链接带归因参数。geo=auto 读客户端 IP。"""
+    if landed_at is not None and not re.fullmatch(r'([01]\d|2[0-3]):[0-5]\d', landed_at):
+        raise HTTPException(400, 'landed_at must be HH:MM')
+    ip = _client_ip(request)
+    gstate, gsource = _resolve_geo(geo, ip)
+    t = _trip_with_done()
+    if landed_at is None and trip.landed_at:
+        landed_at = trip.landed_at[11:16]
+    paid = rules.verified_methods(t, trip.done_items)
+    return recommend.recommend(t, gstate, profile=profile, paid=paid, landed_at=landed_at,
+                               airport=airport, night=night, n=max(1, min(n, 6)),
+                               client_ip=ip, geo_source=gsource)
 
 
 # ---------------- E 真实数据（携程营销 MCP） ----------------

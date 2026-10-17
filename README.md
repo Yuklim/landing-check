@@ -89,6 +89,7 @@ appearance.pen      设计源文件（pen.dev）
 | `POST /stuck/classify` | 上传截图或一句话，返回 `decision`（answer / ask / unknown）、条目或候选、置信度、`mode`（model / rules） |
 | `GET /rules/preflight` `POST /rules/preflight/done` | 行前检查项状态 |
 | `GET /rules/transport?landed_at=HH:MM&bags=&adults=` | 交通推荐，带上客点和理由 |
+| `GET /recommend?geo=auto\|abroad\|in_china&profile=auto\|family\|business\|budget&night=` | 推荐引擎：按 地理×行程×画像 排序的可下单推荐，链接带归因参数；`geo=auto` 读客户端 IP，境外=前链路、境内=后链路 |
 | `GET /mock/trip` `GET /mock/flight` `POST /mock/flight/land` `POST /mock/pay-test?method=alipay\|tenpaygo&fail=1` `POST /mock/event` `GET /mock/timeline` `POST /mock/reset` | 模拟携程数据与演示开关；`method` 缺省为 alipay |
 | `POST /kb/feedback` `POST /feedback/hardest` | 用户反馈 |
 | `GET /live/status` `GET /live/{flight\|hotel\|tickets\|car\|train}?refresh=` `POST /live/refresh` | 真实数据来源与刷新；`/mock/trip`、`/mock/flight`、`/rules/*` 已合并真实数据 |
