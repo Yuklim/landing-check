@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """模拟携程数据：行程、航班状态、1 元支付验证。全部内存态，重启归零。"""
-import os, json, time, random, threading
+import os, re, json, time, random, threading
+from collections import OrderedDict
 from uuid import uuid4
 from datetime import datetime, timezone, timedelta
 
@@ -131,3 +132,38 @@ class MockTrip:
 
     def timeline(self):
         return self.events
+
+
+class TripStore:
+    """按访问者分开的模拟行程：每台设备一份，互不影响（重置也只清自己的）。
+
+    访问者 ID 由前端生成，放在 X-LC-Visitor 请求头里；没带或格式不对就用 default（共用的那份，兼容旧前端）。
+    只留最近活跃的 max_visitors 份，超出时淘汰最久没用的。
+    """
+    VALID_ID = re.compile(r'[A-Za-z0-9_-]{8,64}')
+
+    def __init__(self, default: MockTrip, max_visitors: int = 500):
+        self.default = default
+        self.max_visitors = max_visitors
+        self._trips = OrderedDict()
+        self._lock = threading.Lock()
+
+    def get(self, visitor_id):
+        if not visitor_id or not self.VALID_ID.fullmatch(visitor_id):
+            return self.default
+        with self._lock:
+            t = self._trips.get(visitor_id)
+            if t is None:
+                t = self._trips[visitor_id] = MockTrip()
+                while len(self._trips) > self.max_visitors:
+                    self._trips.popitem(last=False)
+            else:
+                self._trips.move_to_end(visitor_id)
+            return t
+
+    def clear(self):
+        with self._lock:
+            self._trips.clear()
+
+    def __len__(self):
+        return len(self._trips)

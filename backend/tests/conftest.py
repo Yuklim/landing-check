@@ -7,9 +7,10 @@ import pytest
 @pytest.fixture(autouse=True)
 def _isolate(monkeypatch):
     """每个用例前重置共享状态；HTTP 识别用例不真调模型。"""
-    from app import trip, kb
+    from app import trip, trips, kb
     import stuck
     trip.reset()
+    trips.clear()
     kb.feedback.clear()
     if not os.environ.get('LIVE_MODEL'):
         def fake(kb_, image, text):
@@ -17,3 +18,4 @@ def _isolate(monkeypatch):
         monkeypatch.setattr(stuck, 'classify_with_model', fake)
     yield
     trip.reset()
+    trips.clear()
