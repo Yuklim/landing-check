@@ -267,12 +267,14 @@
     { name:'Shanghai',  pos:[121.47,31.23], ds:'上海市', photo:'img/stamp/shanghai-dusk.jpg', lit:true,  date:'10.16', hero:true },
     { name:'Beijing',   pos:[116.40,39.90], ds:'北京市', photo:'img/stamp/beijing.jpg',  lit:true,  date:'10.14', label:'right' },
     { name:'Chengdu',   pos:[104.07,30.57], ds:'成都市', photo:'img/stamp/chengdu.jpg',  lit:true,  date:'10.11' },
-    { name:'Hangzhou',  pos:[120.15,30.27], photo:'img/stamp/hangzhou.jpg',  lit:false },
+    { name:'Hangzhou',  pos:[120.15,30.27], photo:'img/stamp/hangzhou.jpg',  lit:false, slabel:'bottom' },
     { name:'Guangzhou', pos:[113.26,23.13], photo:'img/stamp/guangzhou.jpg', lit:false },
     { name:"Xi'an",     pos:[108.94,34.34], photo:'img/stamp/xian.jpg',      lit:false }
   ];
+  // 和路线地图共用 app.js 的加载器（8 秒超时 + 重试一次，失败不缓存）；app.js 不在时才自己加载
   function loadAMapForAtlas() {
     if (window.AMap) return Promise.resolve(window.AMap);
+    if (window.lcLoadAMap) return window.lcLoadAMap();
     if (window.__lcAMapPromise) return window.__lcAMapPromise;
     window._AMapSecurityConfig = { securityJsCode: '66c2eb31034482e3a0477b1f23af4224' };
     window.__lcAMapPromise = new Promise((res, rej) => {
@@ -287,11 +289,18 @@
   function initAtlas() {
     const box = screens['city-passport'] && screens['city-passport'].querySelector('#fs-atlas-map');
     if (!box) return;
+    // 先画城市点位示意图（不需要底图），高德地图加载好后叠在上面；加载不了就一直显示示意图
+    const sch = window.lcSchematic && window.lcSchematic(box, { lines: [], dots: ATLAS_CITIES.map(c => ({ c: c.pos,
+      html: c.lit ? '<div class="fs-mk-lit"><span class="fs-mk-halo"></span><span class="fs-mk-dot"></span></div>' : '<div style="width:12px;height:12px;border-radius:50%;background:#B7BECB;border:2px solid #fff"></div>',
+      label: c.name, labelClass: 'fs-mk-label ' + (c.lit ? 'lit' : 'off'), dir: c.slabel || (c.lit ? (c.label || 'top') : 'right') })) }, 40, false);
+    const tip = box.querySelector('.fs-atlas-maptip'); if (tip && sch) tip.style.display = 'none';
+    let live = box.querySelector(':scope > .fs-atlas-live');
+    if (!live) { live = document.createElement('div'); live.className = 'fs-atlas-live'; live.style.cssText = 'position:absolute;inset:0;z-index:1'; box.appendChild(live); }
     loadAMapForAtlas().then(A => {
       if (current() !== 'city-passport' || !box.isConnected) return;
       try { if (atlasMap) { atlasMap.destroy(); atlasMap = null; } } catch (_) {}
       // 框住北京(39.9N)到广州(23.1N)、成都(104E)到上海(121.5E)，6 城都在 250px 高的地图里
-      atlasMap = new A.Map(box, { lang:'en', mapStyle:'amap://styles/whitesmoke', zoom:3.9,
+      atlasMap = new A.Map(live, { lang:'en', mapStyle:'amap://styles/whitesmoke', zoom:3.9,
         center:[112.5,32.3], viewMode:'2D', features:['bg','road','building'], showLabel:true });
       const anyLitWithDs = ATLAS_CITIES.some(c => c.lit && c.ds);
       if (anyLitWithDs) {
@@ -319,7 +328,8 @@
             content:'<div class="fs-mk-label off">'+c.name+'</div>' });
         }
       });
-    }).catch(function () { box.classList.add('fs-atlas-map-off'); });
+      atlasMap.on('complete', () => { if (sch) sch.remove(); });
+    }).catch(function () { live.remove(); box.classList.add('fs-atlas-map-off'); });
   }
   function render() {
     if(rendered && rendered!==current()){state.notice='';state.good=false;}
