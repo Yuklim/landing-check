@@ -76,6 +76,8 @@ def page(browser, site):
     context = browser.new_context(viewport={'width': 393, 'height': 852}, is_mobile=True, has_touch=True)
     context.route('https://fonts.googleapis.com/**', lambda route: route.abort())
     context.route('https://fonts.gstatic.com/**', lambda route: route.abort())
+    # Offline tests must not depend on an unrelated local demo backend on port 8000.
+    context.route('http://127.0.0.1:8000/**', lambda route: route.abort())
     page = context.new_page()
     errors = []
     page.on('pageerror', lambda error: errors.append(str(error)))
@@ -106,6 +108,7 @@ def download(page):
 
 def save_hotel(page, phone=''):
     click(page, 'nav', 'offline-hotel')
+    click(page, 'new-hotel')
     form = page.locator('#op-hotel-form')
     data = {'name_en': 'Private Test Hotel', 'name_zh': '私人测试酒店', 'address_en': 'Private test address, Shanghai', 'address_zh': '私人测试地址', 'phone': phone, 'notes': 'Personal note — not public'}
     for name, value in data.items():
@@ -155,7 +158,7 @@ def test_saved_pack_survives_offline_close_and_reopen(page, site):
     nav(reopened, 'offline-cards')
     click(reopened, 'place', 'service')
     reopened.wait_for_function('() => document.querySelector(".screen.on img").naturalWidth > 0')
-    assert 'Offline' in reopened.locator('[data-op-network]:visible').inner_text()
+    assert 'Offline' in reopened.locator('.screen.on [data-op-network]').inner_text()
 
 
 @pytest.mark.parametrize('fault', ['fail', 'changed'])
@@ -339,7 +342,7 @@ def test_offline_core_makes_no_api_requests_and_old_help_uses_local_cards(page, 
 def test_small_mobile_layout_has_no_horizontal_overflow(page, site):
     page.set_viewport_size({'width': 320, 'height': 640})
     open_pack(page, site)
-    for route in ('offline', 'offline-hotel', 'offline-cards', 'offline-guide', 'offline-help'):
+    for route in ('offline', 'offline-hotel', 'offline-cards', 'offline-guide', 'offline-help', 'offline-place'):
         nav(page, route)
         assert page.evaluate('''() => {
           const el = document.querySelector('.screen.on > .scroll');
@@ -363,6 +366,7 @@ def test_static_preflight_counts_real_device_download_state(page, site):
 
 def test_missing_hotel_fields_cannot_be_saved(page, site):
     open_pack(page, site, route='offline-hotel')
+    click(page, 'new-hotel')
     form = page.locator('#op-hotel-form')
     form.locator('[name=name_en]').fill('Incomplete hotel')
     form.locator('[name=confirmed]').check()
@@ -429,3 +433,158 @@ def test_existing_saved_guide_is_migrated_without_losing_progress(page, site):
     page.get_by_role('heading', name='Get help with authentication').wait_for()
     click(page, 'guide-request')
     assert '上网验证码' in page.locator('dialog[open]').inner_text()
+
+
+
+def itinerary(page, hotel):
+    page.evaluate('(hotel) => { window.lcOfflineTrip = async () => ({hotel, demo:false}); }', hotel)
+
+
+def test_hotel_autofills_demo_without_saving_until_confirmed(page, site):
+    open_pack(page, site, route='offline-hotel')
+    page.locator('.screen.on .op-hotel-source h2', has_text='Filled from the demo itinerary').wait_for()
+    form = page.locator('#op-hotel-form')
+    assert form.locator('[name=name_zh]').input_value() == '上海璞丽酒店'
+    assert form.locator('[name=address_zh]').input_value() == '上海市静安区常德路 1 号'
+    assert 'NOT A REAL BOOKING' in page.locator('.screen.on').inner_text()
+    assert not form.locator('[name=confirmed]').is_checked()
+    assert page.evaluate('() => LCOfflineDB.get("hotel")') is None
+    form.locator('[type=submit]').click()
+    assert page.evaluate('() => LCOfflineDB.get("hotel")') is None
+    form.locator('[name=confirmed]').check()
+    form.locator('[type=submit]').click()
+    page.locator('.screen.on .op-hotel-name').wait_for()
+    assert page.evaluate('() => LCOfflineDB.get("hotel").then(h => h.demo)') is True
+    nav(page, 'offline')
+    download(page)
+    page.context.set_offline(True)
+    page.reload()
+    page.get_by_test_id('pack-status').filter(has_text='Public guide saved').wait_for()
+    nav(page, 'offline-hotel')
+    assert '上海璞丽酒店' in page.locator('.screen.on .op-hotel-name').inner_text()
+
+
+def test_itinerary_adapter_fills_booking_without_demo_or_guessed_translation(page, site):
+    open_pack(page, site)
+    itinerary(page, {'name':'Booked Hotel', 'name_zh':'已订酒店', 'address':'A confirmed address', 'address_zh':'已确认地址', 'phone':'+86 21 55556666'})
+    nav(page, 'offline-hotel')
+    page.locator('.screen.on .op-hotel-source h2', has_text='Filled from your itinerary').wait_for()
+    form = page.locator('#op-hotel-form')
+    assert form.locator('[name=name_en]').input_value() == 'Booked Hotel'
+    assert form.locator('[name=address_zh]').input_value() == '已确认地址'
+    assert page.locator('.screen.on .op-demo').count() == 0
+    form.locator('[name=confirmed]').check()
+    form.locator('[type=submit]').click()
+    page.locator('.screen.on .op-hotel-name').wait_for()
+    assert page.evaluate('() => LCOfflineDB.get("hotel").then(h => h.demo)') is False
+    # A newly returned booking never silently replaces the saved hotel.
+    itinerary(page, {'name':'Different hotel', 'name_zh':'另一个酒店'})
+    nav(page, 'offline')
+    nav(page, 'offline-hotel')
+    assert page.locator('.screen.on .op-hotel-name').inner_text() == '已订酒店'
+
+
+def test_incomplete_itinerary_does_not_fill_missing_chinese_from_demo(page, site):
+    open_pack(page, site)
+    itinerary(page, {'name':'Only English Hotel', 'address':'Only English address'})
+    nav(page, 'offline-hotel')
+    page.locator('.screen.on .op-hotel-source h2', has_text='Filled from your itinerary').wait_for()
+    form = page.locator('#op-hotel-form')
+    assert form.locator('[name=name_zh]').input_value() == ''
+    assert form.locator('[name=address_zh]').input_value() == ''
+    form.locator('[name=confirmed]').check()
+    form.locator('[type=submit]').click()
+    assert page.evaluate('() => LCOfflineDB.get("hotel")') is None
+
+
+@pytest.mark.parametrize('blank_card', [False, True])
+def test_late_itinerary_keeps_user_input_and_manual_choice(page, site, blank_card):
+    open_pack(page, site)
+    page.evaluate('() => { window.lcOfflineTrip = () => new Promise(resolve => { window.resolveHotel = resolve; }); }')
+    nav(page, 'offline-hotel')
+    page.locator('.screen.on .op-hotel-source h2', has_text='Checking your itinerary').wait_for()
+    if blank_card:
+        click(page, 'new-hotel')
+    form = page.locator('#op-hotel-form')
+    form.locator('[name=name_en]').fill('My unsaved hotel')
+    form.locator('[name=notes]').fill('Keep my note')
+    page.evaluate('''async () => {
+      window.resolveHotel({hotel:{name:'Late booking',name_zh:'晚到的酒店'},demo:false});
+      await new Promise(requestAnimationFrame);
+    }''')
+    assert form.locator('[name=name_en]').input_value() == 'My unsaved hotel'
+    assert form.locator('[name=notes]').input_value() == 'Keep my note'
+    assert form.locator('[name=notes]').evaluate('(el) => el === document.activeElement')
+    assert form.locator('[name=name_zh]').input_value() == ''
+    # Manual entry must stay manual, even after returning from another task.
+    nav(page, 'offline-help')
+    nav(page, 'offline-hotel')
+    assert form.locator('[name=name_en]').input_value() == 'My unsaved hotel'
+
+
+def test_clear_cancels_pending_itinerary_result(page, site):
+    open_pack(page, site)
+    page.evaluate('() => { window.lcOfflineTrip = () => new Promise(resolve => { window.resolveHotel = resolve; }); }')
+    nav(page, 'offline-hotel')
+    page.locator('.screen.on .op-hotel-source h2', has_text='Checking your itinerary').wait_for()
+    nav(page, 'offline')
+    page.on('dialog', lambda dialog: dialog.accept())
+    click(page, 'clear')
+    page.locator('.screen.on .op-notice', has_text='Personal details').wait_for()
+    page.evaluate('''async () => {
+      window.resolveHotel({hotel:{name:'Private late booking',name_zh:'不应重新出现的酒店'},demo:false});
+      await new Promise(requestAnimationFrame);
+    }''')
+    nav(page, 'offline-hotel')
+    assert page.locator('#op-hotel-form [name=name_en]').input_value() == ''
+    assert '不应重新出现的酒店' not in page.locator('body').inner_text()
+    assert page.evaluate('() => LCOfflineDB.get("hotel")') is None
+
+
+@pytest.mark.parametrize('place_id, expected_request', [
+    ('wifi', '我需要连接机场 Wi-Fi'),
+    ('sim', '我想办理一张可以在中国上网的手机 SIM 卡'),
+    ('exchange', '请问携程换汇柜台在哪里'),
+    ('service', '请问 T2 国际到达大厅的外籍人员一站式综合服务中心在哪里'),
+])
+def test_service_discovery_uses_staff_requests_and_offline_fallback(page, site, place_id, expected_request):
+    open_pack(page, site)
+    download(page)
+    page.context.set_offline(True)
+    nav(page, 'offline-cards')
+    assert 'What do you need help with?' in page.locator('.screen.on').inner_text()
+    click(page, 'place', place_id)
+    assert 'ASK WHERE TO GO' in page.locator('.screen.on').inner_text()
+    assert page.locator('.screen.on .op-find-steps li').count() == 3
+    click(page, 'place-card', place_id)
+    chinese = page.locator('dialog[open] .op-dialog-body [lang=zh-CN]').inner_text()
+    assert expected_request in chinese
+    assert '请向机场工作人员询问' not in page.locator('dialog .op-dialog-body').inner_text()
+    assert 'Destination' in page.locator('dialog .op-context').inner_text()
+    page.locator('dialog [data-op=dialog-close]').click()
+    click(page, 'place-service-card', place_id)
+    assert page.locator('dialog[open] .op-dialog-body [lang=zh-CN]').inner_text() != chinese
+    assert page.locator('dialog[open] #op-dialog-title').inner_text() == 'At the service counter'
+    page.locator('dialog [data-op=dialog-close]').click()
+    click(page, 'help')
+    click(page, 'place-card', place_id)
+    assert expected_request in page.locator('dialog[open] .op-dialog-body [lang=zh-CN]').inner_text()
+    page.locator('dialog [data-op=dialog-close]').click()
+    click(page, 'return-help')
+    if place_id != 'service':
+        page.locator('.screen.on .op-fallback [data-op=place]').click()
+        assert page.locator('.screen.on h2').first.inner_text() == 'Get help from airport staff'
+    else:
+        page.locator('.screen.on .op-fallback [data-op=help]').click()
+        assert '96990' in page.locator('.screen.on').inner_text()
+
+
+def test_trip_counter_entry_and_phrase_categories_remain_available(page, site):
+    open_pack(page, site)
+    page.locator('.screen.on .op-trip-entry [data-op=place]').click()
+    assert 'G check-in island near door 25' in page.locator('.screen.on .op-find-steps').inner_text()
+    assert 'not a confirmed communication desk' in page.locator('.screen.on .op-find-steps').inner_text()
+    nav(page, 'offline-cards')
+    click(page, 'tab', 'All phrases')
+    click(page, 'phrase', 'hotel')
+    assert '请带我去这家酒店' in page.locator('dialog[open] [lang=zh-CN]').inner_text()

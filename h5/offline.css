@@ -26,23 +26,38 @@
 .op-muted{color:var(--op-muted);font-size:12px}
 .op-kicker{font-size:11px;letter-spacing:.06em;font-weight:700;color:var(--op-brand);text-transform:uppercase;margin-bottom:6px}
 
-/* 主色块：和行前检查顶部蓝卡同款 */
-.op-hero{background:var(--op-brand);border-radius:16px;padding:18px 16px;color:#fff;position:relative;overflow:hidden}
-.op-hero::after{content:"";position:absolute;width:140px;height:140px;border:22px solid #ffffff12;border-radius:50%;right:-50px;top:-50px;pointer-events:none}
-.op-hero .op-kicker{color:#ffffffcc}
-.op-hero h2{font-size:22px;line-height:1.25;max-width:260px}
-.op-hero p{color:#ffffffcc;font-size:13px}
-.op-hero .op-muted{color:#ffffffcc}
-
 .op-card{border:1px solid var(--op-line);background:#fff;border-radius:12px;padding:16px;min-width:0}
 .op-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .op-icon{width:40px;height:40px;border-radius:10px;background:var(--op-brand-soft);color:var(--op-brand);display:grid;place-items:center;flex:none}
 .op-icon svg,.op-btn svg,.op-back svg,.op-support svg{width:20px;height:20px;flex:none}
+/* Arrival actions: benefit-led entry cards, using the existing palette and type. */
+.op-save-strip{border:1px solid var(--op-line);border-radius:12px;background:#fff;padding:10px 12px}
+.op-save-row{display:flex;align-items:center;gap:9px}
+.op-save-row>.op-icon{width:28px;height:28px;border-radius:8px}
+.op-save-row>.op-icon svg{width:16px;height:16px}
+.op-save-copy{flex:1;min-width:0}
+.op-save-copy h3{font-size:12px;line-height:1.4;margin:0}
+.op-save-copy p{font-size:10px;color:var(--op-muted);line-height:1.4;margin:2px 0 0}
+.op-save-row .op-save-action{width:auto;flex:none;font-size:12px;min-height:34px;padding:7px 12px;white-space:nowrap}
+.op-home-heading{display:flex;flex-direction:column;gap:3px;padding:2px 0}
+.op-home-heading h2{font-size:18px;margin:0}
+.op-home-heading>span{font-size:11px;color:var(--op-muted)}
 .op-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.op-tile{border:1px solid var(--op-line);background:#fff;border-radius:12px;padding:14px;text-align:left;min-height:132px;color:var(--op-text);display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.op-tile strong{font-size:15px;font-weight:600;line-height:1.25}
-.op-tile small{font-size:12px;color:var(--op-muted);line-height:1.4}
-.op-tile .op-icon{width:36px;height:36px}
+/* Balanced module emphasis: soft tints, distinct icons and lighter action bars. */
+.op-tile{--tile-accent:#2B58C7;--tile-soft:#E9F0FF;--tile-surface:#F7F9FF;--tile-border:#B8CAEC;border:1px solid var(--tile-border);border-top:2px solid var(--tile-border);background:linear-gradient(145deg,var(--tile-soft),var(--tile-surface));border-radius:14px;padding:12px;text-align:left;min-width:0;color:#101D34;display:flex;flex-direction:column;align-items:stretch;box-shadow:0 2px 8px #17264B07;transition:transform .16s,box-shadow .16s}
+.op-tile--phrases{--tile-accent:#7350B9;--tile-soft:#F0E9FC;--tile-surface:#FBF8FF;--tile-border:#D0BEEB}
+.op-tile--internet{--tile-accent:#1D7C91;--tile-soft:#E3F3F6;--tile-surface:#F4FBFC;--tile-border:#AAD4DD}
+.op-tile--support{--tile-accent:#A46A30;--tile-soft:#FFF0DD;--tile-surface:#FFFAF2;--tile-border:#E6CBA8}
+.op-tile-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.op-tile .op-icon{width:32px;height:32px;border-radius:10px;background:var(--tile-accent);color:#fff;box-shadow:0 2px 6px #17264B0D}
+.op-tile-category{font-size:9px;font-weight:700;line-height:1.4;letter-spacing:.02em;text-transform:uppercase;color:var(--tile-accent)}
+.op-tile strong{font-size:17px;font-weight:700;line-height:1.3;color:#101D34;letter-spacing:-.015em}
+.op-tile small{font-size:12px;color:#536077;line-height:1.5;margin-top:5px;margin-bottom:10px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;overflow-wrap:anywhere}
+.op-tile-action{display:flex;align-items:center;justify-content:space-between;gap:4px;font-size:11px;font-weight:700;line-height:1.35;color:var(--tile-accent);background:#ffffffB3;border:1px solid var(--tile-border);border-radius:9px;padding:5px 8px;margin-top:auto;}
+.op-tile-action>span{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:var(--tile-soft);flex:none}
+.op-tile-action svg{width:13px;height:13px}
+.op-tile:active,.op-trip-link:active{transform:scale(.98)}
+@media(hover:hover){.op-tile:hover{box-shadow:0 6px 18px #17264B12}.op-trip-link:hover .op-trip-cta{background:#EFF4FF}}
 
 /* 按钮：胶囊形，主按钮品牌蓝，次按钮浅蓝底，描边按钮白底蓝边 */
 .op-btn{border:0;background:var(--op-brand);color:#fff;border-radius:24px;padding:12px 16px;min-height:44px;font-size:15px;font-weight:700!important;display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;text-align:center;width:100%}
@@ -120,3 +135,43 @@
 body.offline-open #lcdot,body.offline-open #hint{display:none}
 @media(prefers-reduced-motion:reduce){.lc-offline *, .lc-card-dialog *{scroll-behavior:auto!important;transition:none!important}}
 .lc-card-dialog .op-back{font-size:22px;line-height:1;width:36px;height:36px}
+
+/* Task-led service discovery; keep the existing white cards, blue accents and pill buttons. */
+.op-section-intro{padding:4px 0 0}
+/* The counter is an actionable destination, separate from the four saved tools. */
+.op-trip-entry{min-width:0}
+.op-trip-link{position:relative;isolation:isolate;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;width:100%;border:0;border-radius:14px;padding:14px;text-align:left;color:#fff;background:linear-gradient(115deg,#1749D4,#2C61FE 70%,#4D7AFF);box-shadow:0 5px 16px #2C61FE20;transition:transform .16s}
+.op-trip-brand{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;font-size:16px;font-weight:800;line-height:1.1}
+.op-trip-brand small{font-size:11px;font-weight:500;color:#DFE8FF}
+.op-trip-terminal{border:1px solid #ffffff40;background:#ffffff18;border-radius:12px;padding:4px 7px;font-size:9px;letter-spacing:.04em;font-weight:600}
+.op-trip-link>strong{position:relative;font-size:18px;font-weight:700;line-height:1.3;padding-right:22px}
+.op-trip-description{position:relative;font-size:12px;line-height:1.5;color:#EDF2FF;margin-top:4px;max-width:280px}
+.op-trip-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:12px}
+.op-trip-cta{display:flex;align-items:center;justify-content:center;gap:8px;min-height:34px;border-radius:20px;padding:7px 12px;background:#fff;color:#2458E8;font-size:12px;font-weight:700}
+.op-trip-cta svg{width:15px;height:15px}
+.op-trip-bottom>span+span{font-size:10px;color:#E4ECFF}
+.op-trip-motif{position:absolute;right:8px;top:27px;z-index:-1;transform:rotate(12deg);color:#fff;opacity:.1;pointer-events:none}
+.op-trip-motif svg{width:102px;height:102px;stroke-width:1.2}
+.op-body .op-trip-scope{font-size:10px;line-height:1.5;color:var(--op-muted);margin:6px 4px 0}
+
+.op-place-choice{display:flex;align-items:center;gap:12px;text-align:left;color:var(--op-text);width:100%;font:inherit}
+.op-place-choice>.op-icon{align-self:flex-start}
+.op-place-choice>svg{width:18px;height:18px;flex:none;color:var(--op-brand)}
+.op-place-choice-copy{display:flex;flex-direction:column;gap:5px;flex:1;min-width:0;overflow-wrap:anywhere}
+.op-place-choice-copy strong{font-size:15px;line-height:1.4}
+.op-place-choice-copy>span{font-size:12px;color:var(--op-muted);line-height:1.5}
+.op-place-choice-copy small{font-size:11px;color:var(--op-brand);line-height:1.5}
+.op-place-heading{justify-content:flex-start;align-items:flex-start;margin-bottom:12px}
+.op-place-heading h2{margin-bottom:0}
+.op-find-steps{padding-left:24px;margin:8px 0 16px}
+.op-find-steps li{padding-left:5px;margin-bottom:12px;font-size:13px;line-height:1.65}
+.op-find-steps li::marker{color:var(--op-brand);font-weight:700}
+.op-fallback{border-top:1px solid var(--op-line);margin-top:16px;padding-top:16px}
+.op-fallback p{font-size:13px;color:var(--op-muted)}
+.op-service-details>summary{font-size:13px;font-weight:600;cursor:pointer;min-height:32px;color:var(--op-brand)}
+.op-service-details[open]>summary{margin-bottom:12px}
+.op-hotel-source .op-row{align-items:flex-start;justify-content:flex-start;margin-bottom:10px}
+.op-hotel-source h2{font-size:16px}
+.op-source-actions{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.op-source-actions .op-btn{margin:0;font-size:13px;min-height:40px;padding:9px 12px}
+.lc-card-dialog .op-dialog-body .op-context{font-size:14px!important;line-height:1.65;color:#6F7685;border-top:1px solid #DADFE6;padding-top:14px}

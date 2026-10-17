@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "version": "2026.10.16.3",
-  "revision": "ae744a1ca731a20ad35d",
+  "version": "2026.10.17.4",
+  "revision": "ef22da2b35f95a54b45b",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "51ff1b3d73990e3969647ec752d8c30a0f1971547fccb4c16038567b10da0cde",
-      "bytes": 139184
+      "sha256": "e1eb66afcfd297a42655d8df6039a3d3d6481a7cf418fbde4fd19430851f7dbf",
+      "bytes": 139352
     },
     {
       "path": "data/first-stamp.json",
@@ -15,8 +15,8 @@
     },
     {
       "path": "data/offline-pvg-t2.json",
-      "sha256": "3debaacfe5a4de262ef7030fed9c876492e8b9f0b6e54c96979b278ab82a3607",
-      "bytes": 22754
+      "sha256": "041881f2627fb54f7dfe2dd07beb6f8f09871ea74e136a79aa7de19d0dff32ee",
+      "bytes": 29880
     },
     {
       "path": "fonts/OFL-CormorantGaramond.txt",
@@ -205,13 +205,13 @@
     },
     {
       "path": "offline.css",
-      "sha256": "6680cc7853ff4e3043170c4ff9319a568f1cc48071863e13422de08efa66c17e",
-      "bytes": 10927
+      "sha256": "d9ae3a0169d3ea08706c6173c5ba9623a88076f0bb832ef688a994cfef5da998",
+      "bytes": 16473
     },
     {
       "path": "offline.js",
-      "sha256": "2549da8e4f3f7497ec1e88c41e5fc880b5ee9ae77f0e7e3c3af3615b38aea131",
-      "bytes": 40392
+      "sha256": "dc5fef5693ed781318b8f34a3ba4dc5e1bfc7699fab97ecdd174e62226d9a863",
+      "bytes": 48353
     },
     {
       "path": "stamp-renderer.js",
