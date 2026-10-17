@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2454ed">
+  <meta name="description" content="Landing Check 需求与痛点调研：基于 89.6 万条公开英文旅行笔记，量化首次来华游客的真实落地痛点，支撑产品的五大模块。">
+  <title>需求与痛点调研 · Landing Check</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ---- demand-research page scoped styles (reuse tokens from styles.css :root) ---- */
+    :root{
+      --m-transport:#6d28d9;--m-ticket:#dc2626;--m-arrival:#15803d;--m-net:#1d4ed8;--m-pay:#ea580c;
+    }
+    .dr-main{overflow-x:clip}
+    .dr-hero{padding-block:62px 40px;position:relative}
+    .dr-hero .eyebrow{margin-bottom:20px}
+    .dr-hero h1{font-size:clamp(34px,4vw,54px);max-width:16ch}
+    .dr-hero h1 .blue{display:inline}
+    .dr-lede{color:var(--muted);font-size:17px;max-width:620px;margin-top:22px;line-height:1.95}
+    .dr-source-tag{display:inline-flex;align-items:center;gap:9px;margin-top:24px;font-size:12px;color:#5a6b91;
+      background:#eef2fb;border:1px solid #dde5f6;border-radius:30px;padding:7px 15px}
+    .dr-source-tag b{color:var(--blue);font-weight:650}
+
+    /* reveal */
+    [data-reveal]{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+    [data-reveal].in{opacity:1;transform:none}
+    [data-reveal][data-delay="1"]{transition-delay:.08s}[data-reveal][data-delay="2"]{transition-delay:.16s}
+    [data-reveal][data-delay="3"]{transition-delay:.24s}[data-reveal][data-delay="4"]{transition-delay:.32s}
+
+    .dr-section{padding-block:56px;border-top:1px solid var(--line)}
+    .dr-kicker{font-family:"SFMono-Regular",Consolas,monospace;font-size:11px;letter-spacing:.12em;color:var(--blue);display:block;margin-bottom:12px}
+    .dr-section h2{font-size:clamp(24px,2.6vw,32px);letter-spacing:-.6px;max-width:20ch}
+    .dr-section .dr-sub{color:var(--muted);margin-top:13px;font-size:15px;line-height:1.9;max-width:720px}
+
+    /* funnel / stats */
+    .dr-funnel{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
+    .dr-stat{position:relative;border:1px solid var(--line);border-radius:12px;padding:22px 20px;background:linear-gradient(170deg,#fafcff,#fff);overflow:hidden}
+    .dr-stat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--blue);opacity:.85}
+    .dr-stat .num{font-family:Consolas,monospace;font-size:clamp(26px,3vw,38px);font-weight:600;line-height:1.1;letter-spacing:-1px;color:var(--ink)}
+    .dr-stat .lab{font-size:13px;color:var(--muted);margin-top:9px;line-height:1.6}
+    .dr-stat .pct{font-size:11px;color:var(--blue);margin-top:6px;font-weight:600}
+    .dr-stat:nth-child(2)::before{opacity:.65}.dr-stat:nth-child(3)::before{background:var(--m-pay)}.dr-stat:nth-child(4)::before{background:var(--m-ticket)}
+    .dr-funnel-note{font-size:12px;color:#7b8595;margin-top:16px;line-height:1.85}
+
+    /* voices wall */
+    .voices-wrap{margin-top:30px;position:relative;--fade:64px;
+      -webkit-mask:linear-gradient(90deg,transparent,#000 var(--fade),#000 calc(100% - var(--fade)),transparent);
+      mask:linear-gradient(90deg,transparent,#000 var(--fade),#000 calc(100% - var(--fade)),transparent)}
+    .voice-row{display:flex;gap:16px;width:max-content;margin-bottom:16px;animation:marq var(--dur,60s) linear infinite}
+    .voice-row.rev{animation-direction:reverse}
+    .voices-wrap:hover .voice-row{animation-play-state:paused}
+    @keyframes marq{to{transform:translateX(-50%)}}
+    .voice-card{width:310px;flex:0 0 310px;border:1px solid #e0e5ee;border-radius:12px 12px 12px 3px;background:#fff;
+      padding:15px 16px;box-shadow:0 6px 18px #23315e0a;display:flex;flex-direction:column;gap:9px}
+    .voice-card .vhead{display:flex;align-items:center;gap:9px}
+    .vavatar{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:750;color:#fff;flex-shrink:0}
+    .vmeta{display:flex;flex-direction:column;line-height:1.35}
+    .vmeta .vp{font-size:10px;color:#6c7891;font-weight:600}
+    .vmeta .vc{font-size:10px;color:#9aa3b1}
+    .vtag{margin-left:auto;font-size:9px;padding:2px 7px;border-radius:20px;color:#fff;white-space:nowrap}
+    .voice-card q{font-size:13.5px;line-height:1.7;color:#222b3a;font-weight:500;quotes:"“" "”"}
+    .voice-card q::before{content:open-quote;color:#c3ccdb}.voice-card q::after{content:close-quote;color:#c3ccdb}
+    .m-transport{background:var(--m-transport)}.m-ticket{background:var(--m-ticket)}.m-arrival{background:var(--m-arrival)}
+    .m-net{background:var(--m-net)}.m-pay{background:var(--m-pay)}
+    .voices-foot{font-size:12px;color:#7b8595;margin-top:12px;line-height:1.85}
+
+    /* coverage block */
+    .cov-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:34px;align-items:center;margin-top:32px}
+    .cov-figure{border:1px solid #e6ebf4;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 14px 40px #1f397512;position:relative}
+    .cov-figure img{width:100%;height:auto;display:block}
+    .cov-figure .cap{font-size:11px;color:#7b8595;padding:10px 16px;border-top:1px solid #eef1f7;background:#fafbfd}
+    .cov-kpi{display:flex;align-items:baseline;gap:10px}
+    .cov-kpi .big{font-family:Consolas,monospace;font-size:clamp(46px,7vw,78px);font-weight:600;color:var(--blue);letter-spacing:-3px;line-height:1}
+    .cov-kpi .unit{font-size:20px;color:var(--blue);font-weight:600}
+    .cov-ci{font-size:12px;color:#8992a0;margin-top:4px}
+    .cov-desc{font-size:15px;color:var(--muted);line-height:1.9;margin-top:16px}
+    .cov-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+    .cov-chip{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:#fff;padding:7px 13px;border-radius:30px}
+    .cov-chip small{font-weight:500;opacity:.85;font-size:11px}
+    .cov-chip.is-new::after{content:"现已覆盖";font-size:9px;background:#ffffff33;padding:1px 6px;border-radius:10px;font-weight:600}
+
+    /* category bars */
+    .bars{margin-top:30px;display:grid;gap:11px}
+    .bar-row{display:grid;grid-template-columns:150px 1fr 54px;gap:14px;align-items:center}
+    .bar-row .bl{font-size:13px;color:var(--ink);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .bar-track{height:22px;background:#f0f3f8;border-radius:6px;overflow:hidden;position:relative}
+    .bar-fill{height:100%;width:0;border-radius:6px;transition:width 1.1s cubic-bezier(.2,.8,.2,1);background:#c3ccdb}
+    .bar-row.cov .bar-fill{background:linear-gradient(90deg,var(--blue),#4f7bf5)}
+    .bar-row.cov .bl{font-weight:650}
+    .bar-row .bv{font-family:Consolas,monospace;font-size:13px;color:#51607a}
+    .bar-row .tagnew{font-size:9px;color:#fff;background:var(--m-ticket);border-radius:10px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+    .bars-legend{display:flex;gap:18px;font-size:12px;color:#7b8595;margin-top:16px;flex-wrap:wrap}
+    .bars-legend i{width:11px;height:11px;border-radius:3px;display:inline-block;margin-right:6px;vertical-align:middle}
+
+    /* lift */
+    .lift-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:30px}
+    .lift-col{border:1px solid var(--line);border-radius:12px;padding:20px 22px;background:#fff}
+    .lift-col h3{font-size:14px;display:flex;align-items:center;gap:8px}
+    .lift-col h3 .dot{width:8px;height:8px;border-radius:50%}
+    .lift-col .hint{font-size:12px;color:#8992a0;margin-top:4px;line-height:1.7}
+    .lift-item{display:grid;grid-template-columns:96px 1fr 44px;gap:10px;align-items:center;margin-top:13px}
+    .lift-item .ll{font-size:12.5px;color:#3a4454;text-align:right}
+    .lift-bar{height:9px;background:#eef1f7;border-radius:5px;position:relative;overflow:hidden}
+    .lift-bar span{position:absolute;top:0;bottom:0;left:0;width:0;border-radius:5px;transition:width 1s ease}
+    .lift-item .lv{font-family:Consolas,monospace;font-size:12px;color:#51607a}
+    .lift-hi .lift-bar span{background:#e0564f}.lift-lo .lift-bar span{background:#9aa3b1}
+    .lift-explain{font-size:12.5px;color:#7b8595;line-height:1.9;margin-top:18px;border-left:2px solid var(--line);padding-left:14px}
+
+    /* method */
+    .method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+    .method-card{border:1px solid var(--line);border-radius:12px;padding:19px;background:#fafcff;position:relative}
+    .method-card .mi{font-family:Consolas,monospace;font-size:11px;color:#9aa3b1}
+    .method-card h3{font-size:14.5px;margin-top:7px}
+    .method-card p{font-size:12.5px;color:var(--muted);line-height:1.85;margin-top:8px}
+    .method-card code{font-family:Consolas,monospace;font-size:11px;background:#eef2fb;color:#3a4a74;padding:1px 5px;border-radius:4px}
+    .limit-box{margin-top:22px;border:1px dashed #d4b483;background:#fffdf6;border-radius:12px;padding:18px 20px}
+    .limit-box h3{font-size:13px;color:#9a6b1a}
+    .limit-box ul{margin:10px 0 0;padding-left:18px;color:#6b5a33;font-size:12.5px;line-height:1.9}
+
+    /* cta */
+    .dr-cta{display:flex;justify-content:space-between;align-items:center;gap:24px;background:#0f1e3b;color:#fff;
+      border-radius:14px;padding:30px 34px;margin-top:20px;background-image:radial-gradient(ellipse at 90% 120%,#1a4c9d,#0f1e3b 70%)}
+    .dr-cta .mono{font-size:9px;color:#9bb1d6}
+    .dr-cta h3{font-size:22px;margin-top:6px;letter-spacing:-.5px}
+    .dr-cta p{font-size:13px;color:#b8c6dd;margin-top:8px;max-width:420px;line-height:1.8}
+
+    @media(max-width:900px){
+      .dr-funnel{grid-template-columns:repeat(2,1fr)}
+      .cov-grid{grid-template-columns:1fr;gap:24px}
+      .lift-grid{grid-template-columns:1fr}
+      .method-grid{grid-template-columns:1fr}
+      .bar-row{grid-template-columns:118px 1fr 46px;gap:10px}
+      .dr-cta{flex-direction:column;align-items:flex-start}
+    }
+    @media(max-width:600px){
+      .dr-funnel{grid-template-columns:1fr 1fr;gap:11px}
+      .dr-stat{padding:16px 15px}
+      .voice-card{width:252px;flex-basis:252px}
+      .bar-row{grid-template-columns:96px 1fr 42px}
+      .bar-row .bl{font-size:11px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      [data-reveal]{opacity:1;transform:none;transition:none}
+      .voice-row{animation:none;transform:none}
+      .bar-fill,.lift-bar span{transition:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" aria-hidden="true"><span></span></div>
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="Landing Check"><span class="brand-symbol" aria-hidden="true">L<span>✓</span></span>Landing Check<span class="brand-edition">DEMAND RESEARCH</span></a>
+    <nav class="header-nav" aria-label="主导航"><a href="#scale">调研规模</a><a href="#voices">真实原声</a><a href="#coverage">方案覆盖</a><a href="#method">分析方法</a></nav>
+    <div class="header-actions"><a class="button button-small" href="index.html">返回项目主页</a></div>
+  </header>
+
+  <main id="main" class="dr-main">
+    <section class="dr-hero page-width" id="top">
+      <div class="eyebrow" data-reveal><span class="tiny-square"></span> DEMAND &amp; PAIN-POINT RESEARCH <span class="eyebrow-divider">/</span> 产品展示 · 第一部分</div>
+      <h1 data-reveal data-delay="1">游客来华最常卡在哪里？<br><span class="blue">我们用 89.6 万条真实原帖找答案。</span></h1>
+      <p class="dr-lede" data-reveal data-delay="2">我们抓取了公开旅行社区在 2025-10 至 2026-10 的英文旅行笔记，筛出与中国相关的内容，逐句识别"真正在描述问题"的句子，统计首次来华自由行游客最常遇到的实务痛点——并据此确定 Landing Check 要解决的五大模块。</p>
+      <span class="dr-source-tag" data-reveal data-delay="3">数据源：<b>官方 MCP 英文旅行笔记导出</b> · 规则统计 · 不改写原帖</span>
+    </section>
+
+    <!-- 1. SCALE / FUNNEL -->
+    <section class="dr-section page-width" id="scale">
+      <span class="dr-kicker" data-reveal>01 / HOW BIG</span>
+      <h2 data-reveal>从 89.6 万条原帖，筛到 3,907 条真实"问题帖"</h2>
+      <p class="dr-sub" data-reveal>我们不把点赞当需求。每一层都有明确口径：先锁定与中国相关的内容，再逐句判定是否"真的在说问题"（并剔除"没问题""别担心"这类否定与宽慰）。</p>
+      <div class="dr-funnel">
+        <div class="dr-stat" data-reveal data-delay="1"><div class="num" data-count="896434">0</div><div class="lab">英文旅行笔记原帖</div><div class="pct">全量 · 一年窗口</div></div>
+        <div class="dr-stat" data-reveal data-delay="2"><div class="num" data-count="96779">0</div><div class="lab">与中国相关的帖子</div><div class="pct">占全量 10.8%</div></div>
+        <div class="dr-stat" data-reveal data-delay="3"><div class="num" data-count="3907">0</div><div class="lab">含实务问题的"问题帖"</div><div class="pct">问题密度 4.0%</div></div>
+        <div class="dr-stat" data-reveal data-delay="4"><div class="num" data-count="7151">0</div><div class="lab">逐句标注的问题句</div><div class="pct">13 类实务问题</div></div>
+      </div>
+      <p class="dr-funnel-note" data-reveal>注：英文语料以正面攻略/种草为主，真正写问题的占少数，所以 4% 的问题密度是信号而非噪声——它让我们能聚焦"卡点"，而不是泛泛的热门话题。</p>
+    </section>
+
+    <!-- 2. VOICES (preserve original social research) -->
+    <section class="dr-section page-width" id="voices">
+      <span class="dr-kicker" data-reveal>02 / IN THEIR OWN WORDS</span>
+      <h2 data-reveal>先听游客自己怎么说</h2>
+      <p class="dr-sub" data-reveal>下面每一条都是语料里的<strong>真实英文原帖</strong>（原句保留、未改写），正是这些具体的求助与吐槽，被我们逐句归类、汇总成后面的统计。鼠标悬停可暂停。</p>
+      <div class="voices-wrap" data-reveal aria-label="真实社媒原声滚动展示">
+        <div class="voice-row" style="--dur:68s" id="vrow1"></div>
+        <div class="voice-row rev" style="--dur:82s" id="vrow2"></div>
+        <div class="voice-row" style="--dur:74s" id="vrow3"></div>
+      </div>
+      <p class="voices-foot" data-reveal>共 7,151 条问题句，此处为按模块抽样展示的代表原句。颜色对应下方的五大模块。</p>
+    </section>
+
+    <!-- 3. COVERAGE word cloud -->
+    <section class="dr-section page-width" id="coverage">
+      <span class="dr-kicker" data-reveal>03 / WHAT WE SOLVE</span>
+      <h2 data-reveal>一张图看清：我们解决的痛点 × 整合方案</h2>
+      <p class="dr-sub" data-reveal>把高频痛点词按所属模块上色，就得到 Landing Check 的覆盖全景。<strong>市内交通、门票预订、落地机场、上网通讯、支付</strong>五大模块——其中门票预订为新增覆盖。</p>
+      <div class="cov-grid">
+        <figure class="cov-figure" data-reveal>
+          <img src="assets/research/coverage_wordcloud.png" alt="五大模块痛点词云：市内交通、门票预订、落地机场、上网通讯、支付" loading="lazy">
+          <figcaption class="cap">词越大＝该痛点在问题句里越高频；颜色＝对应的 Landing Check 模块。基于 3,907 问题帖 / 7,151 问题句。</figcaption>
+        </figure>
+        <div data-reveal data-delay="1">
+          <div class="cov-kpi"><span class="big" data-count="72" data-suffix="">0</span><span class="unit">%</span></div>
+          <div class="cov-ci">五大模块合计占全部实务问题的比例 · 95%CI [71–74%]（校正前）</div>
+          <p class="cov-desc">这意味着：把这五件事做顺，就覆盖了外国游客落地中国约七成的实务卡点（问题口径）。新增"门票预订"后，覆盖率从四模块的 51% 提升到 72%。若按更广的"需求∪问题"口径（n=22,354，含提问与攻略），五大模块覆盖升至约 80%——详见项目主页需求板块。</p>
+          <div class="cov-chips">
+            <span class="cov-chip m-transport">市内交通 <small>29%</small></span>
+            <span class="cov-chip m-ticket is-new">门票预订 <small>26%</small></span>
+            <span class="cov-chip m-arrival">落地机场 <small>16%</small></span>
+            <span class="cov-chip m-net">上网通讯 <small>13%</small></span>
+            <span class="cov-chip m-pay">支付 <small>12%</small></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. P(category | problem) bars -->
+    <section class="dr-section page-width" id="dist">
+      <span class="dr-kicker" data-reveal>04 / THE DISTRIBUTION</span>
+      <h2 data-reveal>实务问题出在哪里：P(类别 | 问题)</h2>
+      <p class="dr-sub" data-reveal>在 3,907 条问题帖里，每一类问题被提及的比例（多标签，可叠加）。深蓝＝ Landing Check 已覆盖的五大模块。</p>
+      <div class="bars" id="catBars"></div>
+      <div class="bars-legend" data-reveal>
+        <span><i style="background:linear-gradient(90deg,var(--blue),#4f7bf5)"></i>已覆盖模块</span>
+        <span><i style="background:#c3ccdb"></i>暂未覆盖</span>
+        <span>口径：问题帖占比，置信区间为按帖子自助法（bootstrap）1000 次</span>
+      </div>
+    </section>
+
+    <!-- 5. lift: frequency != pain -->
+    <section class="dr-section page-width" id="lift">
+      <span class="dr-kicker" data-reveal>05 / FREQUENCY ≠ PAIN</span>
+      <h2 data-reveal>"被提得多"不等于"最痛"</h2>
+      <p class="dr-sub" data-reveal>我们用 <strong>lift = P(类别 | 问题帖) ÷ P(类别 | 需求帖)</strong> 衡量"一写到就多半在吐槽"的程度。>1 表示该类更集中于"问题"，而非中性提及。</p>
+      <div class="lift-grid">
+        <div class="lift-col lift-hi" data-reveal>
+          <h3><span class="dot" style="background:#e0564f"></span>一写到就多半在吐槽（lift 高）</h3>
+          <p class="hint">提及未必多，但只要出现，往往是出了问题。</p>
+          <div class="lift-item"><span class="ll">安全与骗局</span><span class="lift-bar"><span data-w="100"></span></span><span class="lv">2.78</span></div>
+          <div class="lift-item"><span class="ll">上网通讯</span><span class="lift-bar"><span data-w="63"></span></span><span class="lv">1.75</span></div>
+          <div class="lift-item"><span class="ll">语言翻译</span><span class="lift-bar"><span data-w="59"></span></span><span class="lv">1.65</span></div>
+          <div class="lift-item"><span class="ll">健康与如厕</span><span class="lift-bar"><span data-w="48"></span></span><span class="lv">1.34</span></div>
+          <div class="lift-item"><span class="ll">落地机场</span><span class="lift-bar"><span data-w="44"></span></span><span class="lv">1.21</span></div>
+        </div>
+        <div class="lift-col lift-lo" data-reveal data-delay="1">
+          <h3><span class="dot" style="background:#9aa3b1"></span>高频提及、但多为攻略说明（lift 低）</h3>
+          <p class="hint">天天被写，但更多是"怎么做"的攻略，而非失败。</p>
+          <div class="lift-item"><span class="ll">市内交通</span><span class="lift-bar"><span data-w="77"></span></span><span class="lv">0.77</span></div>
+          <div class="lift-item"><span class="ll">支付</span><span class="lift-bar"><span data-w="75"></span></span><span class="lv">0.75</span></div>
+          <div class="lift-item"><span class="ll">门票预约</span><span class="lift-bar"><span data-w="68"></span></span><span class="lv">0.68</span></div>
+          <div class="lift-item"><span class="ll">城际交通</span><span class="lift-bar"><span data-w="68"></span></span><span class="lv">0.68</span></div>
+          <div class="lift-item"><span class="ll">签证入境</span><span class="lift-bar"><span data-w="59"></span></span><span class="lv">0.59</span></div>
+        </div>
+      </div>
+      <p class="lift-explain" data-reveal>产品启示：支付、门票这类高频低-lift 的场景，更需要"把现成办法讲顺"（教程/引导）；安全、上网这类高-lift 场景，更需要"在出问题时兜住"（现场排障）。两种产品形态，都要做。</p>
+    </section>
+
+    <!-- 6. METHOD -->
+    <section class="dr-section page-width" id="method">
+      <span class="dr-kicker" data-reveal>06 / HOW WE MEASURED</span>
+      <h2 data-reveal>聚类与统计方法</h2>
+      <p class="dr-sub" data-reveal>全流程规则化、可复现、不依赖大模型打分，便于逐条核对与审计。</p>
+      <div class="method-grid">
+        <div class="method-card" data-reveal data-delay="1"><div class="mi">01</div><h3>多语言规则词典</h3><p>13 个实务类别、各含子话题，用英/中/俄/泰多语言关键词匹配。<code>无 LLM 打分</code>，每一次命中都能回溯到具体词与原句。</p></div>
+        <div class="method-card" data-reveal data-delay="2"><div class="mi">02</div><h3>问题信号识别</h3><p>逐句检测 <code>problem / advice / question</code> 信号；并先剔除"no problem""don't worry""stress-free"等否定与宽慰说法，避免把安心话误判成问题。</p></div>
+        <div class="method-card" data-reveal data-delay="3"><div class="mi">03</div><h3>P(类别 | 问题) 双口径</h3><p>多标签（可叠加）＋平均分摊（各类合计 100%，用于占比）。一句话里出现"问题信号＋类别"即计为该类的一次问题事件。</p></div>
+        <div class="method-card" data-reveal data-delay="1"><div class="mi">04</div><h3>自助法置信区间</h3><p>按作者聚类的 bootstrap（1000 次）给出 95%CI；本英文语料无作者字段，降级为<strong>帖子级</strong> bootstrap，并在局限中如实说明。</p></div>
+        <div class="method-card" data-reveal data-delay="2"><div class="mi">05</div><h3>lift 与共现</h3><p>lift 衡量"问题集中度"；共现矩阵找常一起出现的痛点（如"上网×实名/手机号"lift 2.36），指示应打包解决的组合。</p></div>
+        <div class="method-card" data-reveal data-delay="3"><div class="mi">06</div><h3>NMF 主题聚类</h3><p>对每类问题句做 TF-IDF（含二元词）→ <strong>NMF</strong> 主题分解，簇数由 <code>UMass 一致性</code>自动择优，人工命名并附代表原句，用来发现词典之外的新问题类型。</p></div>
+      </div>
+      <div class="limit-box" data-reveal>
+        <h3>⚠ 诚实的局限（已写入报告）</h3>
+        <ul>
+          <li>仅英文、仅"提到中国"的子集；非英语人群与海外内容不在内。</li>
+          <li>无作者/地域/评论字段：置信区间为帖子级；国际 vs 港澳台对比、评论区互证暂无法做。</li>
+          <li>精度校正待人工抽检 260 句后补齐，当前为校正前口径；召回率按类别无法估计。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="dr-section page-width" id="cta" style="border-bottom:none">
+      <div class="dr-cta" data-reveal>
+        <div>
+          <span class="mono">LANDING CHECK / FROM RESEARCH TO PRODUCT</span>
+          <h3>痛点已验证，去看我们怎么解决</h3>
+          <p>五大模块来自上面的数据。回到项目主页，看产品形态与可交互原型如何逐一落地这些卡点。</p>
+        </div>
+        <a class="button" href="index.html#product">查看产品体验 ↗</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="page-width site-footer">
+    <a class="brand footer-brand" href="index.html"><span class="brand-symbol" aria-hidden="true">L<span>✓</span></span>Landing Check</a>
+    <span>Trip Hackathon 2026 · 需求与痛点调研</span>
+    <a href="https://github.com/Yuklim/landing-check" target="_blank" rel="noopener">查看源代码 ↗</a>
+  </footer>
+
+  <script>
+  (function(){
+    "use strict";
+    var reduce = matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+    /* --- real raw voices (unedited English, sampled from the 7,151 problem sentences) --- */
+    var V = [
+      ["pay","支","Cash is fine, but cash can't be found in some places."],
+      ["pay","支","I had a payment problem – couldn't get Alipay or WeChat to work."],
+      ["pay","支","No Octopus card, no bank cards. I can't enter buildings or pay for anything."],
+      ["pay","支","I was stuck in my hotel for 2 days because I had no way to pay — only cash in my pocket."],
+      ["pay","支","Is it true that cash can't be used in Guangzhou?"],
+      ["net","网","First-Time Mistake in China: I Didn't Prepare for the Internet!"],
+      ["net","网","I installed a VPN and tried various things, but it still does not work."],
+      ["net","网","For foreigners like me will have an issue as we don't have a china mobile number."],
+      ["net","网","I have a roaming eSIM, but do I also need a VPN? It feels difficult to prepare."],
+      ["net","网","I'm currently stuck on Gmail and expect that to be a no-go without a VPN."],
+      ["arr","落","I was stuck at Chengdu Tianfu International Airport."],
+      ["arr","落","Three classic failure moments: ① Can't hail a ride at the airport."],
+      ["arr","落","Just landed in Shenzhen and I'm totally lost."],
+      ["arr","落","Airport drop-off clock is ticking, panic creeps up — we're gonna miss our flight."],
+      ["tra","交","Currently stuck in China and Amap just locked me out."],
+      ["tra","交","I circled around several times using Baidu and Gaode maps, but couldn't pinpoint it."],
+      ["tra","交","If you can't drive, use a combination of ride-hailing and public transport."],
+      ["tra","交","When we got stuck in traffic, we thought of the subway."],
+      ["tic","票","Can't get tickets to the National Museum of China?"],
+      ["tic","票","I couldn't get tickets in advance, so I thought I would miss it."],
+      ["tic","票","What to do if I couldn't secure a reservation for the Palace Museum?"],
+      ["tic","票","I went to the self-service machine, but I still couldn't collect my ticket."],
+      ["tic","票","I selected Wenhua Hall, but I couldn't select the Palace Museum ticket."]
+    ];
+    var CLS={pay:"m-pay",net:"m-net",arr:"m-arrival",tra:"m-transport",tic:"m-ticket"};
+    var LAB={pay:"支付",net:"上网通讯",arr:"落地机场",tra:"市内交通",tic:"门票预订"};
+    var PLAT="旅行社区 · 英文原帖";
+    function card(v){
+      var d=document.createElement("div"); d.className="voice-card";
+      d.innerHTML='<div class="vhead"><span class="vavatar '+CLS[v[0]]+'">'+v[1]+
+        '</span><span class="vmeta"><span class="vp">'+PLAT+'</span><span class="vc">first-time visitor</span></span>'+
+        '<span class="vtag '+CLS[v[0]]+'">'+LAB[v[0]]+'</span></div><q>'+v[2]+'</q>';
+      return d;
+    }
+    function fill(id, items){
+      var row=document.getElementById(id); if(!row) return;
+      // duplicate the set for a seamless -50% marquee loop
+      items.concat(items).forEach(function(v){ row.appendChild(card(v)); });
+    }
+    // distribute 23 voices across 3 rows
+    var r1=[],r2=[],r3=[];
+    V.forEach(function(v,i){ (i%3===0?r1:i%3===1?r2:r3).push(v); });
+    fill("vrow1",r1); fill("vrow2",r2); fill("vrow3",r3);
+
+    /* --- category bars P(c|problem) --- */
+    var CATS=[
+      ["市内交通与打车",29.2,1,0],["门票与预约",26.1,1,1],["落地与机场",15.8,1,0],
+      ["上网与通讯",13.1,1,0],["支付",12.4,1,0],["安全与骗局",9.4,0,0],
+      ["语言与翻译",7.5,0,0],["换汇与花费",7.0,0,0],["城际交通",3.9,0,0],
+      ["签证与入境政策",3.6,0,0],["健康与如厕",3.6,0,0],["App与实名/手机号",2.7,0,0],
+      ["住宿与入住登记",1.8,0,0]
+    ];
+    var maxv=29.2, host=document.getElementById("catBars");
+    CATS.forEach(function(c){
+      var row=document.createElement("div");
+      row.className="bar-row"+(c[2]?" cov":"");
+      row.setAttribute("data-reveal","");
+      var newtag=c[3]?'<span class="tagnew">NEW</span>':'';
+      row.innerHTML='<span class="bl">'+c[0]+newtag+'</span>'+
+        '<span class="bar-track"><span class="bar-fill" data-w="'+(c[1]/maxv*100).toFixed(1)+'"></span></span>'+
+        '<span class="bv">'+c[1].toFixed(1)+'%</span>';
+      host.appendChild(row);
+    });
+
+    /* --- count-up --- */
+    function animateCount(el){
+      var target=+el.getAttribute("data-count"), dur=1200, t0=null;
+      if(reduce){ el.textContent=target.toLocaleString("en-US"); return; }
+      function step(ts){ t0=t0||ts; var p=Math.min((ts-t0)/dur,1);
+        var e=1-Math.pow(1-p,3);
+        el.textContent=Math.round(target*e).toLocaleString("en-US");
+        if(p<1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    /* --- reveal + fill bars on view --- */
+    var seen=new WeakSet();
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting||seen.has(e.target)) return;
+        seen.add(e.target);
+        e.target.classList.add("in");
+        e.target.querySelectorAll?.("[data-count]").forEach(animateCount);
+        if(e.target.hasAttribute&&e.target.hasAttribute("data-count")) animateCount(e.target);
+        // fill any bars within
+        var bars=e.target.querySelectorAll?e.target.querySelectorAll(".bar-fill[data-w],.lift-bar span[data-w]"):[];
+        bars.forEach(function(b){ requestAnimationFrame(function(){ b.style.width=b.getAttribute("data-w")+"%"; }); });
+      });
+    },{threshold:.2,rootMargin:"0px 0px -8% 0px"});
+    document.querySelectorAll("[data-reveal]").forEach(function(el){ io.observe(el); });
+    // bars/lift created after observer: observe their rows too
+    document.querySelectorAll(".bar-row[data-reveal]").forEach(function(el){ io.observe(el); });
+
+    /* --- reading progress --- */
+    var pbar=document.querySelector(".reading-progress span");
+    if(pbar){ addEventListener("scroll",function(){
+      var h=document.documentElement, max=h.scrollHeight-h.clientHeight;
+      pbar.style.transform="scaleX("+(max>0?h.scrollTop/max:0)+")";
+    },{passive:true}); }
+  })();
+  </script>
+</body>
+</html>
