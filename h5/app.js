@@ -326,13 +326,20 @@
   const MAPS = {};
   let ROUTES = null, AMAP = null;
   const loadRoutes = () => ROUTES || (ROUTES = fetch('routes.json').then(r => r.json()));
-  const loadAMap = () => AMAP || (AMAP = new Promise((res, rej) => {
+  // 高德脚本偶尔连不上（常见于开着代理 / VPN：webapi.amap.com 在代理节点上握手被断开）。
+  // 每次最多等 8 秒，失败再试一次；仍失败就不缓存这次结果，下次进地图页会重新加载。期间页面先显示路线示意图（schematic）。
+  const AMAP_TIMEOUT = 8000;
+  const injectAMap = retry => new Promise((res, rej) => {
     if (window.AMap) return res(window.AMap);
     window._AMapSecurityConfig = { securityJsCode: AMAP_JS.securityJsCode };
-    const sc = document.createElement('script'); sc.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_JS.key}`;
-    sc.onload = () => window.AMap ? res(window.AMap) : rej(new Error('AMap')); sc.onerror = () => { AMAP = null; rej(new Error('AMap')); };
+    const sc = document.createElement('script'); sc.src = `https://webapi.amap.com/maps?v=2.0&key=${AMAP_JS.key}${retry ? '&_r=' + Date.now() : ''}`;   // 重试换个网址，不和卡住的那次请求合并
+    const fail = () => { clearTimeout(t); sc.remove(); rej(new Error('AMap')); };
+    const t = setTimeout(fail, AMAP_TIMEOUT);
+    sc.onload = () => { clearTimeout(t); window.AMap ? res(window.AMap) : fail(); }; sc.onerror = fail;
     document.head.appendChild(sc);
-  }));
+  });
+  const loadAMap = () => AMAP || (AMAP = injectAMap().catch(() => new Promise(r => setTimeout(r, 1500)).then(() => injectAMap(true))).catch(e => { AMAP = null; throw e; }));
+  window.lcLoadAMap = loadAMap;
   // Trip.com 图床的原图是 1288×1920（约 300 KB），手机上用图床按宽度缩好的版本（800 宽约 150 KB）。
   // 图床只认部分宽度：480/540/600/640/800/960/1080
   const tripImg = (u, w = 800) => /^https:\/\/[\w-]+\.tripcdn\.com\/images\//.test(u || '') ? u.split('?')[0] + `?proc=resize/m_w,w_${w},h_10000` : u;
@@ -342,9 +349,8 @@
   function warmUp() {
     if (!navigator.onLine || (navigator.connection && navigator.connection.saveData)) return;
     loadRoutes().catch(() => {});
-    // 城市图鉴（stamp.js）复用这一个加载，不再插第二个高德脚本
-    window.__lcAMapPromise = window.__lcAMapPromise || loadAMap();
-    window.__lcAMapPromise.then(A => A.plugin('AMap.DistrictSearch', () => {})).catch(() => {});
+    // 城市图鉴（stamp.js）复用这一个加载（window.lcLoadAMap），不再插第二个高德脚本
+    loadAMap().then(A => A.plugin('AMap.DistrictSearch', () => {})).catch(() => {});
     const queue = ['shanghai-dusk.jpg', 'beijing.jpg', 'chengdu.jpg', 'hangzhou.jpg', 'guangzhou.jpg', 'xian.jpg'].map(f => 'img/stamp/' + f);
     // 每条帖子：列表首图 + 详情首图 + 头像（详情后面几张图滑到时再下）
     const addPosts = () => (window.LCStamp ? window.LCStamp.samplePosts() : []).forEach(p => {
@@ -389,22 +395,61 @@
     map.add(mk); return mk;
   }
   const fitMap = (map, items, pad) => map.setFitView(items.filter(Boolean), true, [pad, pad, pad, pad]);
+  // 路线示意图：不需要底图，用 routes.json 的坐标画线和标记。高德加载期间先显示它，加载失败就一直用它。
+  // layers = { lines: [{ path, color, dash }], dots: [{ c, html, label, labelClass, dir, anchor }] }；坐标是 [经度, 纬度]
+  function schematic(box, layers, pad = 24, note = true) {
+    const W = box.clientWidth || 393, H = box.clientHeight || 200;
+    const pts = layers.lines.flatMap(l => l.path).concat(layers.dots.map(d => d.c));
+    if (!pts.length) return;
+    const k = Math.cos(pts.reduce((a, p) => a + p[1], 0) / pts.length * Math.PI / 180);
+    const xs = pts.map(p => p[0] * k), ys = pts.map(p => -p[1]);
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    const sc = Math.min((W - pad * 2) / Math.max(x1 - x0, 1e-6), (H - pad * 2) / Math.max(y1 - y0, 1e-6));
+    const ox = (W - (x1 - x0) * sc) / 2, oy = (H - (y1 - y0) * sc) / 2;
+    const P = c => [ox + (c[0] * k - x0) * sc, oy + (-c[1] - y0) * sc];
+    const poly = l => l.path.map(c => P(c).map(v => v.toFixed(1)).join(',')).join(' ');
+    const lines = layers.lines.filter(l => l.path && l.path.length > 1).map(l => l.dash
+      ? `<polyline points="${poly(l)}" fill="none" stroke="${l.color}" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round"/>`
+      : `<polyline points="${poly(l)}" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${poly(l)}" fill="none" stroke="${l.color}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>`).join('');
+    const LBL = { left: 'translate(calc(-100% - 10px),-50%)', right: 'translate(10px,-50%)', top: 'translate(-50%,calc(-100% - 12px))', bottom: 'translate(-50%,12px)' };
+    const dots = layers.dots.map(d => { const [x, y] = P(d.c); return `<div style="position:absolute;left:${x}px;top:${y}px;transform:translate(-50%,${d.anchor === 'bottom-center' ? '-100%' : '-50%'});z-index:2">${d.html}</div>` +
+      (d.label ? `<div class="${d.labelClass || 'lc-maplabel'}" style="position:absolute;left:${x}px;top:${y}px;transform:${LBL[d.dir] || LBL.right};z-index:3">${d.label}</div>` : ''); }).join('');
+    const sch = el('div', 'position:absolute;inset:0;overflow:hidden;background-color:#EEF1F5;background-image:linear-gradient(#E3E7ED 1px,transparent 1px),linear-gradient(90deg,#E3E7ED 1px,transparent 1px);background-size:28px 28px');
+    sch.className = 'lc-schematic';
+    sch.innerHTML = `<svg width="${W}" height="${H}" style="position:absolute;inset:0">${lines}</svg>${dots}` +
+      (note ? `<div style="position:absolute;right:8px;top:8px;z-index:4;font:500 10px Inter,sans-serif;color:${MUTED};background:rgba(255,255,255,.85);border-radius:6px;padding:2px 6px">Route preview · live map offline</div>` : '');
+    box.querySelectorAll(':scope > .lc-schematic').forEach(n => n.remove());
+    box.prepend(sch);
+    return sch;
+  }
+  window.lcSchematic = schematic;
+  // 先画示意图，再把高德地图叠在上面；高德画好后去掉示意图，失败就留着示意图
+  async function paintMap(box, layers, interactive, pad, note) {
+    const sch = schematic(box, layers, pad, note);
+    const live = el('div', 'position:absolute;inset:0;z-index:1'); box.appendChild(live);
+    try {
+      const map = await newMap(live, interactive);
+      const items = layers.lines.map(l => mapLine(map, l.path, l.color, l.dash)).concat(layers.dots.map(d => mapDot(map, d.c, d.html, d.label, d.dir, d.anchor)));
+      fitMap(map, items, pad);
+      map.on('complete', () => sch && sch.remove());
+      return map;
+    } catch (e) { live.remove(); return null; }
+  }
   const mapFail = box => { box.innerHTML = `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#EEF1F5;color:${MUTED};font:500 12px Inter,sans-serif">Map needs internet · route details below</div>`; };
   // kind: 'taxi' | 'metro'；mini：缩略图（不能拖动，点了进详情）
   async function drawMap(box, kind, mini) {
-    const R = await loadRoutes(), map = await newMap(box, !mini), items = [];
+    const R = await loadRoutes(), L = { lines: [], dots: [] };
     if (kind === 'metro') {
       const m = R.metro, stops = m.stops;
-      items.push(mapLine(map, m.path, m.colour));
-      stops.forEach((st, i) => items.push(mapDot(map, st.c, dotHTML('#fff', m.colour, 16), mini ? '' : i === 0 ? 'PVG T1&T2 station' : "Jing'an Temple", i === 0 ? 'left' : 'bottom')));
-      items.push(mapLine(map, [stops[stops.length - 1].c, R.hotel.c], BLUE, true));
+      L.lines.push({ path: m.path, color: m.colour });
+      stops.forEach((st, i) => L.dots.push({ c: st.c, html: dotHTML('#fff', m.colour, 16), label: mini ? '' : i === 0 ? 'PVG T1&T2 station' : "Jing'an Temple", dir: i === 0 ? 'left' : 'bottom' }));
+      L.lines.push({ path: [stops[stops.length - 1].c, R.hotel.c], color: BLUE, dash: true });
     } else {
-      items.push(mapLine(map, R.taxi.line, BLUE));
-      items.push(mapDot(map, R.taxi.queue.c, dotHTML('#1BA672', '#fff', 18), mini ? '' : 'Taxi pickup · P2', 'left'));
+      L.lines.push({ path: R.taxi.line, color: BLUE });
+      L.dots.push({ c: R.taxi.queue.c, html: dotHTML('#1BA672', '#fff', 18), label: mini ? '' : 'Taxi pickup · P2', dir: 'left' });
     }
-    items.push(mapDot(map, R.hotel.c, PIN, mini ? '' : 'The PuLi', 'right', 'bottom-center'));
-    fitMap(map, items, mini ? 18 : 40);
-    return map;
+    L.dots.push({ c: R.hotel.c, html: PIN, label: mini ? '' : 'The PuLi', dir: 'right', anchor: 'bottom-center' });
+    return paintMap(box, L, !mini, mini ? 18 : 40, !mini);
   }
   async function mountMap(key, host, kind, mini) {
     if (!host) return;
@@ -486,17 +531,18 @@
     if (routeMap) { routeMap.destroy(); routeMap = null; }
     box.innerHTML = '';
     const inner = el('div', 'position:absolute;inset:0;background:#EEF1F5'); box.appendChild(inner);
-    let map; try { map = routeMap = await newMap(inner, true); } catch (e) { mapFail(box); return; }
-    const items = [];
+    const L = { lines: [], dots: [] };
     if (spec.car) {
-      items.push(mapLine(map, spec.car.line, BLUE));
-      items.push(mapDot(map, spec.car.start.c, dotHTML('#1BA672', '#fff', 18), spec.car.startLabel, 'left'));
+      L.lines.push({ path: spec.car.line, color: BLUE });
+      L.dots.push({ c: spec.car.start.c, html: dotHTML('#1BA672', '#fff', 18), label: spec.car.startLabel, dir: 'left' });
     } else {
-      spec.plan.segments.forEach(s => items.push(mapLine(map, s.line, segC(s), s.mode === 'walk')));
-      spec.plan.segments.filter(s => s.mode !== 'walk').forEach((s, i) => items.push(mapDot(map, s.from_c, dotHTML('#fff', segC(s), 14), i === 0 ? s.from : `Change · ${s.from}`, i === 0 ? 'left' : 'right')));
+      spec.plan.segments.forEach(s => L.lines.push({ path: s.line, color: segC(s), dash: s.mode === 'walk' }));
+      spec.plan.segments.filter(s => s.mode !== 'walk').forEach((s, i) => L.dots.push({ c: s.from_c, html: dotHTML('#fff', segC(s), 14), label: i === 0 ? s.from : `Change · ${s.from}`, dir: i === 0 ? 'left' : 'right' }));
     }
-    items.push(mapDot(map, R.hotel.c, PIN, 'The PuLi', 'right', 'bottom-center'));
-    fitMap(map, items, 36);
+    L.dots.push({ c: R.hotel.c, html: PIN, label: 'The PuLi', dir: 'right', anchor: 'bottom-center' });
+    const token = inner;
+    const map = await paintMap(inner, L, true, 36, true);
+    if (map && RS('map').contains(token)) routeMap = map; else if (map) map.destroy();
   }
   async function openRoute(kind, idx) {
     const R = await loadRoutes();
