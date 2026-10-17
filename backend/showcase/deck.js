@@ -140,6 +140,7 @@
     var from = slides[cur], to = slides[n];
     if (onDemo(cur)) demo.stop();
     gsap.set(to, { autoAlpha: 1, scale: 1, xPercent: 100 * dir });
+    if (!reduce) gsap.set(to.querySelectorAll("[data-a]"), { autoAlpha: 0, y: 28 });  // 预隐入场内容，避免滑入途中先显示、到 0.3s 又被 playIntro 重置造成的闪烁
     var tl = gsap.timeline({ onComplete: function () { gsap.set(from, { autoAlpha: 0 }); busy = false; } });
     if (reduce) { tl.set(from, { autoAlpha: 0 }).set(to, { xPercent: 0, autoAlpha: 1 }); }
     else {
