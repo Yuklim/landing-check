@@ -546,3 +546,18 @@ html[lang="en"] .zh{display:none !important}
 .mirror .mx{display:grid;place-items:center;color:var(--blue);font-size:30px}
 .mirror-foot{margin-top:18px;text-align:center;font-size:18px;font-weight:700}
 .mirror-foot .en{display:block;font-family:var(--mono);font-size:14px;color:var(--blue);letter-spacing:.04em;margin-top:6px}
+
+/* ===== growth: post-booking reco shot + referral handoff ===== */
+/* img2 crop fills the former 截图03 placeholder in growth-left */
+.reco-shot img{width:100%;display:block;border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 20px #1a2b5512;background:#fff}
+.reco-shot .mock-caption{margin-top:9px;text-align:left}
+/* growth-right becomes a vertical story: your stamp -> friend's landing page, then branches */
+#growth .growth-right{grid-template-columns:1fr;gap:20px;justify-items:center}
+.referral-flow{display:flex;align-items:center;justify-content:center;gap:16px}
+.referral-flow figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:0}
+.referral-flow .demo-phone{width:150px}
+.referral-flow .mock-caption{max-width:150px;margin-top:9px}
+.rf-arrow{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--blue);font-size:24px;font-weight:700;flex:0 0 auto}
+.rf-arrow span{font-size:11px;color:var(--muted);white-space:nowrap;font-weight:600}
+#growth .growth-right .branches{grid-template-columns:1fr 1fr;gap:14px;width:100%}
+#growth .growth-right .branches .pill{grid-column:1 / -1;justify-self:center}
