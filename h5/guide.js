@@ -141,23 +141,27 @@
     #lc-guide{position:fixed;inset:0;pointer-events:none;z-index:2147483000;font-family:Inter,-apple-system,"PingFang SC","Noto Sans SC",sans-serif}
     #lc-guide .g-ring{position:fixed;border:3px solid ${BLUE};border-radius:14px;box-shadow:0 0 0 4px rgba(44,97,254,.18);animation:gpulse 1.6s ease-out infinite;display:none}
     @keyframes gpulse{0%{box-shadow:0 0 0 0 rgba(44,97,254,.45)}70%{box-shadow:0 0 0 12px rgba(44,97,254,0)}100%{box-shadow:0 0 0 0 rgba(44,97,254,0)}}
-    #lc-guide .g-tip{position:fixed;width:232px;background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:${INK};border:1px solid #DADFE6;border-left:3px solid ${BLUE};border-radius:12px;padding:9px 12px 10px;box-shadow:0 6px 18px rgba(18,24,38,.12);pointer-events:auto;display:none;z-index:3;cursor:pointer}
-    #lc-guide .g-tip .g-ch{display:flex;align-items:center;gap:6px;margin-bottom:3px;font:600 11px inherit;font-family:inherit;color:${BLUE};letter-spacing:.02em}
-    #lc-guide .g-tip .g-x{margin-left:auto;width:20px;height:20px;line-height:18px;text-align:center;border-radius:10px;color:#8F98A8;font:400 16px inherit;font-family:inherit}
-    #lc-guide .g-tip .g-x:hover{background:#F0F2F5;color:${INK}}
+    #lc-guide .g-tip{position:fixed;width:240px;box-sizing:border-box;padding:11px 14px 12px;border-radius:20px;color:#fff;overflow:hidden;cursor:pointer;pointer-events:auto;display:none;z-index:3;
+      background:linear-gradient(140deg,rgba(58,62,72,.78),rgba(30,33,41,.7) 55%,rgba(22,25,33,.76));-webkit-backdrop-filter:blur(26px) saturate(160%);backdrop-filter:blur(26px) saturate(160%);
+      border:1px solid rgba(255,255,255,.16);box-shadow:0 12px 32px rgba(10,12,18,.28),0 1px 3px rgba(10,12,18,.12),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -10px 18px rgba(0,0,0,.12)}
+    #lc-guide .g-tip::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:radial-gradient(120% 70% at 0% 0%,rgba(255,255,255,.16),rgba(255,255,255,0) 55%)}
+    #lc-guide .g-tip > *{position:relative}
+    #lc-guide .g-tip .g-ch{display:flex;align-items:center;gap:6px;margin-bottom:3px;font:600 11px inherit;font-family:inherit;color:#8FB0FF;letter-spacing:.02em}
+    #lc-guide .g-tip .g-x{margin-left:auto;width:20px;height:20px;line-height:18px;text-align:center;border-radius:10px;color:rgba(255,255,255,.55);font:400 16px inherit;font-family:inherit}
+    #lc-guide .g-tip .g-x:hover{background:rgba(255,255,255,.14);color:#fff}
     #lc-guide .g-tip b{display:block;font:700 14px/1.3 inherit;font-family:inherit}
-    #lc-guide .g-tip p{margin:3px 0 0;font:400 12.5px/1.5 inherit;font-family:inherit;color:#4A5160}
-    #lc-guide .g-mini{position:fixed;display:none;align-items:center;gap:5px;max-width:240px;background:rgba(255,255,255,.96);color:${BLUE};border:1px solid rgba(44,97,254,.35);border-radius:12px;padding:3px 10px;font:600 12px/1.5 inherit;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 3px 10px rgba(18,24,38,.12);pointer-events:auto;cursor:pointer;z-index:2}
-    #lc-guide .g-arrow{position:absolute;width:10px;height:10px;background:#fff;border:1px solid #DADFE6;transform:rotate(45deg)}
-    #lc-guide .g-arrow.up{border-right:0;border-bottom:0}
-    #lc-guide .g-arrow.down{border-left:0;border-top:0}
+    #lc-guide .g-tip p{margin:3px 0 0;font:400 12.5px/1.5 inherit;font-family:inherit;color:rgba(255,255,255,.8)}
+    #lc-guide .g-mini{position:fixed;display:none;align-items:center;gap:5px;max-width:240px;padding:4px 12px;border-radius:14px;color:#fff;font:600 12px/1.5 inherit;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:auto;cursor:pointer;z-index:2;
+      background:rgba(44,97,254,.82);-webkit-backdrop-filter:blur(12px) saturate(160%);backdrop-filter:blur(12px) saturate(160%);border:1px solid rgba(255,255,255,.45);box-shadow:0 6px 16px rgba(44,97,254,.3),inset 0 1px 0 rgba(255,255,255,.35)}
+    @supports not ((-webkit-backdrop-filter:blur(1px)) or (backdrop-filter:blur(1px))){#lc-guide .g-tip{background:rgba(30,33,41,.96)}#lc-guide .g-mini{background:${BLUE}}}
+    #lc-guide .g-arrow{display:none}
     #lc-guide .g-dot{position:fixed;z-index:1;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:${BLUE};border:2px solid #fff;box-shadow:0 1px 4px rgba(18,24,38,.3);pointer-events:auto;cursor:pointer;display:none}
     #lc-guide .g-dot::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(44,97,254,.5);animation:gdot 1.8s ease-out infinite}
     @keyframes gdot{from{transform:scale(.6);opacity:1}to{transform:scale(1.3);opacity:0}}
     #lc-guide .g-pop{position:fixed;z-index:4;max-width:220px;background:#fff;color:${INK};border:1px solid #DADFE6;border-radius:10px;padding:8px 10px;font:500 12.5px/1.45 inherit;font-family:inherit;box-shadow:0 8px 24px rgba(18,24,38,.18);display:none}
     #lc-guide .g-bar{position:fixed;transform:translate(-50%,-100%);display:none;align-items:center;gap:8px;background:rgba(18,24,38,.88);color:#fff;border-radius:14px;padding:5px 10px 5px 12px;font:600 12px inherit;font-family:inherit;white-space:nowrap;pointer-events:auto;cursor:pointer}
-    #lc-guide .g-tip .g-ch i{display:inline-block;width:5px;height:5px;border-radius:3px;background:#DADFE6;margin-left:3px}
-    #lc-guide .g-tip .g-ch i.on{background:${BLUE};width:12px}
+    #lc-guide .g-tip .g-ch i{display:inline-block;width:5px;height:5px;border-radius:3px;background:rgba(255,255,255,.25);margin-left:3px}
+    #lc-guide .g-tip .g-ch i.on{background:#8FB0FF;width:12px}
     #lc-guide .g-bar i{display:inline-block;width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.3);margin-left:3px}
     #lc-guide .g-bar i.on{background:#7CA2FF;width:14px}
     #lc-guide .g-more{position:fixed;transform:translateX(-50%);display:none;background:${BLUE};color:#fff;border-radius:18px;padding:8px 14px;font:600 13px inherit;font-family:inherit;box-shadow:0 6px 18px rgba(44,97,254,.35);pointer-events:auto;cursor:pointer}
@@ -186,8 +190,8 @@
 
   // ---------- 每帧定位 ----------
   let cur = { route: null, main: null, spots: [], at: 0 }, popFor = null;
-  // 气泡：换到新的一步时展开，5 秒后或页面一滑动就收成小胶囊；点胶囊再展开
-  const FOLD_MS = 5000; let tipKey = '', tipOpenAt = 0, folded = false;
+  // 气泡：换到新的一步时展开（黑灰毛玻璃说明框），4 秒后或页面一滑动就收成蓝色小胶囊；点胶囊再展开
+  const FOLD_MS = 4000; let tipKey = '', tipOpenAt = 0, folded = false;
   function resolve() {
     const scr = document.querySelector('.screen.on'), route = scr ? scr.dataset.route : null, P = PAGES[route] || {};
     if (route !== cur.route) { popFor = null; pop.style.display = 'none'; }
@@ -265,13 +269,15 @@
         }
       }
     }
-    // 小蓝点：贴在按钮右上角
+    // 小蓝点：贴在按钮右上角；被说明框盖住的先不显示（毛玻璃会把它透出来）
+    const tr = tip.style.display === 'block' ? tip.getBoundingClientRect() : null;
+    const underTip = (x, y) => tr && x > tr.left - 10 && x < tr.right + 10 && y > tr.top - 10 && y < tr.bottom + 10;
     cur.spots.forEach((s, i) => {
       let d = dots[i]; if (!d) { d = document.createElement('div'); d.className = 'g-dot'; d.setAttribute('role', 'button'); d.setAttribute('aria-label', '这是什么'); layer.appendChild(d); dots[i] = d; }
       d._spot = s;
       const r = s.el.getBoundingClientRect(), vb = s.el.closest('#notif') ? pr : visibleBox(s.el);
       const x = Math.min(r.right - 6, pr.right - 10), y = Math.max(r.top + 6, pr.top + 10);
-      const ok = !modalOpen && shown(s.el) && y >= vb.top && y <= vb.bottom && x >= vb.left - 8 && x <= vb.right + 8;
+      const ok = !modalOpen && shown(s.el) && !underTip(x, y) && y >= vb.top && y <= vb.bottom && x >= vb.left - 8 && x <= vb.right + 8;
       d.style.display = ok ? 'block' : 'none'; d.style.left = x + 'px'; d.style.top = y + 'px';
     });
     for (let i = cur.spots.length; i < dots.length; i++) dots[i].style.display = 'none';

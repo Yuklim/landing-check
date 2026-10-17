@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "version": "2026.10.17.4",
-  "revision": "a887e2b45957169947fd",
+  "revision": "c2bd118d9ab0da4b3da1",
   "assets": [
     {
       "path": "app.js",
@@ -30,8 +30,8 @@
     },
     {
       "path": "guide.js",
-      "sha256": "1431e649d351e80d623e7a3395956d257d9896c86af30020de4b7c32fcbfafc6",
-      "bytes": 32071
+      "sha256": "c882be2618513215982dc9ee74629155d310b6061b01911902dde2d8153650d4",
+      "bytes": 33021
     },
     {
       "path": "icon-180.png",
