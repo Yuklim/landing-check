@@ -262,3 +262,4 @@ body.stamp-open #lcdot,body.stamp-open #hint{display:none}
 .lc-stamp[data-route="share"] details[data-fs-customize]:not([open]){display:none}
 .lc-stamp .fs-back{background:#F0F2F5}
 .fs-ma-city{font-size:9.5px;letter-spacing:-.2px}
+.fs-compose-cancel{align-self:center;color:var(--muted)!important;padding:4px 0!important;min-height:28px!important}
