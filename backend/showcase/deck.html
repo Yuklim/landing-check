@@ -73,19 +73,18 @@
           <div class="ds-stat"><b>14.9万</b><span>提取的需求句</span></div>
           <div class="ds-stat"><b>3,907</b><span>真实问题帖</span></div>
         </div>
-        <p class="wc-method" data-a>规则化 NLP（problem 信号 · P(类别｜问题) · lift · NMF 聚类，<b>全程无 LLM</b>）归为 <b>13 类</b>需求；我们覆盖的 4 大落地场景占实务问题 <b>51.4%</b>。</p>
         <div class="wc-box" data-a><img src="assets/research/demand_wordcloud.png" alt="国际游客涉华需求高频词云" class="wc-img"></div>
         <div class="wc-foot" data-a>
           <div class="wc-legend">
-            <span><i style="background:#dc2626"></i>门票预约</span>
-            <span><i style="background:#7c3aed"></i>市内交通</span>
-            <span><i style="background:#16a34a"></i>落地机场</span>
-            <span><i style="background:#ea580c"></i>支付</span>
-            <span><i style="background:#2563eb"></i>上网通讯</span>
-            <span><i style="background:#d97706"></i>换汇花费</span>
-            <span><i style="background:#0891b2"></i>签证入境</span>
-            <span><i style="background:#4f46e5"></i>语言</span>
-            <span><i style="background:#be123c"></i>安全骗局</span>
+            <span><i style="background:#e0574e"></i>门票预约</span>
+            <span><i style="background:#7e5bd6"></i>市内交通</span>
+            <span><i style="background:#2e9e6b"></i>落地机场</span>
+            <span><i style="background:#ee8a3c"></i>支付</span>
+            <span><i style="background:#3b74e0"></i>上网通讯</span>
+            <span><i style="background:#d7a12e"></i>换汇花费</span>
+            <span><i style="background:#1aa0b0"></i>签证入境</span>
+            <span><i style="background:#6366ce"></i>语言</span>
+            <span><i style="background:#c44667"></i>安全骗局</span>
           </div>
           <span class="wc-note">词越大＝越高频 · 颜色＝类别</span>
         </div>
@@ -152,7 +151,7 @@
         <div class="nm-wrap">
           <div class="nm-left">
           <div class="bars" data-a>
-            <div class="bar-row trip"><span class="bl">门票与预约</span><span class="bar-track"><span class="bar-fill" data-w="100"></span></span><span class="bv">38.4%</span></div>
+            <div class="bar-row cov"><span class="bl">门票与预约</span><span class="bar-track"><span class="bar-fill" data-w="100"></span></span><span class="bv">38.4%</span></div>
             <div class="bar-row cov"><span class="bl">市内交通与打车</span><span class="bar-track"><span class="bar-fill" data-w="99.2"></span></span><span class="bv">38.1%</span></div>
             <div class="bar-row cov"><span class="bl">支付</span><span class="bar-track"><span class="bar-fill" data-w="43.2"></span></span><span class="bv">16.6%</span></div>
             <div class="bar-row cov"><span class="bl">落地与机场</span><span class="bar-track"><span class="bar-fill" data-w="34.1"></span></span><span class="bv">13.1%</span></div>
@@ -167,18 +166,17 @@
             <div class="bar-row"><span class="bl">住宿与登记</span><span class="bar-track"><span class="bar-fill" data-w="5.2"></span></span><span class="bv">2.0%</span></div>
           </div>
           <div class="bars-key" data-a>
-            <span><i class="k-cov"></i>我们覆盖的落地场景</span>
-            <span><i class="k-trip"></i>携程已覆盖</span>
+            <span><i class="k-cov"></i>我们覆盖的 5 大需求</span>
             <span><i class="k-tail"></i>长尾需求</span>
           </div>
           </div>
           <div class="nm-dir" data-a>
             <div class="nm-lead">把高频需求，做成能逐步完成的功能：</div>
-            <div class="nm-item"><span class="nm-n">01</span><div><div class="nm-fn">上网联网</div><div class="nm-nd">← 上网与通讯</div></div></div>
-            <div class="nm-item"><span class="nm-n">02</span><div><div class="nm-fn">支付就绪</div><div class="nm-nd">← 支付</div></div></div>
-            <div class="nm-item"><span class="nm-n">03</span><div><div class="nm-fn">市内交通</div><div class="nm-nd">← 市内交通 · 落地机场</div></div></div>
-            <div class="nm-item"><span class="nm-n">04</span><div><div class="nm-fn">I'm Stuck 兜底</div><div class="nm-nd">← 遇阻 · 排障</div></div></div>
-            <div class="nm-note">门票 / 行程预定：携程行前已可完成，不在我们核心范畴。</div>
+            <div class="nm-item"><span class="nm-n">01</span><div><div class="nm-fn">行前预订</div><div class="nm-nd">← 门票与预约</div></div></div>
+            <div class="nm-item"><span class="nm-n">02</span><div><div class="nm-fn">上网联网</div><div class="nm-nd">← 上网与通讯</div></div></div>
+            <div class="nm-item"><span class="nm-n">03</span><div><div class="nm-fn">支付就绪</div><div class="nm-nd">← 支付</div></div></div>
+            <div class="nm-item"><span class="nm-n">04</span><div><div class="nm-fn">市内交通</div><div class="nm-nd">← 市内交通与打车</div></div></div>
+            <div class="nm-item"><span class="nm-n">05</span><div><div class="nm-fn">落地流程 · I'm Stuck</div><div class="nm-nd">← 落地与机场</div></div></div>
           </div>
         </div>
         <div class="data-src" data-a>数据来源：<b>内部数据</b> · 2025-10 ～ 2026-10</div>
