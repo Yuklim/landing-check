@@ -100,7 +100,7 @@
     cover: function (sl) {
       makeQR(sl);
       var vis = visibleLang(sl.querySelector(".cover-title"));
-      if (window.SplitText && vis && !reduce) {
+      if (window.SplitText && vis && !reduce && !document.documentElement.classList.contains("deck-edit-session")) {
         try {
           var sp = new SplitText(vis, { type: "chars,words" });
           gsap.fromTo(sp.chars, { yPercent: 120, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: .7, stagger: .02, ease: EASE, delay: .12 });
@@ -168,6 +168,7 @@
 
   // ---------- input ----------
   document.addEventListener("keydown", function (e) {
+    if (e.target.isContentEditable) return;   // typing in deck-edit.js edit mode
     if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); next(); }
     else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prev(); }
     else if (e.key === "Home") { e.preventDefault(); goto(0, -1); }

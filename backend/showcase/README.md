@@ -26,6 +26,17 @@ python -m uvicorn app:app --app-dir backend --host 127.0.0.1 --port 8010
 
 Render 官方参考：[Monorepo Support](https://render.com/docs/monorepo-support)、[Web Services](https://render.com/docs/web-services)。现有服务是 Web Service，首次打开展示页仍可能受服务休眠唤醒影响。若以后需要独立的静态 CDN，可把本目录作为 Render Static Site 发布目录。
 
+## 答辩 deck 改文字（编辑模式）
+
+`deck.html` 的文字可以直接在页面上改，不用打开代码：
+
+1. 在 `backend/showcase/` 下执行 `python3 -m http.server 8000`，用 **Chrome / Edge** 打开 `http://localhost:8000/deck.html`。
+2. 按 `E` 进入编辑模式，点任意文字直接修改。改过的地方显示橙色虚线框，回车是换行，粘贴只保留纯文字。
+3. 按 `⌘S` / `Ctrl+S` 保存。第一次保存需要选择仓库里的 `backend/showcase/deck.html`，之后浏览器会记住。
+4. 用 `git diff` 确认改动，commit + push 后线上页面更新。
+
+编辑入口只在本地出现（localhost / file://），线上页面不受影响。保存时只替换改过的那几段文字，其余代码不动；如果 `deck.html` 在打开页面后被别处改过，保存会拒绝并提示刷新。以下内容不是写在 HTML 里的，需要改对应文件：03 落地体验页的手机动画与讲解（`demo03/copy.js`）、社媒原声卡片（`evidence.js`）、按钮文字。版式和样式仍在 `deck.css`。
+
 ## 替换内容
 
 - 影片：修改 `content-config.js` 的 `video.src` 与 `video.poster`。支持本地相对路径 MP4/WebM 或 HTTPS 视频地址。当前成片已内嵌中英字幕，无需叠加原操作录屏的 WebVTT 字幕。浏览器不自动播放有声影片。
