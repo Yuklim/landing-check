@@ -3,8 +3,8 @@
 
 /* 顶部：章节 + 五个功能 */
 .d3s-top{position:absolute;left:84px;right:84px;top:38px;display:flex;align-items:center;gap:22px}
-.d3s-kicker{font-family:var(--d3-mono);font-size:14px;letter-spacing:.14em;color:var(--d3-blue);font-weight:600;display:flex;align-items:center;gap:12px;white-space:nowrap}
-.d3s-kicker::before{content:"";width:26px;height:2px;background:var(--d3-blue)}
+.d3s-kicker{font-family:"SFMono-Regular",Consolas,"PingFang SC","Microsoft YaHei",sans-serif;font-size:19px;letter-spacing:.1em;color:var(--d3-blue);font-weight:700;display:flex;align-items:center;gap:14px;white-space:nowrap}
+.d3s-kicker::before{content:"";width:34px;height:3px;border-radius:2px;background:var(--d3-blue)}
 .d3s-tabs{display:flex;gap:10px;flex:1}
 .d3s-tab{flex:1;border:0;background:none;font-family:inherit;font-size:16px;font-weight:600;color:#9aa3b2;text-align:left;padding:0 0 10px;cursor:pointer;position:relative;white-space:nowrap}
 .d3s-tab::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:2px;background:#dfe5f0}
