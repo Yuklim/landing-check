@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="deck.css">
+  <link rel="stylesheet" href="demo03/player.css">
+  <link rel="stylesheet" href="demo03/section.css">
 </head>
 <body>
   <div class="deck-progress"></div>
@@ -182,31 +184,9 @@
         <div class="data-src" data-a>数据来源：<b>内部数据</b> · 2025-10 ～ 2026-10</div>
       </section>
 
-      <!-- 09 LIVE EXPERIENCE: product-flow demo (no persona)
-           TODO(03 改造占位): 顶部做成「功能目录分块」+ 按 → 页内逐个点亮切换，走完再翻页。
-           功能集合待确认（候选：行前准备 / 上网 / 支付 / 市内交通 / I'm Stuck）。
-           当前保留可用的 4 场景演示（prod-nav + LC_SCENES）作为占位，不影响现场演示。 -->
-      <section class="slide slide--wash" id="demo">
-        <div class="s-kicker" data-a>03 / 落地体验 LIVE EXPERIENCE</div>
-        <h2 class="s-title" data-a style="margin-bottom:4px">落地第一小时：<span class="hl">按需求，一件一件做完</span></h2>
-        <p class="s-sub" data-a style="margin-top:6px">场景＝刚落地浦东机场、网络与支付尚未就绪。门票 / 行程预定携程行前已可完成；我们接手落地后的联网 · 支付 · 交通，并随时兜底。</p>
-        <div class="demo-wrap">
-          <div class="prod-nav" data-a>
-            <button aria-selected="true"><span class="pn">01</span><span class="pt">上网联网</span></button>
-            <button aria-selected="false"><span class="pn">02</span><span class="pt">支付就绪</span></button>
-            <button aria-selected="false"><span class="pn">03</span><span class="pt">市内交通</span></button>
-            <button aria-selected="false"><span class="pn">04</span><span class="pt">I'm Stuck</span></button>
-          </div>
-          <div class="demo-view" data-a>
-            <div class="demo-phone"><img src="assets/landing.png" alt=""></div>
-            <div class="demo-steps">
-              <div class="demo-sc"></div>
-              <h3></h3>
-              <ol class="demo-ol"></ol>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- 09 LIVE EXPERIENCE：按 5 大需求的手机操作动画 + 右侧讲解（demo03/section.js 填充）。
+           页内 → / ← 先切换五个功能，走完再翻页；离开本页时停止播放。 -->
+      <section class="slide slide--wash" id="demo"></section>
 
       <!-- 09 BEHIND THE PRODUCT: tech -->
       <section class="slide" id="tech">
@@ -447,26 +427,15 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
   <script src="content-config.js"></script>
   <script src="evidence.js"></script>
-  <script>
-    window.LC_SCENES = [
-      { label: "上网联网", title: "保证落地后有网", img: "landing.png", steps: [
-        { h: "行前买 eSIM / SIM 卡", d: "没流量时，行前就衔接 Trip.com 的 eSIM 购买。" },
-        { h: "落地 Wi-Fi 检测与登录", d: "落地把联网列为当前任务，按步骤连浦东机场 Wi-Fi。" },
-        { h: "连不上有备用 + 离线包", d: "收不到验证码→护照终端 / 服务台；离线包断网也能看。" } ] },
-      { label: "支付就绪", title: "验证能真的付款", img: "payment-alipay-ok.png", steps: [
-        { h: "支付宝 + TenPayGo 二选一", d: "覆盖海外游客的两种境内支付方式。" },
-        { h: "1 元真实交易验证链路", d: "付 1 元，退回原账户或捐赠慈善——装了 ≠ 能付。" },
-        { h: "失败按返回结果排查", d: "支付宝返回的错误码直接定位卡在哪。" } ] },
-      { label: "市内交通", title: "顺利出机场、上对车", img: "landing-transport.png", steps: [
-        { h: "接地图接口，带出信息", d: "结合落地时间、人数、行李、酒店位置给出方案。" },
-        { h: "多种交通方式可比选", d: "出租 / 地铁 / 网约 / 大巴并列，比费用、耗时、乘车方式。" },
-        { h: "翻译：中文地址卡给司机", d: "打车给司机看中文名址电话；公交给换乘与跳转地图。" } ] },
-      { label: "I'm Stuck", title: "卡住了，随时兜底", img: "stuck.png", steps: [
-        { h: "上传截图或描述问题", d: "便利店付款失败、看不懂报错，都能求助。" },
-        { h: "AI 识别 + 知识库步骤", d: "匹配解决步骤，如改扫商家收款码。" },
-        { h: "仍不行 → 换方式 / 现金 / 人工", d: "Solved it 反馈结果，持续完善指引。" } ] }
-    ];
-  </script>
+  <!-- 03 落地体验：手机操作动画（demo03/） -->
+  <script src="demo03/player.js"></script>
+  <script src="demo03/copy.js"></script>
+  <script src="demo03/modules/tickets/timeline.js"></script>
+  <script src="demo03/modules/network/timeline.js"></script>
+  <script src="demo03/modules/payment/timeline.js"></script>
+  <script src="demo03/modules/transport/timeline.js"></script>
+  <script src="demo03/modules/airport/timeline.js"></script>
+  <script src="demo03/section.js"></script>
   <script src="deck.js"></script>
 </body>
 </html>
