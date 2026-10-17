@@ -17,7 +17,8 @@
     const paths = { back: 'M15 18l-6-6 6-6', arrow: 'M5 12h14m-6-6 6 6-6 6', hotel: 'M4 20V5h16v15M2 20h20M8 9h2m4 0h2M8 13h2m4 0h2M10 20v-3h4v3',
       cards: 'M5 4h14v16H5zM8 8h8M8 12h6M8 16h4', wifi: 'M3 8a14 14 0 0 1 18 0M6 12a9 9 0 0 1 12 0M9 16a4 4 0 0 1 6 0M12 20h.01',
       help: 'M9 9a3 3 0 1 1 5 2c-2 1-2 2-2 3M12 17h.01M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0', download: 'M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5',
-      check: 'M5 12l4 4L19 6', phone: 'M7 3H3c0 10 8 18 18 18v-4l-5-2-2 2a15 15 0 0 1-7-7l2-2z', pin: 'M12 22s8-8 8-14a8 8 0 0 0-16 0c0 6 8 14 8 14M15 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0' };
+      check: 'M5 12l4 4L19 6', phone: 'M7 3H3c0 10 8 18 18 18v-4l-5-2-2 2a15 15 0 0 1-7-7l2-2z', pin: 'M12 22s8-8 8-14a8 8 0 0 0-16 0c0 6 8 14 8 14M15 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0',
+      chevron: 'M9 6l6 6-6 6', copy: 'M9 9h11v11H9zM5 15H4V4h11v1', expand: 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5', sim: 'M7 3h7l5 5v13H7zM10 12h6v6h-6z', chat: 'M4 5h16v11H9l-5 4z' };
     return `<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${paths[name] || paths.cards}"/></svg>`;
   };
   const button = (label, action, value = '', tone = '', disabled = false, data = {}) => `<button type="button" class="op-btn ${tone}" data-op="${H(action)}" data-value="${H(value)}" ${Object.entries(data).map(([key, val]) => `data-${H(key)}="${H(val)}"`).join(' ')} ${disabled ? 'disabled' : ''}>${label}</button>`;
@@ -64,29 +65,43 @@
     const list = (ids || []).map(id => state.data.sources.find(source => source.id === id)).filter(Boolean);
     return `<details class="op-source"><summary>Sources & last checked · ${H(state.data.checked_at)}</summary>${list.map(source => `<p>${H(source.name)}${source.published_at ? ' · published ' + H(source.published_at) : ''}<br><a data-op-online href="${H(source.url)}" target="_blank" rel="noopener noreferrer">${H(source.url)}</a></p>`).join('')}<p>Checked against published web information. Not an on-site inspection. Links need internet.</p></details>`;
   }
+  // 顶部与流程页一致：返回 · 居中标题 · 右上角 Help 小按钮；断网时标题下多一枚「Offline」标签
   function header(route, title) {
-    return `<header class="op-header"><div class="op-topline"><button type="button" class="op-back" data-op="back" aria-label="Go back">${icon('back')}</button><h1 tabindex="-1">${H(title)}</h1></div><div class="op-meta"><span class="op-chip">PVG · Terminal 2</span><span class="op-chip ${navigator.onLine ? '' : 'is-offline'}" data-op-network>${navigator.onLine ? 'Network detected' : 'Offline · saved content'}</span></div></header>`;
+    const helpPill = route === 'offline-help' ? '<span></span>' : `<button type="button" class="op-help-pill" data-op="help"><img src="img/ai-bot.png" alt="">Help</button>`;
+    return `<header class="op-header"><div class="op-topline"><button type="button" class="op-back" data-op="back" aria-label="Go back">${icon('back')}</button><h1 tabindex="-1">${H(title)}</h1>${helpPill}</div><span class="op-chip is-offline op-net" data-op-network ${navigator.onLine ? 'hidden' : ''}>${navigator.onLine ? 'Network detected' : 'Offline · saved content'}</span></header>`;
   }
   function footer(route) {
-    return `<footer class="op-footer">${route === 'offline-help' ? button('Return to my task', 'return-help', '', 'secondary') : `<button class="op-support" type="button" data-op="help"><span><img class="op-bot" src="img/ai-bot.png" alt="">I'm stuck</span><span>Works offline →</span></button>`}</footer>`;
+    return route === 'offline-help' ? `<footer class="op-footer">${button('Return to my task', 'return-help', '', 'secondary')}</footer>` : '';
   }
+  const label = text => `<div class="op-label">${H(text)}</div>`;
   function home() {
     const p = state.pack, mb = p ? (p.bytes / 1048576).toFixed(1) : null;
     const status = state.busy ? `Saving ${state.progress?.done || 0} of ${state.progress?.total || '…'} files` : p ? `Public guide saved · ${mb} MB` : 'Not downloaded yet';
     const continuing = state.guide.step !== 'wifi';
+    const d = state.data;
+    // 出发前只有一件事需要用户动手：确认酒店；酒店存好后，若联网向导做到一半，就提示继续
+    const next = !state.hotel ? 'offline-hotel' : continuing ? 'offline-guide' : '';
     const modules = [
-      { icon: 'hotel', tone: 'hotel', category: 'Hotel address', title: 'Show my hotel', text: state.hotel ? state.hotel.name_en : 'A Chinese address for your driver.', action: state.hotel ? 'Open address' : 'Review my hotel', route: 'offline-hotel' },
-      { icon: 'cards', tone: 'phrases', category: 'Places & phrases', title: 'Find local help', text: 'Where to go and what to say.', action: 'Find a service', route: 'offline-cards' },
-      { icon: 'wifi', tone: 'internet', category: 'Connection guide', title: 'Get online', text: continuing ? 'Pick up where you left off.' : 'Wi-Fi stuck? Find your next step.', action: continuing ? 'Continue guide' : 'Start the guide', route: 'offline-guide' },
-      { icon: 'help', tone: 'support', category: 'Help & contacts', title: 'Ask for help', text: 'Show a request or call a contact.', action: 'Open support', route: 'offline-help' },
+      { icon: 'hotel', tone: 'hotel', title: 'Show my hotel', meta: state.hotel ? state.hotel.name_en : 'From your booking · 1 tap', route: 'offline-hotel', badge: 'Do this' },
+      { icon: 'chat', tone: 'phrases', title: 'Find local help', meta: `${d.places.length} desks · ${d.phrases.length} phrases`, route: 'offline-cards' },
+      { icon: 'wifi', tone: 'internet', title: 'Get online', meta: continuing ? 'In progress · ' + (d.guide.steps[state.guide.step]?.label || '') : 'Wi-Fi, SIM or eSIM', route: 'offline-guide', badge: 'Continue' },
+      { icon: 'phone', tone: 'support', title: 'Ask for help', meta: 'Airport hotline saved', route: 'offline-help' },
     ];
-    return `<section class="op-save-strip" aria-label="Download status"><div class="op-save-row"><span class="op-icon">${icon(p ? 'check' : 'download')}</span><div class="op-save-copy"><h3 data-testid="pack-status">${H(status)}</h3><p>${p ? 'Saved · ' + H(date(p.savedAt)) : 'Save before you fly to use this offline.'}</p></div>${button(state.busy ? 'Saving…' : p ? 'Update' : 'Save pack', 'download', '', 'op-save-action', state.busy || !navigator.onLine || !('serviceWorker' in navigator))}</div>
-      ${state.progress ? `<progress class="op-progress" max="${state.progress.total}" value="${state.progress.done}" aria-label="Download progress"></progress>` : ''}</section>
-      <div class="op-home-heading"><h2>What do you need right now?</h2><span>Choose your next step</span></div>
-      <div class="op-grid">${modules.map(item => `<button class="op-tile op-tile--${item.tone}" type="button" data-op="nav" data-value="${item.route}"><span class="op-tile-top"><span class="op-icon">${icon(item.icon)}</span><span class="op-tile-category">${H(item.category)}</span></span><strong>${H(item.title)}</strong><small>${H(item.text)}</small><span class="op-tile-action">${H(item.action)}<span>${icon('arrow')}</span></span></button>`).join('')}</div>
+    const inside = [['hotel', 'Hotel card'], ['chat', d.phrases.length + ' phrases'], ['pin', d.places.length + ' airport desks'], ['wifi', 'Wi-Fi guide']];
+    const disabled = state.busy || !navigator.onLine || !('serviceWorker' in navigator);
+    return `<section class="op-hero ${p ? 'is-saved' : ''}" aria-label="Download status">
+        <div class="op-hero-top"><span class="op-hero-status" data-testid="pack-status">${H(status)}</span><span class="op-hero-tag">PVG · T2</span></div>
+        <h2>${p ? 'Ready, even with no signal' : 'Works with no signal at PVG'}</h2>
+        <ul class="op-inside">${inside.map(([name, text]) => `<li>${icon(name)}${H(text)}</li>`).join('')}</ul>
+        ${state.progress ? `<progress class="op-progress" max="${state.progress.total}" value="${state.progress.done}" aria-label="Download progress"></progress>` : ''}
+        ${p ? `<div class="op-hero-saved"><span>Saved ${H(date(p.savedAt))} · ${mb} MB</span>${button(state.busy ? 'Saving…' : 'Update', 'download', '', 'op-hero-update', disabled)}</div>`
+          : button(state.busy ? 'Saving…' : 'Save pack · before you fly', 'download', '', 'op-hero-save', disabled)}
+      </section>
+      ${label('In your pack')}
+      <div class="op-grid">${modules.map(item => `<button class="op-tile op-tile--${item.tone} ${next === item.route ? 'is-next' : ''}" type="button" data-op="nav" data-value="${item.route}"><span class="op-icon">${icon(item.icon)}</span>${next === item.route ? `<span class="op-badge">${H(item.badge)}</span>` : ''}<strong>${H(item.title)}</strong><small>${H(item.meta)}</small></button>`).join('')}</div>
+      ${label('At the airport')}
       ${tripCounterEntry()}
-      <p class="op-muted">${p ? (state.hotel ? 'Your hotel is saved separately on this device.' : 'Review your hotel to complete your personal pack.') : 'Keep this browser’s site data to retain your saved pack.'} Prepared for Shanghai Pudong T2. Service information checked ${H(state.data.checked_at)}.</p>
-      <button type="button" class="op-text-btn" data-op="clear">Clear my personal data</button><p class="op-muted">Removes hotel, contacts, guide progress, city stamps and sharing drafts. Public guides and artwork stay saved.</p>`;
+      <p class="op-foot">Stored only on this phone · Info checked ${H(d.checked_at)} · <button type="button" class="op-link" data-op="clear">Clear my data</button></p>`;
   }
   function field(label, name, value = '', extra = '') {
     return `<label class="op-field">${H(label)}<input name="${name}" value="${H(value)}" maxlength="${name === 'phone' ? 40 : 240}" ${extra}></label>`;
@@ -141,68 +156,75 @@
       const fromItinerary = draft.source === 'itinerary' || draft.source === 'demo-itinerary';
       const looking = state.hotelLookup === 'loading';
       const source = looking ? 'Checking your itinerary…' : fromItinerary ? (draft.demo ? 'Filled from the demo itinerary' : 'Filled from your itinerary') : 'Enter a different hotel';
-      return `<section class="op-card op-hotel-source"><div class="op-row"><span class="op-icon">${icon('hotel')}</span><div><div class="op-kicker">${looking ? 'FINDING YOUR HOTEL' : fromItinerary ? 'REVIEW, THEN SAVE' : 'YOUR HOTEL DETAILS'}</div><h2>${H(source)}</h2></div></div>
-        <p class="op-muted">${looking ? 'You can start typing; your changes will be kept.' : fromItinerary ? 'We filled the available booking details below. Check them before saving for offline use.' : 'Use your booking confirmation. Missing Chinese details need to be checked with the hotel.'}</p>
-        ${draft.demo ? '<div class="op-demo">DEMO ITINERARY · NOT A REAL BOOKING</div>' : ''}
-        <div class="op-source-actions">${button(fromItinerary ? 'Enter a different hotel' : 'Start with a blank card', 'new-hotel', '', 'secondary')}${button('Use itinerary details', 'import-hotel', '', 'outline', looking)}</div>
-        ${state.hotelCandidate && state.hotelDirty && !fromItinerary ? '<p class="op-muted">A hotel was found in the itinerary. Choose “Use itinerary details” to replace this draft.</p>' : ''}</section>
-        <section class="op-card"><h2>${h ? 'Edit hotel' : 'Confirm your hotel'}</h2><p class="op-muted">Only details you confirm are saved. We do not guess or translate missing hotel names or addresses.</p>
-        <form id="op-hotel-form">${field('Hotel name · English', 'name_en', draft.name_en, 'required autocomplete="organization"')}${field('酒店中文名称 · Chinese name', 'name_zh', draft.name_zh, 'required lang="zh-CN"')}${field('Address · English', 'address_en', draft.address_en, 'required')}${field('酒店中文地址 · Chinese address', 'address_zh', draft.address_zh, 'required lang="zh-CN"')}${field('Phone · optional', 'phone', draft.phone, 'type="tel" autocomplete="tel"')}
-        <label class="op-field">Notes · optional<textarea name="notes" maxlength="600">${H(draft.notes)}</textarea></label>
-        <label class="op-check"><input type="checkbox" name="confirmed" required ${draft.confirmed ? 'checked' : ''}><span>I have checked the Chinese name and address. Save these details on this device.</span></label>
+      // 上方是「司机会看到的样子」，随输入实时更新；下方是紧凑的核对表单
+      return `<section class="op-hotel-source"><span class="op-icon">${icon('hotel')}</span><div><h2>${H(source)}</h2>${draft.demo ? '<span class="op-demo">DEMO ITINERARY · NOT A REAL BOOKING</span>' : ''}</div></section>
+        <section class="op-driver-card" aria-label="What your driver will see"><div class="op-label">What your driver will see</div><div class="op-driver-zh" lang="zh-CN" data-preview="name_zh">${H(draft.name_zh) || '酒店中文名称'}</div><div class="op-driver-addr" lang="zh-CN" data-preview="address_zh">${H(draft.address_zh) || '酒店中文地址'}</div></section>
+        <form id="op-hotel-form" class="op-form"><div class="op-form-group">${field('Hotel name · English', 'name_en', draft.name_en, 'required autocomplete="organization"')}${field('Chinese name · 中文名称', 'name_zh', draft.name_zh, 'required lang="zh-CN"')}${field('Address · English', 'address_en', draft.address_en, 'required')}${field('Chinese address · 中文地址', 'address_zh', draft.address_zh, 'required lang="zh-CN"')}${field('Phone · optional', 'phone', draft.phone, 'type="tel" autocomplete="tel"')}
+        <label class="op-field">Notes · optional<textarea name="notes" maxlength="600">${H(draft.notes)}</textarea></label></div>
+        <label class="op-check"><input type="checkbox" name="confirmed" required ${draft.confirmed ? 'checked' : ''}><span>I've checked the Chinese name and address</span></label>
         <button class="op-btn" type="submit" ${state.storageError ? 'disabled' : ''}>Save hotel on this device</button></form>
-        ${button('Cancel', 'cancel-hotel', '', 'secondary')}</section>`;
+        <div class="op-link-row">${h ? button('Cancel', 'cancel-hotel', '', 'op-link') : ''}${button(fromItinerary ? 'Enter a different hotel' : 'Start with a blank card', 'new-hotel', '', 'op-link')}${button('Use itinerary details', 'import-hotel', '', 'op-link', looking)}</div>
+        <p class="op-foot">${looking ? 'You can start typing — your changes will be kept.' : 'We never guess or translate a missing Chinese name or address.'}</p>`;
     }
-    return `<section class="op-card">${h.demo ? '<div class="op-demo">DEMO HOTEL · FROM SIMULATED ITINERARY</div>' : ''}<div class="op-kicker">YOUR DESTINATION</div><div class="op-hotel-name" lang="zh-CN">${H(h.name_zh)}</div><p class="op-zh" lang="zh-CN">${H(h.address_zh)}</p><p class="op-en" lang="en">${H(h.name_en)}<br>${H(h.address_en)}</p>${h.notes ? `<p class="op-muted">${H(h.notes)}</p>` : ''}
-      ${button('Show address to driver / staff', 'hotel-card')}
-      <div class="op-actions">${button('Copy address', 'copy-hotel', '', 'secondary')}${call(h.phone)}</div><button type="button" class="op-text-btn" data-op="edit-hotel">Edit saved hotel</button><p class="op-muted">Saved ${H(date(h.savedAt))}. Calls need a phone signal.</p></section>`;
+    return `<section class="op-driver-card is-saved"><div class="op-label">Show your driver</div><div class="op-hotel-name" lang="zh-CN">${H(h.name_zh)}</div><p class="op-driver-addr" lang="zh-CN">${H(h.address_zh)}</p><p class="op-en" lang="en">${H(h.name_en)} · ${H(h.address_en)}</p>${h.demo ? '<span class="op-demo">DEMO HOTEL · FROM SIMULATED ITINERARY</span>' : ''}${h.notes ? `<p class="op-muted">${H(h.notes)}</p>` : ''}
+      ${button(icon('expand') + 'Show address to driver / staff', 'hotel-card')}
+      <div class="op-actions">${button(icon('copy') + 'Copy address', 'copy-hotel', '', 'secondary')}${call(h.phone)}</div></section>
+      <p class="op-foot">Saved ${H(date(h.savedAt))} · Calls need a phone signal · <button type="button" class="op-link" data-op="edit-hotel">Edit</button></p>`;
   }
   function tripCounterEntry() {
-    return `<section class="op-trip-entry"><button class="op-trip-link" type="button" data-op="place" data-value="exchange"><span class="op-trip-brand"><span>Trip.com <small>/ 携程</small></span><span class="op-trip-terminal">PVG T2</span></span><span class="op-trip-motif">${icon('pin')}</span><strong>Find the Trip.com counter</strong><span class="op-trip-description">Need cash? Find the currency-exchange counter and a request to show staff.</span><span class="op-trip-bottom"><span class="op-trip-cta">Show me where ${icon('arrow')}</span><span>Currency exchange</span></span></button><p class="op-trip-scope">For Wi-Fi or a SIM, choose airport services in Places & phrases.</p></section>`;
+    return `<section class="op-trip-entry"><button class="op-trip-link" type="button" data-op="place" data-value="exchange"><span class="op-trip-logo">Trip<b>.com</b></span><span class="op-trip-copy"><strong>Find the Trip.com counter</strong><span>Currency exchange · L3, near door 25</span></span>${icon('chevron')}</button></section>`;
   }
+  const placeTone = { wifi: 'internet', sim: 'phrases', exchange: 'hotel', service: 'support' };
   function placePreview(p) {
     const g = p.guidance;
-    return `<button type="button" class="op-card op-place-choice" data-op="place" data-value="${H(p.id)}"><span class="op-icon">${icon(g.icon)}</span><span class="op-place-choice-copy"><strong>${H(g.title)}</strong><span>${H(g.summary)}</span><small>${H(g.location_hint)}</small></span>${icon('arrow')}</button>`;
+    return `<button type="button" class="op-place-choice op-tone--${placeTone[p.id] || 'hotel'}" data-op="place" data-value="${H(p.id)}"><span class="op-icon">${icon(g.icon)}</span><span class="op-place-choice-copy"><strong>${H(g.title)}</strong><span>${H(g.summary)}</span><small>${icon('pin')}${H(g.location_hint)}</small></span>${icon('chevron')}</button>`;
   }
   function cards() {
     const tabs = ['Places', 'All phrases', 'Hotel', 'Internet', 'Payment', 'Mobile data', 'Help'];
+    const iconBtn = (name, action, id, text) => `<button type="button" class="op-icon-btn" data-op="${action}" data-value="${H(id)}" aria-label="${text}" title="${text}">${icon(name)}</button>`;
     return `<div class="op-tabs" aria-label="Card category">${tabs.map(tab => `<button type="button" data-op="tab" data-value="${H(tab)}" aria-pressed="${state.tab === tab}">${H(tab === 'Places' ? 'Find help' : tab)}</button>`).join('')}</div>` + (state.tab === 'Places'
-      ? `<div class="op-section-intro"><div class="op-kicker">WHERE TO GO · WHAT TO SAY</div><h2>What do you need help with?</h2><p class="op-muted">Choose a task. Find the right service, show a Chinese request, and keep a backup if it is unavailable.</p></div>${['wifi', 'sim', 'exchange', 'service'].map(id => placePreview(byId(id))).join('')}<p class="op-muted">Already with a staff member? Choose a phrase above, or open a task to show a request for that service.</p>`
-      : `<section class="op-card">${state.data.phrases.filter(item => state.tab === 'All phrases' || item.category === state.tab).map(item => `<article class="op-phrase"><p class="op-zh" lang="zh-CN">${H(item.zh)}</p><p class="op-en" lang="en">${H(item.en)}</p><div class="op-actions">${button('Show large', 'phrase', item.id, 'secondary')}${button('Copy', 'copy-phrase', item.id, 'outline')}</div></article>`).join('')}</section>`);
+      ? `<h2 class="op-page-title">What do you need help with?</h2><section class="op-list">${['wifi', 'sim', 'exchange', 'service'].map(id => placePreview(byId(id))).join('')}</section>`
+      : `<section class="op-list">${state.data.phrases.filter(item => state.tab === 'All phrases' || item.category === state.tab).map(item => `<article class="op-phrase"><div><p class="op-zh" lang="zh-CN">${H(item.zh)}</p><p class="op-en" lang="en">${H(item.en)}</p></div>${iconBtn('copy', 'copy-phrase', item.id, 'Copy')}${iconBtn('expand', 'phrase', item.id, 'Show large')}</article>`).join('')}</section>`);
   }
   function placeRequest(p) {
     return { ...p.guidance.request, context: '目的地 / Destination\n' + p.name_zh + '\n' + p.name + '\n\n地点参考 / Location reference\n' + p.guidance.staff_location.zh + '\n' + p.guidance.staff_location.en };
   }
   function place() {
     const p = byId(state.place) || byId('service'), g = p.guidance, request = placeRequest(p);
-    return `<section class="op-card"><div class="op-row op-place-heading"><span class="op-icon">${icon(g.icon)}</span><div><div class="op-kicker">${H(p.category)}</div><h2>${H(g.title)}</h2></div></div><p>${H(g.summary)}</p><div class="op-location"><strong>${H(p.name)}</strong><p lang="zh-CN">${H(p.name_zh)}</p><p class="op-muted">${H(g.location_hint)}</p></div></section>
-      <section class="op-card"><div class="op-kicker">1 · ASK WHERE TO GO</div><h3>Let staff point you to the right place</h3><p class="op-muted">Show the Chinese request below to an airport staff member.</p><div class="op-request-preview"><p lang="zh-CN">${H(request.zh)}</p><p class="op-en" lang="en">${H(request.en)}</p></div>${button('Show request to staff', 'place-card', p.id)}<div class="op-actions">${button('Copy request', 'copy-place', p.id, 'secondary')}</div></section>
+    return `<section class="op-card op-place-hero"><img class="op-place-art" src="${H(p.image)}" alt="Illustration of a ${H(p.category)} sign, not a facility photo or map"><div class="op-kicker">${H(p.category)}</div><h2>${H(g.title)}</h2><p class="op-muted">${H(g.summary)}</p><div class="op-location">${icon('pin')}<div><strong>${H(p.name)}</strong><span lang="zh-CN">${H(p.name_zh)}</span><small>${H(g.location_hint)}</small></div></div></section>
+      <section class="op-card"><div class="op-kicker">1 · ASK WHERE TO GO</div><div class="op-request-preview"><p lang="zh-CN">${H(request.zh)}</p><p class="op-en" lang="en">${H(request.en)}</p></div>${button(icon('expand') + 'Show request to staff', 'place-card', p.id)}<div class="op-link-row">${button(icon('copy') + 'Copy request', 'copy-place', p.id, 'op-link')}</div></section>
       <section class="op-card"><div class="op-kicker">2 · FIND THE SERVICE</div><ol class="op-find-steps">${g.steps.map(step => `<li>${H(step)}</li>`).join('')}</ol>${button("I'm at the counter · what to ask", 'place-service-card', p.id, 'secondary')}
-        <div class="op-fallback"><h3>Can’t find it, or is it closed?</h3><p>${H(g.fallback)}</p>${g.fallback_place ? button('Find airport service center', 'place', g.fallback_place, 'outline') : button('View help & airport contact', 'help', '', 'outline')}</div></section>
-      <section class="op-card"><details class="op-service-details"><summary>Location, services & source details</summary><p>${H(p.location)}</p><p lang="zh-CN">${H(p.location_zh)}</p><p class="op-muted">${H(p.floor || 'Ask staff for the exact floor and desk marker.')}</p><p><strong>Services</strong><br>${H(p.services)}</p><p class="op-muted">${H(p.operator)}</p><p class="op-muted">${H(p.hours || 'Check opening hours with airport staff.')}</p>${note(p.note)}<img class="op-place-art" src="${H(p.image)}" alt="Illustration of a ${H(p.category)} sign, not a facility photo or map">${sources(p.sources)}</details></section>`;
+        <div class="op-fallback"><h3>Can’t find it, or is it closed?</h3><p>${H(g.fallback)}</p>${g.fallback_place ? button('Find airport service center' + icon('chevron'), 'place', g.fallback_place, 'op-link') : button('View help & airport contact' + icon('chevron'), 'help', '', 'op-link')}</div></section>
+      <details class="op-service-details"><summary>Hours, services & sources</summary><p>${H(p.location)}</p><p lang="zh-CN">${H(p.location_zh)}</p><p class="op-muted">${H(p.floor || 'Ask staff for the exact floor and desk marker.')}</p><p><strong>Services</strong><br>${H(p.services)}</p><p class="op-muted">${H(p.operator)}</p><p class="op-muted">${H(p.hours || 'Check opening hours with airport staff.')}</p>${note(p.note)}${sources(p.sources)}</details>`;
   }
+  const stepIcon = { wifi: 'wifi', auth: 'wifi', assist: 'help', fallback: 'help', choose: 'sim', sim: 'sim', setup: 'sim', esim: 'sim', payment: 'cards', currency: 'cards', complete: 'check' };
   function guide() {
-    const step = state.data.guide.steps[state.guide.step] || state.data.guide.steps.wifi;
+    const key = state.data.guide.steps[state.guide.step] ? state.guide.step : 'wifi';
+    const step = state.data.guide.steps[key];
     const request = currentRequest();
-    return `<div class="op-step-progress"><i></i> ${H(step.label)} · progress saved on this device</div><section class="op-card"><h2>${H(step.title)}</h2><p>${H(step.body)}</p><div class="op-request-preview"><div class="op-kicker">${H(request.label || request.category)}</div><p lang="zh-CN">${H(request.zh)}</p><p class="op-en" lang="en">${H(request.en)}</p></div>${button('Show bilingual request', 'guide-request', '', 'secondary')}
-      ${step.place ? `<div style="margin-top:10px">${button('View ' + H(byId(step.place).name), 'place', step.place, 'outline')}</div>` : ''}
-      ${step.alternative_place ? `<div style="margin-top:8px">${button('Airport service center alternative', 'place', step.alternative_place, 'outline')}</div>` : ''}${step.sources ? sources(step.sources) : ''}</section>
-      <div class="op-guide-options" aria-label="Choose what happened">${step.options.map((option, index) => button(H(option.label) + icon('arrow'), 'guide-next', option.next, index ? 'outline' : '', false, { option: index })).join('')}</div>
-      ${state.guide.history.length ? button('Previous step', 'guide-prev', '', 'secondary') : ''}<button type="button" class="op-text-btn" data-op="guide-reset">Restart connection guide</button>`;
+    const placeLink = (text, id) => button(H(text) + icon('chevron'), 'place', id, 'op-link');
+    return `<div class="op-step-progress"><i></i><b>Step ${state.guide.history.length + 1}</b> · ${H(step.label)}<span>Progress saved</span></div>
+      <section class="op-card op-guide-card"><span class="op-step-icon ${key === 'complete' ? 'is-done' : ''}">${icon(stepIcon[key] || 'help')}</span><h2>${H(step.title)}</h2><p>${H(step.body)}</p><div class="op-request-preview"><div class="op-kicker">${H(request.label || request.category)}</div><p lang="zh-CN">${H(request.zh)}</p><p class="op-en" lang="en">${H(request.en)}</p></div>${button(icon('expand') + 'Show bilingual request', 'guide-request', '', 'secondary')}
+      ${step.place || step.alternative_place ? `<div class="op-link-row">${step.place ? placeLink('View ' + byId(step.place).name, step.place) : ''}${step.alternative_place ? placeLink('Airport service center', step.alternative_place) : ''}</div>` : ''}${step.sources ? sources(step.sources) : ''}</section>
+      ${label('What happened?')}
+      <div class="op-guide-options" aria-label="Choose what happened">${step.options.map((option, index) => button(H(option.label) + icon('chevron'), 'guide-next', option.next, index ? 'outline' : '', false, { option: index })).join('')}</div>
+      <div class="op-link-row">${state.guide.history.length ? button('Previous step', 'guide-prev', '', 'op-link') : ''}<button type="button" class="op-link" data-op="guide-reset">Restart connection guide</button></div>`;
   }
   function contactCard(contact, removable = false) {
-    return `<article class="op-contact"><strong>${H(contact.name)}</strong>${contact.name_zh ? `<span lang="zh-CN">${H(contact.name_zh)}</span>` : ''}<div class="op-number">${H(contact.phone || 'Phone number not saved')}</div><div class="op-actions">${call(contact.phone)}${button('Copy number', 'copy-number', contact.phone || '', 'outline', !hasPhone(contact.phone))}</div>${removable ? `<button type="button" class="op-text-btn" data-op="remove-contact" data-value="${H(contact.id)}">Remove contact</button>` : ''}${contact.sources ? sources(contact.sources) : ''}</article>`;
+    const ok = hasPhone(contact.phone);
+    return `<article class="op-contact"><div class="op-contact-copy"><strong>${H(contact.name)}</strong>${contact.name_zh ? `<span lang="zh-CN">${H(contact.name_zh)}</span>` : ''}<span class="op-number">${H(contact.phone || 'Phone number not saved')}</span>${removable ? `<button type="button" class="op-link" data-op="remove-contact" data-value="${H(contact.id)}">Remove</button>` : ''}${contact.sources ? sources(contact.sources) : ''}</div>
+      <button type="button" class="op-icon-btn" data-op="copy-number" data-value="${H(contact.phone || '')}" aria-label="Copy number" ${ok ? '' : 'disabled'}>${icon('copy')}</button>${ok ? `<a class="op-icon-btn is-call" href="tel:${H(telValue(contact.phone))}" aria-label="Call ${H(contact.name)}">${icon('phone')}</a>` : `<button type="button" class="op-icon-btn is-call" aria-label="Call unavailable" disabled>${icon('phone')}</button>`}</article>`;
   }
   function help() {
     const useGuideRequest = state.helpReturn === 'offline-guide';
     const usePlaceRequest = state.helpReturn === 'offline-place';
-    return `${note('Calls need a phone signal. Online customer support needs internet. You can always show a saved card to someone nearby.')}
-      <section class="op-card"><h2>Ask someone nearby</h2><p>${useGuideRequest ? 'Your request reflects the situation selected in your connection guide.' : usePlaceRequest ? 'Keep asking for the service you were looking for.' : 'Show a clear request to airport staff.'}</p>${button(useGuideRequest ? 'Show request for my situation' : usePlaceRequest ? 'Show request for this service' : 'Show “I cannot get online”', useGuideRequest ? 'guide-request' : usePlaceRequest ? 'place-card' : 'phrase', useGuideRequest ? '' : usePlaceRequest ? state.place : 'no-internet')}
-      <div class="op-actions">${button('Find airport service center', 'place', 'service', 'secondary')}${state.hotel ? button('Show my hotel', 'hotel-card', '', 'secondary') : button('Add hotel address', 'nav', 'offline-hotel', 'secondary')}</div></section>
-      ${tripCounterEntry()}
-      <section class="op-card"><h2>Your contacts</h2>${state.hotel ? contactCard({ name: state.hotel.name_en, name_zh: state.hotel.name_zh, phone: state.hotel.phone }) : '<p class="op-muted">Add a hotel to keep its contact here.</p>'}${state.data.contacts.map(c => contactCard(c)).join('')}${state.contacts.map(c => contactCard(c, true)).join('')}</section>
-      <section class="op-card"><h2>Add a personal contact</h2><form id="op-contact-form">${field('Name', 'name', '', 'required')}${field('Phone', 'phone', '', 'required type="tel"')}<p class="op-muted">Saved only in this browser.</p><button class="op-btn secondary" type="submit" ${state.storageError ? 'disabled' : ''}>Save contact</button></form></section>
-      <section class="op-card"><h2>Trip.com online support</h2><p class="op-muted">Requires an internet connection.</p><a class="op-btn outline" data-op-online href="${H(state.data.online_support)}" target="_blank" rel="noopener noreferrer">Open online support</a></section>`;
+    return `<section class="op-card op-ask"><h2>Ask someone nearby</h2><p class="op-muted">${useGuideRequest ? 'Uses the situation from your connection guide.' : usePlaceRequest ? 'Keeps asking for the service you were looking for.' : 'Show a clear request to airport staff.'}</p>${button(icon('expand') + (useGuideRequest ? 'Show request for my situation' : usePlaceRequest ? 'Show request for this service' : 'Show “I cannot get online”'), useGuideRequest ? 'guide-request' : usePlaceRequest ? 'place-card' : 'phrase', useGuideRequest ? '' : usePlaceRequest ? state.place : 'no-internet')}
+      <div class="op-actions">${button('Find service center', 'place', 'service', 'secondary')}${state.hotel ? button('Show my hotel', 'hotel-card', '', 'secondary') : button('Add hotel address', 'nav', 'offline-hotel', 'secondary')}</div></section>
+      ${label('Your contacts')}
+      <section class="op-list">${state.hotel ? contactCard({ name: state.hotel.name_en, name_zh: state.hotel.name_zh, phone: state.hotel.phone }) : ''}${state.data.contacts.map(c => contactCard(c)).join('')}${state.contacts.map(c => contactCard(c, true)).join('')}
+        <form id="op-contact-form" class="op-contact-form"><div class="op-contact-inputs">${field('Name', 'name', '', 'required placeholder="Add a contact"')}${field('Phone', 'phone', '', 'required type="tel" placeholder="+44 …"')}</div><button class="op-btn secondary" type="submit" ${state.storageError ? 'disabled' : ''}>Save contact</button></form></section>
+      <a class="op-online-row" data-op-online href="${H(state.data.online_support)}" target="_blank" rel="noopener noreferrer"><span class="op-icon">${icon('chat')}</span><span><strong>Trip.com online support</strong><small>Needs internet</small></span>${icon('chevron')}</a>
+      <p class="op-foot">Calls need a phone signal. A saved card always works — show it to someone nearby.</p>`;
   }
   let renderedRoute;
   function render() {
@@ -294,7 +316,7 @@
   function networkChanged() {
     document.querySelectorAll('[data-op-network]').forEach(item => {
       item.textContent = navigator.onLine ? 'Network detected' : 'Offline · saved content';
-      item.classList.toggle('is-offline', !navigator.onLine);
+      item.hidden = navigator.onLine;
     });
     document.querySelectorAll('[data-op="download"]').forEach(item => { item.disabled = state.busy || !navigator.onLine || !('serviceWorker' in navigator); });
     document.querySelectorAll('[data-op-online]').forEach(item => item.setAttribute('aria-disabled', String(!navigator.onLine)));
@@ -372,7 +394,7 @@
           syncPreflight();
         });
         state.pack = result.pack;
-        state.notice = 'Saved and checked. Open this pack in this browser when you are offline.'; state.noticeGood = true;
+        state.notice = 'Saved and checked · opens offline in this browser.'; state.noticeGood = true;
       } catch (error) {
         state.notice = error.message + ' Your previous complete pack, if any, is unchanged.'; state.noticeGood = false;
         await refreshStatus();
@@ -447,6 +469,8 @@
     if (!form) return;
     state.hotelDirty = true;
     state.draft = { ...(state.draft || state.hotel || {}), ...Object.fromEntries(new FormData(form)), confirmed: form.elements.confirmed.checked };
+    const preview = form.closest('.screen').querySelector(`[data-preview="${event.target.name}"]`);
+    if (preview) preview.textContent = event.target.value.trim() || (event.target.name === 'name_zh' ? '酒店中文名称' : '酒店中文地址');
   });
   document.addEventListener('submit', async event => {
     if (!['op-hotel-form', 'op-contact-form'].includes(event.target.id)) return;

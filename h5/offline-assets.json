@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "version": "2026.10.17.4",
-  "revision": "65862bac30d34097788a",
+  "revision": "8dcffd79922ed974ef4a",
   "assets": [
     {
       "path": "app.js",
@@ -210,13 +210,13 @@
     },
     {
       "path": "offline.css",
-      "sha256": "d9ae3a0169d3ea08706c6173c5ba9623a88076f0bb832ef688a994cfef5da998",
-      "bytes": 16473
+      "sha256": "3a91bddcd31c4246c1657b8a92dc662853869b8b50bfc01858671a1823de95d1",
+      "bytes": 20084
     },
     {
       "path": "offline.js",
-      "sha256": "55432654006b72af72e0e0b1abae2665743458b0952de39292d5e7cc40a1458e",
-      "bytes": 47858
+      "sha256": "5ade754da6f31202e34d9de8d26e1090e9ee87fc1734bcdb27b140fb305a1f7a",
+      "bytes": 48583
     },
     {
       "path": "stamp-renderer.js",
