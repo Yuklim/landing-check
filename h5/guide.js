@@ -141,21 +141,23 @@
     #lc-guide{position:fixed;inset:0;pointer-events:none;z-index:2147483000;font-family:Inter,-apple-system,"PingFang SC","Noto Sans SC",sans-serif}
     #lc-guide .g-ring{position:fixed;border:3px solid ${BLUE};border-radius:14px;box-shadow:0 0 0 4px rgba(44,97,254,.18);animation:gpulse 1.6s ease-out infinite;display:none}
     @keyframes gpulse{0%{box-shadow:0 0 0 0 rgba(44,97,254,.45)}70%{box-shadow:0 0 0 12px rgba(44,97,254,0)}100%{box-shadow:0 0 0 0 rgba(44,97,254,0)}}
-    #lc-guide .g-tip{position:fixed;width:256px;background:${INK};color:#fff;border-radius:14px;padding:12px 14px 10px;box-shadow:0 10px 30px rgba(18,24,38,.35);pointer-events:auto;display:none;z-index:3}
-    #lc-guide .g-tip .g-ch{display:flex;align-items:center;gap:6px;margin-bottom:4px;font:600 11px inherit;font-family:inherit;color:#7CA2FF;letter-spacing:.02em}
-    #lc-guide .g-tip b{display:block;font:700 15px/1.3 inherit;font-family:inherit}
-    #lc-guide .g-tip p{margin:4px 0 0;font:400 13px/1.5 inherit;font-family:inherit;color:#D7DCE5}
-    #lc-guide .g-tip .g-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;font:500 12px inherit;font-family:inherit;color:#8F98A8}
-    #lc-guide .g-tip .g-row span{cursor:pointer;padding:2px 0}
-    #lc-guide .g-tip .g-row span:hover{color:#fff}
-    #lc-guide .g-arrow{position:absolute;width:12px;height:12px;background:${INK};transform:rotate(45deg)}
+    #lc-guide .g-tip{position:fixed;width:232px;background:rgba(255,255,255,.96);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:${INK};border:1px solid #DADFE6;border-left:3px solid ${BLUE};border-radius:12px;padding:9px 12px 10px;box-shadow:0 6px 18px rgba(18,24,38,.12);pointer-events:auto;display:none;z-index:3;cursor:pointer}
+    #lc-guide .g-tip .g-ch{display:flex;align-items:center;gap:6px;margin-bottom:3px;font:600 11px inherit;font-family:inherit;color:${BLUE};letter-spacing:.02em}
+    #lc-guide .g-tip .g-x{margin-left:auto;width:20px;height:20px;line-height:18px;text-align:center;border-radius:10px;color:#8F98A8;font:400 16px inherit;font-family:inherit}
+    #lc-guide .g-tip .g-x:hover{background:#F0F2F5;color:${INK}}
+    #lc-guide .g-tip b{display:block;font:700 14px/1.3 inherit;font-family:inherit}
+    #lc-guide .g-tip p{margin:3px 0 0;font:400 12.5px/1.5 inherit;font-family:inherit;color:#4A5160}
+    #lc-guide .g-mini{position:fixed;display:none;align-items:center;gap:5px;max-width:240px;background:rgba(255,255,255,.96);color:${BLUE};border:1px solid rgba(44,97,254,.35);border-radius:12px;padding:3px 10px;font:600 12px/1.5 inherit;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 3px 10px rgba(18,24,38,.12);pointer-events:auto;cursor:pointer;z-index:2}
+    #lc-guide .g-arrow{position:absolute;width:10px;height:10px;background:#fff;border:1px solid #DADFE6;transform:rotate(45deg)}
+    #lc-guide .g-arrow.up{border-right:0;border-bottom:0}
+    #lc-guide .g-arrow.down{border-left:0;border-top:0}
     #lc-guide .g-dot{position:fixed;z-index:1;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:${BLUE};border:2px solid #fff;box-shadow:0 1px 4px rgba(18,24,38,.3);pointer-events:auto;cursor:pointer;display:none}
     #lc-guide .g-dot::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid rgba(44,97,254,.5);animation:gdot 1.8s ease-out infinite}
     @keyframes gdot{from{transform:scale(.6);opacity:1}to{transform:scale(1.3);opacity:0}}
     #lc-guide .g-pop{position:fixed;z-index:4;max-width:220px;background:#fff;color:${INK};border:1px solid #DADFE6;border-radius:10px;padding:8px 10px;font:500 12.5px/1.45 inherit;font-family:inherit;box-shadow:0 8px 24px rgba(18,24,38,.18);display:none}
     #lc-guide .g-bar{position:fixed;transform:translate(-50%,-100%);display:none;align-items:center;gap:8px;background:rgba(18,24,38,.88);color:#fff;border-radius:14px;padding:5px 10px 5px 12px;font:600 12px inherit;font-family:inherit;white-space:nowrap;pointer-events:auto;cursor:pointer}
-    #lc-guide .g-tip .g-ch i{display:inline-block;width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.25);margin-left:3px}
-    #lc-guide .g-tip .g-ch i.on{background:#7CA2FF;width:14px}
+    #lc-guide .g-tip .g-ch i{display:inline-block;width:5px;height:5px;border-radius:3px;background:#DADFE6;margin-left:3px}
+    #lc-guide .g-tip .g-ch i.on{background:${BLUE};width:12px}
     #lc-guide .g-bar i{display:inline-block;width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,.3);margin-left:3px}
     #lc-guide .g-bar i.on{background:#7CA2FF;width:14px}
     #lc-guide .g-more{position:fixed;transform:translateX(-50%);display:none;background:${BLUE};color:#fff;border-radius:18px;padding:8px 14px;font:600 13px inherit;font-family:inherit;box-shadow:0 6px 18px rgba(44,97,254,.35);pointer-events:auto;cursor:pointer}
@@ -175,18 +177,20 @@
   document.head.appendChild(css);
   const layer = document.createElement('div'); layer.id = 'lc-guide'; layer.setAttribute('aria-live', 'polite');
   layer.innerHTML = `<div class="g-ring"></div><div class="g-bar"></div><div class="g-more"></div>
-    <div class="g-tip" role="dialog"><div class="g-arrow"></div><div class="g-ch"></div><b></b><p></p><div class="g-row"><span data-gd="hide">收起提示</span><span data-gd="quit">退出演示</span></div></div>
+    <div class="g-tip" role="dialog" data-gd="fold"><div class="g-arrow"></div><div class="g-ch"></div><b></b><p></p></div><div class="g-mini" role="button" data-gd="unfold"></div>
     <div class="g-pop"></div><div class="g-modal"></div>`;
   document.body.appendChild(layer);
   const $ = s => layer.querySelector(s);
-  const ring = $('.g-ring'), tip = $('.g-tip'), arrow = $('.g-arrow'), bar = $('.g-bar'), more = $('.g-more'), pop = $('.g-pop'), modal = $('.g-modal');
+  const ring = $('.g-ring'), tip = $('.g-tip'), mini = $('.g-mini'), arrow = $('.g-arrow'), bar = $('.g-bar'), more = $('.g-more'), pop = $('.g-pop'), modal = $('.g-modal');
   const dots = [];
 
   // ---------- 每帧定位 ----------
-  let cur = { route: null, main: null, spots: [], at: 0 }, popFor = null, hideRoute = null;
+  let cur = { route: null, main: null, spots: [], at: 0 }, popFor = null;
+  // 气泡：换到新的一步时展开，5 秒后或页面一滑动就收成小胶囊；点胶囊再展开
+  const FOLD_MS = 5000; let tipKey = '', tipOpenAt = 0, folded = false;
   function resolve() {
     const scr = document.querySelector('.screen.on'), route = scr ? scr.dataset.route : null, P = PAGES[route] || {};
-    if (route !== cur.route) { popFor = null; pop.style.display = 'none'; hideRoute = null; }
+    if (route !== cur.route) { popFor = null; pop.style.display = 'none'; }
     let main = null;
     const nc = notifCard();
     if (nc) main = { el: nc, title: '飞机落地了', body: '点这条推送，进入落地检查。' };
@@ -222,7 +226,7 @@
       bar.style.display = 'flex'; bar.style.left = (pr.left + pr.width / 2) + 'px'; bar.style.top = y + 'px';
     } else bar.style.display = 'none';
     // 主线：光圈 + 气泡；在屏幕外就给「下滑」按钮
-    ring.style.display = tip.style.display = more.style.display = 'none';
+    ring.style.display = tip.style.display = mini.style.display = more.style.display = 'none';
     if (m && shown(m.el) && !modalOpen) {
       const r = m.el.getBoundingClientRect(), vb = nc ? pr : visibleBox(m.el);
       const inView = r.top >= vb.top - 2 && r.bottom <= vb.bottom + 2;
@@ -235,16 +239,28 @@
         const pad = 4, br = parseFloat(getComputedStyle(m.el).borderTopLeftRadius) || 10;
         const t = Math.max(r.top, vb.top), b = Math.min(r.bottom, vb.bottom);
         Object.assign(ring.style, { display: 'block', left: (r.left - pad) + 'px', top: (t - pad) + 'px', width: (r.width + pad * 2) + 'px', height: (b - t + pad * 2) + 'px', borderRadius: Math.min(br + pad, 30) + 'px' });
-        if (hideRoute !== cur.route) {
-          const gc = tip.querySelector('.g-ch'); if (gc.dataset.h !== chHTML) { gc.innerHTML = chHTML; gc.dataset.h = chHTML; } gc.style.display = chHTML ? 'flex' : 'none';
+        const key = cur.route + '|' + m.title;
+        if (key !== tipKey) { tipKey = key; tipOpenAt = performance.now(); folded = false; }
+        if (!folded && performance.now() - tipOpenAt > FOLD_MS) folded = true;
+        const cx = r.left + r.width / 2;
+        if (folded) {
+          const label = '下一步 · ' + m.title; if (mini.textContent !== label) mini.textContent = label;
+          mini.style.display = 'flex';
+          const mw = mini.offsetWidth, mh = mini.offsetHeight, below = b + 10 + mh <= pr.bottom - 8;
+          mini.style.left = Math.max(pr.left + 8, Math.min(cx - mw / 2, pr.right - 8 - mw)) + 'px';
+          mini.style.top = (below ? b + pad + 6 : t - pad - 6 - mh) + 'px';
+        } else {
+          const gc = tip.querySelector('.g-ch'), gh = chHTML + '<span class="g-x" title="收起">×</span>';
+          if (gc.dataset.h !== gh) { gc.innerHTML = gh; gc.dataset.h = gh; }
           tip.querySelector('b').textContent = m.title; tip.querySelector('p').textContent = m.body;
           tip.style.display = 'block';
-          const tw = Math.min(256, pr.width - 24); tip.style.width = tw + 'px'; const th = tip.offsetHeight;
+          const tw = Math.min(232, pr.width - 24); tip.style.width = tw + 'px'; const th = tip.offsetHeight;
           const below = b + 14 + th <= pr.bottom - 8 || t - 14 - th < pr.top + 40;
-          const top = below ? b + pad + 12 : t - pad - 12 - th;
-          const cx = r.left + r.width / 2, left = Math.max(pr.left + 12, Math.min(cx - tw / 2, pr.right - 12 - tw));
+          const top = below ? b + pad + 10 : t - pad - 10 - th;
+          const left = Math.max(pr.left + 12, Math.min(cx - tw / 2, pr.right - 12 - tw));
           tip.style.left = left + 'px'; tip.style.top = Math.max(pr.top + 8, Math.min(top, pr.bottom - th - 8)) + 'px';
-          arrow.style.left = Math.max(14, Math.min(cx - left - 6, tw - 26)) + 'px';
+          arrow.className = 'g-arrow ' + (below ? 'up' : 'down');
+          arrow.style.left = Math.max(12, Math.min(cx - left - 5, tw - 24)) + 'px';
           arrow.style.top = below ? '-6px' : ''; arrow.style.bottom = below ? '' : '-6px';
         }
       }
@@ -281,12 +297,17 @@
     const g = e.target.closest('[data-gd]'); if (!g) return;
     e.stopPropagation();
     const a = g.dataset.gd;
-    if (a === 'hide') { hideRoute = cur.route; tip.style.display = 'none'; }
+    if (a === 'fold') folded = true;
+    else if (a === 'unfold') { folded = false; tipOpenAt = performance.now(); }
     else if (a === 'quit') setOn(false);
     else if (a === 'fresh') { closeModal(); run = { welcomed: 1 }; save(); resetDemo(); }
     else if (a === 'keep') { closeModal(); run.welcomed = 1; save(); }
     else if (a === 'home') { closeModal(); show('home'); }
   });
+  // 用户开始滑动页面：说明已经看过，气泡收成胶囊，不挡内容
+  const foldOnSwipe = e => { if (on && !folded && tipKey && !e.target.closest?.('#lc-guide')) folded = true; };
+  document.addEventListener('wheel', foldOnSwipe, { passive: true, capture: true });
+  document.addEventListener('touchmove', foldOnSwipe, { passive: true, capture: true });
   more.addEventListener('click', () => { const m = cur.main; if (m) m.el.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
   bar.addEventListener('click', () => { if (cur.P && cur.P.side) window.back(); });
   document.addEventListener('click', e => { if (popFor && !e.target.closest('#lc-guide')) { popFor = null; pop.style.display = 'none'; } }, true);
