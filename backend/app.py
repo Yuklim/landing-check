@@ -3,7 +3,7 @@
 
     uvicorn app:app --reload --port 8000
 """
-import os, re, json, hashlib
+import os, re, json, hashlib, time
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -224,18 +224,21 @@ def content_trains(fromCity: str, toCity: str, departDate: str, size: int = 20):
 @app.get('/content/hotels')
 def content_hotels(city: str = '', keyword: str = '', hotelName: str = '', landmark: str = '',
                    tags: str = '', stars: str = '', checkIn: str = '', checkOut: str = '',
-                   sortType: str = '1', size: int = 10):
-    """酒店列表：代理官方 query_hotel，归一化成卡片。常用 city=上海。"""
+                   sortType: str = '1', size: int = 10, lang: str = ''):
+    """酒店列表：代理官方 query_hotel，归一化成卡片。常用 city=上海。lang=en 时附英文名 / 区域 / 卖点。"""
     for d in (checkIn, checkOut):
         if d and not re.fullmatch(r'\d{4}-\d{2}-\d{2}', d):
             raise HTTPException(400, 'checkIn/checkOut must be yyyy-MM-dd')
     try:
-        return ctrip_query_hotel(city=city, keyword=keyword, hotel_name=hotelName,
+        data = ctrip_query_hotel(city=city, keyword=keyword, hotel_name=hotelName,
                                  landmark=landmark, tags=tags, stars=stars,
                                  check_in=checkIn, check_out=checkOut, sort_type=sortType,
                                  size=min(max(size, 1), 30))
     except CtripMCPError as e:
         return {'items': [], 'note': str(e)}
+    if lang == 'en':
+        _english_hotels(data['items'])
+    return data
 
 
 @app.get('/content/cars')
@@ -278,28 +281,81 @@ def _english(kind, rows):
     return {str(i): _EN_CACHE[(kind, str(i))] for i, _, _ in rows if (kind, str(i)) in _EN_CACHE}
 
 
+_HOTEL_PROMPT = ('You translate Chinese hotel listings for foreign travelers. '
+                 'Return JSON {"items":[{"id":..., "name":..., "area":..., "features":[...]}]} with one entry per input id. '
+                 'name: the hotel\'s official English name if it is a known brand, otherwise a natural English rendering; no Chinese. '
+                 'area: "District · Neighborhood" in English (e.g. "Pudong · Zhangjiang"). '
+                 'features: up to 3 short English selling points (2-4 words each) taken only from the given type and tags; '
+                 'do not invent amenities.')
+
+
+def _english_hotels(items):
+    """酒店名 / 区域 / 卖点译成英文，按酒店 id 缓存；模型不可用时这些字段留空，前端退回中文。"""
+    todo = [it for it in items if ('hotel', str(it['id'])) not in _EN_CACHE]
+    if todo and stuck.KEY:
+        ask = [{'id': str(it['id']), 'name': it['name'], 'district': it.get('district', ''), 'zone': it.get('zone', ''),
+                'type': it.get('tags') or [], 'tags': it.get('tags_zh') or []} for it in todo]
+        try:
+            raw = stuck.call_model([{'role': 'system', 'content': _HOTEL_PROMPT},
+                                    {'role': 'user', 'content': json.dumps(ask, ensure_ascii=False)}], max_tokens=2500)
+            for r in (json.loads(raw).get('items') or []):
+                if r.get('id') and r.get('name'):
+                    _EN_CACHE[('hotel', str(r['id']))] = {'name_en': str(r['name'])[:90], 'area_en': str(r.get('area') or '')[:60],
+                                                          'features_en': [str(f)[:40] for f in (r.get('features') or [])][:3]}
+        except Exception:
+            pass
+    for it in items:
+        it.update(_EN_CACHE.get(('hotel', str(it['id'])), {'name_en': '', 'area_en': '', 'features_en': []}))
+
+
+_TICKET_PROMPT = ('You translate Chinese attraction listings for foreign travelers. '
+                  'Return JSON {"items":[{"id":..., "name":..., "highlight":..., "rank":..., "area":..., "tags":[...]}]} with one entry per input id. '
+                  'name: the common English name of the attraction. highlight: one short English sentence (max 90 characters) from the given recommendation. '
+                  'rank: English rendering of the ranking label, or "" if none. area: English neighborhood name, or "". '
+                  'tags: up to 2 short English tags (1-3 words) from the given tags. Do not invent facts.')
+
+
+def _english_tickets(items):
+    """门票名 / 推荐语 / 榜单 / 区域 / 标签译成英文，按景点 id 缓存；固定译名表优先。"""
+    todo = [it for it in items if ('ticket', str(it['id'])) not in _EN_CACHE]
+    if todo and stuck.KEY:
+        ask = [{'id': str(it['id']), 'name': it['name'], 'recommendation': it.get('recommend', ''), 'rank': it.get('rank', ''),
+                'area': it.get('zone', ''), 'tags': it.get('tags_zh') or []} for it in todo]
+        try:
+            raw = stuck.call_model([{'role': 'system', 'content': _TICKET_PROMPT},
+                                    {'role': 'user', 'content': json.dumps(ask, ensure_ascii=False)}], max_tokens=2500)
+            for r in (json.loads(raw).get('items') or []):
+                if r.get('id') and r.get('name'):
+                    _EN_CACHE[('ticket', str(r['id']))] = {'name': str(r['name'])[:80], 'recommend_en': str(r.get('highlight') or '')[:120],
+                                                           'rank_en': str(r.get('rank') or '')[:80], 'area_en': str(r.get('area') or '')[:40],
+                                                           'tags_en': [str(t)[:30] for t in (r.get('tags') or [])][:2]}
+        except Exception:
+            pass
+    for it in items:
+        en = _EN_CACHE.get(('ticket', str(it['id'])), {})
+        it['name_en'] = it['name_en'] or en.get('name', '')
+        for k in ('recommend_en', 'rank_en', 'area_en'):
+            it[k] = en.get(k, '')
+        it['tags_en'] = en.get('tags_en', [])
+
+
 @app.get('/content/tickets')
-def content_tickets(city: str = '上海', tag: str = '必打卡', size: int = 8):
-    """景点门票榜单：代理官方 query_ticket，起价 + 评分 + 英文名。"""
+def content_tickets(city: str = '上海', tag: str = '必打卡', sortType: int = 1, size: int = 8):
+    """景点门票榜单：代理官方 query_ticket，起价 + 评分 + 英文名 / 推荐语 / 榜单。"""
     try:
-        data = ctrip_query_ticket(city=city, tag=tag, size=min(max(size, 1), 20))
+        data = ctrip_query_ticket(city=city, tag=tag, size=min(max(size, 1), 20), sort_type=sortType)
     except CtripMCPError as e:
         return {'items': [], 'note': str(e)}
-    items = data['items']
-    en = _english('ticket', [(it['id'], it['name'], it['recommend']) for it in items])
-    for it in items:
-        t = en.get(str(it['id']))
-        it['name_en'] = it['name_en'] or (t[0] if t else '')
-        it['recommend_en'] = t[1] if t else ''
-    data['translated'] = bool(items) and all(it['name_en'] for it in items)
+    _english_tickets(data['items'])
+    data['translated'] = bool(data['items']) and all(it['name_en'] for it in data['items'])
     return data
 
 
 @app.get('/content/guides')
-def content_guides(city: str = '上海', scenarios: str = '第一次去', size: int = 6):
-    """第一次来这座城市的旅游笔记：代理官方 query_content（city+scenarios），附英文标题与一句话摘要。"""
+def content_guides(city: str = '上海', scenarios: str = '第一次去', keyword: str = '', size: int = 6):
+    """旅游笔记：代理官方 query_content（city+scenarios，或 city+keyword），附英文标题与一句话摘要。"""
     try:
-        data = ctrip_query_guides(city=city, scenarios=scenarios, size=min(max(size, 1), 12))
+        data = ctrip_query_guides(city=city, scenarios=scenarios, keyword=keyword, size=min(max(size, 1), 12))
     except CtripMCPError as e:
         return {'items': [], 'note': str(e)}
     # 没图的笔记在卡片里没法看，去掉；listUrl 是列表页地址（每条都一样），id 用标题 + 作者算
@@ -314,13 +370,30 @@ def content_guides(city: str = '上海', scenarios: str = '第一次去', size: 
 
 
 # 预热：把 demo 常用的查询先打一遍灌进缓存，现场点开就秒出（租车冷启动≈10s，务必先热）。
+# 景点页 / 旅行指南页会用到的查询，预热时一并取好并翻译（官方 tag 取值见 query_ticket 工具说明）
+_TICKET_TAGS = ['必打卡', '城市亲子', '特色体验', '园林', '玩水避暑', '城市赏秋', '城市赏花踏青', '城市温泉']
+_GUIDE_KEYWORDS = ['必玩', '美食', '交通', '住宿', '攻略']
+
+
+WARM_GAP = float(os.environ.get('CTRIP_WARM_GAP', '3'))
+
+
+def _stay_dates():
+    """酒店页默认的入住 / 离店（上海时间今天 / 明天），预热要和页面用同一组参数才能命中缓存。"""
+    import datetime as _dt
+    today = _dt.datetime.now(_dt.timezone(_dt.timedelta(hours=8))).date()
+    return {'checkIn': today.isoformat(), 'checkOut': (today + _dt.timedelta(days=1)).isoformat()}
+
+
 _WARM_JOBS = [
     ('community', lambda: ctrip_query_content(query='上海外滩', size=10)),
     ('hotels', lambda: ctrip_query_hotel(city='上海', sort_type='1', size=10)),
+    ('hotels_en', lambda: content_hotels(city='上海', sortType='1', size=12, lang='en', **_stay_dates())),
     ('cars', lambda: ctrip_query_car_rental('上海', size=12)),
     ('tickets', lambda: content_tickets()),
     ('guides', lambda: content_guides()),
-]
+] + [('tickets_' + t, (lambda t=t: content_tickets(tag=t, size=12))) for t in _TICKET_TAGS] \
+  + [('guides_' + k, (lambda k=k: content_guides(keyword=k, size=8))) for k in _GUIDE_KEYWORDS]
 
 
 def _warm(fn):
@@ -340,6 +413,7 @@ def content_warmup():
         t0 = _t.time()
         n = _warm(fn)
         out[name] = {'items': n, 'ms': round((_t.time() - t0) * 1000)}
+        _t.sleep(WARM_GAP)
     return {'warmed': out}
 
 
@@ -347,7 +421,8 @@ def content_warmup():
 def _warm_on_startup():
     """后端一启动就在后台线程预热（不阻塞启动）；没设 token 时各项静默失败，无副作用。"""
     import threading
-    threading.Thread(target=lambda: [_warm(fn) for _, fn in _WARM_JOBS], daemon=True).start()
+    # 官方 MCP 有频次限制：预热一项一项来，中间隔几秒
+    threading.Thread(target=lambda: [(_warm(fn), time.sleep(WARM_GAP)) for _, fn in _WARM_JOBS], daemon=True).start()
 
 
 # ---------------- B 识别 ----------------

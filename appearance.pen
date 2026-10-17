@@ -13265,7 +13265,7 @@
                 {
                   "type": "frame",
                   "id": "YWhA9",
-                  "name": "Feat Events",
+                  "name": "Feat Travel Guides",
                   "width": 70,
                   "layout": "vertical",
                   "gap": 6,
@@ -13298,7 +13298,7 @@
                               "name": "Feat Icon",
                               "width": 24,
                               "height": 24,
-                              "icon": "sparkles",
+                              "icon": "book-open",
                               "library": "lucide",
                               "fill": "$text"
                             }
@@ -13313,7 +13313,7 @@
                       "fill": "$text",
                       "textGrowth": "fixed-width",
                       "width": "fill_container",
-                      "content": "Events",
+                      "content": "Travel Guides",
                       "textAlign": "center",
                       "fontFamily": "$font",
                       "fontSize": 11,
