@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Landing Check × Trip.com · Commercial Touchpoints</title>
+<meta name="description" content="Clickable commercialization prototype: how Landing Check connects to Trip.com flights, hotels, eSIM, airport transfer and Trip Moments. Demo data only.">
+<style>
+  :root{
+    --blue:#2C61FE; --blue-d:#1E49C8; --ink:#1A1F2E; --muted:#6F7685; --line:#E4E8EE;
+    --bg:#EDEFF3; --card:#fff; --green:#1BA672; --amber:#B25E00; --lightblue:#EEF3FF; --soft:#F6F8FC;
+    --F:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);font-family:var(--F);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;justify-content:center;min-height:100vh}
+  a{color:inherit}
+  /* phone frame */
+  #phone{position:relative;width:393px;max-width:100vw;min-height:100vh;background:var(--soft);
+         box-shadow:0 10px 40px rgba(18,24,38,.14);overflow:hidden}
+  @media(min-width:460px){#phone{min-height:812px;height:860px;margin:28px 0;border-radius:36px;overflow:hidden}}
+  .screen{display:none;flex-direction:column;min-height:100%;animation:fade .22s ease}
+  .screen.on{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  /* nav */
+  .nav{display:flex;align-items:center;gap:10px;height:52px;padding:0 14px;background:var(--blue);color:#fff;flex:none}
+  .nav .back{font-size:22px;line-height:1;cursor:pointer;width:26px}
+  .nav .brand{font-weight:800;letter-spacing:.2px;font-size:17px}
+  .nav .brand small{font-weight:600;opacity:.85;font-size:12px;margin-left:2px}
+  .nav .sp{flex:1}
+  .nav .ic{opacity:.9;font-size:16px}
+  .body{flex:1;overflow-y:auto;padding:16px 16px 28px}
+  .sect{font:700 13px/1.3 var(--F);color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin:20px 2px 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+  .muted{color:var(--muted)}
+  .row{display:flex;gap:12px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:46px;padding:0 18px;border-radius:24px;
+       background:var(--blue);color:#fff;font:700 15px var(--F);border:0;cursor:pointer;width:100%;text-decoration:none}
+  .btn:active{background:var(--blue-d)}
+  .btn.sm{height:38px;font-size:13px;border-radius:19px;width:auto;padding:0 16px}
+  .btn.ghost{background:#fff;color:var(--blue);border:1.5px solid var(--blue)}
+  .btn.plain{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+  .link{color:var(--blue);font-weight:700;font-size:13px;cursor:pointer;background:none;border:0;padding:8px 0}
+  .tag{display:inline-block;font:800 10px var(--F);letter-spacing:.5px;padding:3px 7px;border-radius:5px}
+  .tag.free{background:#E7F6EF;color:var(--green)}
+  .tag.rec{background:var(--lightblue);color:var(--blue)}
+  .tag.svc{background:#FFF3E6;color:var(--amber)}
+  .tag.demo{background:#F0F1F4;color:var(--muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font:700 12px var(--F);padding:4px 10px;border-radius:20px;background:var(--soft);color:var(--muted);border:1px solid var(--line)}
+  .pill.ok{background:#E7F6EF;color:var(--green);border-color:#CDEBDD}
+  .hd{font:800 18px/1.3 var(--F)}
+  .big{font:800 22px/1.25 var(--F)}
+  .price{font:800 16px var(--F)}
+  .hr{height:1px;background:var(--line);margin:12px 0}
+  .confirmwrap{background:linear-gradient(180deg,#2C61FE 0%, #2C61FE 120px, transparent 120px);padding-top:0}
+  .checkmark{width:56px;height:56px;border-radius:50%;background:#fff;color:var(--green);display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px;box-shadow:0 6px 18px rgba(0,0,0,.12)}
+  /* two-col service cards */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .svccard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px}
+  .svccard .emoji{font-size:26px}
+  .svccard .t{font:700 15px var(--F)}
+  .svccard .d{font:400 12px/1.4 var(--F);color:var(--muted);min-height:32px}
+  /* landing check hero card */
+  .lc{background:linear-gradient(135deg,#EEF3FF 0%, #E3ECFF 100%);border:1px solid #CFDBFF;border-radius:18px;padding:18px;margin-top:14px}
+  .lc .top{display:flex;align-items:center;gap:12px}
+  .lc .plane{width:46px;height:46px;border-radius:13px;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
+  .offer{display:flex;gap:14px;align-items:flex-start;background:var(--lightblue);border:1px solid #D7E2FF;border-radius:14px;padding:14px}
+  .offer .vis{width:48px;height:48px;border-radius:12px;background:#fff;border:1px solid #D7E2FF;display:flex;align-items:center;justify-content:center;font-size:24px;flex:none}
+  /* item (preflight-style row) */
+  .item{display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .dot{width:22px;height:22px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;margin-top:1px}
+  .dot.todo{background:#E89A3C}.dot.done{background:var(--green)}.dot.opt{background:#B6BECC}
+  /* bottom sheet */
+  .mask{position:absolute;inset:0;background:rgba(18,24,38,.45);display:none;align-items:flex-end;z-index:50}
+  .mask.on{display:flex}
+  .sheet{background:#fff;width:100%;border-radius:20px 20px 0 0;padding:20px 18px 26px;max-height:88%;overflow-y:auto;animation:up .26s ease}
+  @keyframes up{from{transform:translateY(100%)}to{transform:none}}
+  .plan{border:1.5px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;cursor:pointer}
+  .plan.sel{border-color:var(--blue);background:var(--lightblue)}
+  .plan .pt{display:flex;justify-content:space-between;align-items:center}
+  .toast{position:absolute;left:50%;bottom:74px;transform:translateX(-50%);background:#121826;color:#fff;font:600 13px var(--F);padding:10px 16px;border-radius:22px;opacity:0;transition:opacity .25s;z-index:80;max-width:88%;text-align:center}
+  .toast.on{opacity:1}
+  /* presentation toolbar */
+  #tool{position:fixed;top:8px;left:8px;z-index:90;display:flex;gap:6px;flex-wrap:wrap;max-width:calc(100vw - 16px)}
+  #tool .j{font:700 11px var(--F);background:#121826;color:#fff;border:0;border-radius:14px;padding:6px 10px;cursor:pointer;opacity:.9}
+  #tool .j.alt{background:#2C61FE}
+  /* debug drawer */
+  #dbg{position:fixed;right:8px;bottom:8px;z-index:90;font:600 11px var(--F)}
+  #dbg .tg{background:#121826;color:#fff;border-radius:14px;padding:6px 10px;cursor:pointer;opacity:.85}
+  #dbg .panel{display:none;position:absolute;right:0;bottom:34px;width:260px;max-height:50vh;overflow:auto;background:#121826;color:#cfe;border-radius:12px;padding:12px;box-shadow:0 8px 30px rgba(0,0,0,.4)}
+  #dbg.open .panel{display:block}
+  #dbg code{color:#9ad;font:600 11px/1.6 var(--F)}
+  #dbg .ev{color:#8fb;white-space:nowrap}
+  .note{font:400 11px/1.5 var(--F);color:var(--muted);margin-top:8px}
+  .demobadge{position:absolute;top:10px;right:10px;z-index:40}
+  .photo{width:100%;height:120px;border-radius:14px;object-fit:cover;background:linear-gradient(135deg,#4b6cb7,#182848);display:flex;align-items:flex-end;color:#fff;padding:12px;font:800 18px var(--F)}
+  .stampcard{border-radius:18px;padding:18px;background:radial-gradient(120% 120% at 20% 0%, #2b3a67 0%, #141d33 100%);color:#fff;position:relative;overflow:hidden}
+  .stampcard .seal{position:absolute;right:14px;top:14px;width:62px;height:62px;border-radius:50%;border:2px solid #f0c674;color:#f0c674;display:flex;align-items:center;justify-content:center;font:800 10px var(--F);text-align:center;transform:rotate(-12deg)}
+</style>
+</head>
+<body>
+<div id="tool"></div>
+
+<div id="phone">
+  <!-- ===================== 1. FLIGHT BOOKING CONFIRMATION ===================== -->
+  <section class="screen" data-screen="confirm">
+    <div class="nav"><span class="brand">Trip<span style="opacity:.85">.com</span></span><span class="sp"></span><span class="ic">✈︎</span><span class="ic" style="margin-left:14px">☰</span></div>
+    <div class="body">
+      <div class="card" style="text-align:center;border:0;background:transparent;padding:6px 0 2px">
+        <div class="checkmark">✓</div>
+        <div class="big">Booking confirmed!</div>
+        <div class="muted" style="margin-top:4px">Your trip is booked. Confirmation sent to your email.</div>
+      </div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="hd">San Francisco → Shanghai</div>
+          <span class="pill ok">Confirmed</span>
+        </div>
+        <div class="hr"></div>
+        <div class="row" style="justify-content:space-between">
+          <div><div class="big" style="font-size:20px">SFO</div><div class="muted">13:00 · Oct 18</div></div>
+          <div style="text-align:center;color:var(--muted)"><div style="font-size:12px">UA 857 · 12h25m</div><div>———✈———</div><div style="font-size:12px">Nonstop</div></div>
+          <div style="text-align:right"><div class="big" style="font-size:20px">PVG</div><div class="muted">17:25 · Oct 19 <sup>+1</sup></div></div>
+        </div>
+        <div class="muted" style="margin-top:8px">Passenger: Alex Carter · Terminal 2 · Economy</div>
+        <button class="link" onclick="toast('Demo: flight details')">View flight details ›</button>
+      </div>
+
+      <div class="sect">You may also need</div>
+      <div class="two" id="svcCards"></div>
+
+      <!-- Landing Check hero -->
+      <div class="lc">
+        <div class="top">
+          <div class="plane">🛬</div>
+          <div>
+            <div style="font:800 18px var(--F)">Landing Check</div>
+            <div style="margin-top:3px"><span class="tag free">FREE</span> <span class="muted" style="font-size:12px;font-weight:700">AI Arrival Companion</span></div>
+          </div>
+        </div>
+        <div style="margin-top:12px;font:400 14px/1.5 var(--F)">Internet, payments and transport — get ready for your first hour in China.</div>
+        <button class="btn" style="margin-top:14px" onclick="getArrivalReady()">Get arrival-ready →</button>
+        <div class="note">Opens the live Landing Check pre-trip checklist.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- hotels preview -->
+  <section class="screen" data-screen="hotels">
+    <div class="nav"><span class="back" onclick="go('confirm')">‹</span><span class="brand">Hotels in Shanghai</span></div>
+    <div class="body">
+      <span class="tag demo">DEMO DATA</span>
+      <div class="card" style="margin-top:10px"><div class="row" style="gap:12px">
+        <div style="width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#6a8dff,#2C61FE);flex:none"></div>
+        <div style="flex:1"><div class="hd" style="font-size:15px">The PuLi Hotel and Spa</div><div class="muted" style="font-size:12px">Jing'an · 1.2 km from city center · ★ 4.8</div><div style="margin-top:6px"><span class="price">¥1,880</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
+      </div><button class="btn ghost" style="margin-top:12px" onclick="bookHotel()">Reserve (demo)</button></div>
+      <div class="card"><div class="row" style="gap:12px">
+        <div style="width:72px;height:72px;border-radius:12px;background:linear-gradient(135deg,#59c3a3,#1BA672);flex:none"></div>
+        <div style="flex:1"><div class="hd" style="font-size:15px">Jing'an Shangri-La</div><div class="muted" style="font-size:12px">Jing'an · near metro · ★ 4.7</div><div style="margin-top:6px"><span class="price">¥1,450</span> <span class="muted" style="font-size:12px">/ night</span></div></div>
+      </div><button class="btn ghost" style="margin-top:12px" onclick="bookHotel()">Reserve (demo)</button></div>
+      <div class="note">Prototype preview. No real inventory, pricing or payment.</div>
+    </div>
+  </section>
+
+  <!-- ===================== 2. eSIM inside Landing Check ===================== -->
+  <section class="screen" data-screen="esim">
+    <div class="nav"><span class="back" onclick="go('confirm')">‹</span><span class="brand">Landing Check</span><span class="sp"></span><span class="ic" style="font-size:12px;font-weight:700">Pre-trip</span></div>
+    <div class="body">
+      <div class="muted" style="font-size:12px;font-weight:700">STEP 1 · GET ONLINE</div>
+      <div class="item" style="margin-top:8px">
+        <div class="dot" id="esimDot">!</div>
+        <div style="flex:1">
+          <div style="font:700 15px var(--F)">Mobile data in China</div>
+          <div class="muted" id="esimStatus" style="font-size:13px;margin-top:2px">Not ready · no eSIM or roaming plan found</div>
+        </div>
+      </div>
+
+      <div id="esimOffer">
+        <div class="offer" style="margin-top:12px">
+          <div class="vis">📶</div>
+          <div style="flex:1">
+            <div><span class="tag rec">RECOMMENDED · TRIP.COM</span></div>
+            <div style="font:700 16px var(--F);margin-top:6px">Stay connected in China</div>
+            <div class="muted" style="font-size:13px;margin-top:3px">Get mobile data ready before your flight.</div>
+            <button class="btn" style="margin-top:12px" onclick="openEsimPlans()">View eSIM plans →</button>
+            <button class="link" style="display:block" onclick="go('esimAlt')">Already covered? See other options</button>
+          </div>
+        </div>
+        <div class="note">Why online first: payments, DiDi and maps all need data — and many apps can't be set up once you've landed.</div>
+      </div>
+
+      <div id="esimDone" style="display:none">
+        <div class="card" style="margin-top:12px;border-color:#CDEBDD;background:#F3FCF7">
+          <div class="row" style="align-items:center;gap:10px"><div class="dot done">✓</div><div style="font:700 15px var(--F)">eSIM purchased · Installation pending</div></div>
+          <div class="muted" style="font-size:13px;margin-top:8px">Purchased ≠ connected yet. Install and enable it before you fly, then run the landing check.</div>
+          <button class="btn ghost" style="margin-top:12px" onclick="toast('Demo: eSIM setup guide')">View setup guide</button>
+        </div>
+      </div>
+      <button class="btn plain" style="margin-top:14px" onclick="getArrivalReady()">Open the live checklist →</button>
+    </div>
+  </section>
+
+  <section class="screen" data-screen="esimAlt">
+    <div class="nav"><span class="back" onclick="go('esim')">‹</span><span class="brand">Other ways to get online</span></div>
+    <div class="body">
+      <div class="note" style="margin-bottom:6px">Pick whatever you already have — no purchase required.</div>
+      <div class="card"><div class="hd" style="font-size:15px">📡 International roaming</div><div class="muted" style="font-size:13px;margin-top:4px">Already have a roaming plan? Mark this step as covered.</div><button class="btn ghost sm" style="margin-top:10px;width:auto" onclick="coverData('Roaming confirmed')">I have roaming</button></div>
+      <div class="card"><div class="hd" style="font-size:15px">💳 Physical SIM at the airport</div><div class="muted" style="font-size:13px;margin-top:4px">China Mobile / Unicom counters in PVG arrivals. Passport needed.</div><button class="btn ghost sm" style="margin-top:10px;width:auto" onclick="coverData('Will buy a SIM on arrival')">I'll buy on arrival</button></div>
+      <div class="card"><div class="hd" style="font-size:15px">📶 Airport & hotel Wi-Fi</div><div class="muted" style="font-size:13px;margin-top:4px">Works for the first hour. Landing Check has the offline PVG guide if you're disconnected.</div><button class="btn ghost sm" style="margin-top:10px;width:auto" onclick="coverData('Using Wi-Fi for now')">Use Wi-Fi</button></div>
+    </div>
+  </section>
+
+  <!-- ===================== 3. AIRPORT TRANSFER ===================== -->
+  <section class="screen" data-screen="transfer">
+    <div class="nav"><span class="back" onclick="go('confirm')">‹</span><span class="brand">Landing Check</span><span class="sp"></span><span class="ic" style="font-size:12px;font-weight:700">Get to hotel</span></div>
+    <div class="body">
+      <div id="transferBooked" style="display:none">
+        <div class="card" style="border-color:#CDEBDD;background:#F3FCF7">
+          <div class="row" style="align-items:center;gap:10px"><div class="dot done">✓</div><div style="font:700 16px var(--F)">Airport pickup · Booked</div></div>
+          <div class="muted" style="font-size:13px;margin-top:8px">Your driver will meet you at PVG T2 arrivals with your name.</div>
+          <button class="btn ghost" style="margin-top:12px" onclick="go('voucher')">View pickup details</button>
+        </div>
+      </div>
+
+      <div id="transferOpen">
+        <div class="card" style="background:var(--lightblue);border-color:#D7E2FF">
+          <div class="hd" style="font-size:16px">Need a ride from the airport?</div>
+          <div class="muted" style="font-size:13px;margin-top:4px">Book a pickup ahead of your arrival.</div>
+          <button class="btn" style="margin-top:12px" onclick="go2('transferBook','transfer_offer_clicked')">Explore airport transfers</button>
+        </div>
+
+        <div class="sect">On-the-ground options (always available)</div>
+        <div class="item"><div class="dot opt">🚕</div><div style="flex:1"><div style="font:700 14px var(--F)">Official taxi queue</div><div class="muted" style="font-size:12px">PVG T2, Gate 25 · ≈ ¥180 · ~60 min</div></div></div>
+        <div class="item" style="margin-top:10px"><div class="dot opt">🚇</div><div style="flex:1"><div style="font:700 14px var(--F)">Metro Line 2</div><div class="muted" style="font-size:12px">Cheapest · needs a short walk with luggage</div></div></div>
+
+        <div class="card" style="margin-top:14px;border-color:#FFE3C2">
+          <div><span class="tag svc">TRIP.COM SERVICE</span></div>
+          <div class="hd" style="font-size:16px;margin-top:8px">Prefer a pre-booked ride?</div>
+          <div class="muted" style="font-size:13px;margin-top:4px">Arrange an airport pickup before your flight.</div>
+          <button class="btn" style="margin-top:12px" onclick="go2('transferBook','transfer_offer_clicked')">View transfer options →</button>
+        </div>
+        <div class="note">Optional paid service — not a required checklist task. On the ground, Landing Check always shows real transport first.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" data-screen="transferBook">
+    <div class="nav"><span class="back" onclick="go('transfer')">‹</span><span class="brand">Trip<span style="opacity:.85">.com</span></span><span class="sp"></span><span class="ic" style="font-size:12px;font-weight:700">Airport Transfer</span></div>
+    <div class="body">
+      <span class="tag demo">DEMO DATA</span>
+      <div class="card" style="margin-top:10px">
+        <div style="display:flex;justify-content:space-between"><span class="muted">Pickup</span><b>Shanghai Pudong (PVG) T2</b></div>
+        <div class="hr"></div>
+        <div style="display:flex;justify-content:space-between"><span class="muted">Drop-off</span><b>The PuLi Hotel, Jing'an</b></div>
+        <div class="hr"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">Passengers</span><span><button class="btn plain sm" onclick="step('pax',-1)">−</button> <b id="pax">2</b> <button class="btn plain sm" onclick="step('pax',1)">+</button></span></div>
+        <div class="hr"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center"><span class="muted">Luggage</span><span><button class="btn plain sm" onclick="step('bag',-1)">−</button> <b id="bag">2</b> <button class="btn plain sm" onclick="step('bag',1)">+</button></span></div>
+      </div>
+      <div class="sect">Vehicle</div>
+      <div id="veh"></div>
+      <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+        <div><div class="muted" style="font-size:12px">Estimated price <span class="tag demo">DEMO</span></div><div class="price" id="vehPrice">¥320</div></div>
+        <div class="muted" style="font-size:12px;max-width:150px;text-align:right">Fixed fare · meet & greet · 60 min free wait</div>
+      </div>
+      <button class="btn" style="margin-top:6px" onclick="confirmTransfer()">Confirm demo reservation</button>
+      <div class="note">Prototype only — no real driver, inventory or payment.</div>
+    </div>
+  </section>
+
+  <section class="screen" data-screen="voucher">
+    <div class="nav"><span class="back" onclick="go('transfer')">‹</span><span class="brand">Pickup confirmed</span></div>
+    <div class="body">
+      <div class="card" style="text-align:center">
+        <div class="checkmark" style="color:var(--blue)">🚗</div>
+        <div class="hd">Airport pickup booked</div>
+        <span class="tag demo">DEMO RESERVATION</span>
+        <div class="hr"></div>
+        <div style="text-align:left;font-size:14px;line-height:2">
+          <div><span class="muted">Ref</span> &nbsp;<b>LC-TRX-20931</b></div>
+          <div><span class="muted">Driver meets you</span> &nbsp;<b>PVG T2 arrivals</b></div>
+          <div><span class="muted">Vehicle</span> &nbsp;<b id="vRef">Comfort sedan</b></div>
+        </div>
+      </div>
+      <button class="btn" onclick="go('transfer')">Back to Landing Check</button>
+    </div>
+  </section>
+
+  <!-- ===================== 4. STAMP → MOMENTS → FRIENDS ===================== -->
+  <section class="screen" data-screen="stamp">
+    <div class="nav"><span class="back" onclick="go('confirm')">‹</span><span class="brand">Landing Check</span><span class="sp"></span><span class="ic" style="font-size:12px;font-weight:700">Arrived 🎉</span></div>
+    <div class="body">
+      <div class="hd" style="text-align:center">You made it through your first hour</div>
+      <div class="muted" style="text-align:center;margin:4px 0 14px">Here's your arrival stamp.</div>
+      <div class="stampcard">
+        <div style="font:800 12px var(--F);letter-spacing:2px;opacity:.8">THE FIRST STAMP</div>
+        <div style="font:800 26px var(--F);margin-top:6px">Shanghai</div>
+        <div style="opacity:.85;font-size:13px;margin-top:2px">Arrived · Oct 19, 2026 · PVG</div>
+        <div style="opacity:.7;font-size:12px;margin-top:14px">Online ✓ · Payment ✓ · At the hotel ✓</div>
+        <div class="seal">ARRIVED<br>上海</div>
+      </div>
+      <button class="btn" style="margin-top:16px" onclick="go2('moments','stamp_shared')">Post to Trip Moments</button>
+      <button class="btn ghost" style="margin-top:10px" onclick="shareFriends()">Share with friends</button>
+      <div class="note">Shared stamps hide private trip info (no hotel address, name or booking number).</div>
+    </div>
+  </section>
+
+  <section class="screen" data-screen="moments">
+    <div class="nav"><span class="back" onclick="go('stamp')">‹</span><span class="brand">Trip Moments</span><span class="sp"></span><span class="ic" style="font-size:12px;font-weight:700">Preview</span></div>
+    <div class="body">
+      <span class="tag demo">MOCK COMMUNITY — not posted to a real feed</span>
+      <div class="card" style="margin-top:10px">
+        <div class="row" style="align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:50%;background:var(--blue)"></div><div><b>Alex</b><div class="muted" style="font-size:12px">Shanghai · just now</div></div></div>
+        <div style="margin:12px 0;font-size:14px">First hour in China = sorted. Internet, payments, taxi — Landing Check walked me through it. 🛬🇨🇳 #FirstStamp</div>
+        <div class="stampcard" style="padding:14px"><div style="font:800 20px var(--F)">Shanghai</div><div style="opacity:.8;font-size:12px">Arrived · Oct 19 · PVG</div><div class="seal" style="width:48px;height:48px;font-size:8px">ARRIVED</div></div>
+      </div>
+      <button class="btn" onclick="postMoment()">Post to Trip Moments (demo)</button>
+      <button class="link" style="display:block;text-align:center;width:100%" onclick="go('stamp')">Cancel</button>
+    </div>
+  </section>
+
+  <!-- FRIENDS LANDING (referral) -->
+  <section class="screen" data-screen="friends">
+    <div class="nav"><span class="brand">Trip<span style="opacity:.85">.com</span></span><span class="sp"></span><span class="pill">Shared with you</span></div>
+    <div class="body">
+      <div class="photo" style="background:linear-gradient(135deg,#3a6db5,#13214a)">Shanghai</div>
+      <div class="stampcard" style="margin-top:12px;padding:14px"><div style="font:800 12px var(--F);letter-spacing:2px;opacity:.8">ALEX'S FIRST STAMP</div><div style="font:800 22px var(--F);margin-top:4px">Shanghai</div><div style="opacity:.8;font-size:12px">Arrived safely 🛬</div><div class="seal" style="width:50px;height:50px;font-size:8px">ARRIVED</div></div>
+      <div class="big" style="margin-top:18px">Your first hour in China, made easier.</div>
+      <div class="muted" style="margin-top:6px;font-size:14px">Get ready for internet, payments and transport before you arrive.</div>
+      <button class="btn" style="margin-top:16px" onclick="prepareArrival()">Prepare my arrival</button>
+      <button class="btn ghost" style="margin-top:10px" onclick="toast('Demo: browse trips on Trip.com')">Explore trips on Trip.com</button>
+      <div class="card" style="margin-top:16px">
+        <div class="muted" style="font-size:12px;font-weight:700">NO TRIP YET? PICK A DESTINATION</div>
+        <select id="dest" style="width:100%;margin-top:8px;height:42px;border:1px solid var(--line);border-radius:10px;padding:0 10px;font:600 14px var(--F)">
+          <option>Shanghai</option><option>Beijing</option><option>Chengdu</option><option>Guangzhou</option>
+        </select>
+      </div>
+      <div class="note">Shared view hides the sender's private trip details.</div>
+    </div>
+  </section>
+</div>
+
+<!-- eSIM plans sheet -->
+<div class="mask" id="esimSheet">
+  <div class="sheet">
+    <div style="display:flex;justify-content:space-between;align-items:center"><div class="hd">Choose your China eSIM</div><button class="link" onclick="closeSheet('esimSheet')">Close</button></div>
+    <span class="tag demo" style="margin-top:6px;display:inline-block">DEMO DATA · not a live Trip.com quote</span>
+    <div class="plan sel" data-plan="7" onclick="selPlan(this)"><div class="pt"><b>China · Mobile data</b><span class="price">¥35</span></div><div class="muted" style="font-size:12px;margin-top:4px">7 days · 5 GB · 4G/5G</div></div>
+    <div class="plan" data-plan="15" onclick="selPlan(this)"><div class="pt"><b>China · Mobile data</b><span class="price">¥69</span></div><div class="muted" style="font-size:12px;margin-top:4px">15 days · 15 GB · 4G/5G</div></div>
+    <div class="note">Compatibility: eSIM needs an eSIM-capable, carrier-unlocked phone. Install before you fly; activate on arrival.</div>
+    <button class="btn" style="margin-top:14px" onclick="confirmEsim()">Continue with Trip.com</button>
+    <button class="link" style="display:block;width:100%;text-align:center" onclick="closeSheet('esimSheet')">Back</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div id="dbg">
+  <div class="tg" onclick="document.getElementById('dbg').classList.toggle('open')">⚙ demo state</div>
+  <div class="panel"><div id="dbgState"></div><div class="hr" style="background:#2a3550"></div><div style="color:#6f8">events ▸</div><div id="dbgEvents"></div></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var DEFAULT = {hotelBooked:false, transferBooked:false, esimPurchased:false, esimInstalled:false,
+                 esimCompatible:true, landingCheckActivated:false, stampCreated:true, shareLinkOpened:false};
+  var S = load();
+  var LIVE = 'https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com#preflight';
+  var veh = [{t:'Economy sedan',s:'1-3 seats · 2 bags',p:260},{t:'Comfort sedan',s:'1-3 seats · 3 bags',p:320},{t:'Business van',s:'1-6 seats · 5 bags',p:520}];
+  var state = {pax:2, bag:2, vehi:1, plan:'7'};
+  var events = [];
+
+  function load(){ try{ var j=JSON.parse(localStorage.getItem('lc_ctp')); return Object.assign({}, DEFAULT, j||{}); }catch(e){ return Object.assign({},DEFAULT); } }
+  function save(){ try{ localStorage.setItem('lc_ctp', JSON.stringify(S)); }catch(e){} renderDbg(); }
+
+  function emit(ev){ events.unshift(ev); console.log('[event]', ev, JSON.stringify(S)); renderDbg(); }
+  function toast(t){ var e=document.getElementById('toast'); e.textContent=t; e.classList.add('on'); clearTimeout(e._t); e._t=setTimeout(function(){e.classList.remove('on');},1900); }
+  window.toast = toast;
+
+  function go(r){ document.querySelectorAll('.screen').forEach(function(s){ s.classList.toggle('on', s.dataset.screen===r); }); var p=document.querySelector('#phone'); if(p) p.scrollTop=0; var b=document.querySelector('.screen.on .body'); if(b) b.scrollTop=0; render(r); try{ history.replaceState(null,'', location.pathname+'?screen='+r); }catch(e){} }
+  window.go = go;
+  window.go2 = function(r, ev){ emit(ev); go(r); };
+
+  function render(r){
+    if(r==='confirm') renderConfirm();
+    if(r==='esim') renderEsim();
+    if(r==='transfer') renderTransfer();
+    if(r==='transferBook') renderVeh();
+    renderDbg();
+  }
+
+  // ---- scenario 1 ----
+  function renderConfirm(){
+    var el = document.getElementById('svcCards'); el.innerHTML='';
+    var cards = [];
+    if(!S.hotelBooked) cards.push({e:'🏨',t:'Hotels in Shanghai',d:'Find your place to stay',b:'Explore hotels',f:"go('hotels')"});
+    else if(!S.esimPurchased) cards.push({e:'📶',t:'Trip.com eSIM',d:'Get online the moment you land',b:'View eSIM plans',f:"go('esim')"});
+    if(!S.transferBooked) cards.push({e:'🚗',t:'Airport transfer',d:'Get to your hotel easily',b:'Explore transfers',f:"go2('transfer','transfer_offer_clicked')"});
+    if(!cards.length) cards.push({e:'🧭',t:'Things to do',d:'Plan your Shanghai days',b:'Explore',f:"toast('Demo: things to do')"});
+    cards.forEach(function(c){
+      var d=document.createElement('div'); d.className='svccard';
+      d.innerHTML='<div class="emoji">'+c.e+'</div><div class="t">'+c.t+'</div><div class="d">'+c.d+'</div>';
+      var btn=document.createElement('button'); btn.className='btn ghost sm'; btn.style.width='100%'; btn.textContent=c.b; btn.setAttribute('onclick',c.f);
+      d.appendChild(btn); el.appendChild(d);
+    });
+  }
+  window.getArrivalReady = function(){ S.landingCheckActivated=true; save(); emit('landing_check_entry_clicked'); toast('Opening live Landing Check…'); setTimeout(function(){ window.open(LIVE,'_blank'); },300); };
+  window.bookHotel = function(){ S.hotelBooked=true; save(); toast('Hotel reserved (demo)'); go('confirm'); };
+
+  // ---- scenario 2 ----
+  function renderEsim(){
+    var done = S.esimPurchased;
+    document.getElementById('esimOffer').style.display = done ? 'none':'block';
+    document.getElementById('esimDone').style.display = done ? 'block':'none';
+    var dot=document.getElementById('esimDot'), st=document.getElementById('esimStatus');
+    if(done){ dot.className='dot done'; dot.textContent='✓'; st.textContent='eSIM purchased · installation pending'; }
+    else { dot.className='dot todo'; dot.textContent='!'; st.textContent='Not ready · no eSIM or roaming plan found'; }
+  }
+  window.openEsimPlans = function(){ if(!S.esimCompatible){ toast('This phone is not eSIM-capable'); go('esimAlt'); return; } emit('esim_offer_clicked'); openSheet('esimSheet'); };
+  window.selPlan = function(node){ document.querySelectorAll('#esimSheet .plan').forEach(function(p){p.classList.remove('sel');}); node.classList.add('sel'); state.plan=node.dataset.plan; };
+  window.confirmEsim = function(){ S.esimPurchased=true; save(); closeSheet('esimSheet'); emit('esim_demo_order_confirmed'); toast('eSIM ordered (demo) · installation pending'); go('esim'); };
+  window.coverData = function(msg){ toast(msg+' — no purchase needed'); go('esim'); };
+
+  // ---- scenario 3 ----
+  function renderTransfer(){
+    document.getElementById('transferBooked').style.display = S.transferBooked ? 'block':'none';
+    document.getElementById('transferOpen').style.display = S.transferBooked ? 'none':'block';
+  }
+  function renderVeh(){
+    var el=document.getElementById('veh'); el.innerHTML='';
+    veh.forEach(function(v,i){
+      var d=document.createElement('div'); d.className='plan'+(i===state.vehi?' sel':''); d.onclick=function(){ state.vehi=i; renderVeh(); document.getElementById('vehPrice').textContent='¥'+veh[i].p; };
+      d.innerHTML='<div class="pt"><b>'+v.t+'</b><span class="price">¥'+v.p+'</span></div><div class="muted" style="font-size:12px;margin-top:4px">'+v.s+'</div>';
+      el.appendChild(d);
+    });
+    document.getElementById('vehPrice').textContent='¥'+veh[state.vehi].p;
+  }
+  window.step = function(k,n){ state[k]=Math.max(1, state[k]+n); var e=document.getElementById(k==='pax'?'pax':'bag'); e.textContent=state[k]; };
+  window.confirmTransfer = function(){ S.transferBooked=true; save(); emit('transfer_demo_order_confirmed'); document.getElementById('vRef').textContent=veh[state.vehi].t; go('voucher'); };
+
+  // ---- scenario 4 ----
+  window.shareFriends = function(){
+    S.stampCreated=true; save(); emit('stamp_shared');
+    var url = location.origin + location.pathname + '?screen=friends';
+    if(navigator.clipboard) navigator.clipboard.writeText(url).catch(function(){});
+    toast('Demo link copied — opening friend view');
+    setTimeout(function(){ openReferral(); }, 700);
+  };
+  window.postMoment = function(){ emit('stamp_shared'); toast('Posted to Trip Moments (demo)'); go('stamp'); };
+  function openReferral(){ S.shareLinkOpened=true; save(); emit('referral_opened'); go('friends'); }
+  window.prepareArrival = function(){ S.landingCheckActivated=true; save(); emit('referral_landing_check_started'); toast('Opening live Landing Check…'); setTimeout(function(){ window.open(LIVE,'_blank'); },300); };
+
+  // ---- bottom sheet ----
+  function openSheet(id){ document.getElementById(id).classList.add('on'); }
+  function closeSheet(id){ document.getElementById(id).classList.remove('on'); }
+  window.closeSheet = closeSheet;
+  document.querySelectorAll('.mask').forEach(function(m){ m.addEventListener('click', function(e){ if(e.target===m) m.classList.remove('on'); }); });
+
+  // ---- presentation toolbar ----
+  var jumps = [['① Flight','confirm'],['② eSIM','esim'],['③ Transfer','transfer'],['④ Stamp','stamp'],['Friend link','friends']];
+  var tool=document.getElementById('tool');
+  jumps.forEach(function(j){ var b=document.createElement('button'); b.className='j'+(j[1]==='friends'?' alt':''); b.textContent=j[0]; b.onclick=function(){ if(j[1]==='friends'){ openReferral(); } else go(j[1]); }; tool.appendChild(b); });
+  var rb=document.createElement('button'); rb.className='j'; rb.textContent='↺ Reset'; rb.onclick=function(){ S=Object.assign({},DEFAULT); state={pax:2,bag:2,vehi:1,plan:'7'}; events=[]; save(); toast('Demo reset'); go('confirm'); }; tool.appendChild(rb);
+
+  // ---- debug ----
+  function renderDbg(){
+    var st=document.getElementById('dbgState'); if(!st) return;
+    st.innerHTML = Object.keys(S).map(function(k){ return '<code>'+k+': '+ (S[k]?'<span style="color:#8fb">'+S[k]+'</span>':'<span style="color:#f99">'+S[k]+'</span>') +'</code>'; }).join('<br>');
+    document.getElementById('dbgEvents').innerHTML = events.slice(0,8).map(function(e){ return '<div class="ev">• '+e+'</div>'; }).join('') || '<div class="muted" style="color:#789">none yet</div>';
+  }
+
+  // ---- boot ----
+  var q = new URLSearchParams(location.search).get('screen');
+  if(q==='friends'){ openReferral(); }
+  else go(q && document.querySelector('[data-screen="'+q+'"]') ? q : 'confirm');
+  renderDbg();
+})();
+</script>
+</body>
+</html>
