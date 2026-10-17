@@ -981,13 +981,23 @@
     const carScreen = document.querySelector('.screen[data-route="car"]');
     if (carScreen) {
       const istyle = 'border:0;outline:0;background:transparent;font:600 17px Inter,sans-serif;color:#121826;width:100%';
-      const dstyle = 'border:0;outline:0;background:transparent;font:600 14px Inter,sans-serif;color:#121826';
+      const dstyle = 'border:0;outline:0;background:transparent;font:600 14px Inter,sans-serif;color:#121826;width:116px';
+      const lcDays = (a, b) => { const d = Math.round((new Date(b) - new Date(a)) / 86400000); return d > 0 ? d : 1; };
       const locRow = carScreen.querySelector('[data-pencil-name="Form Shanghai Pudong Airport (PVG)"]');
       const locText = locRow && locRow.querySelector('[data-pencil-name="Form Text"]');
-      if (locText) locText.innerHTML = `<input id="lc-car-city" value="上海" placeholder="取车城市" style="${istyle}">`;
+      if (locText) locText.innerHTML = `<input id="lc-car-city" value="${CQ.city}" placeholder="取车城市" style="${istyle}">`;
+      // 取/还车同城（开关关着），右侧原设计残留的 "Shanghai" 隐掉，避免和左侧城市打架
+      const locRight = locRow && locRow.querySelector('[data-pencil-name="Form Right"]');
+      if (locRight) locRight.style.display = 'none';
       const dateRow = carScreen.querySelector('[data-pencil-name="Form 14:30, Sep 25 - 10:00, Sep 28"]');
       const dateText = dateRow && dateRow.querySelector('[data-pencil-name="Form Text"]');
-      if (dateText) dateText.innerHTML = `<span style="display:flex;align-items:center;gap:6px"><input type="date" id="lc-car-pick" value="${CQ.pick}" style="${dstyle}"><span style="color:#6F7685">→</span><input type="date" id="lc-car-ret" value="${CQ.ret}" style="${dstyle}"></span>`;
+      const dateRight = dateRow && dateRow.querySelector('[data-pencil-name="Form Right"]');
+      const syncDays = () => { if (dateRight) dateRight.textContent = lcDays(CQ.pick, CQ.ret) + ' days'; };
+      if (dateText) dateText.innerHTML = `<span style="display:flex;align-items:center;gap:4px"><input type="date" id="lc-car-pick" value="${CQ.pick}" style="${dstyle}"><span style="color:#6F7685">→</span><input type="date" id="lc-car-ret" value="${CQ.ret}" style="${dstyle}"></span>`;
+      const pk0 = document.getElementById('lc-car-pick'), rt0 = document.getElementById('lc-car-ret');
+      if (pk0) pk0.onchange = () => { CQ.pick = pk0.value || CQ.pick; syncDays(); };
+      if (rt0) rt0.onchange = () => { CQ.ret = rt0.value || CQ.ret; syncDays(); };
+      syncDays();
       const sb = carScreen.querySelector('[data-pencil-name="Search Button"]');
       if (sb) {
         sb.removeAttribute('data-act');
