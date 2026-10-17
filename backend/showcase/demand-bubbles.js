@@ -25,6 +25,7 @@
   var DATA = null, bubbles = [], raw = [], legend = [];
   var W = 0, H = 0, DPR = 1, scale = 1;
   var running = false, built = false, userPaused = false, coveredOnly = false, rafId = 0;
+  var settled = false, settleFrames = 0;
   var active = Object.create(null); var activeCount = 0;   // empty => all shown
 
   // --- DOM scaffold (built once) ---
@@ -55,12 +56,11 @@
     coverBtn.addEventListener("click", function () {
       coveredOnly = !coveredOnly;
       coverBtn.setAttribute("aria-pressed", String(coveredOnly));
+      settled = false; settleFrames = 0;   // re-pack for the new set
       applyLang();
     });
     pauseBtn.addEventListener("click", function () {
-      userPaused = !userPaused;
-      pauseBtn.setAttribute("aria-pressed", String(userPaused));
-      applyLang();
+      if (built) buildBubbles();            // re-pack / reshuffle the cluster
     });
     cv.addEventListener("mousemove", onMove);
     cv.addEventListener("mouseleave", function () { tip.style.opacity = 0; });
@@ -107,7 +107,7 @@
       "同一语料里的高频实务词，气泡越大＝出现越多，按类别着色（取自 <b>" + n.toLocaleString("en-US") + "</b> 条需求语句）",
       "High-frequency practical words from the same corpus — bigger = more mentions, coloured by category (from <b>" + n.toLocaleString("en-US") + "</b> need-sentences)");
     coverBtn.textContent = T("只看已覆盖", "Covered only");
-    pauseBtn.textContent = userPaused ? T("播放", "Play") : T("暂停", "Pause");
+    pauseBtn.textContent = T("重新排布", "Re-pack");
     if (resetEl) resetEl.textContent = T("全部类别", "All categories");
     legendEl && legendEl.querySelectorAll(".db-chip").forEach(function (ch) {
       var l = legend.find(function (x) { return x.cat === ch.dataset.cat; });
@@ -140,48 +140,53 @@
   function buildBubbles() {
     var counts = raw.map(function (b) { return b.count; });
     var mn = Math.sqrt(Math.min.apply(null, counts)), mx = Math.sqrt(Math.max.apply(null, counts));
-    var rMin = 13 * scale, rMax = 50 * scale;
+    var rMin = 13 * scale, rMax = 52 * scale;
+    var cx = W / 2, cy = H / 2;
     bubbles = raw.map(function (b) {
       var t = mx > mn ? (Math.sqrt(b.count) - mn) / (mx - mn) : 0.5;
       var r = rMin + (rMax - rMin) * Math.pow(t, 0.85);
       return Object.assign({}, b, {
         r: r, label: b.term,
-        x: r + Math.random() * Math.max(1, W - 2 * r),
-        y: Math.random() * H,
-        vy: (0.14 + Math.random() * 0.34) * scale,
-        phase: Math.random() * Math.PI * 2,
-        wob: (0.2 + Math.random() * 0.45) * scale,
-        wsp: 0.6 + Math.random() * 0.7
+        x: cx + (Math.random() - 0.5) * W * 0.55,
+        y: cy + (Math.random() - 0.5) * H * 0.55,
+        vx: 0, vy: 0
       });
     });
+    settled = false; settleFrames = 0;
+    if (reduce) { for (var k = 0; k < 240; k++) step(); settled = true; }
   }
 
-  // --- physics ---
-  function step(dt) {
-    var i, j;
-    for (i = 0; i < bubbles.length; i++) {
-      var b = bubbles[i];
-      b.y -= b.vy * dt;
-      b.phase += 0.016 * b.wsp * dt;
-      b.x += Math.cos(b.phase) * b.wob * dt * 0.6;
-      if (b.y < -b.r - 4) { b.y = H + b.r + Math.random() * 36; b.x = b.r + Math.random() * Math.max(1, W - 2 * b.r); }
-    }
+  // --- physics: settle into a tight collision-packed cluster, then freeze (static) ---
+  function step() {
+    var cx = W / 2, cy = H / 2, i, j;
     var act = bubbles.filter(visible);
     for (i = 0; i < act.length; i++) {
-      for (j = i + 1; j < act.length; j++) {
-        var a = act[i], c = act[j];
-        var dx = c.x - a.x, dy = c.y - a.y, d = Math.hypot(dx, dy), md = a.r + c.r + 2;
-        if (d < md && d > 0.01) {
-          var push = (md - d) * 0.5 * 0.14; dx /= d; dy /= d;
-          a.x -= dx * push; a.y -= dy * push * 0.6; c.x += dx * push; c.y += dy * push * 0.6;
+      var b = act[i];
+      b.vx *= 0.80; b.vy *= 0.80;
+      b.vx += (cx - b.x) * 0.0045;
+      b.vy += (cy - b.y) * 0.0045;
+    }
+    for (var it = 0; it < 3; it++) {
+      for (i = 0; i < act.length; i++) {
+        for (j = i + 1; j < act.length; j++) {
+          var a = act[i], c = act[j];
+          var dx = c.x - a.x, dy = c.y - a.y, d = Math.hypot(dx, dy) || 0.01, md = a.r + c.r + 1.5;
+          if (d < md) {
+            var push = (md - d) / d * 0.5, ox = dx * push, oy = dy * push;
+            a.x -= ox; a.y -= oy; c.x += ox; c.y += oy;
+          }
         }
       }
     }
-    for (i = 0; i < bubbles.length; i++) {
-      var bb = bubbles[i];
-      if (bb.x < bb.r) bb.x += (bb.r - bb.x) * 0.2;
-      if (bb.x > W - bb.r) bb.x -= (bb.x - (W - bb.r)) * 0.2;
+    var energy = 0;
+    for (i = 0; i < act.length; i++) {
+      var bb = act[i];
+      bb.x += bb.vx; bb.y += bb.vy;
+      energy += bb.vx * bb.vx + bb.vy * bb.vy;
+      if (bb.x < bb.r) bb.x = bb.r; if (bb.x > W - bb.r) bb.x = W - bb.r;
+      if (bb.y < bb.r) bb.y = bb.r; if (bb.y > H - bb.r) bb.y = H - bb.r;
     }
+    return energy / Math.max(1, act.length);
   }
 
   // --- draw ---
@@ -222,12 +227,13 @@
 
   function frame(ts) {
     rafId = requestAnimationFrame(frame);
-    if (!running) { frame.last = ts; return; }
-    if (!frame.last) frame.last = ts;
-    var dt = (ts - frame.last) / 16.67; frame.last = ts;
-    dt = Math.min(dt, 2.2);
+    if (!running) return;
+    if (!settled && !userPaused && !reduce) {
+      var e = step();
+      settleFrames++;
+      if (e < 0.03 || settleFrames > 320) settled = true;
+    }
     ctx.clearRect(0, 0, W, H);
-    if (!userPaused && !reduce) step(dt);
     var i;
     for (i = 0; i < bubbles.length; i++) if (visible(bubbles[i]) && !highlighted(bubbles[i])) drawBubble(bubbles[i]);
     for (i = 0; i < bubbles.length; i++) if (visible(bubbles[i]) && highlighted(bubbles[i])) drawBubble(bubbles[i]);
@@ -286,9 +292,7 @@
     if (window.ResizeObserver) {
       var ro = new ResizeObserver(function () {
         if (!built) { setRunning(running); return; }
-        var old = bubbles.map(function (b) { return { x: b.x / (W || 1), y: b.y / (H || 1) }; });
-        resize(); buildBubbles();
-        bubbles.forEach(function (b, i) { if (old[i]) { b.x = old[i].x * W; b.y = old[i].y * H; } });
+        resize(); buildBubbles();   // re-pack at the new size
       });
       ro.observe(host.querySelector(".db-stage-wrap"));
     }

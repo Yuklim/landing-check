@@ -35,14 +35,13 @@ html[lang="en"] .zh{display:none !important}
 .deck-stage{
   position:absolute;left:50%;top:50%;width:var(--stage-w);height:var(--stage-h);
   transform-origin:center center;
-  background:#fff;border-radius:14px;overflow:hidden;
-  box-shadow:0 40px 120px #00000066, 0 0 0 1px #ffffff14;
+  background:#fff;overflow:hidden;
 }
 
 /* ---------- slides ---------- */
 .slide{
   position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
-  padding:66px 92px; opacity:0; visibility:hidden;
+  padding:50px 84px; opacity:0; visibility:hidden;
   background:#fff; overflow:hidden; will-change:transform,opacity;
 }
 .slide--dark{background:linear-gradient(135deg,#102a66 0%,#0b1f52 55%,#0a1740 100%);color:#fff}
@@ -202,14 +201,31 @@ html[lang="en"] .zh{display:none !important}
 .offer-cta{margin:11px 13px 13px;background:var(--blue);color:#fff;text-align:center;font-weight:700;font-size:13px;padding:11px;border-radius:9px}
 .mock-reco{font-size:11px;color:#8a93a3;padding:2px 2px 0;display:flex;align-items:center;gap:6px}
 .mock-reco b{color:var(--blue)}
-.slide--tight{padding:44px 72px}
-#commercial .mock-phone{width:198px}
-#commercial .mock-screen{min-height:344px}
-#commercial .mock-body{gap:9px;padding:12px}
-#commercial .offer-opt{padding:8px 12px}
-#commercial .offer-cta{margin:10px 12px 12px;padding:10px}
-#commercial .expand{margin-top:16px;padding-top:14px}
+.slide--tight{padding:40px 72px}
+/* commercial: narrative left, mock phones right (uses the whole width, no CJK vertical wrap) */
+.comm-wrap{display:grid;grid-template-columns:38% 1fr;gap:40px;align-items:center;margin-top:14px}
+.comm-left{display:flex;flex-direction:column;gap:18px}
+.flowpath.vert{flex-direction:column;align-items:stretch;gap:8px}
+.flowpath.vert .step{justify-content:flex-start;font-size:15px;padding:12px 16px}
+.flowpath.vert .arrow{align-self:center;transform:rotate(90deg);font-size:18px;line-height:1}
+#commercial .mock-row{gap:28px;justify-content:center;align-items:stretch}
+#commercial .mock-phone{width:220px}
+#commercial .mock-screen{min-height:402px}
+#commercial .mock-body{gap:10px;padding:13px}
+.offer-src{font-size:10.5px;font-weight:700;color:var(--blue);background:#eef3ff;padding:6px 12px;letter-spacing:.02em;display:flex;align-items:center;gap:6px}
+.offer-tt{flex:1;min-width:0}
+#commercial .offer-head{padding:11px 13px}
+#commercial .offer-head .ot{font-size:13px;line-height:1.3}
+#commercial .offer-opt{padding:8px 13px;font-size:11.5px}
+#commercial .offer-cta{margin:10px 13px 13px;padding:10px;font-size:12.5px}
+#commercial .expand{margin-top:0;border:0;padding-top:0}
+#commercial .expand-head{margin-bottom:11px}
+#commercial .expand-items{grid-template-columns:1fr;gap:8px}
+#commercial .expand-item{padding:10px 13px;gap:11px}
+#commercial .expand-item .ei{width:32px;height:32px}
 #commercial .mock-caption{margin-top:8px}
+#commercial .mock-app{font-size:12px;white-space:nowrap}
+#demandBubbles .db-title{display:none}
 
 /* commercial expansion row */
 .expand{border-top:1px dashed #c9d2e2;margin-top:26px;padding-top:22px}
@@ -309,7 +325,8 @@ html[lang="en"] .zh{display:none !important}
 .v1-card li::before{content:"✓";color:var(--blue);font-weight:700}
 
 /* ---------- iteration: before -> now ecosystem ---------- */
-.evo-wrap{display:grid;grid-template-columns:.8fr 56px 1.4fr;gap:20px;align-items:center}
+.evo-wrap{display:grid;grid-template-columns:.82fr 104px 1.36fr;gap:18px;align-items:center}
+.evo-mid .taglist span{white-space:nowrap}
 .evo-before{border:1px solid var(--line);border-radius:14px;padding:22px;background:#fafbfe}
 .evo-before .ek{font-family:var(--mono);font-size:13px;color:#9aa4b4}
 .evo-before h3{font-size:22px;margin-top:8px}

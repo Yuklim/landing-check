@@ -109,7 +109,7 @@
     },
     problem: function (sl) { animateBars(sl); },
     closing: function (sl) { makeQR(sl); },
-    proto: function (sl) { makeQR(sl); },
+    team: function (sl) { makeQR(sl); },
     "iter-eco": function (sl) { if (!reduce) drawEco(sl); }
   };
   function playIntro(i) {
@@ -196,10 +196,10 @@
   (function () {
     var cfg = window.LC_SHOWCASE || {};
     var host = document.getElementById("deckVideo");
-    if (host && cfg.video && cfg.video.src) {
+    if (host) {
       var v = document.createElement("video");
-      v.src = cfg.video.src; v.controls = true; v.playsInline = true; v.preload = "metadata";
-      if (cfg.video.poster) v.poster = cfg.video.poster;
+      v.src = "assets/landing-check-opener-v3.mp4";   // cinematic opener (片头)
+      v.controls = true; v.playsInline = true; v.preload = "metadata";
       host.appendChild(v);
     }
     if (cfg.demoUrl) {
