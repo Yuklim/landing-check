@@ -1,22 +1,22 @@
 {
   "schema": 1,
-  "version": "2026.10.16.3",
-  "revision": "28fc3194dd1e77351611",
+  "version": "2026.10.17.4",
+  "revision": "c80740126d43f688a4d9",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "a1392fb958343224d1e793d807c890f79325f85ff8237e4cd4d9deef7709acae",
-      "bytes": 142992
+      "sha256": "edb761f4afe413f3bd4445d30d33418ba2aac14269eab9cdceaaf97c2a9d617b",
+      "bytes": 143160
     },
     {
       "path": "data/first-stamp.json",
-      "sha256": "fbee7243f07c152533651a396ce55891ac72c7581fa9678aec4862746a0b49bd",
-      "bytes": 6757
+      "sha256": "fac2be3bdc84c6a90f987345b65fb45824b83893c623e915fcdc31b041a6ef55",
+      "bytes": 18669
     },
     {
       "path": "data/offline-pvg-t2.json",
-      "sha256": "3debaacfe5a4de262ef7030fed9c876492e8b9f0b6e54c96979b278ab82a3607",
-      "bytes": 22754
+      "sha256": "041881f2627fb54f7dfe2dd07beb6f8f09871ea74e136a79aa7de19d0dff32ee",
+      "bytes": 29880
     },
     {
       "path": "fonts/OFL-CormorantGaramond.txt",
@@ -205,13 +205,13 @@
     },
     {
       "path": "offline.css",
-      "sha256": "6680cc7853ff4e3043170c4ff9319a568f1cc48071863e13422de08efa66c17e",
-      "bytes": 10927
+      "sha256": "d9ae3a0169d3ea08706c6173c5ba9623a88076f0bb832ef688a994cfef5da998",
+      "bytes": 16473
     },
     {
       "path": "offline.js",
-      "sha256": "2549da8e4f3f7497ec1e88c41e5fc880b5ee9ae77f0e7e3c3af3615b38aea131",
-      "bytes": 40392
+      "sha256": "dc5fef5693ed781318b8f34a3ba4dc5e1bfc7699fab97ecdd174e62226d9a863",
+      "bytes": 48353
     },
     {
       "path": "stamp-renderer.js",
@@ -220,13 +220,13 @@
     },
     {
       "path": "stamp.css",
-      "sha256": "a78e3d26c2b9d4103e4bf50840d6baec33e7cca3dcce34578cb6dd81aa993790",
-      "bytes": 14455
+      "sha256": "7ba2d1a06dfda2a9b23b45b2344742650bcbf0bec8b9553783430b9a47b1821f",
+      "bytes": 17994
     },
     {
       "path": "stamp.js",
-      "sha256": "bfb1d7743071ff7e2a3afbcb8380012e3ec66f124a58d02560565424ec691c29",
-      "bytes": 43689
+      "sha256": "b7ad154877a5bab0103c60e6ac2dc924622448722147083618cb14cb59ad42a3",
+      "bytes": 47939
     },
     {
       "path": "tutorials.json",

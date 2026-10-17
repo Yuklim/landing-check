@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026.10.16.3",
+  "version": "2026.10.17.4",
   "airport": {
     "code": "PVG",
     "terminal": "T2",
@@ -58,7 +58,32 @@
       "sources": [
         "airport"
       ],
-      "checked_at": "2026-10-16"
+      "checked_at": "2026-10-16",
+      "guidance": {
+        "icon": "wifi",
+        "title": "Connect to airport Wi-Fi",
+        "summary": "Get help with the airport network or its login verification.",
+        "location_hint": "PVG T2 · ask staff for the current Wi-Fi authentication point",
+        "request": {
+          "zh": "我需要连接机场 Wi-Fi。请问哪里可以办理上网认证，或者找到能帮助我联网的工作人员？",
+          "en": "I need to connect to the airport Wi-Fi. Where can I complete the login verification or find someone who can help me get online?"
+        },
+        "steps": [
+          "Ask an airport staff member where the current Wi-Fi authentication point is. The exact kiosk location has not been confirmed.",
+          "Follow the airport login screen or the staff member’s instructions. Keep your passport ready if requested.",
+          "Open a web page to check internet access. If you still cannot get online, ask at the airport service center."
+        ],
+        "fallback": "Try the International Services Shanghai center in the T2 international arrivals hall for in-person help.",
+        "fallback_place": "service",
+        "staff_location": {
+          "zh": "浦东机场 T2 航站楼 · Wi-Fi 认证服务点（具体位置待现场确认）",
+          "en": "PVG Terminal 2 · Wi-Fi authentication point; exact desk to be confirmed."
+        },
+        "at_counter": {
+          "zh": "我连接机场 Wi-Fi 时遇到了问题，可以帮我完成认证并检查是否能上网吗？",
+          "en": "I am having trouble connecting to the airport Wi-Fi. Could you help me complete the login verification and check that I can access the internet?"
+        }
+      }
     },
     {
       "id": "service",
@@ -78,7 +103,32 @@
         "airport",
         "shanghai"
       ],
-      "checked_at": "2026-10-16"
+      "checked_at": "2026-10-16",
+      "guidance": {
+        "icon": "help",
+        "title": "Get help from airport staff",
+        "summary": "A place to ask about getting online, payment, transport or visitor information.",
+        "location_hint": "T2 international arrivals hall · public arrivals area",
+        "request": {
+          "zh": "您好，我需要一些帮助。请问 T2 国际到达大厅的外籍人员一站式综合服务中心在哪里？可以帮我指一下位置吗？",
+          "en": "Hello, I need some help. Where is the International Services Shanghai center in the T2 international arrivals hall? Could you point me in the right direction?"
+        },
+        "steps": [
+          "In the public international arrivals hall, look for International Services Shanghai signs or show this request to airport staff.",
+          "Tell the service center what you need: internet, payment, transport or visitor information. Ask which desk can help.",
+          "If a particular desk is unavailable, ask staff for the next available option before leaving."
+        ],
+        "fallback": "Show this request to another airport staff member or use the saved airport service number. Calling needs phone signal.",
+        "fallback_place": null,
+        "staff_location": {
+          "zh": "浦东机场 T2 国际到达大厅公共区域",
+          "en": "Public international arrivals hall, PVG Terminal 2."
+        },
+        "at_counter": {
+          "zh": "您好，我刚到中国，需要一些帮助。请问哪位工作人员可以协助我处理联网、支付或交通问题？",
+          "en": "Hello, I have just arrived in China and need some help. Who can assist me with internet access, payment or transport?"
+        }
+      }
     },
     {
       "id": "sim",
@@ -98,7 +148,32 @@
         "airport",
         "shanghai"
       ],
-      "checked_at": "2026-10-16"
+      "checked_at": "2026-10-16",
+      "guidance": {
+        "icon": "phone",
+        "title": "Buy a local SIM card",
+        "summary": "Ask about mobile data, phone compatibility and setup.",
+        "location_hint": "T2 international arrivals · ask for the communication desk",
+        "request": {
+          "zh": "我想办理一张可以在中国上网的手机 SIM 卡。请问一站式综合服务中心的通信服务窗口在哪里？",
+          "en": "I would like a SIM card with mobile data for China. Where is the communication desk at the one-stop service center?"
+        },
+        "steps": [
+          "Look for International Services Shanghai signs in the T2 international arrivals hall, or show the request to staff.",
+          "Ask the communication desk about available plans, identification, phone compatibility and accepted payment.",
+          "Ask staff to help with setup. Before leaving, check that you can open a web page."
+        ],
+        "fallback": "Ask the service center about another available telecom desk. Confirm where it is before leaving; do not assume the Ctrip exchange counter sells SIM cards.",
+        "fallback_place": "service",
+        "staff_location": {
+          "zh": "浦东机场 T2 国际到达大厅 · 一站式综合服务中心通信窗口",
+          "en": "Communication desk at International Services Shanghai, T2 public international arrivals hall."
+        },
+        "at_counter": {
+          "zh": "我想办理一张可以在中国上网的手机 SIM 卡。请问需要什么证件、支持哪些付款方式？可以帮我安装并测试吗？",
+          "en": "I would like a SIM card with mobile data for China. What identification do I need, and which payment methods do you accept? Could you help me set it up and test it?"
+        }
+      }
     },
     {
       "id": "exchange",
@@ -117,7 +192,32 @@
       "sources": [
         "forex"
       ],
-      "checked_at": "2026-10-16"
+      "checked_at": "2026-10-16",
+      "guidance": {
+        "icon": "cards",
+        "title": "Find the Trip.com / Ctrip counter",
+        "summary": "Ask the currency-exchange counter whether it can exchange your foreign cash for RMB.",
+        "location_hint": "T2 · level 3 departures · G island, near door 25 · before security",
+        "request": {
+          "zh": "请问携程换汇柜台在哪里？我想咨询是否可以把外币现金兑换成人民币。如果这里不能办理，请告诉我哪里可以办理。",
+          "en": "Where is the Trip.com / Ctrip currency-exchange counter? I would like to ask whether I can exchange foreign cash for RMB. If this is not available here, could you tell me where I can do it?"
+        },
+        "steps": [
+          "Ask airport staff to confirm the Ctrip exchange counter: T2, level 3 departures, G check-in island near door 25, before security.",
+          "At the counter, ask whether foreign-cash-to-RMB exchange is available for you. Confirm the required ID, currency, fees and opening hours.",
+          "If you need a SIM or Wi-Fi help, use the airport service center instead. This exchange outlet is not a confirmed communication desk."
+        ],
+        "fallback": "Ask the airport service center for an available currency-exchange point or an ATM suitable for your card. Confirm availability before making the trip.",
+        "fallback_place": "service",
+        "staff_location": {
+          "zh": "浦东机场 T2，3 楼国际出发层，G 岛近 25 号门，安检外",
+          "en": "PVG T2, level 3 departures, G island near door 25, before security."
+        },
+        "at_counter": {
+          "zh": "请问这里可以把外币现金兑换成人民币吗？需要什么证件，费用是多少？",
+          "en": "Can I exchange foreign cash for RMB here? What identification do I need, and what are the fees?"
+        }
+      }
     }
   ],
   "phrases": [

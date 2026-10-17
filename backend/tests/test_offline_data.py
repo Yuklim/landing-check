@@ -59,3 +59,19 @@ def test_build_template_keeps_offline_integration():
     for asset in ('offline.css', 'offline-db.js', 'offline.js', 'stamp.css', 'stamp-renderer.js', 'stamp.js'):
         assert asset in template
     assert "'offline-help'" in template
+
+
+
+def test_service_tasks_have_staff_requests_and_real_fallbacks():
+    data = json.loads((H5 / 'data/offline-pvg-t2.json').read_text())
+    places = {p['id']: p for p in data['places']}
+    for place in places.values():
+        guidance = place['guidance']
+        assert guidance['title'] and guidance['summary'] and guidance['location_hint']
+        assert guidance['request']['zh'] and guidance['request']['en']
+        assert guidance['staff_location']['zh'] and guidance['staff_location']['en']
+        assert guidance['at_counter']['zh'] and guidance['at_counter']['en']
+        assert guidance['steps'] and guidance['fallback']
+        target = guidance['fallback_place']
+        assert target is None or (target in places and target != place['id'])
+    assert places['exchange']['guidance']['fallback_place'] == 'service'

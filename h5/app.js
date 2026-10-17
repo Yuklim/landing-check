@@ -22,7 +22,8 @@
   const localOnly = () => !navigator.onLine || /^#(?:offline|share|community|city-passport)/.test(location.hash);
   const get = (p, explicit = false) => (!navigator.onLine || (!explicit && localOnly())) ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p).then(ok);
   const post = (p, body, isForm) => localOnly() ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p, isForm ? { method: 'POST', body } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) }).then(ok);
-  window.lcOfflineTrip = () => withTimeout(get('/mock/trip', true), 4000);
+  // This endpoint is simulated; preserve that provenance when prefilling the offline hotel card.
+  window.lcOfflineTrip = () => API ? withTimeout(get('/mock/trip', true), 4000).then(trip => ({ ...trip, demo: true })) : Promise.resolve(null);
 
   // ---------- 状态指示 ----------
   const dot = document.createElement('div');
