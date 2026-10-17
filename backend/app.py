@@ -3,7 +3,7 @@
 
     uvicorn app:app --reload --port 8000
 """
-import os, re
+import os, re, json, hashlib
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,6 +17,7 @@ from mock import MockTrip, TripStore
 from rules import PAY_METHODS
 from ctrip_mcp import (query_content as ctrip_query_content, query_train as ctrip_query_train,
                        query_hotel as ctrip_query_hotel, query_car_rental as ctrip_query_car_rental,
+                       query_ticket as ctrip_query_ticket, query_guides as ctrip_query_guides,
                        CtripMCPError)
 import stuck
 import rules
@@ -250,11 +251,75 @@ def content_cars(pickUpCity: str, returnCity: str = '', vehicleGroupIds: str = '
         return {'items': [], 'note': str(e)}
 
 
+# 行前检查「到了先去哪 / 出发前读一读」：门票榜单 + 第一次来的旅游笔记。
+# 官方数据是中文，外国游客看英文：门票名有固定译名表，其余标题 / 一句话摘要交给模型翻译并缓存；
+# 模型不可用时原样返回中文（translated=false），前端照常显示。
+_EN_CACHE = {}
+_EN_PROMPT = ('You translate Chinese travel content for foreign visitors arriving in China. '
+              'Return JSON {"items":[{"id":..., "title":..., "summary":...}]} with one entry per input id. '
+              'title: natural English, at most 60 characters, no emoji. '
+              'summary: one plain English sentence, at most 120 characters, saying what the reader gets. '
+              'Keep proper names in their common English form (The Bund, Yu Garden, Lujiazui).')
+
+
+def _english(kind, rows):
+    """rows: [(id, 中文标题, 中文正文片段)] -> {id: (title, summary)}。模型失败时只返回已缓存的部分。"""
+    todo = [(str(i), t, x) for i, t, x in rows if (kind, str(i)) not in _EN_CACHE]
+    if todo and stuck.KEY:
+        ask = [{'id': i, 'title': t, 'text': (x or '')[:280]} for i, t, x in todo]
+        try:
+            raw = stuck.call_model([{'role': 'system', 'content': _EN_PROMPT},
+                                    {'role': 'user', 'content': json.dumps(ask, ensure_ascii=False)}], max_tokens=1500)
+            for it in (json.loads(raw).get('items') or []):
+                if it.get('id') and it.get('title'):
+                    _EN_CACHE[(kind, str(it['id']))] = (str(it['title'])[:80], str(it.get('summary') or '')[:160])
+        except Exception:
+            pass
+    return {str(i): _EN_CACHE[(kind, str(i))] for i, _, _ in rows if (kind, str(i)) in _EN_CACHE}
+
+
+@app.get('/content/tickets')
+def content_tickets(city: str = '上海', tag: str = '必打卡', size: int = 8):
+    """景点门票榜单：代理官方 query_ticket，起价 + 评分 + 英文名。"""
+    try:
+        data = ctrip_query_ticket(city=city, tag=tag, size=min(max(size, 1), 20))
+    except CtripMCPError as e:
+        return {'items': [], 'note': str(e)}
+    items = data['items']
+    en = _english('ticket', [(it['id'], it['name'], it['recommend']) for it in items])
+    for it in items:
+        t = en.get(str(it['id']))
+        it['name_en'] = it['name_en'] or (t[0] if t else '')
+        it['recommend_en'] = t[1] if t else ''
+    data['translated'] = bool(items) and all(it['name_en'] for it in items)
+    return data
+
+
+@app.get('/content/guides')
+def content_guides(city: str = '上海', scenarios: str = '第一次去', size: int = 6):
+    """第一次来这座城市的旅游笔记：代理官方 query_content（city+scenarios），附英文标题与一句话摘要。"""
+    try:
+        data = ctrip_query_guides(city=city, scenarios=scenarios, size=min(max(size, 1), 12))
+    except CtripMCPError as e:
+        return {'items': [], 'note': str(e)}
+    # 没图的笔记在卡片里没法看，去掉；listUrl 是列表页地址（每条都一样），id 用标题 + 作者算
+    items = data['items'] = [it for it in data['items'] if it.get('cover') or it.get('images')]
+    for it in items:
+        it['id'] = hashlib.sha1((it['title'] + '|' + it['author']).encode('utf-8')).hexdigest()[:12]
+    en = _english('guide', [(it['id'], it['title'], it['text']) for it in items])
+    for it in items:
+        it['title_en'], it['summary_en'] = en.get(str(it['id']), ('', ''))
+    data['translated'] = bool(items) and all(it['title_en'] for it in items)
+    return data
+
+
 # 预热：把 demo 常用的查询先打一遍灌进缓存，现场点开就秒出（租车冷启动≈10s，务必先热）。
 _WARM_JOBS = [
     ('community', lambda: ctrip_query_content(query='上海外滩', size=10)),
     ('hotels', lambda: ctrip_query_hotel(city='上海', sort_type='1', size=10)),
     ('cars', lambda: ctrip_query_car_rental('上海', size=12)),
+    ('tickets', lambda: content_tickets()),
+    ('guides', lambda: content_guides()),
 ]
 
 

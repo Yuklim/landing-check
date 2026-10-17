@@ -14,6 +14,7 @@
           由上层路由兜底，避免页面卡顿或翻车。
 """
 import os
+import re
 import json
 import time
 import itertools
@@ -122,6 +123,75 @@ def query_content(query='', city='', keyword='', region='', scenarios='', size=1
     if not isinstance(data, list):
         return {'items': [], 'note': data if isinstance(data, str) else ''}
     return {'items': [_norm_note(n) for n in data]}
+
+
+# 笔记正文里有 <poi ...>外滩</poi> 这种标签：只留文字；标题为空时取正文第一行
+_POI = re.compile(r'<poi\b[^>]*>(.*?)</poi>', re.S)
+_TAG = re.compile(r'<[^>]+>')
+
+
+def clean_text(text):
+    return _TAG.sub('', _POI.sub(r'\1', text or '')).replace('﻿', '').strip()
+
+
+def query_guides(city='上海', scenarios='第一次去', size=6):
+    """行前检查「出发前读一读」：第一次来这座城市的旅游笔记（city+scenarios 组合）。"""
+    data = call_tool('query_content', {'city': city, 'scenarios': scenarios, 'size': size})
+    if not isinstance(data, list):
+        return {'items': [], 'note': data if isinstance(data, str) else ''}
+    items = []
+    for n in data:
+        it = _norm_note(n)
+        text = clean_text(n.get('content', ''))
+        it['text'] = text[:600]
+        it['title'] = clean_text(it['title']) or text.split('\n', 1)[0][:60]
+        items.append(it)
+    return {'items': items}
+
+
+# ---------------- query_ticket：景点门票 ----------------
+# 外国游客看英文：上海热门景点用官方 / 通行英文名，其余由上层翻译或保留中文
+SPOT_EN = {
+    '外滩': 'The Bund', '上海迪士尼度假区': 'Shanghai Disney Resort', '东方明珠': 'Oriental Pearl Tower',
+    '豫园': 'Yu Garden', '上海海昌海洋公园': 'Haichang Ocean Park', '上海乐高乐园®度假区': 'LEGOLAND® Shanghai Resort',
+    '上海野生动物园': 'Shanghai Wild Animal Park', '上海海洋水族馆': 'Shanghai Ocean Aquarium',
+    '上海千古情景区': 'The Romance of Shanghai Park', '上海天文馆': 'Shanghai Astronomy Museum',
+    '上海中心大厦': 'Shanghai Tower', '上海博物馆': 'Shanghai Museum', '朱家角古镇': 'Zhujiajiao Water Town',
+    '田子坊': 'Tianzifang', '南京路步行街': 'Nanjing Road Pedestrian Street', '上海科技馆': 'Shanghai Science & Technology Museum',
+    '上海环球金融中心': 'Shanghai World Financial Center', '武康路': 'Wukang Road', '新天地': 'Xintiandi',
+}
+
+
+def _norm_ticket(t):
+    b = t.get('basicInfo') or {}
+    a = t.get('additionalInfo') or {}
+    u = t.get('urlInfo') or {}
+    prices = [_num(r.get('price')) for r in t.get('resourceInfoList') or []]
+    prices = [p for p in prices if p]
+    open_time = (((t.get('ticketExtendInfo') or {}).get('openTimeInfo') or {}).get('unFormatOpenTime') or '')
+    name = b.get('name', '')
+    return {
+        'id': t.get('productID') or b.get('productID'),
+        'name': name,
+        'name_en': SPOT_EN.get(name, ''),
+        'cover': b.get('imageURL', ''),
+        'score': b.get('score'),
+        'comments': a.get('commentsCount') or 0,
+        'price_from': min(prices) if prices else None,
+        'rank': a.get('rankTag', ''),
+        'recommend': a.get('pmRecommand', ''),
+        'open_time': open_time,
+        'free': ('全天开放' in open_time) and not prices,
+        'url': u.get('h5Url') or u.get('pcUrl') or '',
+    }
+
+
+def query_ticket(city='上海', tag='必打卡', size=8):
+    """景点门票榜单（cityName + tag），每个景点只取起价，归一化成卡片。"""
+    data = call_tool('query_ticket', {'cityName': city, 'tag': tag, 'resourceSize': 3})
+    if not isinstance(data, list):
+        return {'items': [], 'note': data if isinstance(data, str) else ''}
+    return {'items': [_norm_ticket(t) for t in data[:size]]}
 
 
 # ---------------- query_train：城际火车票 ----------------
