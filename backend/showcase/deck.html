@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a1430">
+  <title>Landing Check · 答辩</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="deck.css">
+</head>
+<body>
+  <div class="deck-progress"></div>
+
+  <div class="deck-root">
+    <div class="deck-stage">
+
+      <!-- 01 COVER -->
+      <section class="slide slide--wash slide--center" id="cover" data-chapter>
+        <div class="cover-wrap">
+          <div>
+            <div class="cover-brand" data-a><span class="brand-symbol">L<span>✓</span></span>Landing Check</div>
+            <h1 class="cover-title" data-a><span class="zh">第一次来中国，<br><span class="hl">落地后该做什么？</span></span></h1>
+            <p class="cover-sub" data-a>把行前准备、落地联网、支付和去酒店，放进 Trip.com——在游客需要时，告诉他下一步怎么做。</p>
+            <div class="cover-meta" data-a>
+              <div><strong>TRIP HACKATHON 2026</strong><span>入境游 AI 创新</span></div>
+              <div><strong>上海交通大学</strong><span>4 人团队</span></div>
+              <div><strong>H5 + API</strong><span>可交互原型</span></div>
+            </div>
+          </div>
+          <div class="cover-visual" data-a>
+            <div class="grid"></div>
+            <div class="phone phone-left"><img src="assets/preflight.png" alt="行前准备"></div>
+            <div class="phone phone-main"><img src="assets/landing.png" alt="落地联网"></div>
+            <div class="phone phone-right"><img src="assets/driver.png" alt="中文地址卡"></div>
+            <div class="cover-tag"><span class="ck">✓</span> 准备在起飞前，指引在需要时</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 02 VIDEO -->
+      <section class="slide slide--dark" id="video">
+        <div class="video-stage">
+          <div class="video-cap" data-a>
+            <h2>产品演示</h2>
+            <span class="meta">约 57 秒 · 中英字幕 · 跟随一位首次来华的旅客</span>
+          </div>
+          <div class="video-frame" id="deckVideo" data-a></div>
+        </div>
+      </section>
+
+      <!-- 03 PROBLEM / demand bars -->
+      <section class="slide" id="problem" data-chapter>
+        <div class="s-kicker" data-a>01 / 真实需求</div>
+        <h2 class="s-title" data-a>大家在聊什么、<span class="hl">卡在哪</span></h2>
+        <p class="s-sub" data-a>我们统计公开旅行笔记里，首次来华的自由行游客最常讨论的实务话题——看他们真正会卡在哪里。</p>
+        <div class="bars-grid">
+          <div class="bars" data-a>
+            <div class="bar-row cov"><span class="bl">门票与预约</span><span class="bar-track"><span class="bar-fill" data-w="100"></span></span><span class="bv">38.4%</span></div>
+            <div class="bar-row cov"><span class="bl">市内交通与打车</span><span class="bar-track"><span class="bar-fill" data-w="99.2"></span></span><span class="bv">38.1%</span></div>
+            <div class="bar-row cov"><span class="bl">支付</span><span class="bar-track"><span class="bar-fill" data-w="43.2"></span></span><span class="bv">16.6%</span></div>
+            <div class="bar-row cov"><span class="bl">落地与机场</span><span class="bar-track"><span class="bar-fill" data-w="34.1"></span></span><span class="bv">13.1%</span></div>
+            <div class="bar-row cov"><span class="bl">上网与通讯</span><span class="bar-track"><span class="bar-fill" data-w="19.5"></span></span><span class="bv">7.5%</span></div>
+            <div class="bar-row"><span class="bl">换汇与花费</span><span class="bar-track"><span class="bar-fill" data-w="18.0"></span></span><span class="bv">6.9%</span></div>
+            <div class="bar-row"><span class="bl">签证与入境</span><span class="bar-track"><span class="bar-fill" data-w="16.1"></span></span><span class="bv">6.2%</span></div>
+            <div class="bar-row"><span class="bl">城际交通</span><span class="bar-track"><span class="bar-fill" data-w="14.8"></span></span><span class="bv">5.7%</span></div>
+            <div class="bar-row"><span class="bl">语言与翻译</span><span class="bar-track"><span class="bar-fill" data-w="12.0"></span></span><span class="bv">4.6%</span></div>
+            <div class="bar-row"><span class="bl">安全与骗局</span><span class="bar-track"><span class="bar-fill" data-w="8.9"></span></span><span class="bv">3.4%</span></div>
+            <div class="bar-row"><span class="bl">App 与实名</span><span class="bar-track"><span class="bar-fill" data-w="7.3"></span></span><span class="bv">2.8%</span></div>
+            <div class="bar-row"><span class="bl">健康与如厕</span><span class="bar-track"><span class="bar-fill" data-w="7.0"></span></span><span class="bv">2.7%</span></div>
+            <div class="bar-row"><span class="bl">住宿与登记</span><span class="bar-track"><span class="bar-fill" data-w="5.2"></span></span><span class="bv">2.0%</span></div>
+          </div>
+          <div class="bars-side" data-a>
+            <div class="funnel">
+              <div class="funnel-step"><div class="n"><span data-count="896434">0</span></div><div class="t">公开英文旅行笔记（2025-10 ～ 2026-10）</div></div>
+              <div class="funnel-step"><div class="n"><span data-count="96779">0</span></div><div class="t">其中涉华内容</div></div>
+              <div class="funnel-step"><div class="n"><span data-count="22354">0</span></div><div class="t">在聊实务的「需求帖」= 统计基数</div></div>
+            </div>
+            <p class="bars-prov">规则词典逐句匹配，全程无大模型打分，每次命中可回溯到原词原句。深蓝 = Landing Check 已覆盖的 5 大模块——恰好是热度前五。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 BUBBLE CLOUD -->
+      <section class="slide" id="cloud">
+        <div class="s-kicker" data-a>01 / 真实需求</div>
+        <h2 class="s-title" data-a>同一语料的<span class="hl">高频词</span>，按类别着色</h2>
+        <div id="demandBubbles" data-a></div>
+      </section>
+
+      <!-- 05 VOICES -->
+      <section class="slide" id="voices">
+        <div class="s-kicker" data-a>01 / 真实需求</div>
+        <h2 class="s-title" data-a>这些<span class="hl">具体的求助</span>，汇成了上面的统计</h2>
+        <div class="voices" id="deckVoices" data-a></div>
+        <p class="voices-note" data-a>来自公开原帖的真实提问与吐槽：看过攻略、装好应用、甚至绑了卡，落地买瓶水还是不知道怎么付。</p>
+      </section>
+
+      <!-- 06 PRODUCT -->
+      <section class="slide slide--wash" id="product" data-chapter>
+        <div class="s-kicker" data-a>02 / 产品体验</div>
+        <h2 class="s-title" data-a style="margin-bottom:14px">产品怎么用</h2>
+        <div class="prod-wrap">
+          <div class="prod-nav" data-a>
+            <button aria-selected="true"><span class="pn">01</span><span class="pt">行前准备</span></button>
+            <button aria-selected="false"><span class="pn">02</span><span class="pt">落地联网</span></button>
+            <button aria-selected="false"><span class="pn">03</span><span class="pt">截图求助</span></button>
+            <button aria-selected="false"><span class="pn">04</span><span class="pt">前往酒店</span></button>
+          </div>
+          <div class="prod-view" data-a>
+            <div class="prod-phone"><img src="assets/preflight.png" alt="行前准备"></div>
+            <div class="prod-copy">
+              <div class="pk">01 / 行前准备</div>
+              <h3>起飞前检查准备情况</h3>
+              <p>上网、支付、接机做成一张清单；支付宝 / TenPayGo 合并为一个“境内支付”待办，选一种做小额测试即可。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 07 TECH -->
+      <section class="slide" id="tech">
+        <div class="s-kicker" data-a>03 / 技术栈</div>
+        <h2 class="s-title" data-a style="margin-bottom:6px">H5 承载体验，<span class="hl">Python 负责规则、识别与知识库</span></h2>
+        <div class="tech-grid">
+          <div class="tech-card" data-a>
+            <div class="tech-ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H4zM2 20h20"/></svg></div>
+            <h3>前端与原型</h3><p>HTML / CSS / JS 构建交互界面；设计稿经 pen.dev 导出，Python 脚本组装为 H5。</p>
+            <div class="tags"><span>HTML</span><span>CSS</span><span>JS</span></div>
+          </div>
+          <div class="tech-card" data-a>
+            <div class="tech-ico"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
+            <h3>后端与规则</h3><p>FastAPI + Uvicorn 提供接口，Pydantic 校验，HTTPX 调模型。行前检查与交通推荐用规则计算。</p>
+            <div class="tags"><span>FastAPI</span><span>Pydantic</span></div>
+          </div>
+          <div class="tech-card" data-a>
+            <div class="tech-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></div>
+            <h3>AI 场景识别</h3><p>DeepSeek 匹配截图/文字中的问题，再从知识库读步骤；不确定给候选，不可用时回退关键词。</p>
+            <div class="tags"><span>deepseek-flash</span></div>
+          </div>
+          <div class="tech-card" data-a>
+            <div class="tech-ico"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4zM4 6l3-3h10l3 3"/></svg></div>
+            <h3>知识库与教程</h3><p>JSON 维护 5 类场景、41 条记录，含步骤、备用办法、来源与核验日期，脚本校验并导出图文。</p>
+            <div class="tags"><span>JSON · 41 条</span></div>
+          </div>
+          <div class="tech-card" data-a>
+            <div class="tech-ico"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></div>
+            <h3>测试与部署</h3><p>pytest + Playwright 检查接口与完整流程；GitHub Pages 托管展示页与 H5，Render 运行后端。</p>
+            <div class="tags"><span>Playwright</span><span>Render</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 08 COMMERCIAL -->
+      <section class="slide slide--tight" id="commercial" data-chapter>
+        <div class="s-kicker" data-a>04 / 商业化</div>
+        <h2 class="s-title" data-a style="margin-bottom:4px">精准触达，<span class="hl">场景转化</span></h2>
+        <p class="s-sub" data-a style="margin-top:8px">基于行程信息与实时需求，精准连接 Trip.com 现有旅行服务。</p>
+        <div class="flowpath" data-a style="margin:14px 0 18px">
+          <span class="step">识别需求</span><span class="arrow">→</span>
+          <span class="step">精准算法推荐</span><span class="arrow">→</span>
+          <span class="step accent">服务成交</span>
+        </div>
+        <div class="mock-row" data-a>
+          <div>
+            <div class="mock-phone"><div class="mock-screen">
+              <div class="mock-bar"><span>9:41</span><span>Trip.com</span></div>
+              <div class="mock-app"><span class="b">L<span></span></span> Landing Check · 行前准备</div>
+              <div class="mock-body">
+                <div class="mock-reco">检测到<b>尚未准备网络</b>，为你推荐</div>
+                <div class="offer-card">
+                  <div class="offer-head"><span class="offer-ico" style="background:#2563eb"><svg viewBox="0 0 24 24"><path d="M5 12a7 7 0 0114 0M8 15a4 4 0 018 0M12 18h.01"/></svg></span><span><span class="ot">中国大陆 eSIM · 7 天</span><span class="os">落地即用 · 免换卡</span></span><span class="offer-tag">Trip.com eSIM</span></div>
+                  <div class="offer-opt sel"><span class="r"></span>3GB / 天<span class="price">¥35</span></div>
+                  <div class="offer-opt"><span class="r"></span>不限量<span class="price">¥59</span></div>
+                  <div class="offer-cta">选择套餐并预订</div>
+                </div>
+              </div>
+            </div></div>
+            <div class="mock-caption">A · 联网服务 — eSIM 推荐卡</div>
+          </div>
+          <div>
+            <div class="mock-phone"><div class="mock-screen">
+              <div class="mock-bar"><span>9:41</span><span>Trip.com</span></div>
+              <div class="mock-app"><span class="b">L<span></span></span> Landing Check · 前往酒店</div>
+              <div class="mock-body">
+                <div class="mock-reco">航班 <b>23:30 抵达</b> · 2 人 2 箱 · 为你推荐</div>
+                <div class="offer-card">
+                  <div class="offer-head"><span class="offer-ico" style="background:#16a34a"><svg viewBox="0 0 24 24"><path d="M5 16l2-6h10l2 6M7 16v2M17 16v2M3 16h18"/></svg></span><span><span class="ot">机场接送机 · 专车</span><span class="os">深夜抵达 · 行李多，更省心</span></span><span class="offer-tag">Trip.com 接送</span></div>
+                  <div class="offer-opt sel"><span class="r"></span>专车送达酒店<span class="price">¥128</span></div>
+                  <div class="offer-opt"><span class="r"></span>拼车<span class="price">¥69</span></div>
+                  <div class="offer-cta">预订接送机</div>
+                </div>
+              </div>
+            </div></div>
+            <div class="mock-caption">B · 交通服务 — 机场接送机推荐卡</div>
+          </div>
+        </div>
+        <div class="expand" data-a>
+          <div class="expand-head"><span class="lab">拓展场景 · 从落地刚需到当地消费</span><span class="soon">未来可拓展</span></div>
+          <div class="expand-items">
+            <div class="expand-item"><span class="ei"><svg viewBox="0 0 24 24"><path d="M4 9h16v10H4zM9 9V5h6v4"/></svg></span><div><h4>景点门票</h4><p>按行程与位置推荐可预订门票</p></div></div>
+            <div class="expand-item"><span class="ei"><svg viewBox="0 0 24 24"><path d="M12 3l2.5 5 5.5.8-4 3.9 1 5.5L12 15.9 7 18.2l1-5.5-4-3.9 5.5-.8z"/></svg></span><div><h4>当地玩乐</h4><p>城市体验、一日游等可预订服务</p></div></div>
+            <div class="expand-item"><span class="ei"><svg viewBox="0 0 24 24"><path d="M6 3v8a3 3 0 006 0V3M9 3v18M17 3c-1.5 2-1.5 6 0 8v10"/></svg></span><div><h4>餐饮探索</h4><p>附近餐厅推荐，可衔接订座</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 09 GROWTH -->
+      <section class="slide slide--wash" id="growth">
+        <div class="s-kicker" data-a>05 / 用户增长</div>
+        <h2 class="s-title" data-a style="margin-bottom:14px">从一次服务，<span class="hl">到下一位旅客</span></h2>
+        <div class="growth-wrap">
+          <div class="growth-left" data-a>
+            <div class="entry-card"><div class="et"><span class="d"></span>首页入口 · 主动发现</div><p>在 Trip.com 首页功能区设置 Landing Check 入口。</p></div>
+            <div class="entry-card"><div class="et"><span class="d"></span>订单推荐 · 场景触达</div><p>结合机票 / 酒店订单与 My Trips，在「你可能还需要」里精准推荐。</p></div>
+            <div class="pill" style="margin-top:4px"><span class="dot"></span>平台已有流量 → 用户激活</div>
+          </div>
+          <div class="growth-right" data-a>
+            <div class="stamp">
+              <div class="st-ring"></div>
+              <div class="st-lab">THE FIRST STAMP</div>
+              <div class="st-city">上海 Shanghai</div>
+              <div class="st-date">2026 · 落地第一小时 已完成</div>
+              <div class="st-foot">✦ 生成专属城市票根，鼓励记录与分享</div>
+            </div>
+            <div class="branches">
+              <div class="branch"><div class="bt">社区互动 · Trip Moments<span class="tag">内容沉淀</span></div><p>旅行体验分享到社区，促进参与和后续互动。</p></div>
+              <div class="branch"><div class="bt">社交分享 · Social Referral<span class="tag">站外引流</span></div><p>票根经社交平台传播，带新访客进入 Landing Check。</p></div>
+              <div class="pill" style="font-size:15px"><span class="dot"></span>站内流量激活 + 站外分享引流</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 PHILOSOPHY -->
+      <section class="slide slide--dark slide--center" id="philosophy" data-chapter>
+        <div style="width:100%">
+          <div class="phil-top">
+            <div class="en-lead" data-a>User First. Beyond Booking.</div>
+            <h2 class="phil-title" data-a>用户优先，不止预订</h2>
+          </div>
+          <div class="phil-cols">
+            <div class="phil-card" data-a>
+              <div class="pc-k">ALL IN ONE</div>
+              <h3>一站式整合</h3>
+              <div class="claim">一次预订，服务贯通。</div>
+              <p>连接行程信息、行前准备、落地指引与旅行服务，减少信息割裂和重复操作。</p>
+            </div>
+            <div class="phil-card" data-a>
+              <div class="pc-k">TRAVEL PARTNER</div>
+              <h3>旅行伙伴</h3>
+              <div class="claim">一次帮助，长期信任。</div>
+              <p>先解决问题，再推荐合适的服务，成为旅客愿意再次选择的旅行伙伴。</p>
+            </div>
+          </div>
+          <div class="phil-foot" data-a>从旅行预订平台，走向全旅程服务伙伴。</div>
+        </div>
+      </section>
+
+      <!-- 11 VALIDATION -->
+      <section class="slide" id="validation">
+        <div class="s-kicker" data-a>06 / 验证与反思</div>
+        <h2 class="s-title" data-a style="margin-bottom:6px">从发现问题，<span class="hl">到验证解决方案</span></h2>
+        <div class="val-cols">
+          <div class="val-card" data-a>
+            <div class="vn">01</div><div class="ven">Real Problems, Real Contexts</div>
+            <h3>需求调研 · 从真实问题出发</h3>
+            <p>海外社媒、攻略与求助案例显示：网络、支付与交通问题常相互关联，而现有信息分散。</p>
+          </div>
+          <div class="val-card" data-a>
+            <div class="vn">02</div><div class="ven">From Concept to Prototype</div>
+            <h3>原型验证 · 从想法到体验</h3>
+            <p>已构建可交互 H5，打通行前检查、落地指引、AI 排障、交通推荐与旅程分享主要流程。</p>
+          </div>
+          <div class="val-card limit" data-a>
+            <div class="vn">03</div><div class="ven">What Still Needs Validation</div>
+            <h3>现阶段局限 · 从模拟走向真实</h3>
+            <p>支付 / 航班 / 订单仍为模拟数据；现场适用性与真实用户任务完成率尚待验证。</p>
+          </div>
+        </div>
+        <div class="val-foot" data-a>Build for real-world use — 功能能够运行，不等于用户的问题已经得到解决。</div>
+      </section>
+
+      <!-- 12 ROADMAP -->
+      <section class="slide slide--wash" id="roadmap" data-chapter>
+        <div class="s-kicker" data-a>07 / 未来展望</div>
+        <h2 class="s-title" data-a>从一个机场，<span class="hl">走向更多旅程</span></h2>
+        <p class="s-sub" data-a>以浦东机场 T2 为起点，先验证真实旅客能否顺利完成落地任务，再连接 Trip.com 的行程与服务。</p>
+        <div class="road">
+          <div class="road-line"><span class="fill"></span></div>
+          <div class="road-node frag">
+            <div class="road-badge">01</div>
+            <div class="road-en">VALIDATE</div>
+            <h3>真实验证</h3>
+            <p>浦东 T2 首个试点，走通从行前准备到顺利上车的完整流程，据真实问题优化排障与备用方案。</p>
+            <div class="road-metric">任务完成率 · 问题解决率 · 落地到上车用时</div>
+            <div class="road-goal">让游客遇到困难时，仍能继续下一步。</div>
+          </div>
+          <div class="road-node frag">
+            <div class="road-badge">02</div>
+            <div class="road-en">INTEGRATE</div>
+            <h3>平台集成</h3>
+            <p>在授权与平台支持下接入真实航班 / 酒店订单，自动带入抵达时间与地址；衔接 eSIM、接送机、客服。</p>
+            <div class="road-metric">行程信息使用 · 服务预订转化 · 人工协助衔接</div>
+            <div class="road-goal">从理解行程，到帮用户完成当前任务。</div>
+          </div>
+          <div class="road-node frag">
+            <div class="road-badge">03</div>
+            <div class="road-en">SCALE</div>
+            <h3>场景复制</h3>
+            <p>从上海拓展到更多入境城市与机场，沿用任务编排与异常恢复，按当地服务条件调整路径。</p>
+            <div class="road-metric">多城市覆盖 · 本地化信息核验</div>
+            <div class="road-goal">让每个目的地，都有适合当地的行动指引。</div>
+          </div>
+        </div>
+        <div class="road-foot frag"><span class="seq">真实验证 → 平台集成 → 场景复制</span> ——先让一个机场可靠，再走向更多旅程。</div>
+      </section>
+
+      <!-- 13 CLOSING -->
+      <section class="slide slide--dark" id="closing">
+        <div class="closing">
+          <div>
+            <div class="s-kicker" data-a>LANDING CHECK</div>
+            <div class="big" data-a>One Moment.<br>One Next Step.</div>
+            <div class="seq" data-a>ROADMAP · <b>Validate</b> → <b>Integrate</b> → <b>Scale</b></div>
+            <p class="tagline" data-a>从解决一个关键时刻的问题开始，从一次及时的帮助，建立对下一段旅程的信任。</p>
+          </div>
+          <div class="qr-box" data-a>
+            <div class="qr"></div>
+            <div class="qr-cap">扫码体验在线原型</div>
+            <div class="qr-url">yuklim.github.io/landing-check/h5</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14 ITERATION · need -> V1 -->
+      <section class="slide" id="iter-need">
+        <div class="s-kicker" data-a>项目迭代 · 从真实需求出发</div>
+        <h2 class="s-title" data-a style="margin-bottom:16px">先证明需求真实，<span class="hl">再证明产品有价值</span></h2>
+        <div class="iter-wrap">
+          <div class="evi-stack" data-a>
+            <div class="evi-mini"><span class="evi-tag">联网问题</span><span class="evi-tag">支付问题</span><span class="evi-tag">交通问题</span><span class="evi-tag">落地信息割裂</span></div>
+            <div class="evi-quote">“看过攻略、装好应用，落地买瓶水还是不知道怎么付款。”</div>
+            <div class="evi-quote">“eSIM 什么时候激活？怎么确认它真的能用？”</div>
+            <div class="pill"><span class="dot"></span>高频、具体、可被产品化解决</div>
+          </div>
+          <div class="iter-arrow" data-a>
+            <span class="lab">真实痛点 → 产品机会</span>
+            <svg viewBox="0 0 24 24" width="40" height="40"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+          </div>
+          <div class="v1-card" data-a>
+            <div class="v1-k">LANDING CHECK · V1</div>
+            <h3>最初版本定位</h3>
+            <ul>
+              <li>聚焦首次来华的自由行旅客</li>
+              <li>解决「落地第一小时」的关键问题</li>
+              <li>上网 · 支付 · 到酒店，三件事串成一条流程</li>
+              <li>提供更及时、更确定的帮助</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 15 ITERATION · before -> now ecosystem -->
+      <section class="slide slide--wash" id="iter-eco">
+        <div class="s-kicker" data-a>项目迭代 · 导师 1v1 之后</div>
+        <h2 class="s-title" data-a style="margin-bottom:14px">从单点工具，<span class="hl">到生态化方案</span></h2>
+        <div class="evo-wrap">
+          <div class="evo-before" data-a>
+            <div class="ek">BEFORE</div>
+            <h3>单点问题解决工具</h3>
+            <ul><li>聚焦外国游客落地困难</li><li>核心是联网、支付、交通</li><li>目标做成独立产品入口</li></ul>
+          </div>
+          <div class="evo-mid" data-a>
+            <svg viewBox="0 0 24 24" width="34" height="34"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+            <div class="taglist"><span>真实需求验证</span><span>导师反馈启发</span><span>生态协同思考</span></div>
+          </div>
+          <div class="evo-now">
+            <div class="nk" data-a>NOW</div>
+            <h3 data-a>面向 Trip.com 生态的旅行服务连接器</h3>
+            <div class="eco">
+              <svg class="eco-links" viewBox="0 0 100 100" preserveAspectRatio="none">
+                <line class="lk" x1="50" y1="50" x2="50" y2="9" vector-effect="non-scaling-stroke"/>
+                <line class="lk" x1="50" y1="50" x2="86" y2="30" vector-effect="non-scaling-stroke"/>
+                <line class="lk" x1="50" y1="50" x2="88" y2="64" vector-effect="non-scaling-stroke"/>
+                <line class="lk" x1="50" y1="50" x2="58" y2="91" vector-effect="non-scaling-stroke"/>
+                <line class="lk" x1="50" y1="50" x2="20" y2="88" vector-effect="non-scaling-stroke"/>
+                <line class="lk" x1="50" y1="50" x2="12" y2="42" vector-effect="non-scaling-stroke"/>
+              </svg>
+              <div class="eco-center">Landing<br>Check</div>
+              <div class="eco-node" style="left:50%;top:9%"><span class="ed"></span>订单入口</div>
+              <div class="eco-node" style="left:86%;top:30%"><span class="ed"></span>My Trips</div>
+              <div class="eco-node" style="left:88%;top:64%"><span class="ed"></span>eSIM · 接送机</div>
+              <div class="eco-node" style="left:58%;top:91%"><span class="ed"></span>Trip Moments</div>
+              <div class="eco-node" style="left:20%;top:88%"><span class="ed"></span>景点 · 玩乐</div>
+              <div class="eco-node" style="left:12%;top:42%"><span class="ed"></span>餐饮探索</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 16 TEAM -->
+      <section class="slide" id="team" data-chapter>
+        <div class="s-kicker" data-a>团队协作</div>
+        <h2 class="s-title" data-a style="margin-bottom:16px">明确分工，<span class="hl">快速迭代</span></h2>
+        <div class="team-wrap">
+          <div class="team-grid" data-a>
+            <div class="member"><span class="ava">程</span><div class="nm">程钰麟<span class="role">队长</span></div><div class="org">上海交通大学 · 生物医学工程学院</div><div class="did">产品定义 / 方案设计 / 技术实现</div></div>
+            <div class="member"><span class="ava">何</span><div class="nm">何雪齐</div><div class="org">上海交通大学 · 生物医学工程学院</div><div class="did">用户研究 / 数据分析</div></div>
+            <div class="member"><span class="ava">薛</span><div class="nm">薛俊智</div><div class="org">上海交通大学 · 人工智能学院</div><div class="did">AI 场景识别 / 技术实现</div></div>
+            <div class="member"><span class="ava">周</span><div class="nm">周语轩</div><div class="org">上海交通大学 · 安泰经济与管理学院</div><div class="did">商业化 / 增长 / 路演整合</div></div>
+          </div>
+          <div>
+            <div class="flow-time" data-a>
+              <div class="ft-h">协作流程</div>
+              <div class="ft-step"><div class="ft-dot"><span></span></div><div><div class="ft-t">需求发现 · 用户研究与痛点归纳</div></div></div>
+              <div class="ft-step"><div class="ft-dot"><span></span></div><div><div class="ft-t">产品方案初版</div></div></div>
+              <div class="ft-step"><div class="ft-dot"><span></span></div><div><div class="ft-t">导师反馈后迭代</div></div></div>
+              <div class="ft-step"><div class="ft-dot"><span></span></div><div><div class="ft-t">原型完善</div></div></div>
+              <div class="ft-step"><div class="ft-dot"><span></span></div><div><div class="ft-t">商业化与增长逻辑补充 · Presentation 整合</div></div></div>
+            </div>
+            <div class="thanks" data-a>感谢<b>携程导师</b>的反馈与启发，帮助我们从一个功能想法，拓展为更完整的产品方向。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 17 PROTOTYPE -->
+      <section class="slide slide--dark" id="proto">
+        <div class="proto-wrap">
+          <div>
+            <div class="s-kicker" data-a>原型体验</div>
+            <h2 class="s-title" data-a style="color:#fff">现在就走一遍<br><span class="hl">落地第一小时</span></h2>
+            <ul class="proto-list" data-a style="margin-top:22px;color:#cdd9f2">
+              <li><span class="pi"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 8h3v3H8zM13 8h3M13 12h3M8 15h8"/></svg></span>扫描右侧二维码，手机打开可交互 H5</li>
+              <li><span class="pi"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007 0l2-2a5 5 0 00-7-7l-1 1M14 11a5 5 0 00-7 0l-2 2a5 5 0 007 7l1-1"/></svg></span>或访问 yuklim.github.io/landing-check/h5</li>
+              <li><span class="pi"><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"/></svg></span>行前检查 · 落地联网 · 截图求助 · 交通推荐，均可试走</li>
+            </ul>
+          </div>
+          <div class="qr-box" data-a>
+            <div class="qr"></div>
+            <div class="qr-cap">扫码打开原型</div>
+            <div class="qr-url">yuklim.github.io/landing-check/h5</div>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /stage -->
+  </div><!-- /deck-root -->
+
+  <!-- chrome -->
+  <div class="deck-arrows">
+    <button class="prev" aria-label="上一页"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button class="next" aria-label="下一页"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+  </div>
+  <div class="deck-bar">
+    <div class="deck-dots"></div>
+    <div class="deck-counter">1 / 17</div>
+    <div class="deck-tools">
+      <button class="fs" aria-label="全屏"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+    </div>
+  </div>
+  <div class="deck-hint">← → 翻页 · F 全屏 · A 展开整页 · 路线图按 → 逐段推进</div>
+
+  <!-- libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+  <!-- data + reused modules -->
+  <script src="content-config.js"></script>
+  <script src="evidence.js"></script>
+  <script>
+    window.LC_STAGES = [
+      { image: "preflight.png", label: "行前准备", title: "起飞前检查准备情况", body: "上网、支付、接机做成一张清单；支付宝 / TenPayGo 合并为一个“境内支付”待办，选一种做小额测试即可。" },
+      { image: "landing.png", label: "落地联网", title: "落地先确认网络能否使用", body: "落地流程从“能不能上网”开始；收不到验证码时，给出护照认证、服务台等备选入口。" },
+      { image: "stuck.png", label: "截图求助", title: "看不懂报错，上传截图即可", body: "模型在知识库已覆盖的场景里匹配，给出原因、操作步骤和备用办法，并保留来源与核验日期。" },
+      { image: "driver.png", label: "前往酒店", title: "选交通，给司机看中文地址", body: "结合落地时刻、人数、行李、已订接机推荐方案，并打开中文酒店名址电话直接给司机看。" }
+    ];
+  </script>
+  <script src="demand-bubbles.js"></script>
+  <script src="deck.js"></script>
+</body>
+</html>
