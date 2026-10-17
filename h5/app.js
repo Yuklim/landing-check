@@ -1418,10 +1418,10 @@
     const items = [...list.children].filter(n => !n.classList.contains('lc-hide') && n.style.display !== 'none');
     items.forEach((n, i) => { n.classList.toggle('lc-pf-next', i === 0); n.classList.toggle('lc-pf-compact', i > 0); });
     if (items.length > 1) { const still = el('div', '', 'STILL TO DO'); still.className = 'lc-pf-still'; items[1].before(still); }
-    // 可选项：标题改成可点的一行，列表默认收起
+    // 可选项：默认展开（收起时只剩一行标题，用户以为没有可选项）；标题右侧 Hide / Show 可收起
     const sec = $$('preflight', 'Section OPTIONAL'), opt = $$('preflight', 'Optional List'), body = sec && sec.parentElement;
     if (sec && opt && body && !sec.dataset.lcToggle) {
-      sec.dataset.lcToggle = '1'; sec.classList.add('tap'); sec.style.cursor = 'pointer'; body.classList.add('lc-pf-opt-closed');
+      sec.dataset.lcToggle = '1'; sec.classList.add('tap'); sec.style.cursor = 'pointer';
       sec.addEventListener('click', () => { body.classList.toggle('lc-pf-opt-closed'); syncOpt(); });
     }
     syncOpt();
@@ -1467,9 +1467,13 @@
   })();
   function syncOpt() {
     const sec = $$('preflight', 'Section OPTIONAL'), opt = $$('preflight', 'Optional List'); if (!sec || !opt) return;
-    const names = [...opt.children].map(n => (n.querySelector('[data-pencil-name="Item Title"]') || {}).textContent || '').filter(Boolean).map(t => t.toLowerCase().replace(/ from the airport$/, '').replace(/ & tickets$/, ''));
-    const closed = sec.parentElement.classList.contains('lc-pf-opt-closed');
-    txt(sec.querySelector('[data-pencil-name="Section Title"]'), `OPTIONAL${names.length ? ' · ' + names.join(', ').toUpperCase() : ''} ${closed ? '›' : '⌄'}`);
+    const n = opt.children.length, closed = sec.parentElement.classList.contains('lc-pf-opt-closed');
+    txt(sec.querySelector('[data-pencil-name="Section Title"]'), n ? `OPTIONAL · ${n}` : 'OPTIONAL');
+    let tg = sec.querySelector('.lc-opt-tg');
+    if (!tg) { tg = el('span', `font:600 13px Inter,sans-serif;color:${BLUE}`); tg.className = 'lc-opt-tg'; sec.appendChild(tg); }
+    tg.textContent = closed ? 'Show ›' : 'Hide ⌃';
+    // 后端 summary 只数接机 / 租车两项，景点、旅行指南是前端加的：「N optional」按实际项数改
+    const pl = $$('preflight', 'Progress Label'); if (pl) pl.textContent = pl.textContent.replace(/\d+ optional/, `${n} optional`);
   }
   const PF = { status: {} };
   // offline.js 每次同步本机保存状态都会回调这里（含下载中）
