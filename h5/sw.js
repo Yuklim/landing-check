@@ -21,16 +21,38 @@ async function status() {
   const complete = (await Promise.all(info.assets.map(url => cache.match(url)))).every(Boolean);
   return { pack: complete ? info : null, busy: downloading };
 }
-async function network(url) {
+// 超时按文件大小放宽：15 秒起步，再按慢速 4G（约 64 KB/s）给够传输时间，3 MB 的图约 1 分钟
+async function network(url, size = 0) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
+  const timer = setTimeout(() => controller.abort(), 15000 + size / 64);
   try {
     const response = await fetch(url, { cache: 'no-store', credentials: 'omit', signal: controller.signal, redirect: 'error' });
-    if (!response.ok || response.type === 'opaque') throw new Error('Could not download ' + new URL(url).pathname);
+    if (!response.ok || response.type === 'opaque') {
+      const error = new Error('Could not download ' + new URL(url).pathname);
+      error.retry = response.status >= 500 || response.status === 429;
+      throw error;
+    }
     const bytes = await response.arrayBuffer();
     return { response, bytes };
+  } catch (error) {
+    if (error.retry === undefined) error.retry = true;   // 断网、超时这类网络错误可以重试
+    throw error;
   } finally { clearTimeout(timer); }
 }
+// 单个文件失败先重试它自己（最多 3 次），不让整包从头再来；4xx 和校验不符不重试
+async function fetchAsset(asset) {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const item = await network(asset.url, asset.bytes);
+      if (await checksum(item.bytes) !== asset.sha256) throw Object.assign(new Error('Files changed during download. Please try again.'), { retry: false });
+      return item;
+    } catch (error) {
+      if (!error.retry || attempt >= 3) throw error;
+      await new Promise(resolve => setTimeout(resolve, 600 * attempt));
+    }
+  }
+}
+const PARALLEL = 5;   // 同时下载的文件数：47 个小文件主要耗在等待响应上，并发能省掉大部分等待
 function checksum(bytes) {
   return crypto.subtle.digest('SHA-256', bytes).then(buffer => [...new Uint8Array(buffer)].map(n => n.toString(16).padStart(2, '0')).join(''));
 }
@@ -55,17 +77,26 @@ async function download(send) {
     }
     staging = PREFIX + 'pack-' + manifest.revision + '-' + crypto.randomUUID();
     const cache = await caches.open(staging);
-    let bytes = 0;
-    for (let i = 0; i < assets.length; i++) {
-      const asset = assets[i];
-      const item = await network(asset.url);
-      if (await checksum(item.bytes) !== asset.sha256) throw new Error('Files changed during download. Please try again.');
-      const headers = new Headers(item.response.headers);
-      headers.delete('content-encoding'); headers.delete('content-length');
-      await cache.put(asset.url, new Response(item.bytes, { status: 200, headers }));
-      bytes += item.bytes.byteLength;
-      send({ type: 'progress', done: i + 1, total: assets.length });
-    }
+    let bytes = 0, done = 0, next = 0, failure = null;
+    const worker = async () => {
+      while (!failure && next < assets.length) {
+        const asset = assets[next++];
+        try {
+          const item = await fetchAsset(asset);
+          const headers = new Headers(item.response.headers);
+          headers.delete('content-encoding'); headers.delete('content-length');
+          await cache.put(asset.url, new Response(item.bytes, { status: 200, headers }));
+          bytes += item.bytes.byteLength;
+          send({ type: 'progress', done: ++done, total: assets.length });
+        } catch (error) { failure = failure || error; }
+      }
+    };
+    // 大文件慢网下可能一分钟没有新进度；每 10 秒报一次心跳，页面那边 30 秒无消息就判超时
+    const heartbeat = setInterval(() => send({ type: 'progress', done, total: assets.length }), 10000);
+    // 一个文件最终失败就不再领新文件；等在途的结束后整包作废，旧包不受影响
+    try { await Promise.all(Array.from({ length: Math.min(PARALLEL, assets.length) }, worker)); }
+    finally { clearInterval(heartbeat); }
+    if (failure) throw failure;
     await cache.put(manifestURL, new Response(manifestResult.bytes, { headers: { 'Content-Type': 'application/json' } }));
     const info = { cache: staging, revision: manifest.revision, version: manifest.version, savedAt: new Date().toISOString(), bytes, assets: [...seen, manifestURL] };
     // Publishing this pointer is the commit. A failed staging download cannot replace it.
