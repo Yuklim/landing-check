@@ -351,7 +351,7 @@
     loadRoutes().catch(() => {});
     // 城市图鉴（stamp.js）复用这一个加载（window.lcLoadAMap），不再插第二个高德脚本
     loadAMap().then(A => A.plugin('AMap.DistrictSearch', () => {})).catch(() => {});
-    const queue = ['shanghai-dusk.jpg', 'beijing.jpg', 'chengdu.jpg', 'hangzhou.jpg', 'guangzhou.jpg', 'xian.jpg'].map(f => 'img/stamp/' + f);
+    const queue = [];
     // 每条帖子：列表首图 + 详情首图 + 头像（详情后面几张图滑到时再下）
     const addPosts = () => (window.LCStamp ? window.LCStamp.samplePosts() : []).forEach(p => {
       const first = (p.images && p.images[0]) || p.image;
@@ -371,6 +371,15 @@
       }
     }
     pump();
+    // 票根图约 1 MB，走境外的 GitHub Pages：首屏阶段不下，免得和刚开始的点击抢带宽。
+    // 模拟落地之后（或直接打开票根 / 社区页）再插到队首，走到完成页之前早已下好
+    const STAMPS = ['shanghai-dusk.jpg', 'beijing.jpg', 'chengdu.jpg', 'hangzhou.jpg', 'guangzhou.jpg', 'xian.jpg'].map(f => 'img/stamp/' + f);
+    const STAMP_ROUTES = ['lock', 'trips', 'step1', 'online', 'wifi', 'step3', 'transit', 'driver', 'done', 'share', 'community', 'community-compose', 'community-post', 'city-passport'];
+    let stampsQueued = false;
+    const queueStamps = route => { if (stampsQueued || !STAMP_ROUTES.includes(route)) return; stampsQueued = true; queue.unshift(...STAMPS); pump(); };
+    const prevOnShow = window.lcOnShow;
+    window.lcOnShow = route => { if (prevOnShow) prevOnShow(route); queueStamps(route); };
+    const cur = document.querySelector('.screen.on'); if (cur) queueStamps(cur.dataset.route);
   }
   window.addEventListener('load', () => (window.requestIdleCallback || setTimeout)(warmUp, { timeout: 2000 }));
   const dotHTML = (bg, ring, size = 14) => `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${bg};border:3px solid ${ring};box-sizing:border-box;box-shadow:0 1px 4px rgba(0,0,0,.3)"></div>`;

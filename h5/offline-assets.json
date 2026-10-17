@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "version": "2026.10.17.4",
-  "revision": "1c572c47f216d904850d",
+  "revision": "35b44724020059f3c0f6",
   "assets": [
     {
       "path": "app.js",
-      "sha256": "123af51f4058964ad67086f5de50252492a0c5cdb891eb3c2ab16109c6b12226",
-      "bytes": 201414
+      "sha256": "d7249b5923a8dd59ec930b93c1b72bd08174153d8bffbdc81e4426efb9bfdff4",
+      "bytes": 202264
     },
     {
       "path": "data/first-stamp.json",
@@ -210,8 +210,8 @@
     },
     {
       "path": "index.html",
-      "sha256": "9f7c4612012c9675b42319b96e94e83cff496b9a1d0a2dae8050353cfc51048c",
-      "bytes": 1102063
+      "sha256": "f5d697a689b8f379177848e0788a67dac40d2b888e699e9b75b38805f5a00e69",
+      "bytes": 1102593
     },
     {
       "path": "manifest.json",
