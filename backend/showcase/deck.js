@@ -20,9 +20,6 @@
   var slides = [].slice.call(document.querySelectorAll(".slide"));
   var N = slides.length;
   var cur = 0, frag = 0, busy = false;
-  // in-page steppers keyed by slide id: STEP consumes →/← (returns true) before the deck turns the page;
-  // ENTER resets the slide's inner state on arrival (dir < 0 = arrived going backwards).
-  var STEP = {}, ENTER = {};
 
   // ---------- stage scaling (fit 1440x810 into viewport) ----------
   function fit() {
@@ -123,11 +120,17 @@
     } else gsap.set(items, { autoAlpha: 1, y: 0 });
     var fn = INTRO[sl.id]; if (fn) fn(sl);
   }
-  function playEnter(i, dir) {
-    resetFrags(i, dir < 0);
-    var en = ENTER[slides[i].id]; if (en) en(dir);
-    playIntro(i);
+  function playEnter(i, dir) { resetFrags(i, dir < 0); playIntro(i); if (onDemo(i)) demo.show(dir < 0 ? demo.count - 1 : 0); }
+
+  // ---------- 03 落地体验（demo03/section.js）：页内先切五个功能，走完再翻页 ----------
+  var demo = null, demoSlide = document.getElementById("demo");
+  if (demoSlide && window.Demo03 && Demo03.section) {
+    demo = Demo03.section(demoSlide, { base: "demo03/", kicker: "03 / 落地体验" });
+    [].forEach.call(demoSlide.querySelectorAll(".d3s-top,.d3s-phone,.d3s-copy"), function (el) { el.setAttribute("data-a", ""); });   // 和其他页一样的入场
+    demo.show(0, 0);                         // 先定格在第一帧，进页时再从头播放
+    setTimeout(demo.preload, 1500);
   }
+  function onDemo(i) { return demo && slides[i] === demoSlide; }
 
   // ---------- navigation ----------
   function goto(n, dir) {
@@ -135,6 +138,7 @@
     dir = dir || (n > cur ? 1 : -1);
     busy = true;
     var from = slides[cur], to = slides[n];
+    if (onDemo(cur)) demo.stop();
     gsap.set(to, { autoAlpha: 1, scale: 1, xPercent: 100 * dir });
     var tl = gsap.timeline({ onComplete: function () { gsap.set(from, { autoAlpha: 0 }); busy = false; } });
     if (reduce) { tl.set(from, { autoAlpha: 0 }).set(to, { xPercent: 0, autoAlpha: 1 }); }
@@ -148,14 +152,14 @@
   }
   function next() {
     if (busy) return;
-    var st = STEP[slides[cur].id]; if (st && st(1)) return;
+    if (onDemo(cur) && demo.next()) return;
     var fs = frags(cur);
     if (frag < fs.length) { gsap.to(fs[frag], { autoAlpha: 1, y: 0, duration: .5, ease: EASE, onUpdate: function () { onFrag(cur); } }); frag++; }
     else goto(cur + 1, 1);
   }
   function prev() {
     if (busy) return;
-    var st = STEP[slides[cur].id]; if (st && st(-1)) return;
+    if (onDemo(cur) && demo.prev()) return;
     if (frag > 0) { frag--; gsap.to(frags(cur)[frag], { autoAlpha: 0, y: 16, duration: .35, ease: "power2.in", onUpdate: function () { onFrag(cur); } }); }
     else goto(cur - 1, -1);
   }
@@ -229,42 +233,6 @@
       var av = (d.platform || "?")[0];
       return '<div class="voice-card"><div class="voice-top"><span class="voice-ava">' + av + '</span><span class="voice-plat">' + d.platform + '</span><span class="voice-cat">' + (catZH[d.topic] || "需求") + '</span></div><blockquote>' + d.zh + '</blockquote>' + (d.quote ? '<span class="orig">“' + d.quote + '”</span>' : '') + '</div>';
     }).join("");
-  })();
-
-  // ---------- demo scene switcher (LC_SCENES) — GIF-ready: swap st.img for a .gif later ----------
-  // One scene lit at a time; →/← walk the scenes in-page, then hand over to the deck.
-  (function () {
-    var sl = document.getElementById("demo"); if (!sl) return;
-    var btns = [].slice.call(sl.querySelectorAll(".prod-nav button"));
-    var phoneWrap = sl.querySelector(".demo-phone");
-    var phone = sl.querySelector(".demo-phone img");
-    var steps = sl.querySelector(".demo-steps");
-    var need = steps.querySelector(".demo-need");
-    var S = window.LC_SCENES || [];
-    var at = 0;
-    function render(i) {
-      var st = S[i]; if (!st) return;
-      steps.querySelector(".demo-sc").textContent = "SCENE 0" + (i + 1) + " · " + st.label;
-      steps.querySelector("h3").textContent = st.title;
-      if (need) need.textContent = st.need || "";
-      steps.querySelector(".demo-ol").innerHTML = st.steps.map(function (s) {
-        return "<li><b>" + s.h + "</b><span>" + s.d + "</span></li>";
-      }).join("");
-      if (phone && st.img) { phone.src = "assets/" + st.img; phone.alt = st.title; }
-    }
-    function show(i, anim) {
-      at = i;
-      btns.forEach(function (b, k) { b.setAttribute("aria-selected", String(k === i)); });
-      if (anim && !reduce) gsap.fromTo([phoneWrap, steps], { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .45, ease: EASE, onStart: function () { render(i); } });
-      else render(i);
-    }
-    btns.forEach(function (b, i) { b.addEventListener("click", function () { show(i, true); }); });
-    STEP.demo = function (d) {
-      var n = at + d; if (n < 0 || n >= S.length) return false;
-      show(n, true); return true;
-    };
-    ENTER.demo = function (dir) { show(dir < 0 ? S.length - 1 : 0, false); };
-    show(0, false);
   })();
 
   // ---------- boot ----------

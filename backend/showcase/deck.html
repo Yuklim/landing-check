@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
   <link rel="stylesheet" href="deck.css">
+  <link rel="stylesheet" href="demo03/player.css">
+  <link rel="stylesheet" href="demo03/section.css">
 </head>
 <body>
   <div class="deck-progress"></div>
@@ -172,32 +174,9 @@
         </div>
       </section>
 
-      <!-- 09 LIVE EXPERIENCE: the 5 needs as 5 in-page scenes (no persona).
-           → / ← step through the scenes first, then turn the page; tabs stay clickable.
-           Scene copy + screenshot live in LC_SCENES below; swap img for a phone-recording .gif when ready. -->
-      <section class="slide slide--wash" id="demo">
-        <div class="s-kicker" data-a>03 / 落地体验 LIVE EXPERIENCE</div>
-        <h2 class="s-title" data-a>五个需求，<span class="hl">一件一件做完</span></h2>
-        <p class="s-sub demo-sub" data-a>首次来华的游客：从出发前的准备，到落地浦东 T2、坐上去酒店的车。</p>
-        <div class="demo-wrap">
-          <div class="prod-nav" data-a>
-            <button aria-selected="true"><span class="pn">01</span><span class="pt">行前预订<small>门票与预约</small></span></button>
-            <button aria-selected="false"><span class="pn">02</span><span class="pt">上网联网<small>上网与通讯</small></span></button>
-            <button aria-selected="false"><span class="pn">03</span><span class="pt">支付就绪<small>支付</small></span></button>
-            <button aria-selected="false"><span class="pn">04</span><span class="pt">市内交通<small>市内交通与打车</small></span></button>
-            <button aria-selected="false"><span class="pn">05</span><span class="pt">落地流程 · I'm Stuck<small>落地与机场</small></span></button>
-          </div>
-          <div class="demo-view" data-a>
-            <div class="demo-phone"><img src="assets/preflight.png" alt=""></div>
-            <div class="demo-steps">
-              <div class="demo-sc"></div>
-              <h3></h3>
-              <div class="demo-need"></div>
-              <ol class="demo-ol"></ol>
-            </div>
-          </div>
-        </div>
-      </section>
+      <!-- 09 LIVE EXPERIENCE：按 5 大需求的手机操作动画 + 右侧讲解（demo03/section.js 填充）。
+           页内 → / ← 先切换五个功能，走完再翻页；离开本页时停止播放。 -->
+      <section class="slide slide--wash" id="demo"></section>
 
       <!-- 10 BEHIND THE PRODUCT: tech, one visual per point -->
       <section class="slide" id="tech">
@@ -484,31 +463,15 @@
   <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
   <script src="content-config.js"></script>
   <script src="evidence.js"></script>
-  <script>
-    // One scene per need, same order as the needs-map directory. img: swap for a phone-recording .gif when ready.
-    window.LC_SCENES = [
-      { label: "行前预订", need: "需求 01｜门票与预约 · 38.4%", title: "行前把门票、预约和接送一次办好", img: "preflight.png", steps: [
-        { h: "景点门票", d: "行前清单的可选项直接接入 Trip.com 景点门票，显示实时价格。" },
-        { h: "实名预约", d: "行程里有故宫这类需实名预约的景点，一并核对预约状态。" },
-        { h: "接机与租车", d: "同一份清单里预订 Trip.com 接机和租车，不用在多个 App 之间切换。" } ] },
-      { label: "上网联网", need: "需求 02｜上网与通讯 · 7.5%", title: "落地后，先保证有网", img: "pvg-wifi.png", steps: [
-        { h: "行前确认 eSIM", d: "检查是否已有 eSIM 或漫游；没有就在 Trip.com 直接购买。" },
-        { h: "三步连上机场 Wi-Fi", d: "网络名一键复制，用境外手机号收验证码，连上后点 I'm online。" },
-        { h: "收不到验证码也有办法", d: "60 秒后自动切到备用方案：护照拍照登录或服务台；离线包断网也能看。" } ] },
-      { label: "支付就绪", need: "需求 03｜支付 · 16.6%", title: "装了不等于能付，出发前先验证", img: "payment-alipay-ok.png", steps: [
-        { h: "支付宝或 TenPayGo，任选其一", d: "TenPayGo 邮箱注册、无需中国手机号；另一种作为备用。" },
-        { h: "1 元支付检测", d: "用 1 元走通完整支付链路；可退回原卡，或全额捐给中国青少年发展基金会。" },
-        { h: "失败按错误类型排查", d: "卡不支持、银行拒绝、额度受限，各给对应建议和图文教程。" } ] },
-      { label: "市内交通", need: "需求 04｜市内交通与打车 · 38.1%", title: "从机场顺利到酒店", img: "landing-transport.png", steps: [
-        { h: "接入地图", d: "航站楼到酒店的路线，出租车候车区、网约车上客点一目了然。" },
-        { h: "按情况推荐交通方式", d: "出租车、网约车、接机、地铁、磁悬浮并列比价比时；按落地时间、行李、人数、距地铁远近和天气推荐。" },
-        { h: "司机地址卡", d: "打车时用中文展示酒店名称、地址和电话，直接给司机看。" } ] },
-      { label: "落地流程 · I'm Stuck", need: "需求 05｜落地与机场 · 13.1%", title: "一次只做一件事，卡住有人帮", img: "stuck.png", steps: [
-        { h: "按步骤走的落地流程", d: "每次只给一个当前任务：联网 → 支付 → 去酒店；上车后生成时间线与城市票根。" },
-        { h: "I'm Stuck：拍下来就行", d: "看不懂的报错拍照或描述，AI 识别场景，匹配知识库里的解决步骤。" },
-        { h: "仍未解决，有人兜底", d: "转 Trip.com 英文客服（Demo 示意）或出示求助卡；解决后点 Solved 反馈。" } ] }
-    ];
-  </script>
+  <!-- 03 落地体验：手机操作动画（demo03/） -->
+  <script src="demo03/player.js"></script>
+  <script src="demo03/copy.js"></script>
+  <script src="demo03/modules/tickets/timeline.js"></script>
+  <script src="demo03/modules/network/timeline.js"></script>
+  <script src="demo03/modules/payment/timeline.js"></script>
+  <script src="demo03/modules/transport/timeline.js"></script>
+  <script src="demo03/modules/airport/timeline.js"></script>
+  <script src="demo03/section.js"></script>
   <script src="deck.js"></script>
 </body>
 </html>

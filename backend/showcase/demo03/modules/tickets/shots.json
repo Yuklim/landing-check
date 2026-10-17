@@ -1,0 +1,28 @@
+{
+  "home": {
+    "src": "shots/home.png"
+  },
+  "hotels": {
+    "src": "shots/hotels.png"
+  },
+  "attractions": {
+    "src": "shots/attractions.png"
+  },
+  "car": {
+    "src": "shots/car.png"
+  },
+  "guides": {
+    "src": "shots/guides.png"
+  },
+  "preflight": {
+    "src": "shots/preflight.png",
+    "scroll": {
+      "src": "shots/preflight-scroll.png",
+      "x": 0,
+      "y": 54,
+      "w": 393,
+      "h": 728,
+      "contentH": 915
+    }
+  }
+}

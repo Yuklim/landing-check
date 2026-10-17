@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Landing Check · 03 Demo</title>
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="player.css">
+  <link rel="stylesheet" href="section.css">
+  <style>
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{font-family:Inter,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(130% 120% at 50% 0%,#15245a 0%,#0a1430 60%,#070d20 100%);overflow:hidden;-webkit-font-smoothing:antialiased}
+    .root{position:fixed;inset:0;display:grid;place-items:center}
+    .stage{position:absolute;left:50%;top:50%;width:1440px;height:810px;transform-origin:center;background:linear-gradient(120deg,#f3f7ff 0%,#fff 70%);overflow:hidden}
+    .ctl{position:fixed;right:16px;bottom:14px;color:#b9c6e6;font:500 12px "SFMono-Regular",Consolas,monospace;opacity:.7}
+  </style>
+</head>
+<body>
+  <div class="root"><div class="stage" id="stage"></div></div>
+  <div class="ctl">← → 切模块 · 空格 暂停 · ?m=模块&amp;t=秒 定格</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="player.js"></script>
+  <script src="copy.js"></script>
+  <!-- 顺序即演示顺序：门票与预约 → 上网与通讯 → 支付 → 交通 → 落地与机场（总结） -->
+  <script src="modules/tickets/timeline.js"></script>
+  <script src="modules/network/timeline.js"></script>
+  <script src="modules/payment/timeline.js"></script>
+  <script src="modules/transport/timeline.js"></script>
+  <script src="modules/airport/timeline.js"></script>
+  <script src="section.js"></script>
+  <script>
+  (function () {
+    const stage = document.getElementById('stage');
+    const fit = () => { const s = Math.min(innerWidth / 1440, innerHeight / 810); stage.style.transform = `translate(-50%,-50%) scale(${s})`; };
+    fit(); addEventListener('resize', fit);
+    const sec = Demo03.section(stage);
+    const q = new URLSearchParams(location.search);
+    const m = Math.max(0, sec.order.indexOf(q.get('m')));
+    sec.show(m, q.get('m') && q.get('t') != null ? q.get('t') : null);
+    sec.preload();
+    addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') sec.next() || sec.show(0);
+      else if (e.key === 'ArrowLeft') sec.prev() || sec.show(sec.count - 1);
+      else if (e.key === ' ') { e.preventDefault(); sec.toggle(); }
+    });
+  })();
+  </script>
+</body>
+</html>
