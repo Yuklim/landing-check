@@ -98,6 +98,7 @@
   }
   var INTRO = {
     cover: function (sl) {
+      makeQR(sl);
       var vis = visibleLang(sl.querySelector(".cover-title"));
       if (window.SplitText && vis && !reduce) {
         try {
@@ -105,10 +106,8 @@
           gsap.fromTo(sp.chars, { yPercent: 120, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: .7, stagger: .02, ease: EASE, delay: .12 });
         } catch (e) { }
       }
-      if (!reduce) gsap.fromTo(sl.querySelectorAll(".phone"), { autoAlpha: 0, y: 42, scale: .92 }, { autoAlpha: 1, y: 0, scale: 1, duration: .9, stagger: .12, ease: EASE, delay: .25 });
     },
-    problem: function (sl) { animateBars(sl); },
-    closing: function (sl) { makeQR(sl); },
+    "needs-map": function (sl) { animateBars(sl); },
     team: function (sl) { makeQR(sl); },
     "iter-eco": function (sl) { if (!reduce) drawEco(sl); }
   };
@@ -181,7 +180,7 @@
   // ---------- QR (qrcode-generator) ----------
   function makeQR(sl) {
     var box = sl.querySelector(".qr"); if (!box || box.dataset.done) return;
-    var url = box.dataset.url || "https://yuklim.github.io/landing-check/h5/";
+    var url = box.dataset.url || "https://yuklim.github.io/landing-check/h5/?api=https://landing-check.onrender.com&guide=1";
     if (window.qrcode) {
       try {
         var qr = qrcode(0, "M"); qr.addData(url); qr.make();
@@ -223,24 +222,27 @@
     }).join("");
   })();
 
-  // ---------- product stage switcher (LC_STAGES) ----------
+  // ---------- demo scene switcher (LC_SCENES) — GIF-ready: swap st.img for a .gif later ----------
   (function () {
-    var sl = document.getElementById("product"); if (!sl) return;
+    var sl = document.getElementById("demo"); if (!sl) return;
     var btns = [].slice.call(sl.querySelectorAll(".prod-nav button"));
-    var phone = sl.querySelector(".prod-phone img");
-    var copy = sl.querySelector(".prod-copy");
-    var S = window.LC_STAGES || [];
+    var phoneWrap = sl.querySelector(".demo-phone");
+    var phone = sl.querySelector(".demo-phone img");
+    var steps = sl.querySelector(".demo-steps");
+    var S = window.LC_SCENES || [];
+    function render(i) {
+      var st = S[i]; if (!st) return;
+      steps.querySelector(".demo-sc").textContent = "SCENE 0" + (i + 1) + " · " + st.label;
+      steps.querySelector("h3").textContent = st.title;
+      steps.querySelector(".demo-ol").innerHTML = st.steps.map(function (s) {
+        return "<li><b>" + s.h + "</b><span>" + s.d + "</span></li>";
+      }).join("");
+      if (phone && st.img) { phone.src = "assets/" + st.img; phone.alt = st.title; }
+    }
     function show(i, anim) {
       btns.forEach(function (b, k) { b.setAttribute("aria-selected", String(k === i)); });
-      var st = S[i]; if (!st) return;
-      var render = function () {
-        if (phone) { phone.src = "assets/" + st.image; phone.alt = st.title; }
-        copy.querySelector(".pk").textContent = "0" + (i + 1) + " / " + st.label;
-        copy.querySelector("h3").textContent = st.title;
-        copy.querySelector("p").textContent = st.body;
-      };
-      if (anim && !reduce) gsap.fromTo([phone.parentNode, copy], { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .45, ease: EASE, onStart: render });
-      else render();
+      if (anim && !reduce) gsap.fromTo([phoneWrap, steps], { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: .45, ease: EASE, onStart: function () { render(i); } });
+      else render(i);
     }
     btns.forEach(function (b, i) { b.addEventListener("click", function () { show(i, true); }); });
     show(0, false);
