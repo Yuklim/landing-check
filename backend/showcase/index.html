@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="demand-research.css">
   <script src="content-config.js" defer></script>
   <script src="demand-research.js" defer></script>
+  <script src="demand-bubbles.js" defer></script>
   <script src="evidence.js" defer></script>
   <script src="app.js" defer></script>
 </head>
@@ -50,14 +51,24 @@
       <div class="story-content">
         <section class="story-section" id="needs">
           <div class="section-heading"><span class="section-number">01 / THE NEED</span><h2 data-i18n="needsTitle">为什么做 Landing Check</h2><p data-i18n="needsDescription">在公开旅行社区里，我们看到一些游客已经查过攻略、装好应用，甚至完成了绑卡，却仍然担心到了中国不能付款。也有人在落地后才发现，自己不知道怎样完成买水这样简单的一笔消费。这些具体的提问让我们开始关注：游客做过准备之后，怎样才能在现场把工具用起来？</p></div>
-          <div id="demandResearch" class="demand-research"></div>
-          <div class="evidence-foot" style="margin:2px 0 24px"><p data-i18n="voicesLeadIn">下面是语料里的真实原帖，正是这些具体的求助与吐槽，汇总成上面的统计。</p></div>
-          <div class="evidence-toolbar"><div class="segmented" id="evidenceFilters" role="group" aria-label="按需求筛选" data-aria-key="filterNeeds"></div><span class="interaction-hint" data-i18n="clickEvidence">点击卡片查看原话与出处</span></div>
-          <div class="social-cloud" id="socialCloud"></div>
-          <div class="evidence-foot"><p data-i18n="evidenceFoot">卡片标题为公开原帖的释义。点击查看具体情境、已知后续与原始来源。</p><button class="text-button" type="button" id="openArchive"><span data-i18n="allEvidence">查看完整来源</span> ↗</button></div>
-          <aside class="guide-context" aria-labelledby="guideContextTitle"><div class="guide-context-heading"><h3 id="guideContextTitle" data-i18n="guideContextTitle">攻略已经帮游客做了不少准备</h3><p data-i18n="guideContextBody">Instagram 上的创作者会介绍来华前需要安装哪些应用、准备哪些东西。这类攻略是有用的起点。我们把它们和游客自己的追问放在一起看，想弄清楚哪些信息已经讲明白了，哪些操作到了实际使用时还会让人犹豫。</p></div><div class="guide-sources" id="guideSources"></div></aside>
+          <div class="needs-tabs" role="tablist" aria-label="数据来源" data-aria-key="dataSources">
+            <button class="needs-tab" id="tab-ctrip" role="tab" aria-selected="true" aria-controls="panel-ctrip" tabindex="0"><span data-i18n="tabCtrip">携程数据</span></button>
+            <button class="needs-tab" id="tab-social" role="tab" aria-selected="false" aria-controls="panel-social" tabindex="-1"><span data-i18n="tabSocial">社媒数据</span></button>
+          </div>
+          <div class="needs-panel" id="panel-ctrip" role="tabpanel" aria-labelledby="tab-ctrip" tabindex="0">
+            <div id="demandResearch" class="demand-research"></div>
+            <div id="demandBubbles" class="demand-bubbles"></div>
+            <div id="demandMethod" class="demand-research"></div>
+          </div>
+          <div class="needs-panel" id="panel-social" role="tabpanel" aria-labelledby="tab-social" tabindex="0" hidden>
+            <div class="evidence-foot" style="margin:0 0 20px"><p data-i18n="voicesLeadIn">下面是语料里的真实原帖，正是这些具体的求助与吐槽，汇总成上面的统计。</p></div>
+            <div class="evidence-toolbar"><div class="segmented" id="evidenceFilters" role="group" aria-label="按需求筛选" data-aria-key="filterNeeds"></div><span class="interaction-hint" data-i18n="clickEvidence">点击卡片查看原话与出处</span></div>
+            <div class="social-cloud" id="socialCloud"></div>
+            <div class="evidence-foot"><p data-i18n="evidenceFoot">卡片标题为公开原帖的释义。点击查看具体情境、已知后续与原始来源。</p><button class="text-button" type="button" id="openArchive"><span data-i18n="allEvidence">查看完整来源</span> ↗</button></div>
+            <aside class="guide-context" aria-labelledby="guideContextTitle"><div class="guide-context-heading"><h3 id="guideContextTitle" data-i18n="guideContextTitle">攻略已经帮游客做了不少准备</h3><p data-i18n="guideContextBody">Instagram 上的创作者会介绍来华前需要安装哪些应用、准备哪些东西。这类攻略是有用的起点。我们把它们和游客自己的追问放在一起看，想弄清楚哪些信息已经讲明白了，哪些操作到了实际使用时还会让人犹豫。</p></div><div class="guide-sources" id="guideSources"></div></aside>
+            <details class="research-method"><summary><span data-i18n="methodTitle">调研资料与核对方式</span><span aria-hidden="true">+</span></summary><div><p data-i18n="methodBody">我们对照公开原帖、评论和作者后续回复，保留具体情境和原始链接。游客的求助、个人经历和创作者攻略分别使用；如果问题后来已经解决，来源记录也会保留这个结果。这里展示的是定向收集的案例，没有把帖子热度换算成需求发生率。</p><div class="source-links"><a href="research/demand-review-2026-10-07.md" target="_blank" rel="noopener" data-i18n="researchDoc">阅读需求判断</a><a href="research/demand-review-2026-10-07.json" target="_blank" rel="noopener" data-i18n="sourceRecords">来源与后续记录</a></div></div></details>
+          </div>
           <div class="article-prose needs-context"><p data-i18n="needsContext1">因此，我们把目标用户收窄为首次来华、能够自己安排机票和酒店的外国自由行游客。他们通常愿意做准备，需要的是知道自己的设备和账户适用哪种办法，以及出问题后还能怎么办。我们选择从起飞前到离开机场这一段开始，把上网、支付和去酒店的步骤放到同一个行程里。</p><p data-i18n="needsContext2">这个选择也有边界。社区里的求助说明问题确实存在，但不能告诉我们有多少游客会遇到，也不能证明一套连续引导一定比攻略更好。“第一小时”只是我们用来控制产品范围的说法，实际是否能减少摸索，还需要让目标用户完成具体任务来比较。</p></div>
-          <details class="research-method"><summary><span data-i18n="methodTitle">调研资料与核对方式</span><span aria-hidden="true">+</span></summary><div><p data-i18n="methodBody">我们对照公开原帖、评论和作者后续回复，保留具体情境和原始链接。游客的求助、个人经历和创作者攻略分别使用；如果问题后来已经解决，来源记录也会保留这个结果。这里展示的是定向收集的案例，没有把帖子热度换算成需求发生率。</p><div class="source-links"><a href="research/demand-review-2026-10-07.md" target="_blank" rel="noopener" data-i18n="researchDoc">阅读需求判断</a><a href="research/demand-review-2026-10-07.json" target="_blank" rel="noopener" data-i18n="sourceRecords">来源与后续记录</a></div></div></details>
         </section>
 
         <section class="story-section" id="product">
