@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Community 帖子详情页 · 设计规范</title>
+<!--
+  ============================================================================
+  Community 帖子详情页（post detail）设计规范 —— 供"有数据的同学"实现用
+  目的：保持与 app 整体（Trip 蓝 #2C61FE / Inter / 白底卡片）风格统一。
+  对应路由建议：stamp.js 的 community-post 视图（story()）升级版。
+
+  页面结构（从上到下）：
+    1) 顶部作者条（sticky）：返回 ‹ + 头像 + 作者名 + 「🔥 China Regular ›」徽章 + Follow（蓝）+ ···
+    2) 图片轮播（可左右滑）：横向 scroll-snap；右上角「当前/总数」计数(1/13)；下方圆点指示器（当前为蓝色长条）
+    3) 定位药丸：📍 Shanghai ›
+    4) 标题（800 / 23px）
+    5) 正文：多段，段间距 14px，行高 1.7；链接用蓝色
+    6)（可选）提问 + PK 投票组件：红 Yes! / 蓝 No… + 中间 PK 圆标 + "275 voted" + 参与者头像
+    7) Posted · 日期
+    8) 评论区：计数标题「1,626 comments」；评论项（头像/名/Author 标/日期/正文/👍/💬/···）；
+       置顶评论用「Pinned」蓝标；楼中楼回复缩进；「view more replies (46) ›」
+    9) 底部操作栏（sticky）：Say something… 输入 + 👍1.4k / 💬1.6k / ♥1k / 分享
+
+  交互要点：
+    - 轮播：touch 左右滑（scroll-snap-type:x mandatory）；滑动时更新计数与圆点（JS 监听 scroll）。
+    - 真实数据字段（first-stamp.json 的 post）：title / body / author / authorImage / image(封面) /
+      images[](轮播多图，若有) / likeCount / commentCount / sourceUrl（溯源）/ publishTime。
+      图片轮播请用 images[]；无多图则退化为单图。评论/PK 若无真实数据可先用占位或隐藏。
+    - 溯源：底部或正文末保留「View the original on Trip.com ↗」(sourceUrl)。
+  配色 token：--blue:#2C61FE; --ink:#121826; --muted:#8A8F99; --line:#ECEFF3。
+  ============================================================================
+-->
+<style>
+  :root{ --blue:#2C61FE; --ink:#121826; --muted:#8A8F99; --line:#ECEFF3; --bg:#fff; }
+  *{box-sizing:border-box; -webkit-font-smoothing:antialiased; margin:0}
+  body{background:#0b1020; display:flex; justify-content:center}
+  .phone{width:393px; height:852px; background:#fff; position:relative; overflow:hidden;
+    font-family:Inter,-apple-system,"PingFang SC",system-ui,sans-serif; color:var(--ink); display:flex; flex-direction:column}
+  .sb{height:50px; display:flex; align-items:flex-end; justify-content:space-between; padding:0 22px 5px; flex:none}
+  .sb .t{font-weight:600; font-size:16px}
+  .sb .r{display:flex; gap:6px; align-items:center}
+  .hd{display:flex; align-items:center; gap:10px; padding:6px 14px 10px; border-bottom:1px solid var(--line); flex:none}
+  .hd .back{width:30px; flex:none}
+  .hd .av{width:40px; height:40px; border-radius:50%; flex:none; background:#ccc center/cover}
+  .hd .who{flex:1; min-width:0}
+  .hd .who .nm{font:700 15px Inter,sans-serif; line-height:1.1}
+  .hd .badge{display:inline-flex; align-items:center; gap:3px; margin-top:4px; padding:2px 8px; border-radius:20px;
+    background:#FFF1E8; color:#E8730C; font:600 11px Inter,sans-serif}
+  .hd .follow{color:var(--blue); font:700 15px Inter,sans-serif; flex:none}
+  .hd .more{color:#121826; font-size:20px; flex:none; letter-spacing:1px}
+  .scroll{flex:1; overflow-y:auto}
+  .carousel{position:relative}
+  .track{display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none}
+  .track::-webkit-scrollbar{display:none}
+  .slide{flex:0 0 100%; scroll-snap-align:center; height:300px; background:#e9edf2 center/cover no-repeat}
+  .count{position:absolute; top:12px; right:12px; background:rgba(20,26,40,.55); color:#fff;
+    font:600 13px Inter,sans-serif; padding:3px 11px; border-radius:20px}
+  .dots{display:flex; gap:6px; justify-content:center; padding:12px 0 4px}
+  .dots i{width:6px; height:6px; border-radius:50%; background:#D2D7DF}
+  .dots i.on{background:var(--blue); width:16px; border-radius:3px}
+  .pad{padding:4px 16px}
+  .loc{display:inline-flex; align-items:center; gap:5px; margin:8px 0 2px; padding:6px 12px; border-radius:20px;
+    background:#F3F5F8; color:#3A3F4A; font:600 13px Inter,sans-serif}
+  .title{font:800 23px/1.3 Inter,sans-serif; margin:10px 0 12px}
+  .body p{font:400 16px/1.7 Inter,-apple-system,"PingFang SC",sans-serif; color:#20242C; margin:0 0 14px}
+  .body a{color:var(--blue); word-break:break-all}
+  .qn{font:600 16px/1.5 Inter,sans-serif; margin:6px 0 12px}
+  .pk{border:1px solid var(--line); border-radius:16px; padding:16px}
+  .pk h4{font:800 18px Inter,sans-serif; margin-bottom:14px}
+  .pkbar{position:relative; display:flex; height:46px; border-radius:24px; overflow:hidden; font:700 15px Inter,sans-serif; color:#fff}
+  .pkbar .yes{flex:1; background:#E23B3B; display:flex; align-items:center; padding-left:18px}
+  .pkbar .no{flex:1; background:#2C61FE; display:flex; align-items:center; justify-content:flex-end; padding-right:18px}
+  .pkbar .vs{position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:38px; height:38px; border-radius:50%;
+    background:#fff; color:#C018B0; font:800 13px Inter,sans-serif; display:flex; align-items:center; justify-content:center; box-shadow:0 0 0 3px #fff}
+  .voted{display:flex; align-items:center; gap:7px; margin-top:12px; color:var(--muted); font:500 13px Inter,sans-serif}
+  .voted .faces i{display:inline-block; width:20px; height:20px; border-radius:50%; background:#cbd2dc; border:2px solid #fff; margin-left:-6px; vertical-align:middle}
+  .posted{color:var(--muted); font:400 13px Inter,sans-serif; margin:16px 0}
+  .divider{height:8px; background:#F4F6F9}
+  .csec{padding:16px}
+  .ctitle{font:800 18px Inter,sans-serif; margin-bottom:6px}
+  .cmt{display:flex; gap:11px; padding:14px 0; border-top:1px solid var(--line)}
+  .cmt:first-of-type{border-top:0}
+  .cmt .cav{width:34px; height:34px; border-radius:50%; flex:none; background:#cbd2dc center/cover}
+  .cmt .cmain{flex:1; min-width:0}
+  .cmeta{display:flex; align-items:center; gap:7px; flex-wrap:wrap; font:400 13px Inter,sans-serif; color:var(--muted)}
+  .cmeta .cn{font:700 13px Inter,sans-serif; color:#3A3F4A}
+  .tag{background:#EEF1F5; color:#6B7280; font:600 11px Inter,sans-serif; padding:1px 7px; border-radius:5px}
+  .tag.pin{background:#E8EEFF; color:var(--blue)}
+  .ctext{font:400 15px/1.5 Inter,sans-serif; color:#20242C; margin:6px 0 8px}
+  .cact{display:flex; align-items:center; gap:26px; color:var(--muted); font:500 13px Inter,sans-serif}
+  .cact span{display:inline-flex; align-items:center; gap:5px}
+  .reply{margin-left:45px; border-top:1px solid var(--line)}
+  .more-replies{margin-left:45px; color:var(--blue); font:600 14px Inter,sans-serif; padding:10px 0}
+  .foot{display:flex; align-items:center; gap:14px; padding:10px 14px; border-top:1px solid var(--line); flex:none}
+  .foot .say{flex:1; height:40px; border-radius:20px; background:#F3F5F8; color:#9aa0ab; display:flex; align-items:center; padding:0 16px; font:500 14px Inter,sans-serif}
+  .foot .ic{display:flex; align-items:center; gap:3px; color:#3A3F4A; font:600 12px Inter,sans-serif}
+  .foot svg{display:block}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="sb"><div class="t">12:11</div><div class="r">
+    <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="1" fill="#121826"/><rect x="5" y="4" width="3" height="8" rx="1" fill="#121826"/><rect x="10" y="1" width="3" height="11" rx="1" fill="#121826"/><rect x="15" y="1" width="3" height="11" rx="1" fill="#121826"/></svg>
+    <svg width="18" height="13" viewBox="0 0 18 13" fill="none" stroke="#121826" stroke-width="1.6"><path d="M1 4.5C5-0.5 13-0.5 17 4.5M3.5 7.5c3-3 8-3 11 0M6.5 10.5c1.4-1.3 3.6-1.3 5 0"/></svg>
+    <svg width="26" height="13" viewBox="0 0 26 13"><rect x="1" y="1" width="21" height="11" rx="3" fill="none" stroke="#121826" stroke-width="1.4"/><rect x="3" y="3" width="17" height="7" rx="1.5" fill="#121826"/><rect x="23" y="4" width="2" height="5" rx="1" fill="#121826"/></svg>
+  </div></div>
+
+  <div class="hd">
+    <svg class="back" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#121826" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    <div class="av" style="background-image:url('../h5/img/stamp/chengdu.jpg')"></div>
+    <div class="who"><div class="nm">Meowsvacation</div><span class="badge">🔥 China Regular ›</span></div>
+    <div class="follow">Follow</div>
+    <div class="more">···</div>
+  </div>
+
+  <div class="scroll">
+    <div class="carousel">
+      <div class="track">
+        <div class="slide" style="background-image:url('../h5/img/stamp/shanghai-dusk.png')"></div>
+        <div class="slide" style="background-image:url('../h5/img/stamp/hangzhou.jpg')"></div>
+        <div class="slide" style="background-image:url('../h5/img/stamp/guangzhou.jpg')"></div>
+        <div class="slide" style="background-image:url('../h5/img/stamp/beijing.jpg')"></div>
+      </div>
+      <div class="count" data-count>1/13</div>
+    </div>
+    <div class="dots" data-dots><i class="on"></i><i></i><i></i><i></i></div>
+
+    <div class="pad">
+      <div class="loc">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3A3F4A" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Shanghai ›
+      </div>
+      <div class="title">Crazy good value 24 hour spa in Shanghai!</div>
+      <div class="body">
+        <p>This is one of the best-value 24-hour spas that I've found in Shanghai.</p>
+        <p>For $40 USD, you get 8 hours of access, including buffet meal plus unlimited fruit, drinks, and ice cream.</p>
+        <p>You also get access to the hot pools, saunas, lounges, pool tables, arcade areas, and other activities (some gaming options cost extra).</p>
+        <p>For more information and to book: <a href="#">https://trip.tpx.gr/wOBwnk2O</a> (affiliate link)</p>
+      </div>
+
+      <div class="qn">Would you choose this over paying for a hotel for the night?</div>
+      <div class="pk">
+        <h4>Do you think this is a good value?</h4>
+        <div class="pkbar"><div class="yes">Yes!</div><div class="no">No…</div><div class="vs">PK</div></div>
+        <div class="voted"><span class="faces"><i></i><i></i></span> 275 voted</div>
+      </div>
+      <div class="posted">Posted · Sep 29</div>
+    </div>
+
+    <div class="divider"></div>
+    <div class="csec">
+      <div class="ctitle">1,626 comments</div>
+
+      <div class="cmt">
+        <div class="cav" style="background-image:url('../h5/img/stamp/chengdu.jpg')"></div>
+        <div class="cmain">
+          <div class="cmeta"><span class="cn">Meowsvacation</span><span class="tag">Author</span><span>Sep 29</span></div>
+          <div class="ctext">For more information and to book: https://trip.tpx.gr/wOBwnk2O (affiliate link) ^ it's O like the letter, not the number zero</div>
+          <div class="cact"><span class="tag pin">Pinned</span>
+            <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A8F99" stroke-width="2"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 3 2l-1 6h5a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 20 20H7"/></svg>7</span>
+            <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A8F99" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            <span>···</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cmt">
+        <div class="cav" style="background-image:url('../h5/img/stamp/hangzhou.jpg')"></div>
+        <div class="cmain">
+          <div class="cmeta"><span class="cn">Junli's</span><span>Sep 29</span></div>
+          <div class="ctext">Nice recommendation</div>
+          <div class="cact"><span>👍 0</span><span>💬</span><span>···</span></div>
+          <div class="reply" style="margin-left:0;padding-top:12px">
+            <div class="cmt" style="padding:0">
+              <div class="cav" style="width:28px;height:28px;background-image:url('../h5/img/stamp/beijing.jpg')"></div>
+              <div class="cmain">
+                <div class="cmeta"><span class="cn">Lovely Traveler</span><span>Oct 2</span></div>
+                <div class="ctext" style="margin-bottom:4px">Thank you so much 🙏</div>
+              </div>
+            </div>
+            <div class="more-replies" style="margin-left:0">view more replies (46) ›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="say">Say something…</div>
+    <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3A3F4A" stroke-width="1.8"><path d="M7 11v9H4v-9zM7 11l4-8a2 2 0 0 1 3 2l-1 6h5a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 20 20H7"/></svg>1.4k</div>
+    <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3A3F4A" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>1.6k</div>
+    <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3A3F4A" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l8.8 8.6 8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg>1k</div>
+    <div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3A3F4A" stroke-width="1.8"><path d="M18 8a3 3 0 1 0-2.8-4M6 15a3 3 0 1 0 0-6m12 14a3 3 0 1 0-2.8-4M8 10l7-4M8 14l7 4"/></svg></div>
+  </div>
+</div>
+
+<script>
+  // 轮播：左右滑动时更新计数与圆点（实现时把 slide 换成真实 post.images[]）
+  (function () {
+    var track = document.querySelector('.track');
+    var count = document.querySelector('[data-count]');
+    var dots = document.querySelector('[data-dots]');
+    var total = track ? track.children.length : 0;
+    if (!track) return;
+    track.addEventListener('scroll', function () {
+      var i = Math.round(track.scrollLeft / track.clientWidth);
+      if (count) count.textContent = (i + 1) + '/' + 13;         // 13 = 真实总图数
+      if (dots) [].forEach.call(dots.children, function (d, k) { d.classList.toggle('on', k === i); });
+    }, { passive: true });
+  })();
+</script>
+</body>
+</html>
