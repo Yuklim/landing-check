@@ -15,7 +15,8 @@ def build():
     paths.update(re.findall(r'''(?:src=["']|url\(["']?)(img/[^"'\s)]+)''', html))
     paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'img' / 'offline').glob('*.svg'))
     for ext in ('*.png', '*.jpg', '*.jpeg'):
-        paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'img' / 'stamp').glob(ext))
+        paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'img' / 'stamp').glob(ext)
+                     if not (p.suffix == '.png' and p.with_suffix('.jpg').exists()))   # 原图 PNG 只给 Pen 用，H5 用同名 JPEG
     paths.update(p.relative_to(HERE).as_posix() for p in (HERE / 'fonts').glob('*') if p.is_file())
     assets = []
     for path in sorted(paths):

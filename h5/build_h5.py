@@ -257,7 +257,12 @@ IMG_DIR = os.path.join(HERE, 'img'); os.makedirs(IMG_DIR, exist_ok=True)
 def localize(m):
     url = m.group(1).strip('"\'')
     if url.startswith('h5/'):                      # Pen 里引用的本地图片相对项目根目录，H5 里相对 h5/
-        return 'url(%s)' % url[3:]
+        local = url[3:]
+        # 照片类 PNG 在 Pen 里保留原图，H5 用同名压缩 JPEG（如 shanghai-dusk：3.2 MB → 0.4 MB）
+        jpg = re.sub(r'\.png$', '.jpg', local)
+        if jpg != local and os.path.exists(os.path.join(HERE, jpg)):
+            local = jpg
+        return 'url(%s)' % local
     if not url.startswith('http'):
         return m.group(0)
     name = hashlib.md5(url.encode()).hexdigest()[:12] + '.jpg'

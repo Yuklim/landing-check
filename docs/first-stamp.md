@@ -59,7 +59,7 @@ E2E=1 E2E_CHANNEL=chrome python -m pytest -q backend/tests
 
 ## 视觉素材与生成记录
 
-- 原创城市图：`h5/img/stamp/shanghai-dusk.png`，由内置 **image_gen** 工具生成并复制到项目内。插画用于纪念卡，不是实景照片或导航图。
+- 原创城市图：`h5/img/stamp/shanghai-dusk.png`，由内置 **image_gen** 工具生成并复制到项目内；H5 和离线包用缩到 1200 宽的同名 JPEG（约 0.4 MB），PNG 原图只给 Pen 设计稿用。插画用于纪念卡，不是实景照片或导航图。
 - 衬线字体：Cormorant Garamond，来自 [Google Fonts 源仓库](https://github.com/google/fonts/tree/main/ofl/cormorantgaramond)，以 SIL Open Font License 随包保存，许可证位于 `h5/fonts/OFL-CormorantGaramond.txt`。
 - QR：`h5/img/stamp/discover-qr.png`，固定公共入口，由本地工具生成；运行时无需二维码服务或新依赖。
 

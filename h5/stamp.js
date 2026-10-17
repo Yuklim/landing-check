@@ -164,7 +164,8 @@
     // A traveler's own keepsake post (saved on this browser) keeps the simple card view.
     if (post.card) return `<div class="fs-demo">Local demo post · on this browser only</div><div><div class="fs-eyebrow">${H(post.topic)} · SHANGHAI</div><h2 style="font-size:32px;margin-top:9px">${H(post.title)}</h2><p class="fs-story-author">by ${H(post.author)}</p></div>${preview(post.card)}<p class="fs-story-body">${H(post.body)}</p>
       ${btn('Edit post','edit-post',post.id)}${btn(icon('bookmark')+(state.personal.bookmarks.includes(post.id)?' Saved to my atlas':' Save this story'),'bookmark',post.id,'outline')}${btn('Delete this local post','delete-post',post.id,'danger')}${btn('Back to Community','nav','explore','secondary')}`;
-    const imgs = (post.images && post.images.length) ? post.images : (post.image ? [post.image] : []);
+    const sized = window.lcTripImg || (u => u);   // Trip.com 图床原图太大，用 800 宽版本（见 app.js tripImg）
+    const imgs = ((post.images && post.images.length) ? post.images : (post.image ? [post.image] : [])).map(u => sized(u, 800));
     const slides = imgs.map(u=>`<div class="fs-pd-slide"><img src="${H(u)}" alt="" loading="lazy" referrerpolicy="no-referrer"></div>`).join('');
     const paras = String(post.body||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
     const body = (paras.length?paras:[String(post.body||'')]).map(p=>`<p>${H(p)}</p>`).join('');
@@ -263,7 +264,7 @@
   // ---- 城市图鉴地图（高德）：上海点亮=蓝，其它城市灰点待点亮；离线/失败则静默保留下方卡片 ----
   let atlasMap = null;
   const ATLAS_CITIES = [
-    { name:'Shanghai',  pos:[121.47,31.23], ds:'上海市', photo:'img/stamp/shanghai-dusk.png', lit:true,  date:'10.16', hero:true },
+    { name:'Shanghai',  pos:[121.47,31.23], ds:'上海市', photo:'img/stamp/shanghai-dusk.jpg', lit:true,  date:'10.16', hero:true },
     { name:'Beijing',   pos:[116.40,39.90], ds:'北京市', photo:'img/stamp/beijing.jpg',  lit:true,  date:'10.14', label:'right' },
     { name:'Chengdu',   pos:[104.07,30.57], ds:'成都市', photo:'img/stamp/chengdu.jpg',  lit:true,  date:'10.11' },
     { name:'Hangzhou',  pos:[120.15,30.27], photo:'img/stamp/hangzhou.jpg',  lit:false },
