@@ -10,3 +10,22 @@ __pycache__/
 
 # Reddit 用户截图只留本地，不进公开仓库
 知识库/samples/from_reddit/images/
+
+# 提交包里的演示成片太大（真实场景版超过 100MB），只留本地
+submission/02-演示视频/*.mp4
+submission-final/*.mp4
+
+# 需求调研原始数据（用户帖子和作者名）只留本地，不进公开仓库
+demand-research/data/
+# 采集专用 Chrome 的配置目录
+demand-research/.chrome-profile/
+
+# 以下只留本地，不进公开仓库：体积大 / 独立子项目 / 含队员个人照片 / 含提供方水印
+demo/film/
+trip/
+demand-research/
+MCP使用文档.pdf
+submission/
+submission-final/
+docs/354859021fcb62144be5bb86c0d9575a.jpg
+docs/微信图片_20261016205229_407_159.jpg
