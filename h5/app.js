@@ -699,8 +699,22 @@
     return false;
   };
   const menuList = document.getElementById('list');
+  // 重置演示数据：后端 mock 状态 + 本机 IndexedDB（集章、社区帖、离线酒店卡/联系人/引导进度）+ 已下载的离线包，然后回首页重载。
+  // 静态模式也要有；不走 post()，否则在分享 / 社区 / 离线页会被 localOnly() 拦下
+  async function resetDemo() {
+    toast('正在重置…');
+    const jobs = [];
+    if (API) jobs.push(fetch(API + '/mock/reset', { method: 'POST' }).then(ok));
+    if (window.LCOfflineDB) jobs.push(window.LCOfflineDB.clear());
+    if (window.caches) jobs.push(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith('lc-offline-')).map(k => caches.delete(k)))));
+    const failed = (await Promise.allSettled(jobs)).filter(r => r.status === 'rejected');
+    Object.assign(S, S0());
+    toast(failed.length ? (API && failed.length === 1 ? '本机已重置（后端不可达）' : '部分数据没清掉，请关闭其他标签页后重试') : '已重置');
+    setTimeout(() => { history.replaceState(null, '', location.pathname + location.search); location.reload(); }, 500);
+  }
   if (menuList) {
     const sep = document.createElement('div'); sep.style.cssText = 'border-top:1px solid #DADFE6;margin:4px 0'; menuList.appendChild(sep);
+    const rb = document.createElement('button'); rb.textContent = '🔄 重置演示数据'; rb.onclick = resetDemo; menuList.appendChild(rb);
     loadTutorials().then(list => list.forEach(t => { const b = document.createElement('button'); b.textContent = '📖 ' + t.title; b.onclick = () => openTutorial(t.id); menuList.appendChild(b); }));
   }
 
@@ -1436,7 +1450,6 @@
     const sep = document.createElement('div'); sep.style.cssText = 'border-top:1px solid #DADFE6;margin:4px 0';
     list.appendChild(sep);
     const mk = (label, fn) => { const b = document.createElement('button'); b.textContent = label; b.onclick = fn; list.appendChild(b); return b; };
-    mk('🔄 重置演示数据', async () => { try { await post('/mock/reset'); Object.assign(S, S0()); toast('已重置'); setTimeout(() => location.reload(), 400); } catch (e) { toast('后端不可达'); } });
     const nb = mk('🌙 深夜落地模式：关', () => { S.night = !S.night; nb.textContent = '🌙 深夜落地模式：' + (S.night ? '开' : '关'); renderTransport(); toast(S.night ? '交通推荐按 23:40 落地计算' : '恢复 14:20 落地'); });
     const failSim = m => async () => { try { const r = await post('/mock/pay-test?fail=1&method=' + m); renderPayFail(m, r, await otherVerified(m)); show('payment'); } catch (e) { toast('后端不可达'); } };
     mk('💳 模拟支付失败（支付宝）', failSim('alipay'));
