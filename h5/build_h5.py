@@ -109,12 +109,13 @@ BIND = [
     ('step1', 'name:Back', 'go:trips'),
     ('step1', 'name:Primary Button', 'go:wifi'),
     ('step1', 'name:Alt Left', 'go:online'),
-    ('step1', 'name:Stuck Card', 'api:stuck'),
+    ('step1', 'name:Stuck FAB', 'api:stuck'),
     ('step1', 'name:Tab Home', 'go:home'),
     # 已联网分支
     ('online', 'name:Back', 'go:trips'),
     ('online', 'name:Primary Button', 'go:step3'),
     ('online', 'name:Alt Left', 'go:step1'),
+    ('online', 'name:Stuck FAB', 'api:stuck'),
     ('online', 'name:Tab Home', 'go:home'),
     # Wi-Fi 引导
     ('wifi', 'name:Back', 'go:online'),
@@ -131,8 +132,7 @@ BIND = [
     # 第三步 交通
     ('step3', 'name:Back', 'go:online'),
     ('step3', 'name:Primary Button', 'go:driver'),
-    ('step3', 'id:kwA7p', 'go:transit'),
-    ('step3', 'id:aFhcw', 'toast:Demo：打开支付宝里的滴滴小程序'),
+    ('step3', 'name:Pay Note', 'api:pay2'),
     ('step3', 'name:In Car Button', 'api:incar'),
     ('step3', 'name:Stuck FAB', 'api:stuck'),
     ('step3', 'name:Tab Home', 'go:home'),

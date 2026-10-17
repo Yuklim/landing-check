@@ -474,14 +474,7 @@
       errorBox.textContent = error.message || 'Could not save on this device.';
     } finally { if (submit.isConnected) submit.disabled = false; }
   });
-  for (const route of ['wifi', 'step1', 'online', 'step3', 'driver']) {
-    const host = document.querySelector(`.screen[data-route="${route}"] > .scroll`);
-    if (!host) continue;
-    const entry = document.createElement('button'); entry.className = 'op-entry'; entry.dataset.op = 'nav'; entry.dataset.value = 'offline';
-    entry.innerHTML = `${icon('download')}<span>Offline travel pack<small>Your hotel, useful phrases & connection help</small></span>`;
-    const body = [...host.children].find(node => ['Body', 'Content'].includes(node.dataset.pencilName));
-    if (body) host.insertBefore(entry, body); else host.append(entry);
-  }
+  // 流程页顶部不再插离线包横幅（页面改版：一屏一个重点）；离线包从首页「Offline Pack」和行前检查进入
   const menu = document.getElementById('list');
   if (menu) { const entry = document.createElement('button'); entry.textContent = 'Offline travel pack · 离线包'; entry.dataset.op = 'nav'; entry.dataset.value = 'offline'; menu.prepend(entry); }
   const originalOnShow = window.lcOnShow;

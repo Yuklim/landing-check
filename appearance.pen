@@ -74,11 +74,11 @@
           "width": "fill_container",
           "fill": "$brand",
           "layout": "vertical",
-          "gap": 4,
+          "gap": 5,
           "padding": [
             4,
             20,
-            20,
+            16,
             20
           ],
           "children": [
@@ -87,6 +87,7 @@
               "id": "bGUYV",
               "name": "Header Row",
               "width": "fill_container",
+              "gap": 11,
               "justifyContent": "space_between",
               "alignItems": "center",
               "children": [
@@ -114,9 +115,24 @@
                   ]
                 },
                 {
+                  "type": "text",
+                  "id": "NFf6n",
+                  "name": "Step Label",
+                  "fill": "#FFFFFFD9",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Step 1 of 3",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
                   "type": "frame",
                   "id": "fOEuQ",
+                  "x": 238,
+                  "y": 4.5,
                   "name": "Offline Chip",
+                  "enabled": false,
                   "fill": "#FFFFFF33",
                   "cornerRadius": 12,
                   "gap": 6,
@@ -147,6 +163,15 @@
                       "fontWeight": "500"
                     }
                   ]
+                },
+                {
+                  "id": "C7yYWT",
+                  "type": "ref",
+                  "ref": "lTCGy",
+                  "name": "Stuck FAB",
+                  "fill": "#FFFFFF",
+                  "x": 284,
+                  "y": 0
                 }
               ]
             },
@@ -157,22 +182,68 @@
               "fill": "$white",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "Step 1 of 3 · Get online",
+              "content": "Get online",
               "fontFamily": "$font",
-              "fontSize": 24,
-              "fontWeight": "700"
+              "fontSize": 26,
+              "fontWeight": "800"
             },
             {
               "type": "text",
               "id": "N8tw1g",
+              "x": 20,
+              "y": 73,
               "name": "Subtitle",
+              "enabled": false,
               "fill": "#FFFFFFCC",
               "textGrowth": "fixed-width",
-              "width": "fill_container",
+              "width": "fill_container(353)",
               "content": "Landed at PVG T2 · 07:52 local · one thing at a time",
               "fontFamily": "$font",
               "fontSize": 14,
               "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "n0VUs",
+              "name": "Progress Segs",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 4,
+              "padding": [
+                8,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Sz9br",
+                  "name": "Seg 1",
+                  "width": "fill_container",
+                  "height": 4,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 2
+                },
+                {
+                  "type": "frame",
+                  "id": "AWs1D",
+                  "name": "Seg 2",
+                  "width": "fill_container",
+                  "height": 4,
+                  "fill": "#FFFFFF55",
+                  "cornerRadius": 2
+                },
+                {
+                  "type": "frame",
+                  "id": "jDZVC",
+                  "name": "Seg 3",
+                  "width": "fill_container",
+                  "height": 4,
+                  "fill": "#FFFFFF55",
+                  "cornerRadius": 2
+                }
+              ]
             }
           ]
         },
@@ -181,6 +252,7 @@
           "id": "JbXnt",
           "name": "Content",
           "width": "fill_container",
+          "height": "fill_container",
           "fill": "$bg",
           "layout": "vertical",
           "gap": 10,
@@ -195,41 +267,73 @@
               "name": "Current Task",
               "width": "fill_container",
               "fill": "$white",
-              "cornerRadius": 10,
+              "cornerRadius": 16,
               "stroke": "$brand",
-              "strokeWidth": 1.5,
               "layout": "vertical",
-              "gap": 12,
-              "padding": 16,
+              "gap": 14,
+              "padding": [
+                26,
+                16,
+                22,
+                16
+              ],
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
                   "id": "NdM5p",
                   "name": "Task Top",
                   "width": "fill_container",
-                  "gap": 12,
+                  "layout": "vertical",
+                  "gap": 14,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
                       "id": "a51xvk",
                       "name": "Icon Wrap",
-                      "width": 44,
-                      "height": 44,
-                      "fill": "$warn-soft",
-                      "cornerRadius": 22,
+                      "width": 128,
+                      "height": 128,
+                      "fill": "#FFF4E5",
+                      "cornerRadius": 64,
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "R2bkly",
-                          "name": "Icon",
-                          "width": 22,
-                          "height": 22,
-                          "icon": "wifi",
-                          "library": "lucide",
-                          "fill": "$warn"
+                          "type": "frame",
+                          "id": "oM8V6",
+                          "name": "Icon Ring",
+                          "width": 96,
+                          "height": 96,
+                          "fill": "#FFE2BF",
+                          "cornerRadius": 48,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "q1DnfK",
+                              "name": "Icon Core",
+                              "width": 68,
+                              "height": 68,
+                              "fill": "$warn",
+                              "cornerRadius": 34,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "R2bkly",
+                                  "name": "Icon",
+                                  "width": 34,
+                                  "height": 34,
+                                  "icon": "wifi-off",
+                                  "library": "lucide",
+                                  "fill": "$white"
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -239,17 +343,18 @@
                       "name": "Task Texts",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 3,
+                      "gap": 4,
+                      "alignItems": "center",
                       "children": [
                         {
                           "type": "text",
                           "id": "b9WuE",
                           "name": "Task Title",
                           "fill": "$text",
-                          "content": "Your own data isn't working",
+                          "content": "No mobile data yet",
                           "fontFamily": "$font",
-                          "fontSize": 17,
-                          "fontWeight": "700"
+                          "fontSize": 26,
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
@@ -258,7 +363,8 @@
                           "fill": "$text-2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Checked eSIM and roaming · no connection at 07:53",
+                          "content": "Checked eSIM and roaming",
+                          "textAlign": "center",
                           "fontFamily": "$font",
                           "fontSize": 13,
                           "fontWeight": "normal"
@@ -268,7 +374,10 @@
                     {
                       "type": "frame",
                       "id": "pfYDR",
+                      "x": 142,
+                      "y": 196,
                       "name": "Status",
+                      "enabled": false,
                       "fill": "$warn-soft",
                       "cornerRadius": 4,
                       "padding": [
@@ -293,76 +402,28 @@
                 {
                   "type": "text",
                   "id": "Ha4RL",
+                  "x": 16,
+                  "y": 255,
                   "name": "Task Desc",
+                  "enabled": false,
                   "fill": "$text-2",
                   "textGrowth": "fixed-width",
-                  "width": "fill_container",
+                  "width": "fill_container(329)",
                   "content": "We checked at 07:53: data is on, pages load, Google services respond. Skip airport Wi-Fi. Moving on in 5 s.",
                   "lineHeight": 1.45,
                   "fontFamily": "$font",
                   "fontSize": 13,
                   "fontWeight": "normal"
-                },
-                {
-                  "type": "frame",
-                  "id": "xp3qm",
-                  "name": "Primary Button",
-                  "width": "fill_container",
-                  "height": 46,
-                  "fill": "$brand",
-                  "cornerRadius": 6,
-                  "gap": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "jhH9u",
-                      "name": "Primary Label",
-                      "fill": "$white",
-                      "content": "Connect to PVG Wi-Fi",
-                      "fontFamily": "$font",
-                      "fontSize": 15,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "icon",
-                      "id": "QzlDA",
-                      "name": "Arrow",
-                      "width": 16,
-                      "height": 16,
-                      "icon": "chevron-right",
-                      "library": "lucide",
-                      "fill": "$white"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "WZsBb",
-                  "name": "Alt Row",
-                  "width": "fill_container",
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "gt8lA",
-                      "name": "Alt Left",
-                      "fill": "$brand",
-                      "content": "Already have an eSIM? Turn it on, then re-check",
-                      "fontFamily": "$font",
-                      "fontSize": 12,
-                      "fontWeight": "600"
-                    }
-                  ]
                 }
               ]
             },
             {
               "type": "text",
               "id": "Y2RtF5",
+              "x": 16,
+              "y": 264,
               "name": "Steps Title",
+              "enabled": false,
               "fill": "$text-2",
               "content": "Your first hour",
               "fontFamily": "$font",
@@ -372,9 +433,12 @@
             {
               "type": "frame",
               "id": "PtN1R",
+              "x": 16,
+              "y": 290,
               "name": "Step List",
+              "enabled": false,
               "clip": true,
-              "width": "fill_container",
+              "width": "fill_container(361)",
               "fill": "$white",
               "cornerRadius": 8,
               "layout": "vertical",
@@ -632,8 +696,11 @@
             {
               "type": "frame",
               "id": "X26TrS",
+              "x": 16,
+              "y": 445,
               "name": "Stuck Card",
-              "width": "fill_container",
+              "enabled": false,
+              "width": "fill_container(361)",
               "fill": "$white",
               "cornerRadius": 8,
               "stroke": "$line",
@@ -739,6 +806,68 @@
                   "icon": "chevron-right",
                   "library": "lucide",
                   "fill": "$text-3"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "JTvMv",
+              "name": "Spacer",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "#00000000"
+            },
+            {
+              "type": "frame",
+              "id": "xp3qm",
+              "name": "Primary Button",
+              "width": "fill_container",
+              "height": 46,
+              "fill": "$brand",
+              "cornerRadius": 23,
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "jhH9u",
+                  "name": "Primary Label",
+                  "fill": "$white",
+                  "content": "Connect to PVG Wi-Fi",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "icon",
+                  "id": "QzlDA",
+                  "name": "Arrow",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "chevron-right",
+                  "library": "lucide",
+                  "fill": "$white"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "WZsBb",
+              "name": "Alt Row",
+              "width": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "gt8lA",
+                  "name": "Alt Left",
+                  "fill": "$brand",
+                  "content": "Already have an eSIM? Turn it on, then re-check",
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "600"
                 }
               ]
             }
@@ -3001,24 +3130,42 @@
           "children": [
             {
               "type": "frame",
-              "id": "SVHbv",
-              "name": "Close",
-              "width": 32,
-              "height": 32,
-              "fill": "#F0F2F5",
-              "cornerRadius": 16,
-              "justifyContent": "center",
+              "id": "SCHmV",
+              "name": "Nav Left",
+              "fill": "#00000000",
+              "gap": 6,
               "alignItems": "center",
               "children": [
                 {
-                  "type": "icon",
-                  "id": "C6iLZm",
-                  "name": "Close Icon",
-                  "width": 18,
-                  "height": 18,
-                  "icon": "x",
-                  "library": "lucide",
-                  "fill": "$text"
+                  "type": "frame",
+                  "id": "SVHbv",
+                  "name": "Close",
+                  "width": 32,
+                  "height": 32,
+                  "fill": "#F0F2F5",
+                  "cornerRadius": 16,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "C6iLZm",
+                      "name": "Close Icon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "x",
+                      "library": "lucide",
+                      "fill": "$text"
+                    }
+                  ]
+                },
+                {
+                  "id": "x9i1tM",
+                  "type": "ref",
+                  "ref": "lTCGy",
+                  "name": "Stuck FAB",
+                  "x": 38,
+                  "y": 0
                 }
               ]
             },
@@ -3383,15 +3530,6 @@
           "ref": "VIOxe",
           "name": "Tab Bar",
           "width": "fill_container"
-        },
-        {
-          "id": "x9i1tM",
-          "type": "ref",
-          "ref": "lTCGy",
-          "name": "Stuck FAB",
-          "layoutPosition": "absolute",
-          "x": 262,
-          "y": 652
         }
       ]
     },
@@ -3464,7 +3602,10 @@
             {
               "type": "frame",
               "id": "K6jubO",
+              "x": 345,
+              "y": 6,
               "name": "More",
+              "enabled": false,
               "width": 32,
               "height": 32,
               "fill": "#F0F2F5",
@@ -3483,6 +3624,14 @@
                   "fill": "$text"
                 }
               ]
+            },
+            {
+              "id": "p0Sow",
+              "type": "ref",
+              "ref": "lTCGy",
+              "name": "Stuck FAB",
+              "x": 308,
+              "y": 6
             }
           ]
         },
@@ -3629,7 +3778,7 @@
                   "id": "p9aLM",
                   "name": "Run Check Button",
                   "width": "fill_container",
-                  "height": 36,
+                  "height": 34,
                   "fill": "#FFFFFF26",
                   "cornerRadius": 18,
                   "stroke": "#FFFFFF66",
@@ -3681,7 +3830,7 @@
                   "id": "OEe6A",
                   "name": "Section Title",
                   "fill": "$text-2",
-                  "content": "MUST DO",
+                  "content": "DO THIS NEXT",
                   "fontFamily": "$font",
                   "fontSize": 13,
                   "fontWeight": "700"
@@ -3702,9 +3851,9 @@
                   "name": "Item Mobile data in China",
                   "width": "fill_container",
                   "fill": "$white",
-                  "cornerRadius": 12,
-                  "stroke": "$warn",
-                  "strokeWidth": 1,
+                  "cornerRadius": 16,
+                  "stroke": "$brand",
+                  "strokeWidth": 2,
                   "layout": "vertical",
                   "gap": 10,
                   "padding": 14,
@@ -3828,12 +3977,14 @@
                   "name": "Item Alipay payment",
                   "width": "fill_container",
                   "fill": "$white",
-                  "cornerRadius": 12,
+                  "cornerRadius": 16,
                   "stroke": "$line",
-                  "strokeWidth": 1,
-                  "layout": "vertical",
                   "gap": 10,
-                  "padding": 14,
+                  "padding": [
+                    12,
+                    14
+                  ],
+                  "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
@@ -3893,7 +4044,7 @@
                               "fill": "$text-2",
                               "textGrowth": "fixed-width",
                               "width": "fill_container",
-                              "content": "Installed · not verified yet · ¥1 test, refunded in 24 h",
+                              "content": "¥1 test · refunded",
                               "fontFamily": "$font",
                               "fontSize": 12,
                               "fontWeight": "normal"
@@ -3906,12 +4057,14 @@
                       "type": "frame",
                       "id": "jVYml",
                       "name": "Item Button",
-                      "width": "fill_container",
-                      "height": 40,
-                      "fill": "$brand",
-                      "cornerRadius": 20,
+                      "height": 32,
+                      "fill": "$brand-soft",
+                      "cornerRadius": 16,
                       "stroke": "$brand",
-                      "strokeWidth": 1,
+                      "padding": [
+                        0,
+                        14
+                      ],
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
@@ -3919,10 +4072,10 @@
                           "type": "text",
                           "id": "DfkEA",
                           "name": "Item Button Label",
-                          "fill": "$white",
-                          "content": "Verify ¥1",
+                          "fill": "$brand",
+                          "content": "Verify",
                           "fontFamily": "$font",
-                          "fontSize": 14,
+                          "fontSize": 13,
                           "fontWeight": "600"
                         }
                       ]
@@ -4621,15 +4774,6 @@
           "ref": "VIOxe",
           "name": "Tab Bar",
           "width": "fill_container"
-        },
-        {
-          "id": "p0Sow",
-          "type": "ref",
-          "ref": "lTCGy",
-          "name": "Stuck FAB",
-          "layoutPosition": "absolute",
-          "x": 262,
-          "y": 646
         }
       ]
     },
@@ -4694,7 +4838,7 @@
               "id": "g3Sph",
               "name": "Nav Title",
               "fill": "$text",
-              "content": "Get online",
+              "content": "Airport Wi-Fi",
               "fontFamily": "$font",
               "fontSize": 17,
               "fontWeight": "600"
@@ -4702,7 +4846,10 @@
             {
               "type": "frame",
               "id": "re5zk",
+              "x": 309,
+              "y": 12.5,
               "name": "Offline Chip",
+              "enabled": false,
               "fill": "$bg",
               "cornerRadius": 10,
               "gap": 4,
@@ -4733,6 +4880,14 @@
                   "fontWeight": "600"
                 }
               ]
+            },
+            {
+              "id": "V4ENrW",
+              "type": "ref",
+              "ref": "lTCGy",
+              "name": "Stuck FAB",
+              "x": 308,
+              "y": 6
             }
           ]
         },
@@ -4758,16 +4913,22 @@
               "name": "Wifi Header",
               "width": "fill_container",
               "fill": "$white",
-              "cornerRadius": 8,
+              "cornerRadius": 16,
               "layout": "vertical",
               "gap": 8,
-              "padding": 14,
+              "padding": [
+                12,
+                14
+              ],
               "children": [
                 {
                   "type": "frame",
                   "id": "D0GBn",
+                  "x": 14,
+                  "y": 14,
                   "name": "Wifi Title Row",
-                  "width": "fill_container",
+                  "enabled": false,
+                  "width": "fill_container(333)",
                   "justifyContent": "space_between",
                   "alignItems": "center",
                   "children": [
@@ -4798,26 +4959,34 @@
                   "id": "d8jqtV",
                   "name": "SSID Row",
                   "width": "fill_container",
-                  "fill": "$bg",
+                  "fill": "#00000000",
                   "cornerRadius": 6,
                   "stroke": "$line",
-                  "strokeWidth": 1,
-                  "gap": 10,
-                  "padding": [
-                    10,
-                    12
-                  ],
+                  "gap": 12,
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "icon",
-                      "id": "Vs1qw",
-                      "name": "Wifi Icon",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "wifi",
-                      "library": "lucide",
-                      "fill": "$brand"
+                      "type": "frame",
+                      "id": "dlcIA",
+                      "name": "Wifi Icon Box",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "$ok-soft",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Vs1qw",
+                          "name": "Wifi Icon",
+                          "width": 22,
+                          "height": 22,
+                          "icon": "wifi",
+                          "library": "lucide",
+                          "fill": "$ok"
+                        }
+                      ]
                     },
                     {
                       "type": "text",
@@ -4835,21 +5004,21 @@
                       "type": "frame",
                       "id": "Zeq5G",
                       "name": "No Password",
-                      "fill": "$ok-soft",
-                      "cornerRadius": 4,
+                      "fill": "$brand-soft",
+                      "cornerRadius": 16,
                       "padding": [
-                        3,
-                        8
+                        6,
+                        12
                       ],
                       "children": [
                         {
                           "type": "text",
                           "id": "i6RnAV",
                           "name": "No Password Label",
-                          "fill": "$ok",
-                          "content": "No password",
+                          "fill": "$brand",
+                          "content": "Copy",
                           "fontFamily": "$font",
-                          "fontSize": 11,
+                          "fontSize": 12,
                           "fontWeight": "700"
                         }
                       ]
@@ -4863,7 +5032,7 @@
                   "fill": "$text-2",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Works with foreign numbers from 220+ countries.",
+                  "content": "Free · no password · works with foreign numbers",
                   "lineHeight": 1.4,
                   "fontFamily": "$font",
                   "fontSize": 12,
@@ -4877,207 +5046,234 @@
               "name": "Steps",
               "width": "fill_container",
               "fill": "$white",
-              "cornerRadius": 8,
-              "layout": "vertical",
-              "gap": 10,
+              "cornerRadius": 16,
+              "gap": 14,
               "padding": 14,
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
-                  "id": "e0flK9",
-                  "name": "Step 1",
-                  "width": "fill_container",
-                  "gap": 12,
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "TWr0t",
-                      "name": "Num",
-                      "width": 24,
-                      "height": 24,
-                      "fill": "$brand",
-                      "cornerRadius": 12,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "bE9AB",
-                          "name": "Num Text",
-                          "fill": "$white",
-                          "content": "1",
-                          "fontFamily": "$font",
-                          "fontSize": 13,
-                          "fontWeight": "700"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "ZCwsz",
-                      "name": "Step Texts",
-                      "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 2,
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "hYC9c",
-                          "name": "Step Title",
-                          "fill": "$text",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "Join the network",
-                          "fontFamily": "$font",
-                          "fontSize": 15,
-                          "fontWeight": "600"
-                        },
-                        {
-                          "type": "text",
-                          "id": "BA9lt",
-                          "name": "Step Desc",
-                          "fill": "$text-2",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "Settings → Wi-Fi → #AIRPORTPVG-FREE-WIFI. The login page opens by itself.",
-                          "lineHeight": 1.4,
-                          "fontFamily": "$font",
-                          "fontSize": 13,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
+                  "id": "GqYkN",
+                  "name": "Login Shot",
+                  "width": 124,
+                  "height": 220,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "h5/img/tutorial/connectivity/connectivity_airport_wifi_sms/step2.jpg",
+                    "mode": "fill"
+                  },
+                  "cornerRadius": 16,
+                  "stroke": "#1D2230",
+                  "strokeWidth": 5
                 },
                 {
                   "type": "frame",
-                  "id": "ZxKYH",
-                  "name": "Step 2",
+                  "id": "eSz53",
+                  "name": "Step Column",
                   "width": "fill_container",
-                  "gap": 12,
+                  "fill": "#00000000",
+                  "layout": "vertical",
+                  "gap": 14,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "Q4rHZ",
-                      "name": "Num",
-                      "width": 24,
-                      "height": 24,
-                      "fill": "$brand",
-                      "cornerRadius": 12,
-                      "justifyContent": "center",
-                      "alignItems": "center",
+                      "id": "e0flK9",
+                      "name": "Step 1",
+                      "width": "fill_container",
+                      "gap": 12,
                       "children": [
                         {
-                          "type": "text",
-                          "id": "UlAXi",
-                          "name": "Num Text",
-                          "fill": "$white",
-                          "content": "2",
-                          "fontFamily": "$font",
-                          "fontSize": 13,
-                          "fontWeight": "700"
+                          "type": "frame",
+                          "id": "TWr0t",
+                          "name": "Num",
+                          "width": 24,
+                          "height": 24,
+                          "fill": "$brand",
+                          "cornerRadius": 12,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "bE9AB",
+                              "name": "Num Text",
+                              "fill": "$white",
+                              "content": "1",
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ZCwsz",
+                          "name": "Step Texts",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "hYC9c",
+                              "name": "Step Title",
+                              "fill": "$text",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Join the network",
+                              "fontFamily": "$font",
+                              "fontSize": 15,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "BA9lt",
+                              "name": "Step Desc",
+                              "fill": "$text-2",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Settings → Wi-Fi → #AIRPORTPVG-FREE-WIFI",
+                              "lineHeight": 1.4,
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
                         }
                       ]
                     },
                     {
                       "type": "frame",
-                      "id": "TG3GI",
-                      "name": "Step Texts",
+                      "id": "ZxKYH",
+                      "name": "Step 2",
                       "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 2,
+                      "gap": 12,
                       "children": [
                         {
-                          "type": "text",
-                          "id": "OAtrM",
-                          "name": "Step Title",
-                          "fill": "$text",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "Pick “Overseas mobile”",
-                          "fontFamily": "$font",
-                          "fontSize": 15,
-                          "fontWeight": "600"
+                          "type": "frame",
+                          "id": "Q4rHZ",
+                          "name": "Num",
+                          "width": 24,
+                          "height": 24,
+                          "fill": "$brand",
+                          "cornerRadius": 12,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "UlAXi",
+                              "name": "Num Text",
+                              "fill": "$white",
+                              "content": "2",
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "QmOii",
-                          "name": "Step Desc",
-                          "fill": "$text-2",
-                          "textGrowth": "fixed-width",
+                          "type": "frame",
+                          "id": "TG3GI",
+                          "name": "Step Texts",
                           "width": "fill_container",
-                          "content": "Choose your country code, type your number, tap Get code. SMS arrives even with data off.",
-                          "lineHeight": 1.4,
-                          "fontFamily": "$font",
-                          "fontSize": 13,
-                          "fontWeight": "normal"
-                        }
-                      ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "jy3cu",
-                  "name": "Step 3",
-                  "width": "fill_container",
-                  "gap": 12,
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "nLxHS",
-                      "name": "Num",
-                      "width": 24,
-                      "height": 24,
-                      "fill": "$brand",
-                      "cornerRadius": 12,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "nqjtB",
-                          "name": "Num Text",
-                          "fill": "$white",
-                          "content": "3",
-                          "fontFamily": "$font",
-                          "fontSize": 13,
-                          "fontWeight": "700"
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "OAtrM",
+                              "name": "Step Title",
+                              "fill": "$text",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Pick “Overseas mobile”",
+                              "fontFamily": "$font",
+                              "fontSize": 15,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "QmOii",
+                              "name": "Step Desc",
+                              "fill": "$text-2",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Choose your country code, enter your number",
+                              "lineHeight": 1.4,
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
                         }
                       ]
                     },
                     {
                       "type": "frame",
-                      "id": "slN0N",
-                      "name": "Step Texts",
+                      "id": "jy3cu",
+                      "name": "Step 3",
                       "width": "fill_container",
-                      "layout": "vertical",
-                      "gap": 2,
+                      "gap": 12,
                       "children": [
                         {
-                          "type": "text",
-                          "id": "lMqk2",
-                          "name": "Step Title",
-                          "fill": "$text",
-                          "textGrowth": "fixed-width",
-                          "width": "fill_container",
-                          "content": "Enter the code",
-                          "fontFamily": "$font",
-                          "fontSize": 15,
-                          "fontWeight": "600"
+                          "type": "frame",
+                          "id": "nLxHS",
+                          "name": "Num",
+                          "width": 24,
+                          "height": 24,
+                          "fill": "$brand",
+                          "cornerRadius": 12,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "nqjtB",
+                              "name": "Num Text",
+                              "fill": "$white",
+                              "content": "3",
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
                         },
                         {
-                          "type": "text",
-                          "id": "Dr4hW",
-                          "name": "Step Desc",
-                          "fill": "$text-2",
-                          "textGrowth": "fixed-width",
+                          "type": "frame",
+                          "id": "slN0N",
+                          "name": "Step Texts",
                           "width": "fill_container",
-                          "content": "Online for 24 hours. We'll re-check your setup.",
-                          "lineHeight": 1.4,
-                          "fontFamily": "$font",
-                          "fontSize": 13,
-                          "fontWeight": "normal"
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "lMqk2",
+                              "name": "Step Title",
+                              "fill": "$text",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Enter the code",
+                              "fontFamily": "$font",
+                              "fontSize": 15,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Dr4hW",
+                              "name": "Step Desc",
+                              "fill": "$text-2",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Type the SMS code · online for 24 h",
+                              "lineHeight": 1.4,
+                              "fontFamily": "$font",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
                         }
                       ]
                     }
@@ -5091,7 +5287,7 @@
               "name": "No SMS Card",
               "width": "fill_container",
               "fill": "$warn-soft",
-              "cornerRadius": 8,
+              "cornerRadius": 16,
               "layout": "vertical",
               "gap": 10,
               "padding": 14,
@@ -5404,9 +5600,9 @@
               "id": "lhKfe",
               "name": "Open Settings",
               "width": "fill_container",
-              "height": 44,
+              "height": 46,
               "fill": "$brand",
-              "cornerRadius": 4,
+              "cornerRadius": 23,
               "gap": 8,
               "justifyContent": "center",
               "alignItems": "center",
@@ -5441,15 +5637,6 @@
           "ref": "VIOxe",
           "name": "Tab Bar",
           "width": "fill_container"
-        },
-        {
-          "id": "V4ENrW",
-          "type": "ref",
-          "ref": "lTCGy",
-          "name": "Stuck FAB",
-          "layoutPosition": "absolute",
-          "x": 262,
-          "y": 668
         }
       ]
     },
@@ -5905,7 +6092,10 @@
             {
               "type": "frame",
               "id": "ZrVWH",
+              "x": 345,
+              "y": 6,
               "name": "More",
+              "enabled": false,
               "width": 32,
               "height": 32,
               "fill": "#F0F2F5",
@@ -5924,6 +6114,14 @@
                   "fill": "$text"
                 }
               ]
+            },
+            {
+              "id": "elc9a",
+              "type": "ref",
+              "ref": "lTCGy",
+              "name": "Stuck FAB",
+              "x": 308,
+              "y": 6
             }
           ]
         },
@@ -5949,22 +6147,26 @@
               "name": "Result Card",
               "width": "fill_container",
               "fill": "$white",
-              "cornerRadius": 10,
+              "cornerRadius": 16,
               "stroke": "$ok",
-              "strokeWidth": 1.5,
               "layout": "vertical",
-              "gap": 10,
-              "padding": 18,
+              "gap": 12,
+              "padding": [
+                26,
+                18,
+                22,
+                18
+              ],
               "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
                   "id": "TatXA",
                   "name": "OK Circle",
-                  "width": 56,
-                  "height": 56,
+                  "width": 88,
+                  "height": 88,
                   "fill": "$ok-soft",
-                  "cornerRadius": 28,
+                  "cornerRadius": 44,
                   "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
@@ -5972,8 +6174,8 @@
                       "type": "icon",
                       "id": "Nz2zm",
                       "name": "OK Icon",
-                      "width": 28,
-                      "height": 28,
+                      "width": 40,
+                      "height": 40,
                       "icon": "check",
                       "library": "lucide",
                       "fill": "$ok"
@@ -5990,7 +6192,7 @@
                   "content": "Your Alipay works in China",
                   "textAlign": "center",
                   "fontFamily": "$font",
-                  "fontSize": 19,
+                  "fontSize": 24,
                   "fontWeight": "700"
                 },
                 {
@@ -6046,8 +6248,207 @@
             },
             {
               "type": "frame",
+              "id": "QOy3u",
+              "name": "Checks Row",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hVWaY",
+                  "name": "Check Card",
+                  "width": "fill_container",
+                  "fill": "$white",
+                  "cornerRadius": 14,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    14,
+                    6,
+                    12,
+                    6
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "wmwwT",
+                      "name": "Check Icon Box",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "#EAF0FF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "IntDK",
+                          "name": "Check Icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "credit-card",
+                          "library": "lucide",
+                          "fill": "$brand"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "fpjF3",
+                      "name": "Check Label",
+                      "fill": "$text",
+                      "content": "Card accepted",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "iu1EV",
+                      "name": "Check Mark",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "check",
+                      "library": "lucide",
+                      "fill": "$ok"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hyOCx",
+                  "name": "Check Linked",
+                  "width": "fill_container",
+                  "fill": "$white",
+                  "cornerRadius": 14,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    14,
+                    6,
+                    12,
+                    6
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "UgL3Z",
+                      "name": "Check Icon Box",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "#EAF0FF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "FyYys",
+                          "name": "Check Icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "smartphone",
+                          "library": "lucide",
+                          "fill": "$brand"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Ir8lu",
+                      "name": "Check Label",
+                      "fill": "$text",
+                      "content": "Alipay linked",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "k4PobV",
+                      "name": "Check Mark",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "check",
+                      "library": "lucide",
+                      "fill": "$ok"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "arMIo",
+                  "name": "Check Refund",
+                  "width": "fill_container",
+                  "fill": "$white",
+                  "cornerRadius": 14,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": [
+                    14,
+                    6,
+                    12,
+                    6
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Krpzb",
+                      "name": "Check Icon Box",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "#EAF0FF",
+                      "cornerRadius": 12,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "gak9d",
+                          "name": "Check Icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "rotate-ccw",
+                          "library": "lucide",
+                          "fill": "$brand"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "O9gNK",
+                      "name": "Check Label",
+                      "fill": "$text",
+                      "content": "Refund works",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "NK05Q",
+                      "name": "Check Mark",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "check",
+                      "library": "lucide",
+                      "fill": "$ok"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
               "id": "Fpl0I",
-              "name": "How Card",
+              "name": "Fail Explain Card",
               "width": "fill_container",
               "fill": "$white",
               "cornerRadius": 8,
@@ -6232,7 +6633,7 @@
             {
               "type": "frame",
               "id": "EtqgY",
-              "name": "If Fail Card",
+              "name": "Fail Codes Card",
               "width": "fill_container",
               "fill": "$warn-soft",
               "cornerRadius": 8,
@@ -6266,19 +6667,6 @@
                   "fontWeight": "normal"
                 }
               ]
-            },
-            {
-              "type": "text",
-              "id": "XrPgY",
-              "name": "Source",
-              "fill": "$text-3",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "Test runs through Trip.com's existing Alipay checkout · no new permissions",
-              "textAlign": "center",
-              "fontFamily": "$font",
-              "fontSize": 11,
-              "fontWeight": "normal"
             }
           ]
         },
@@ -6292,13 +6680,29 @@
           "strokeWidth": {
             "top": 1
           },
+          "layout": "vertical",
+          "gap": 8,
           "padding": [
             12,
             16,
             8,
             16
           ],
+          "alignItems": "center",
           "children": [
+            {
+              "type": "text",
+              "id": "XrPgY",
+              "name": "Source",
+              "fill": "$text-3",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Tested through Trip.com's Alipay checkout · no new permissions",
+              "textAlign": "center",
+              "fontFamily": "$font",
+              "fontSize": 11,
+              "fontWeight": "normal"
+            },
             {
               "type": "frame",
               "id": "eb12N",
@@ -6330,15 +6734,6 @@
           "ref": "VIOxe",
           "name": "Tab Bar",
           "width": "fill_container"
-        },
-        {
-          "id": "elc9a",
-          "type": "ref",
-          "ref": "lTCGy",
-          "name": "Stuck FAB",
-          "layoutPosition": "absolute",
-          "x": 262,
-          "y": 662
         }
       ]
     },
@@ -6408,7 +6803,7 @@
           "padding": [
             4,
             20,
-            20,
+            16,
             20
           ],
           "children": [
@@ -6417,6 +6812,7 @@
               "id": "eFuck",
               "name": "Header Row",
               "width": "fill_container",
+              "gap": 10,
               "justifyContent": "space_between",
               "alignItems": "center",
               "children": [
@@ -6444,9 +6840,25 @@
                   ]
                 },
                 {
+                  "type": "text",
+                  "id": "FqENE",
+                  "name": "Step Label",
+                  "fill": "#FFFFFFD9",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Step 3 of 3",
+                  "lineHeight": 1.2,
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
                   "type": "frame",
                   "id": "UdfDL",
+                  "x": 238,
+                  "y": 4.5,
                   "name": "Offline Chip",
+                  "enabled": false,
                   "fill": "#FFFFFF33",
                   "cornerRadius": 12,
                   "gap": 6,
@@ -6477,6 +6889,15 @@
                       "fontWeight": "500"
                     }
                   ]
+                },
+                {
+                  "id": "z7eDF",
+                  "type": "ref",
+                  "ref": "lTCGy",
+                  "name": "Stuck FAB",
+                  "x": 284,
+                  "y": 0,
+                  "fill": "#FFFFFF"
                 }
               ]
             },
@@ -6487,22 +6908,68 @@
               "fill": "$white",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "Step 3 of 3 · Get to your hotel",
+              "content": "Get to your hotel",
               "fontFamily": "$font",
-              "fontSize": 24,
-              "fontWeight": "700"
+              "fontSize": 26,
+              "fontWeight": "800"
             },
             {
               "type": "text",
               "id": "XjiQo",
+              "x": 20,
+              "y": 73,
               "name": "Subtitle",
+              "enabled": false,
               "fill": "#FFFFFFCC",
               "textGrowth": "fixed-width",
-              "width": "fill_container",
+              "width": "fill_container(353)",
               "content": "Online since 07:53 · payment verified · last step",
               "fontFamily": "$font",
               "fontSize": 14,
               "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "V4AJah",
+              "name": "Progress Segs",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 4,
+              "padding": [
+                8,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "hRLNu",
+                  "name": "Seg 1",
+                  "width": "fill_container",
+                  "height": 4,
+                  "fill": "#7CE0B6",
+                  "cornerRadius": 2
+                },
+                {
+                  "type": "frame",
+                  "id": "e2i5oA",
+                  "name": "Seg 2",
+                  "width": "fill_container",
+                  "height": 4,
+                  "fill": "#FFC56B",
+                  "cornerRadius": 2
+                },
+                {
+                  "type": "frame",
+                  "id": "ik7yb",
+                  "name": "Seg 3",
+                  "width": "fill_container",
+                  "height": 4,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 2
+                }
+              ]
             }
           ]
         },
@@ -6513,7 +6980,7 @@
           "width": "fill_container",
           "fill": "$bg",
           "layout": "vertical",
-          "gap": 8,
+          "gap": 12,
           "padding": [
             12,
             16
@@ -6521,17 +6988,66 @@
           "children": [
             {
               "type": "frame",
+              "id": "kLQiM",
+              "name": "Map Box",
+              "width": "fill_container",
+              "height": 176,
+              "fill": "#E9EEF3",
+              "cornerRadius": 16,
+              "layout": "vertical",
+              "padding": 12,
+              "justifyContent": "end",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "EVcIj",
+                  "name": "Map Chip",
+                  "fill": "#121826",
+                  "cornerRadius": 10,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "s6c560",
+                      "name": "Map Chip Label",
+                      "fill": "$white",
+                      "content": "57 min · 48 km",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$font",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
               "id": "OaU8n",
               "name": "Current Task",
               "width": "fill_container",
               "fill": "$white",
-              "cornerRadius": 10,
+              "cornerRadius": 16,
               "stroke": "$brand",
-              "strokeWidth": 1.5,
               "layout": "vertical",
               "gap": 12,
               "padding": 16,
               "children": [
+                {
+                  "type": "text",
+                  "id": "vUWyj",
+                  "name": "Task Kicker",
+                  "fill": "$ok",
+                  "content": "BEST FOR YOU · 2 CHECKED BAGS",
+                  "lineHeight": 1.2,
+                  "fontFamily": "$font",
+                  "fontSize": 11,
+                  "fontWeight": "700",
+                  "letterSpacing": 0.6
+                },
                 {
                   "type": "frame",
                   "id": "LZiid",
@@ -6576,10 +7092,10 @@
                           "id": "VBqZn",
                           "name": "Task Title",
                           "fill": "$text",
-                          "content": "We recommend a taxi",
+                          "content": "Taxi",
                           "fontFamily": "$font",
-                          "fontSize": 17,
-                          "fontWeight": "700"
+                          "fontSize": 22,
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
@@ -6588,7 +7104,7 @@
                           "fill": "$text-2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "About ¥180 · 50 min · queue at Door 25, level 1",
+                          "content": "Official queue · Door 25, Level 1",
                           "fontFamily": "$font",
                           "fontSize": 13,
                           "fontWeight": "normal"
@@ -6599,22 +7115,18 @@
                       "type": "frame",
                       "id": "fRvoN",
                       "name": "Status",
-                      "fill": "$ok-soft",
+                      "fill": "#00000000",
                       "cornerRadius": 4,
-                      "padding": [
-                        3,
-                        8
-                      ],
                       "children": [
                         {
                           "type": "text",
                           "id": "IQXj8",
                           "name": "Status Label",
-                          "fill": "$ok",
-                          "content": "BEST FIT",
+                          "fill": "$text",
+                          "content": "¥160–200",
                           "fontFamily": "$font",
-                          "fontSize": 11,
-                          "fontWeight": "700"
+                          "fontSize": 20,
+                          "fontWeight": "800"
                         }
                       ]
                     }
@@ -6623,10 +7135,13 @@
                 {
                   "type": "text",
                   "id": "Ftuce",
+                  "x": 16,
+                  "y": 84,
                   "name": "Task Desc",
+                  "enabled": false,
                   "fill": "$text-2",
                   "textGrowth": "fixed-width",
-                  "width": "fill_container",
+                  "width": "fill_container(329)",
                   "content": "Why: 2 checked bags make the metro a hassle at this hour. Hotel is 18 km away.",
                   "lineHeight": 1.45,
                   "fontFamily": "$font",
@@ -6636,8 +7151,11 @@
                 {
                   "type": "frame",
                   "id": "KlTpu",
+                  "x": 16,
+                  "y": 134,
                   "name": "Reason Chips",
-                  "width": "fill_container",
+                  "enabled": false,
+                  "width": "fill_container(329)",
                   "gap": 6,
                   "children": [
                     {
@@ -6741,7 +7259,7 @@
                   "width": "fill_container",
                   "height": 46,
                   "fill": "$brand",
-                  "cornerRadius": 6,
+                  "cornerRadius": 23,
                   "gap": 8,
                   "justifyContent": "center",
                   "alignItems": "center",
@@ -6771,8 +7289,11 @@
                 {
                   "type": "frame",
                   "id": "BvC5r",
+                  "x": 16,
+                  "y": 225,
                   "name": "Alt Options",
-                  "width": "fill_container",
+                  "enabled": false,
+                  "width": "fill_container(329)",
                   "layout": "vertical",
                   "gap": 8,
                   "children": [
@@ -6976,10 +7497,76 @@
             },
             {
               "type": "frame",
-              "id": "f9Ucls",
-              "name": "Step List",
-              "clip": true,
+              "id": "nt3hA",
+              "name": "Pay Note",
               "width": "fill_container",
+              "fill": "#FFF4E5",
+              "cornerRadius": 16,
+              "gap": 10,
+              "padding": [
+                12,
+                14
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "zZR2n",
+                  "name": "Pay Note Icon",
+                  "width": 20,
+                  "height": 20,
+                  "icon": "credit-card",
+                  "library": "lucide",
+                  "fill": "#B4650A"
+                },
+                {
+                  "type": "text",
+                  "id": "C5VZo",
+                  "name": "Pay Note Text",
+                  "fill": "#7A4A0A",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Alipay not verified yet. Run the ¥1 test before you ride.",
+                  "lineHeight": 1.35,
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "aKCOj",
+                  "name": "Pay Note Button",
+                  "fill": "$white",
+                  "cornerRadius": 16,
+                  "padding": [
+                    6,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "aR6ls",
+                      "name": "Pay Note Label",
+                      "fill": "#B4650A",
+                      "content": "Verify",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$font",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "f9Ucls",
+              "x": 16,
+              "y": 399,
+              "name": "Step List",
+              "enabled": false,
+              "clip": true,
+              "width": "fill_container(361)",
               "fill": "$white",
               "cornerRadius": 8,
               "layout": "vertical",
@@ -7241,7 +7828,7 @@
               "width": "fill_container",
               "height": 42,
               "fill": "$white",
-              "cornerRadius": 6,
+              "cornerRadius": 23,
               "stroke": "$brand",
               "strokeWidth": 1.5,
               "gap": 8,
@@ -7278,15 +7865,6 @@
           "ref": "VIOxe",
           "name": "Tab Bar",
           "width": "fill_container"
-        },
-        {
-          "id": "z7eDF",
-          "type": "ref",
-          "ref": "lTCGy",
-          "name": "Stuck FAB",
-          "layoutPosition": "absolute",
-          "x": 262,
-          "y": 710
         }
       ]
     },
@@ -7421,11 +7999,312 @@
               "fill": "#FFFFFFD9",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "from touchdown to your taxi. Faster than 7 in 10 first-time visitors at PVG.",
+              "content": "touchdown to taxi · faster than 7 in 10",
               "lineHeight": 1.4,
               "fontFamily": "$font",
               "fontSize": 14,
               "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "ChSgz",
+              "name": "Timeline",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 4,
+              "padding": [
+                12,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "h1f92",
+                  "name": "Event Landed at PVG T2",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "TEIpc",
+                      "name": "Dot",
+                      "width": 30,
+                      "height": 30,
+                      "fill": "$white",
+                      "cornerRadius": 15,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "HXVIq",
+                          "name": "Event Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "plane-landing",
+                          "library": "lucide",
+                          "fill": "$brand"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "e7NqQi",
+                      "name": "Event Title",
+                      "fill": "#FFFFFFE6",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Landed",
+                      "textAlign": "center",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tkj4c",
+                      "name": "Event Time",
+                      "fill": "#FFFFFFB3",
+                      "content": "07:52",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZZzBF",
+                  "name": "Event Online · PVG free Wi-Fi",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "EjbH6",
+                      "name": "Dot",
+                      "width": 30,
+                      "height": 30,
+                      "fill": "$white",
+                      "cornerRadius": 15,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "SyrkK",
+                          "name": "Event Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "wifi",
+                          "library": "lucide",
+                          "fill": "$brand"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "wbbej",
+                      "name": "Event Title",
+                      "fill": "#FFFFFFE6",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Online",
+                      "textAlign": "center",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Itoia",
+                      "name": "Event Time",
+                      "fill": "#FFFFFFB3",
+                      "content": "07:53",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "l9m6U",
+                  "name": "Event Payment verified before flight",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "F7zrW",
+                      "name": "Dot",
+                      "width": 30,
+                      "height": 30,
+                      "fill": "$white",
+                      "cornerRadius": 15,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "RoVX7",
+                          "name": "Event Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "wallet",
+                          "library": "lucide",
+                          "fill": "$brand"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "L7BqMS",
+                      "name": "Event Title",
+                      "fill": "#FFFFFFE6",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Paid",
+                      "textAlign": "center",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Mhm9U",
+                      "name": "Event Time",
+                      "fill": "#FFFFFFB3",
+                      "content": "Oct 10",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cUa9e",
+                  "name": "Event In the car · detected automatically",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "q95XcA",
+                      "name": "Dot",
+                      "width": 30,
+                      "height": 30,
+                      "fill": "$white",
+                      "cornerRadius": 15,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "UTjN8",
+                          "name": "Event Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "car-taxi-front",
+                          "library": "lucide",
+                          "fill": "$brand"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "CK7s6",
+                      "name": "Event Title",
+                      "fill": "#FFFFFFE6",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "In the car",
+                      "textAlign": "center",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "drDKF",
+                      "name": "Event Time",
+                      "fill": "#FFFFFFB3",
+                      "content": "08:28",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "UWQQa",
+                  "name": "Event Arrived at The PuLi",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "R5ybON",
+                      "name": "Dot",
+                      "width": 30,
+                      "height": 30,
+                      "fill": "#FFFFFF33",
+                      "cornerRadius": 15,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Xf2ZF",
+                          "name": "Event Icon",
+                          "width": 15,
+                          "height": 15,
+                          "icon": "hotel",
+                          "library": "lucide",
+                          "fill": "$white"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "xtRdd",
+                      "name": "Event Title",
+                      "fill": "#FFFFFFE6",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "At The PuLi",
+                      "textAlign": "center",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "AWcsE",
+                      "name": "Event Time",
+                      "fill": "#FFFFFFB3",
+                      "content": "on the way",
+                      "fontFamily": "$font",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         },
@@ -7447,311 +8326,179 @@
           "children": [
             {
               "type": "frame",
-              "id": "ChSgz",
-              "name": "Timeline",
+              "id": "zXXU6",
+              "name": "Share Card",
+              "clip": true,
               "width": "fill_container",
               "fill": "$white",
-              "cornerRadius": 8,
+              "cornerRadius": 16,
+              "stroke": "$line",
               "layout": "vertical",
+              "gap": 10,
               "padding": [
-                6,
-                16
+                0,
+                0,
+                14,
+                0
               ],
               "children": [
                 {
                   "type": "frame",
-                  "id": "h1f92",
-                  "name": "Event Landed at PVG T2",
+                  "id": "CKAHu",
+                  "name": "Stamp Photo",
                   "width": "fill_container",
-                  "gap": 12,
-                  "padding": [
-                    10,
-                    0
-                  ],
+                  "height": 150,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "h5/img/stamp/shanghai-dusk.png",
+                    "mode": "fill"
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "vWAAv",
+                  "x": 14,
+                  "y": 18.5,
+                  "name": "Share Icon Wrap",
+                  "enabled": false,
+                  "width": 40,
+                  "height": 40,
+                  "fill": "$brand-soft",
+                  "cornerRadius": 8,
+                  "justifyContent": "center",
                   "alignItems": "center",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "TEIpc",
-                      "name": "Dot",
-                      "width": 28,
-                      "height": 28,
-                      "fill": "$ok-soft",
-                      "cornerRadius": 14,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "HXVIq",
-                          "name": "Event Icon",
-                          "width": 14,
-                          "height": 14,
-                          "icon": "plane-landing",
-                          "library": "lucide",
-                          "fill": "$ok"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "e7NqQi",
-                      "name": "Event Title",
-                      "fill": "$text",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Landed at PVG T2",
-                      "fontFamily": "$font",
-                      "fontSize": 14,
-                      "fontWeight": "500"
-                    },
-                    {
-                      "type": "text",
-                      "id": "tkj4c",
-                      "name": "Event Time",
-                      "fill": "$text-2",
-                      "content": "07:52",
-                      "fontFamily": "$font",
-                      "fontSize": 13,
-                      "fontWeight": "600"
+                      "type": "icon",
+                      "id": "U0uvLS",
+                      "name": "Share Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "share-2",
+                      "library": "lucide",
+                      "fill": "$brand"
                     }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "ZZzBF",
-                  "name": "Event Online · PVG free Wi-Fi",
+                  "id": "UGwTa",
+                  "name": "Share Texts",
                   "width": "fill_container",
-                  "gap": 12,
+                  "layout": "vertical",
+                  "gap": 4,
                   "padding": [
-                    10,
-                    0
+                    14,
+                    16,
+                    0,
+                    16
                   ],
-                  "alignItems": "center",
                   "children": [
                     {
-                      "type": "frame",
-                      "id": "EjbH6",
-                      "name": "Dot",
-                      "width": 28,
-                      "height": 28,
-                      "fill": "$ok-soft",
-                      "cornerRadius": 14,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "SyrkK",
-                          "name": "Event Icon",
-                          "width": 14,
-                          "height": 14,
-                          "icon": "wifi",
-                          "library": "lucide",
-                          "fill": "$ok"
-                        }
-                      ]
+                      "type": "text",
+                      "id": "soekh",
+                      "name": "Share Kicker",
+                      "fill": "$brand",
+                      "content": "NEW · CITY STAMP",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.6
                     },
                     {
                       "type": "text",
-                      "id": "wbbej",
-                      "name": "Event Title",
+                      "id": "KZJxG",
+                      "name": "Share Title",
                       "fill": "$text",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Online · eSIM detected",
+                      "content": "Your first stamp is ready",
                       "fontFamily": "$font",
-                      "fontSize": 14,
-                      "fontWeight": "500"
+                      "fontSize": 19,
+                      "fontWeight": "700"
                     },
                     {
                       "type": "text",
-                      "id": "Itoia",
-                      "name": "Event Time",
+                      "id": "h9BRi",
+                      "x": 0,
+                      "y": 19,
+                      "name": "Share Sub",
+                      "enabled": false,
                       "fill": "$text-2",
-                      "content": "07:53",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container(251)",
+                      "content": "“Out of Pudong Airport in 36 min with Trip.com”",
                       "fontFamily": "$font",
-                      "fontSize": 13,
-                      "fontWeight": "600"
+                      "fontSize": 12,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
                 {
+                  "type": "icon",
+                  "id": "NBWUw",
+                  "x": 329,
+                  "y": 29.5,
+                  "name": "Share Arrow",
+                  "enabled": false,
+                  "width": 18,
+                  "height": 18,
+                  "icon": "chevron-right",
+                  "library": "lucide",
+                  "fill": "$text-3"
+                },
+                {
                   "type": "frame",
-                  "id": "l9m6U",
-                  "name": "Event Payment verified before flight",
+                  "id": "x7nW7",
+                  "name": "Post Row",
                   "width": "fill_container",
-                  "gap": 12,
+                  "fill": "#00000000",
                   "padding": [
-                    10,
-                    0
+                    4,
+                    16,
+                    0,
+                    16
                   ],
-                  "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
-                      "id": "F7zrW",
-                      "name": "Dot",
-                      "width": 28,
-                      "height": 28,
-                      "fill": "$ok-soft",
-                      "cornerRadius": 14,
+                      "id": "H3zud",
+                      "name": "Post Button",
+                      "width": "fill_container",
+                      "height": 46,
+                      "fill": "$brand",
+                      "cornerRadius": 23,
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "RoVX7",
-                          "name": "Event Icon",
-                          "width": 14,
-                          "height": 14,
-                          "icon": "wallet",
-                          "library": "lucide",
-                          "fill": "$ok"
+                          "type": "text",
+                          "id": "bz0ad",
+                          "name": "Post Label",
+                          "fill": "$white",
+                          "content": "Post my stamp to Community",
+                          "lineHeight": 1.2,
+                          "fontFamily": "$font",
+                          "fontSize": 15,
+                          "fontWeight": "700"
                         }
                       ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "L7BqMS",
-                      "name": "Event Title",
-                      "fill": "$text",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Payment verified before flight",
-                      "fontFamily": "$font",
-                      "fontSize": 14,
-                      "fontWeight": "500"
-                    },
-                    {
-                      "type": "text",
-                      "id": "Mhm9U",
-                      "name": "Event Time",
-                      "fill": "$text-2",
-                      "content": "Oct 10",
-                      "fontFamily": "$font",
-                      "fontSize": 13,
-                      "fontWeight": "600"
                     }
                   ]
                 },
                 {
-                  "type": "frame",
-                  "id": "cUa9e",
-                  "name": "Event In the car · detected automatically",
+                  "type": "text",
+                  "id": "EnSJZ",
+                  "name": "Share Link",
+                  "fill": "$brand",
+                  "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "gap": 12,
-                  "padding": [
-                    10,
-                    0
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "q95XcA",
-                      "name": "Dot",
-                      "width": 28,
-                      "height": 28,
-                      "fill": "$ok-soft",
-                      "cornerRadius": 14,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "UTjN8",
-                          "name": "Event Icon",
-                          "width": 14,
-                          "height": 14,
-                          "icon": "car-taxi-front",
-                          "library": "lucide",
-                          "fill": "$ok"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "CK7s6",
-                      "name": "Event Title",
-                      "fill": "$text",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "In the car · detected automatically",
-                      "fontFamily": "$font",
-                      "fontSize": 14,
-                      "fontWeight": "500"
-                    },
-                    {
-                      "type": "text",
-                      "id": "drDKF",
-                      "name": "Event Time",
-                      "fill": "$text-2",
-                      "content": "08:28",
-                      "fontFamily": "$font",
-                      "fontSize": 13,
-                      "fontWeight": "600"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "UWQQa",
-                  "name": "Event Arrived at The PuLi",
-                  "width": "fill_container",
-                  "gap": 12,
-                  "padding": [
-                    10,
-                    0
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "R5ybON",
-                      "name": "Dot",
-                      "width": 28,
-                      "height": 28,
-                      "fill": "$bg",
-                      "cornerRadius": 14,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "Xf2ZF",
-                          "name": "Event Icon",
-                          "width": 14,
-                          "height": 14,
-                          "icon": "hotel",
-                          "library": "lucide",
-                          "fill": "$text-3"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "text",
-                      "id": "xtRdd",
-                      "name": "Event Title",
-                      "fill": "$text-3",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "Arrived at The PuLi",
-                      "fontFamily": "$font",
-                      "fontSize": 14,
-                      "fontWeight": "500"
-                    },
-                    {
-                      "type": "text",
-                      "id": "AWcsE",
-                      "name": "Event Time",
-                      "fill": "$text-3",
-                      "content": "on the way",
-                      "fontFamily": "$font",
-                      "fontSize": 13,
-                      "fontWeight": "600"
-                    }
-                  ]
+                  "content": "View my stamp",
+                  "lineHeight": 1.2,
+                  "textAlign": "center",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "600"
                 }
               ]
             },
@@ -7761,7 +8508,7 @@
               "name": "Feedback Card",
               "width": "fill_container",
               "fill": "$white",
-              "cornerRadius": 8,
+              "cornerRadius": 16,
               "layout": "vertical",
               "gap": 10,
               "padding": 16,
@@ -7779,10 +8526,13 @@
                 {
                   "type": "text",
                   "id": "Yl5EX",
+                  "x": 16,
+                  "y": 44,
                   "name": "FB Sub",
+                  "enabled": false,
                   "fill": "$text-2",
                   "textGrowth": "fixed-width",
-                  "width": "fill_container",
+                  "width": "fill_container(329)",
                   "content": "One tap. Your answer updates the guide for the next traveler.",
                   "fontFamily": "$font",
                   "fontSize": 12,
@@ -7918,86 +8668,6 @@
             },
             {
               "type": "frame",
-              "id": "zXXU6",
-              "name": "Share Card",
-              "width": "fill_container",
-              "fill": "$white",
-              "cornerRadius": 8,
-              "stroke": "$line",
-              "strokeWidth": 1,
-              "gap": 12,
-              "padding": 14,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "vWAAv",
-                  "name": "Share Icon Wrap",
-                  "width": 40,
-                  "height": 40,
-                  "fill": "$brand-soft",
-                  "cornerRadius": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "U0uvLS",
-                      "name": "Share Icon",
-                      "width": 20,
-                      "height": 20,
-                      "icon": "share-2",
-                      "library": "lucide",
-                      "fill": "$brand"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "UGwTa",
-                  "name": "Share Texts",
-                  "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 2,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "KZJxG",
-                      "name": "Share Title",
-                      "fill": "$text",
-                      "content": "Share your 36-minute card",
-                      "fontFamily": "$font",
-                      "fontSize": 14,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "text",
-                      "id": "h9BRi",
-                      "name": "Share Sub",
-                      "fill": "$text-2",
-                      "textGrowth": "fixed-width",
-                      "width": "fill_container",
-                      "content": "“Out of Pudong Airport in 36 min with Trip.com”",
-                      "fontFamily": "$font",
-                      "fontSize": 12,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "icon",
-                  "id": "NBWUw",
-                  "name": "Share Arrow",
-                  "width": 18,
-                  "height": 18,
-                  "icon": "chevron-right",
-                  "library": "lucide",
-                  "fill": "$text-3"
-                }
-              ]
-            },
-            {
-              "type": "frame",
               "id": "GiHun",
               "name": "Next Card",
               "width": "fill_container",
@@ -8112,7 +8782,7 @@
           "padding": [
             4,
             20,
-            20,
+            16,
             20
           ],
           "children": [
@@ -8121,6 +8791,7 @@
               "id": "HnJsw",
               "name": "Header Row",
               "width": "fill_container",
+              "gap": 10,
               "justifyContent": "space_between",
               "alignItems": "center",
               "children": [
@@ -8148,9 +8819,25 @@
                   ]
                 },
                 {
+                  "type": "text",
+                  "id": "x3AsFF",
+                  "name": "Step Label",
+                  "fill": "#FFFFFFD9",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Step 1 of 3",
+                  "lineHeight": 1.2,
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
                   "type": "frame",
                   "id": "AiyS4",
+                  "x": 238,
+                  "y": 4.5,
                   "name": "Offline Chip",
+                  "enabled": false,
                   "fill": "#FFFFFF33",
                   "cornerRadius": 12,
                   "gap": 6,
@@ -8181,6 +8868,15 @@
                       "fontWeight": "500"
                     }
                   ]
+                },
+                {
+                  "id": "ZfEc9",
+                  "type": "ref",
+                  "ref": "lTCGy",
+                  "name": "Stuck FAB",
+                  "fill": "#FFFFFF",
+                  "x": 284,
+                  "y": 0
                 }
               ]
             },
@@ -8191,22 +8887,68 @@
               "fill": "$white",
               "textGrowth": "fixed-width",
               "width": "fill_container",
-              "content": "Step 1 of 3 · You're online",
+              "content": "Get online",
               "fontFamily": "$font",
-              "fontSize": 24,
-              "fontWeight": "700"
+              "fontSize": 26,
+              "fontWeight": "800"
             },
             {
               "type": "text",
               "id": "ZAgU1",
+              "x": 20,
+              "y": 73,
               "name": "Subtitle",
+              "enabled": false,
               "fill": "#FFFFFFCC",
               "textGrowth": "fixed-width",
-              "width": "fill_container",
+              "width": "fill_container(353)",
               "content": "Landed at PVG T2 · 07:52 local · nothing to do here",
               "fontFamily": "$font",
               "fontSize": 14,
               "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "v9xR8",
+              "name": "Progress Segs",
+              "width": "fill_container",
+              "fill": "#00000000",
+              "gap": 4,
+              "padding": [
+                8,
+                0,
+                0,
+                0
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "vtcRN",
+                  "name": "Seg 1",
+                  "width": "fill_container",
+                  "height": 4,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 2
+                },
+                {
+                  "type": "frame",
+                  "id": "DRyQ6",
+                  "name": "Seg 2",
+                  "width": "fill_container",
+                  "height": 4,
+                  "fill": "#FFFFFF55",
+                  "cornerRadius": 2
+                },
+                {
+                  "type": "frame",
+                  "id": "KwrG3",
+                  "name": "Seg 3",
+                  "width": "fill_container",
+                  "height": 4,
+                  "fill": "#FFFFFF55",
+                  "cornerRadius": 2
+                }
+              ]
             }
           ]
         },
@@ -8215,6 +8957,7 @@
           "id": "PLN3S",
           "name": "Content",
           "width": "fill_container",
+          "height": "fill_container",
           "fill": "$bg",
           "layout": "vertical",
           "gap": 10,
@@ -8229,41 +8972,73 @@
               "name": "Current Task",
               "width": "fill_container",
               "fill": "$white",
-              "cornerRadius": 10,
+              "cornerRadius": 16,
               "stroke": "$ok",
-              "strokeWidth": 1.5,
               "layout": "vertical",
-              "gap": 12,
-              "padding": 16,
+              "gap": 14,
+              "padding": [
+                26,
+                16,
+                20,
+                16
+              ],
+              "alignItems": "center",
               "children": [
                 {
                   "type": "frame",
                   "id": "L1fBI4",
                   "name": "Task Top",
                   "width": "fill_container",
-                  "gap": 12,
+                  "layout": "vertical",
+                  "gap": 14,
                   "alignItems": "center",
                   "children": [
                     {
                       "type": "frame",
                       "id": "bXzxi",
                       "name": "Icon Wrap",
-                      "width": 44,
-                      "height": 44,
-                      "fill": "$ok-soft",
-                      "cornerRadius": 22,
+                      "width": 128,
+                      "height": 128,
+                      "fill": "#E6F7F0",
+                      "cornerRadius": 64,
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
                         {
-                          "type": "icon",
-                          "id": "jRBpK",
-                          "name": "Icon",
-                          "width": 22,
-                          "height": 22,
-                          "icon": "signal",
-                          "library": "lucide",
-                          "fill": "$ok"
+                          "type": "frame",
+                          "id": "hG93a",
+                          "name": "Icon Ring",
+                          "width": 96,
+                          "height": 96,
+                          "fill": "#BDEBD7",
+                          "cornerRadius": 48,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "RO6AL",
+                              "name": "Icon Core",
+                              "width": 68,
+                              "height": 68,
+                              "fill": "$ok",
+                              "cornerRadius": 34,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "jRBpK",
+                                  "name": "Icon",
+                                  "width": 34,
+                                  "height": 34,
+                                  "icon": "wifi",
+                                  "library": "lucide",
+                                  "fill": "$white"
+                                }
+                              ]
+                            }
+                          ]
                         }
                       ]
                     },
@@ -8273,17 +9048,18 @@
                       "name": "Task Texts",
                       "width": "fill_container",
                       "layout": "vertical",
-                      "gap": 3,
+                      "gap": 4,
+                      "alignItems": "center",
                       "children": [
                         {
                           "type": "text",
                           "id": "WaveE",
                           "name": "Task Title",
                           "fill": "$text",
-                          "content": "Your own data works",
+                          "content": "You're online",
                           "fontFamily": "$font",
-                          "fontSize": 17,
-                          "fontWeight": "700"
+                          "fontSize": 26,
+                          "fontWeight": "800"
                         },
                         {
                           "type": "text",
@@ -8292,7 +9068,8 @@
                           "fill": "$text-2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "eSIM · China Unicom · international services reachable",
+                          "content": "eSIM · China Unicom",
+                          "textAlign": "center",
                           "fontFamily": "$font",
                           "fontSize": 13,
                           "fontWeight": "normal"
@@ -8302,7 +9079,10 @@
                     {
                       "type": "frame",
                       "id": "tGMKV",
+                      "x": 134.5,
+                      "y": 212,
                       "name": "Status",
+                      "enabled": false,
                       "fill": "$ok-soft",
                       "cornerRadius": 4,
                       "padding": [
@@ -8327,10 +9107,13 @@
                 {
                   "type": "text",
                   "id": "EpKwJ",
+                  "x": 16,
+                  "y": 271,
                   "name": "Task Desc",
+                  "enabled": false,
                   "fill": "$text-2",
                   "textGrowth": "fixed-width",
-                  "width": "fill_container",
+                  "width": "fill_container(329)",
                   "content": "We checked at 07:53: mobile data is on, pages load, and Google services respond. You can skip airport Wi-Fi. Moving to the next step in 5 s.",
                   "lineHeight": 1.45,
                   "fontFamily": "$font",
@@ -8342,23 +9125,23 @@
                   "id": "ZzPY7",
                   "name": "Check Rows",
                   "width": "fill_container",
-                  "layout": "vertical",
-                  "gap": 6,
+                  "gap": 20,
+                  "justifyContent": "center",
                   "children": [
                     {
                       "type": "frame",
                       "id": "AREup",
                       "name": "Check Mobile data · eSIM active",
-                      "width": "fill_container",
-                      "gap": 8,
+                      "layout": "vertical",
+                      "gap": 4,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "icon",
                           "id": "p03veG",
                           "name": "Check Icon",
-                          "width": 14,
-                          "height": 14,
+                          "width": 18,
+                          "height": 18,
                           "icon": "check",
                           "library": "lucide",
                           "fill": "$ok"
@@ -8367,10 +9150,10 @@
                           "type": "text",
                           "id": "JkvYX",
                           "name": "Check Text",
-                          "fill": "$text",
-                          "content": "Mobile data · eSIM active",
+                          "fill": "$text-2",
+                          "content": "Mobile data",
                           "fontFamily": "$font",
-                          "fontSize": 13,
+                          "fontSize": 12,
                           "fontWeight": "normal"
                         }
                       ]
@@ -8379,16 +9162,16 @@
                       "type": "frame",
                       "id": "smS6t",
                       "name": "Check Web pages load",
-                      "width": "fill_container",
-                      "gap": 8,
+                      "layout": "vertical",
+                      "gap": 4,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "icon",
                           "id": "R4vIM",
                           "name": "Check Icon",
-                          "width": 14,
-                          "height": 14,
+                          "width": 18,
+                          "height": 18,
                           "icon": "check",
                           "library": "lucide",
                           "fill": "$ok"
@@ -8397,10 +9180,10 @@
                           "type": "text",
                           "id": "rWkrb",
                           "name": "Check Text",
-                          "fill": "$text",
-                          "content": "Web pages load",
+                          "fill": "$text-2",
+                          "content": "Web pages",
                           "fontFamily": "$font",
-                          "fontSize": 13,
+                          "fontSize": 12,
                           "fontWeight": "normal"
                         }
                       ]
@@ -8409,16 +9192,16 @@
                       "type": "frame",
                       "id": "FpC4X",
                       "name": "Check International services (Google, WhatsApp)",
-                      "width": "fill_container",
-                      "gap": 8,
+                      "layout": "vertical",
+                      "gap": 4,
                       "alignItems": "center",
                       "children": [
                         {
                           "type": "icon",
                           "id": "dSnwA",
                           "name": "Check Icon",
-                          "width": 14,
-                          "height": 14,
+                          "width": 18,
+                          "height": 18,
                           "icon": "check",
                           "library": "lucide",
                           "fill": "$ok"
@@ -8427,67 +9210,13 @@
                           "type": "text",
                           "id": "f2THMp",
                           "name": "Check Text",
-                          "fill": "$text",
-                          "content": "International services (Google, WhatsApp)",
+                          "fill": "$text-2",
+                          "content": "Google · WhatsApp",
                           "fontFamily": "$font",
-                          "fontSize": 13,
+                          "fontSize": 12,
                           "fontWeight": "normal"
                         }
                       ]
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "lWm3B",
-                  "name": "Primary Button",
-                  "width": "fill_container",
-                  "height": 46,
-                  "fill": "$ok",
-                  "cornerRadius": 6,
-                  "gap": 8,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "DFPsS",
-                      "name": "Primary Label",
-                      "fill": "$white",
-                      "content": "Continue to step 3 · Get to your hotel",
-                      "fontFamily": "$font",
-                      "fontSize": 15,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "icon",
-                      "id": "OHK2G",
-                      "name": "Arrow",
-                      "width": 16,
-                      "height": 16,
-                      "icon": "chevron-right",
-                      "library": "lucide",
-                      "fill": "$white"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "K1GobP",
-                  "name": "Alt Row",
-                  "width": "fill_container",
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "iXnEJ",
-                      "name": "Alt Left",
-                      "fill": "$brand",
-                      "content": "Not actually online? Re-check",
-                      "fontFamily": "$font",
-                      "fontSize": 12,
-                      "fontWeight": "600"
                     }
                   ]
                 }
@@ -8496,7 +9225,10 @@
             {
               "type": "text",
               "id": "RudDO",
+              "x": 16,
+              "y": 336,
               "name": "Steps Title",
+              "enabled": false,
               "fill": "$text-2",
               "content": "Your first hour",
               "fontFamily": "$font",
@@ -8506,9 +9238,12 @@
             {
               "type": "frame",
               "id": "ATba5",
+              "x": 16,
+              "y": 362,
               "name": "Step List",
+              "enabled": false,
               "clip": true,
-              "width": "fill_container",
+              "width": "fill_container(361)",
               "fill": "$white",
               "cornerRadius": 8,
               "layout": "vertical",
@@ -8762,6 +9497,149 @@
                   ]
                 }
               ]
+            },
+            {
+              "type": "frame",
+              "id": "t44ZZ",
+              "name": "Up Next Card",
+              "width": "fill_container",
+              "fill": "$white",
+              "cornerRadius": 16,
+              "gap": 12,
+              "padding": 14,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "o9Ijj",
+                  "name": "Up Next Icon Box",
+                  "width": 40,
+                  "height": 40,
+                  "fill": "#EAF0FF",
+                  "cornerRadius": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "k71hdo",
+                      "name": "Up Next Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "credit-card",
+                      "library": "lucide",
+                      "fill": "$brand"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "mutyt",
+                  "name": "Up Next Texts",
+                  "width": "fill_container",
+                  "fill": "#00000000",
+                  "layout": "vertical",
+                  "gap": 1,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "l6AXg",
+                      "name": "Up Next Kicker",
+                      "fill": "$brand",
+                      "content": "UP NEXT",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$font",
+                      "fontSize": 11,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.6
+                    },
+                    {
+                      "type": "text",
+                      "id": "LNhi8",
+                      "name": "Up Next Title",
+                      "fill": "$text",
+                      "content": "Pay like a local",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$font",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "V8VJy",
+                      "name": "Up Next Sub",
+                      "fill": "$text-2",
+                      "content": "¥1 test with Alipay · 10 s",
+                      "lineHeight": 1.2,
+                      "fontFamily": "$font",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "W354Bs",
+              "name": "Spacer",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "#00000000"
+            },
+            {
+              "type": "frame",
+              "id": "lWm3B",
+              "name": "Primary Button",
+              "width": "fill_container",
+              "height": 46,
+              "fill": "$brand",
+              "cornerRadius": 23,
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "DFPsS",
+                  "name": "Primary Label",
+                  "fill": "$white",
+                  "content": "Next · Verify payment",
+                  "fontFamily": "$font",
+                  "fontSize": 15,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "icon",
+                  "id": "OHK2G",
+                  "name": "Arrow",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "chevron-right",
+                  "library": "lucide",
+                  "fill": "$white"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "K1GobP",
+              "name": "Alt Row",
+              "width": "fill_container",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "iXnEJ",
+                  "name": "Alt Left",
+                  "fill": "$brand",
+                  "content": "Not actually online? Re-check",
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                }
+              ]
             }
           ]
         },
@@ -8781,26 +9659,15 @@
       "y": -360,
       "name": "Stuck FAB",
       "reusable": true,
-      "fill": "$white",
-      "cornerRadius": 24,
+      "fill": "#EAF0FF",
+      "cornerRadius": 16,
       "stroke": "#C9D6FF",
-      "strokeWidth": 1,
-      "effect": {
-        "type": "shadow",
-        "shadowType": "outer",
-        "color": "#2C61FE33",
-        "offset": {
-          "x": 0,
-          "y": 4
-        },
-        "blur": 16
-      },
-      "gap": 8,
+      "gap": 4,
       "padding": [
-        8,
-        14,
-        8,
-        8
+        4,
+        10,
+        4,
+        4
       ],
       "alignItems": "center",
       "children": [
@@ -8808,8 +9675,8 @@
           "type": "frame",
           "id": "n9tSC",
           "name": "FAB Icon Wrap",
-          "width": 34,
-          "height": 34,
+          "width": 24,
+          "height": 24,
           "fill": "#00000000",
           "cornerRadius": 16,
           "justifyContent": "center",
@@ -8832,8 +9699,8 @@
               "type": "frame",
               "id": "nc76I",
               "name": "FAB Bot",
-              "width": 34,
-              "height": 34,
+              "width": 24,
+              "height": 24,
               "fill": {
                 "type": "image",
                 "enabled": true,
@@ -8848,9 +9715,9 @@
           "id": "bDqmn",
           "name": "FAB Label",
           "fill": "$brand",
-          "content": "I'm stuck",
+          "content": "Help",
           "fontFamily": "$font",
-          "fontSize": 13,
+          "fontSize": 12,
           "fontWeight": "700"
         }
       ]
@@ -9825,12 +10692,23 @@
             {
               "type": "text",
               "id": "u36XWM",
+              "x": 337,
+              "y": 13.5,
               "name": "Nav Right",
+              "enabled": false,
               "fill": "$brand",
               "content": "Share",
               "fontFamily": "$font",
               "fontSize": 14,
               "fontWeight": "600"
+            },
+            {
+              "id": "nhiPY",
+              "type": "ref",
+              "ref": "lTCGy",
+              "name": "Stuck FAB",
+              "x": 308,
+              "y": 6
             }
           ]
         },
@@ -10684,15 +11562,6 @@
           "ref": "VIOxe",
           "name": "Tab Bar",
           "width": "fill_container"
-        },
-        {
-          "id": "nhiPY",
-          "type": "ref",
-          "ref": "lTCGy",
-          "name": "Stuck FAB",
-          "layoutPosition": "absolute",
-          "x": 262,
-          "y": 660
         }
       ]
     },
@@ -20619,7 +21488,7 @@
               "id": "Kzbsd",
               "name": "Nav Title",
               "fill": "$text",
-              "content": "Privacy & permissions",
+              "content": "Permissions",
               "fontFamily": "$font",
               "fontSize": 17,
               "fontWeight": "600"
@@ -20630,7 +21499,7 @@
               "name": "More",
               "width": 32,
               "height": 32,
-              "fill": "#F0F2F5",
+              "fill": "#00000000",
               "cornerRadius": 16,
               "justifyContent": "center",
               "alignItems": "center",
@@ -20638,7 +21507,10 @@
                 {
                   "type": "icon",
                   "id": "JGevC",
+                  "x": 7,
+                  "y": 7,
                   "name": "More Icon",
+                  "enabled": false,
                   "width": 18,
                   "height": 18,
                   "icon": "ellipsis",
@@ -20707,10 +21579,10 @@
                   "id": "BN6h3",
                   "name": "Intro Title",
                   "fill": "$text",
-                  "content": "You decide what we can use",
+                  "content": "You decide what we use",
                   "fontFamily": "$font",
-                  "fontSize": 22,
-                  "fontWeight": "700"
+                  "fontSize": 26,
+                  "fontWeight": "800"
                 },
                 {
                   "type": "text",
@@ -20719,7 +21591,7 @@
                   "fill": "$text-2",
                   "textGrowth": "fixed-width",
                   "width": "fill_container",
-                  "content": "Each permission is used only for the purpose shown. Turn any of them off — the rest of Landing Check still works.",
+                  "content": "Turn any off. Everything else still works.",
                   "lineHeight": 1.4,
                   "fontFamily": "$font",
                   "fontSize": 13,
@@ -20734,7 +21606,7 @@
               "clip": true,
               "width": "fill_container",
               "fill": "$white",
-              "cornerRadius": 12,
+              "cornerRadius": 16,
               "layout": "vertical",
               "children": [
                 {
@@ -20796,7 +21668,10 @@
                             {
                               "type": "frame",
                               "id": "djEzQ",
+                              "x": 69,
+                              "y": 1,
                               "name": "Tag",
+                              "enabled": false,
                               "fill": "$ok-soft",
                               "cornerRadius": 4,
                               "padding": [
@@ -20825,7 +21700,7 @@
                           "fill": "$text-2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Detects when you land at PVG and opens your landing card — only while this trip is active.",
+                          "content": "Spot when you land at PVG",
                           "lineHeight": 1.4,
                           "fontFamily": "$font",
                           "fontSize": 12,
@@ -20921,7 +21796,10 @@
                             {
                               "type": "frame",
                               "id": "GRiuH",
+                              "x": 99,
+                              "y": 1,
                               "name": "Tag",
+                              "enabled": false,
                               "fill": "$ok-soft",
                               "cornerRadius": 4,
                               "padding": [
@@ -20950,7 +21828,7 @@
                           "fill": "$text-2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Landing, baggage belt and driver-arrival alerts.",
+                          "content": "Baggage belt & driver alerts",
                           "lineHeight": 1.4,
                           "fontFamily": "$font",
                           "fontSize": 12,
@@ -21052,7 +21930,7 @@
                           "fill": "$text-2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Only when you tap “I'm stuck” to read a screenshot or a sign.",
+                          "content": "Only when you tap Help",
                           "lineHeight": 1.4,
                           "fontFamily": "$font",
                           "fontSize": 12,
@@ -21153,7 +22031,7 @@
                           "fill": "$text-2",
                           "textGrowth": "fixed-width",
                           "width": "fill_container",
-                          "content": "Only while you hold to speak to Ask AI.",
+                          "content": "Only for voice questions",
                           "lineHeight": 1.4,
                           "fontFamily": "$font",
                           "fontSize": 12,
@@ -21190,8 +22068,11 @@
             {
               "type": "frame",
               "id": "wJbSi",
+              "x": 16,
+              "y": 407,
               "name": "Pack Card",
-              "width": "fill_container",
+              "enabled": false,
+              "width": "fill_container(361)",
               "fill": "$brand-soft",
               "cornerRadius": 12,
               "gap": 12,
@@ -21242,42 +22123,6 @@
                   ]
                 }
               ]
-            },
-            {
-              "type": "frame",
-              "id": "dBgQ2",
-              "name": "Data Note",
-              "width": "fill_container",
-              "gap": 8,
-              "padding": [
-                0,
-                2
-              ],
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "n1SAi7",
-                  "name": "Lock",
-                  "width": 14,
-                  "height": 14,
-                  "icon": "lock",
-                  "library": "lucide",
-                  "fill": "$text-3"
-                },
-                {
-                  "type": "text",
-                  "id": "D3h8L",
-                  "name": "Data Text",
-                  "fill": "$text-3",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "Your trip data stays on this phone. Screenshots are deleted after they're read. We never sell your data.",
-                  "lineHeight": 1.4,
-                  "fontFamily": "$font",
-                  "fontSize": 12,
-                  "fontWeight": "normal"
-                }
-              ]
             }
           ]
         },
@@ -21300,6 +22145,41 @@
             16
           ],
           "children": [
+            {
+              "type": "frame",
+              "id": "dBgQ2",
+              "name": "Data Note",
+              "width": "fill_container",
+              "gap": 8,
+              "padding": [
+                0,
+                2
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "n1SAi7",
+                  "name": "Lock",
+                  "width": 14,
+                  "height": 14,
+                  "icon": "lock",
+                  "library": "lucide",
+                  "fill": "$text-3"
+                },
+                {
+                  "type": "text",
+                  "id": "D3h8L",
+                  "name": "Data Text",
+                  "fill": "$text-3",
+                  "content": "Your data stays on this phone. We never sell it.",
+                  "lineHeight": 1.4,
+                  "fontFamily": "$font",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
             {
               "type": "frame",
               "id": "kBc31",
