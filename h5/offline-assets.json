@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "version": "2026.10.16.3",
-  "revision": "680c98fb0acae14f39d0",
+  "revision": "9241f99ea712baa80014",
   "assets": [
     {
       "path": "app.js",
@@ -10,8 +10,8 @@
     },
     {
       "path": "data/first-stamp.json",
-      "sha256": "86f61cf16cc3245452faeb2ea067f0358287e233723735c268400dd55085a5cd",
-      "bytes": 2435
+      "sha256": "fbee7243f07c152533651a396ce55891ac72c7581fa9678aec4862746a0b49bd",
+      "bytes": 6757
     },
     {
       "path": "data/offline-pvg-t2.json",
@@ -200,8 +200,8 @@
     },
     {
       "path": "stamp.js",
-      "sha256": "c6f8155f6d464c93610cd24b7618f436ca101f853eafb3bc1363951b64b93438",
-      "bytes": 37662
+      "sha256": "64bed55522462c4e224a56af7972e15a598928d893dcd0779fcd6df4a6c4e1b6",
+      "bytes": 38130
     },
     {
       "path": "tutorials.json",
