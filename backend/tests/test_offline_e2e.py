@@ -122,6 +122,14 @@ def nav(page, route):
     page.evaluate('(route) => show(route)', route)
 
 
+def open_preflight(page):
+    # 第一次进入行前检查会先转到权限页（隐私授权），再进一次才是行前检查本身
+    nav(page, 'preflight')
+    if page.locator('.screen.on').get_attribute('data-route') == 'privacy':
+        nav(page, 'preflight')
+    page.locator('.screen.on[data-route="preflight"]').wait_for()
+
+
 def next_step(page, key):
     click(page, 'guide-next', key)
     page.wait_for_function('(key) => window.LCOfflineDB.get("guide").then(g => g && g.step === key)', arg=key)
@@ -333,7 +341,7 @@ def test_offline_core_makes_no_api_requests_and_old_help_uses_local_cards(page, 
     page.context.set_offline(True)
     page.reload()
     page.get_by_test_id('pack-status').filter(has_text='Public guide saved').wait_for()
-    nav(page, 'preflight')
+    open_preflight(page)
     page.locator('.screen.on [data-pencil-name="Stuck FAB"]').click()
     page.get_by_role('heading', name='Help & contacts', exact=True).wait_for()
     assert not [url for url in requests if any(path in url for path in ('/mock/', '/health', '/kb/', '/stuck/', '/rules/'))]
@@ -352,16 +360,14 @@ def test_small_mobile_layout_has_no_horizontal_overflow(page, site):
 
 def test_static_preflight_counts_real_device_download_state(page, site):
     open_pack(page, site)
-    nav(page, 'preflight')
-    label = page.locator('.screen.on [data-pencil-name="Progress Label"]')
-    assert label.inner_text() == '3 of 6 ready · 3 to do · 2 optional'
-    row = page.locator('.screen.on [data-pencil-name="Item Offline landing pack"]')
-    assert 'Not saved on this device' in row.inner_text()
-    nav(page, 'offline')
-    download(page)
-    nav(page, 'preflight')
-    assert label.inner_text() == '4 of 6 ready · 2 to do · 2 optional'
-    assert 'Saved on this device' in row.inner_text()
+    hidden = page.locator('.screen[data-route="preflight"] [data-pencil-name="Progress Label"]')
+    assert hidden.text_content() == '3 of 6 ready · 3 to do · 4 optional'
+    assert 'Not saved on this device' in page.locator('.screen[data-route="preflight"] [data-pencil-name="Item Offline landing pack"]').text_content()
+    # 通过权限页进入行前检查后，离线包自动开始下载；完成后计数和那一行都要反映本机真实状态
+    open_preflight(page)
+    # 已完成的项会收进折叠的 Done 分组，所以按文字判断，不要求可见
+    page.wait_for_function('() => /Saved on this device/.test(document.querySelector(\'.screen[data-route="preflight"] [data-pencil-name="Item Offline landing pack"]\').textContent)', timeout=30000)
+    assert page.locator('.screen.on [data-pencil-name="Progress Label"]').inner_text() == '4 of 6 ready · 2 to do · 4 optional'
 
 
 def test_missing_hotel_fields_cannot_be_saved(page, site):
