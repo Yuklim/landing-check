@@ -111,13 +111,55 @@
       <form id="fs-compose-form" class="fs-panel"><label class="fs-field">Your story<textarea name="caption" maxlength="1000" required placeholder="What does the beginning feel like?">${H(draft.caption)}</textarea></label><label class="fs-field">Story topic<select name="topic">${state.config.topics.filter(t=>t!=='All stories').map(topic=>`<option ${draft.topic===topic?'selected':''}>${H(topic)}</option>`).join('')}</select></label><button type="button" class="fs-text-btn" data-fs="suggest-caption">Try a different opening line</button><p class="fs-small">Include only what you want others to read. Do not add hotel addresses, contact details or payment information.</p><label class="fs-check"><input type="checkbox" name="reviewed" required><span>I have reviewed the image and text for sharing.</span></label><button class="fs-btn" type="submit" ${!stamp()?'disabled':''}>Save post to this demo Community</button>${!stamp()?'<p class="fs-small" style="margin-top:10px">This card is a preview. Confirm your arrival essentials to unlock it before creating a post.</p>':''}</form>
       ${btn('Edit card & public fields','edit-card','','outline')}<p class="fs-small">Draft saved on this device. Official Trip.com publishing requires a separate integration.</p>`;
   }
+  function fmtDate(ms){ try{ return new Intl.DateTimeFormat('en-US',{month:'short',day:'numeric'}).format(new Date(Number(ms))); }catch(_){ return ''; } }
+  function fmtNum(n){ n=Number(n)||0; return n>=1000?(n/1000).toFixed(n>=10000?0:1).replace(/\.0$/,'')+'k':String(n); }
+  function commentItem(c){
+    const av = c.avatar?`<img src="${H(c.avatar)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:'';
+    const tags = `${c.isAuthor?'<span class="fs-pd-ctag">Author</span>':''}${c.pinned?'<span class="fs-pd-ctag pin">Pinned</span>':''}`;
+    const replies = c.replyCount?`<span>💬 ${fmtNum(c.replyCount)}</span>`:'';
+    return `<div class="fs-pd-cmt"><div class="fs-pd-cav">${av}</div><div class="fs-pd-cmain"><div class="fs-pd-cmeta"><span class="fs-pd-cn">${H(c.name)}</span>${tags}${c.date?`<span>${H(c.date)}</span>`:''}</div><div class="fs-pd-ctext">${H(c.text)}</div><div class="fs-pd-cact"><span>👍 ${fmtNum(c.likes)}</span>${replies}</div></div></div>`;
+  }
   function story() {
     const post = posts().find(item=>item.id===state.postId) || posts()[0];
     if (!post) return '<div class="fs-empty">This post is no longer available.</div>';
     state.postId = post.id;
-    return `<div class="fs-demo">${post.source?('From '+H(post.source)):(post.demo?'Illustrative sample story':'Local demo post · on this browser only')}</div><div><div class="fs-eyebrow">${H(post.topic)} · SHANGHAI</div><h2 style="font-size:38px;margin-top:9px">${H(post.title)}</h2><p class="fs-story-author">by ${H(post.author)}</p></div>${post.card?preview(post.card):cover(post)}<p class="fs-story-body">${H(post.body)}</p>${post.sourceUrl?`<p class="fs-small"><a href="${H(post.sourceUrl)}" target="_blank" rel="noopener noreferrer">View the original on Trip.com ↗</a></p>`:''}
-      ${btn(icon('bookmark')+(state.personal.bookmarks.includes(post.id)?' Saved to my atlas':' Save this story'),'bookmark',post.id,'outline')}${post.topic==='Local Tips'?btn('Open my offline travel pack','nav','offline','secondary'):''}
-      ${!post.demo?btn('Delete this local post','delete-post',post.id,'danger'):''}${btn('Back to Shanghai Community','nav','community','secondary')}`;
+    // A traveler's own keepsake post (saved on this browser) keeps the simple card view.
+    if (post.card) return `<div class="fs-demo">Local demo post · on this browser only</div><div><div class="fs-eyebrow">${H(post.topic)} · SHANGHAI</div><h2 style="font-size:32px;margin-top:9px">${H(post.title)}</h2><p class="fs-story-author">by ${H(post.author)}</p></div>${preview(post.card)}<p class="fs-story-body">${H(post.body)}</p>
+      ${btn(icon('bookmark')+(state.personal.bookmarks.includes(post.id)?' Saved to my atlas':' Save this story'),'bookmark',post.id,'outline')}${btn('Delete this local post','delete-post',post.id,'danger')}${btn('Back to Shanghai Community','nav','community','secondary')}`;
+    const imgs = (post.images && post.images.length) ? post.images : (post.image ? [post.image] : []);
+    const slides = imgs.map(u=>`<div class="fs-pd-slide"><img src="${H(u)}" alt="" loading="lazy" referrerpolicy="no-referrer"></div>`).join('');
+    const dots = imgs.length>1 ? `<div class="fs-pd-dots" data-fs-dots>${imgs.map((_,k)=>`<i class="${k===0?'on':''}"></i>`).join('')}</div>` : '';
+    const paras = String(post.body||'').split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    const body = (paras.length?paras:[String(post.body||'')]).map(p=>`<p>${H(p)}</p>`).join('');
+    const av = post.authorImage?`<img src="${H(post.authorImage)}" alt="" loading="lazy" referrerpolicy="no-referrer">`:'';
+    const badge = post.authorBadge?`<span class="fs-pd-badge">🔥 ${H(post.authorBadge)}</span>`:'';
+    const cmts = post.comments_list || [];
+    const cmtSec = cmts.length ? `<div class="fs-pd-divider"></div><div class="fs-pd-csec"><div class="fs-pd-ctitle">${post.commentCount?Number(post.commentCount).toLocaleString('en-US')+' comments':'Comments'}</div>${cmts.map(commentItem).join('')}${(post.commentCount||0)>cmts.length?`<a class="fs-pd-more" href="${H(post.sourceUrl||'#')}" target="_blank" rel="noopener noreferrer">View all comments on Trip.com ›</a>`:''}</div>` : '';
+    return `<article class="fs-pd">
+      <div class="fs-pd-author"><div class="fs-pd-av">${av}</div><div class="fs-pd-who"><div class="fs-pd-nm">${H(post.author)}</div>${badge}</div><a class="fs-pd-follow" href="${H(post.sourceUrl||'#')}" target="_blank" rel="noopener noreferrer">Follow</a></div>
+      ${imgs.length?`<div class="fs-pd-car"><div class="fs-pd-track" data-fs-track>${slides}</div>${imgs.length>1?`<div class="fs-pd-count" data-fs-count>1/${imgs.length}</div>`:''}</div>${dots}`:''}
+      <div class="fs-pd-pad">
+        ${post.location?`<div class="fs-pd-loc">📍 ${H(post.location)}</div>`:''}
+        <h1 class="fs-pd-title">${H(post.title)}</h1>
+        <div class="fs-pd-body">${body}</div>
+        ${post.sourceUrl?`<p class="fs-small"><a href="${H(post.sourceUrl)}" target="_blank" rel="noopener noreferrer">View the original on Trip.com ↗</a></p>`:''}
+        <div class="fs-pd-acts"><span>👍 ${fmtNum(post.likeCount||post.likes||0)}</span><span>💬 ${fmtNum(post.commentCount||post.comments||0)}</span><span class="fs-pd-src">${H(post.source||'')}</span></div>
+        ${post.publishTime?`<div class="fs-pd-posted">Posted · ${fmtDate(post.publishTime)}</div>`:''}
+      </div>
+      ${cmtSec}
+      </article>
+      <div class="fs-pd-cta">${btn(icon('bookmark')+(state.personal.bookmarks.includes(post.id)?' Saved to my atlas':' Save this story'),'bookmark',post.id,'outline')}${post.topic==='Local Tips'?btn('Open my offline travel pack','nav','offline','secondary'):''}${btn('Back to Shanghai Community','nav','community','secondary')}</div>`;
+  }
+  function initCarousel(){
+    const host = screens['community-post']; if(!host) return;
+    const track = host.querySelector('[data-fs-track]'); if(!track) return;
+    const count = host.querySelector('[data-fs-count]'), dots = host.querySelector('[data-fs-dots]');
+    const total = track.children.length;
+    track.addEventListener('scroll', ()=>{
+      const i = Math.round(track.scrollLeft / Math.max(1,track.clientWidth));
+      if (count) count.textContent = (i+1)+'/'+total;
+      if (dots) [].forEach.call(dots.children,(d,k)=>d.classList.toggle('on', k===i));
+    }, {passive:true});
   }
   // 到访认证章（护照盖章风）——仿高德城市卡片右下角的 ARRIVAL 印章
   const ARRIVAL_SEAL = `<svg width="68" height="68" viewBox="0 0 120 120" aria-hidden="true"><g style="transform:rotate(-9deg);transform-origin:60px 60px;opacity:.74">
@@ -249,6 +291,7 @@
     if (statusBar) screens[rendered].querySelector('.fs-head').prepend(statusBar.cloneNode(true));
     if (state.ready && !state.error) drawPreviews();
     if (rendered === 'city-passport' && state.ready && !state.error) initAtlas();
+    if (rendered === 'community-post' && state.ready && !state.error) initCarousel();
   }
   function capture(form) {
     if (form.id==='fs-customize') {
