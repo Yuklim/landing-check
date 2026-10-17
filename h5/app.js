@@ -20,8 +20,14 @@
   const txt = (el, v) => { if (el && v != null) el.textContent = v; };
   const ok = r => { if (!r.ok) throw new Error(r.status); return r.json(); };
   const localOnly = () => !navigator.onLine || /^#(?:offline|share|community|city-passport)/.test(location.hash);
-  const get = (p, explicit = false) => (!navigator.onLine || (!explicit && localOnly())) ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p).then(ok);
-  const post = (p, body, isForm) => localOnly() ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p, isForm ? { method: 'POST', body } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) }).then(ok);
+  // 访问者 ID：每台设备一份演示进度（后端按 X-LC-Visitor 隔离），评委扫码互不影响；存不了本机就只在本次打开有效
+  const VISITOR = (() => {
+    const make = () => 'v' + Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(16).padStart(2, '0')).join('');
+    try { let id = localStorage.getItem('lc-visitor'); if (!/^[A-Za-z0-9_-]{8,64}$/.test(id || '')) { id = make(); localStorage.setItem('lc-visitor', id); } return id; } catch (e) { return make(); }
+  })();
+  const VH = { 'X-LC-Visitor': VISITOR };
+  const get = (p, explicit = false) => (!navigator.onLine || (!explicit && localOnly())) ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p, { headers: VH }).then(ok);
+  const post = (p, body, isForm) => localOnly() ? Promise.reject(new Error('Offline guide uses local data')) : fetch(API + p, isForm ? { method: 'POST', headers: VH, body } : { method: 'POST', headers: { ...VH, 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) }).then(ok);
   // This endpoint is simulated; preserve that provenance when prefilling the offline hotel card.
   window.lcOfflineTrip = () => API ? withTimeout(get('/mock/trip', true), 4000).then(trip => ({ ...trip, demo: true })) : Promise.resolve(null);
 
@@ -716,7 +722,7 @@
   async function resetDemo() {
     toast('正在重置…');
     const jobs = [];
-    if (API) jobs.push(fetch(API + '/mock/reset', { method: 'POST' }).then(ok));
+    if (API) jobs.push(fetch(API + '/mock/reset', { method: 'POST', headers: VH }).then(ok));
     if (window.LCOfflineDB) jobs.push(window.LCOfflineDB.clear());
     if (window.caches) jobs.push(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith('lc-offline-')).map(k => caches.delete(k)))));
     const failed = (await Promise.allSettled(jobs)).filter(r => r.status === 'rejected');
