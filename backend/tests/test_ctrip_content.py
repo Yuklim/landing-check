@@ -70,13 +70,15 @@ def test_routes_add_english_title_and_summary_from_model(mcp, monkeypatch):
 
     def fake_model(messages, **_):
         rows = json.loads(messages[-1]['content'])
-        return json.dumps({'items': [{'id': r['id'], 'title': 'EN ' + r['id'], 'summary': 'One line.'} for r in rows]})
+        return json.dumps({'items': [{'id': r['id'], 'title': 'EN ' + r['id'], 'name': 'EN ' + r['id'], 'summary': 'One line.',
+                                      'highlight': 'One line.', 'rank': 'Must-see', 'area': 'The Bund', 'tags': ['City walk']} for r in rows]})
     monkeypatch.setattr(stuck, 'call_model', fake_model)
     client = TestClient(app_module.app)
     tickets = client.get('/content/tickets').json()
     assert tickets['translated'] is True
     assert tickets['items'][0]['name_en'] == 'The Bund'    # 固定译名优先
     assert tickets['items'][1]['name_en'] == 'EN 9' and tickets['items'][1]['recommend_en'] == 'One line.'
+    assert tickets['items'][0]['rank_en'] == 'Must-see' and tickets['items'][0]['tags_en'] == ['City walk']
     guide = client.get('/content/guides').json()['items'][0]
     assert guide['title_en'].startswith('EN ') and guide['summary_en'] == 'One line.'
 
@@ -89,3 +91,31 @@ def test_mcp_failure_returns_empty_list_not_error(monkeypatch):
     for path in ('/content/tickets', '/content/guides'):
         r = client.get(path)
         assert r.status_code == 200 and r.json()['items'] == []
+
+
+def test_small_image_rewrites_ctrip_originals_only():
+    big = 'https://dimg04.c-ctrip.com/images/1me2l12000s7y4s132792.jpg?proc=source/tripcommunity'
+    assert ctrip_mcp.small_image(big) == 'https://dimg04.c-ctrip.com/images/1me2l12000s7y4s132792_R_640_10000.jpg'
+    assert ctrip_mcp.small_image('https://ak-d.tripcdn.com/images/x.jpg') == 'https://ak-d.tripcdn.com/images/x.jpg'
+
+
+def test_rate_limit_message_is_not_cached(monkeypatch):
+    calls = []
+
+    class R:
+        status_code = 200
+        text = 'data: {"result":{"content":[{"text":"超出频次限制"}]}}'
+
+    monkeypatch.setenv('CTRIP_MCP_TOKEN', 't')
+    monkeypatch.setattr(ctrip_mcp.httpx, 'post', lambda *a, **k: calls.append(1) or R())
+    ctrip_mcp._CACHE.clear()
+    assert ctrip_mcp.call_tool('query_ticket', {'cityName': '上海'}) == '超出频次限制'
+    ctrip_mcp.call_tool('query_ticket', {'cityName': '上海'})
+    assert len(calls) == 2                                     # 限流提示不进缓存，下次照常重试
+
+
+def test_ticket_sort_type_passed_only_when_not_default(monkeypatch):
+    seen = []
+    monkeypatch.setattr(ctrip_mcp, 'call_tool', lambda name, args, **_: seen.append(args) or [])
+    ctrip_mcp.query_ticket(sort_type=1); ctrip_mcp.query_ticket(sort_type=3)
+    assert 'sortType' not in seen[0] and seen[1]['sortType'] == 3

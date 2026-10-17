@@ -87,7 +87,8 @@ def call_tool(name, arguments, timeout=None, use_cache=True):
     except (json.JSONDecodeError, TypeError):
         result = text  # 例如 "查询无结果" / "身份不合法"
 
-    if use_cache:
+    # 只缓存真正的数据；「超出频次限制」「身份不合法」这类提示串不能缓存，否则 10 分钟内都拿不到数据
+    if use_cache and isinstance(result, (list, dict)):
         _CACHE[key] = (time.time(), result)
     return result
 
@@ -134,14 +135,23 @@ def clean_text(text):
     return _TAG.sub('', _POI.sub(r'\1', text or '')).replace('﻿', '').strip()
 
 
-def query_guides(city='上海', scenarios='第一次去', size=6):
-    """行前检查「出发前读一读」：第一次来这座城市的旅游笔记（city+scenarios 组合）。"""
-    data = call_tool('query_content', {'city': city, 'scenarios': scenarios, 'size': size})
+def small_image(url, width=640):
+    """携程图床原图常有 1MB：换成 640 宽的缩略图（_R_640_10000），页面秒出。非携程图床原样返回。"""
+    m = re.match(r'(https://dimg\d+\.c-ctrip\.com/images/[^?._]+)\.(jpg|jpeg|png|webp)(\?.*)?$', url or '')
+    return '%s_R_%d_10000.%s' % (m.group(1), width, m.group(2)) if m else url
+
+
+def query_guides(city='上海', scenarios='第一次去', keyword='', size=6):
+    """旅游笔记：默认「第一次去」（city+scenarios）；给 keyword 时走 city+keyword（必玩 / 美食 / 交通 / 住宿…）。"""
+    args = {'city': city, 'keyword': keyword} if keyword else {'city': city, 'scenarios': scenarios}
+    data = call_tool('query_content', {**args, 'size': size})
     if not isinstance(data, list):
         return {'items': [], 'note': data if isinstance(data, str) else ''}
     items = []
     for n in data:
         it = _norm_note(n)
+        it['cover'] = small_image(it['cover'])
+        it['images'] = [small_image(u) for u in it['images']]
         text = clean_text(n.get('content', ''))
         it['text'] = text[:600]
         it['title'] = clean_text(it['title']) or text.split('\n', 1)[0][:60]
@@ -179,6 +189,8 @@ def _norm_ticket(t):
         'comments': a.get('commentsCount') or 0,
         'price_from': min(prices) if prices else None,
         'rank': a.get('rankTag', ''),
+        'zone': a.get('zoneName', ''),
+        'tags_zh': (a.get('tags') or [])[:4],
         'recommend': a.get('pmRecommand', ''),
         'open_time': open_time,
         'free': ('全天开放' in open_time) and not prices,
@@ -186,9 +198,12 @@ def _norm_ticket(t):
     }
 
 
-def query_ticket(city='上海', tag='必打卡', size=8):
-    """景点门票榜单（cityName + tag），每个景点只取起价，归一化成卡片。"""
-    data = call_tool('query_ticket', {'cityName': city, 'tag': tag, 'resourceSize': 3})
+def query_ticket(city='上海', tag='必打卡', size=8, sort_type=1):
+    """景点门票榜单（cityName + tag），每个景点只取起价，归一化成卡片。sort_type：1 推荐 2 高价 3 低价 4 好评。"""
+    args = {'cityName': city, 'tag': tag, 'resourceSize': 3}
+    if sort_type and int(sort_type) != 1:
+        args['sortType'] = int(sort_type)
+    data = call_tool('query_ticket', args)
     if not isinstance(data, list):
         return {'items': [], 'note': data if isinstance(data, str) else ''}
     return {'items': [_norm_ticket(t) for t in data[:size]]}
@@ -247,6 +262,8 @@ def _norm_hotel(h):
         'district': a.get('locationName', ''),
         'tags': a.get('typeTags') or a.get('tags') or [],
         'recommend': (a.get('recommendText') or '').strip('“”"'),
+        'favorites': a.get('favorityCount') or 0,
+        'tags_zh': a.get('tags') or [],
         'url': u.get('h5Url') or u.get('pcUrl') or '',
     }
 
