@@ -128,22 +128,29 @@
     <text x="60" y="54" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="20" font-weight="700" fill="#3B63D6">Arrival</text>
     <path d="M44 64 h32 M48 70 h24" stroke="#3B63D6" stroke-width="1.6" stroke-linecap="round"/></g></svg>`;
   function atlas() {
-    const collected = stamp(), lit = Boolean(collected), art = H(state.config.city.art);
-    const shCard = lit
-      ? `<button class="fs-acard" type="button" data-fs="nav" data-value="share" aria-label="View my Shanghai keepsake">
-           <span class="fs-acard-photo"><img src="${art}" alt="Shanghai"><span class="fs-acard-cn">CHINA</span><span class="fs-acard-seal">${ARRIVAL_SEAL}</span></span>
-           <span class="fs-acard-meta"><strong>Shanghai</strong><span class="fs-acard-dt lit">Arrived · ${H(renderer.formatDate(collected.arrival))}</span></span>
-         </button>`
-      : `<div class="fs-acard notyet">
-           <span class="fs-acard-photo gray"><img src="${art}" alt="Shanghai"><span class="fs-acard-cn">CHINA</span><span class="fs-acard-add" aria-hidden="true">+</span></span>
-           <span class="fs-acard-meta"><strong>Shanghai</strong><span class="fs-acard-dt">Not collected yet</span></span>
-         </div>`;
-    const lock = (ch, name) => `<div class="fs-alock"><span class="fs-alock-ring">${ch}</span><strong>${name}</strong><small>Coming soon</small></div>`;
+    const real = stamp();
+    const litCount = ATLAS_CITIES.filter(c => c.lit).length;
+    const tile = c => {
+      if (c.lit) {
+        const shLink = c.hero && real;                       // 上海真集到章才跳到票根导出页
+        const date = shLink ? H(renderer.formatDate(real.arrival)) : H(c.date || '');
+        const open = shLink ? '<button class="fs-acard" type="button" data-fs="nav" data-value="share"' : '<div class="fs-acard"';
+        const close = shLink ? '</button>' : '</div>';
+        return `${open} aria-label="${H(c.name)}">
+          <span class="fs-acard-photo"><img src="${H(c.photo)}" alt="${H(c.name)}" loading="lazy"><span class="fs-acard-cn">CHINA</span><span class="fs-acard-seal">${ARRIVAL_SEAL}</span></span>
+          <span class="fs-acard-meta"><strong>${H(c.name)}</strong><span class="fs-acard-dt lit">Arrived · ${date}</span></span>
+        ${close}`;
+      }
+      return `<div class="fs-acard notyet">
+          <span class="fs-acard-photo gray"><img src="${H(c.photo)}" alt="${H(c.name)}" loading="lazy"><span class="fs-acard-cn">CHINA</span><span class="fs-acard-add" aria-hidden="true">+</span></span>
+          <span class="fs-acard-meta"><strong>${H(c.name)}</strong><span class="fs-acard-dt">Not collected yet</span></span>
+        </div>`;
+    };
     return `<section class="fs-atlas2">
       <div class="fs-atlas-map" id="fs-atlas-map"><div class="fs-atlas-maptip">Connect to the internet to see the map.</div></div>
-      <div class="fs-atlas-stat"><div><div class="fs-eyebrow">MY CITY ATLAS</div><div class="fs-atlas-big">${lit?'Shanghai is <em>lit</em>':'Light up <em>Shanghai</em>'}</div></div><div class="fs-atlas-count"><b>${lit?1:0}/6</b>cities lit</div></div>
-      <div class="fs-atlas-bar"><i style="width:${lit?16:4}%"></i></div>
-      <div class="fs-atlas-grid">${shCard}${lock('京','Beijing')}${lock('蓉','Chengdu')}${lock('杭','Hangzhou')}${lock('穗','Guangzhou')}${lock('西',"Xi'an")}</div>
+      <div class="fs-atlas-stat"><div><div class="fs-eyebrow">MY CITY ATLAS</div><div class="fs-atlas-big">${litCount} ${litCount===1?'city':'cities'} <em>lit</em></div></div><div class="fs-atlas-count"><b>${litCount}/6</b>cities lit</div></div>
+      <div class="fs-atlas-bar"><i style="width:${Math.round(litCount/6*100)}%"></i></div>
+      <div class="fs-atlas-grid">${ATLAS_CITIES.map(tile).join('')}</div>
       <div class="fs-atlas-foot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A8F99" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg><span>Saved on this device · no location tracking</span><button type="button" class="fs-text-btn" data-fs="clear-stamps">Clear my stamps</button></div>`;
   }
   function drawPreviews() {
@@ -172,9 +179,12 @@
   // ---- 城市图鉴地图（高德）：上海点亮=蓝，其它城市灰点待点亮；离线/失败则静默保留下方卡片 ----
   let atlasMap = null;
   const ATLAS_CITIES = [
-    {name:'Shanghai',pos:[121.47,31.23],hero:true},{name:'Beijing',pos:[116.40,39.90]},
-    {name:'Chengdu',pos:[104.07,30.57]},{name:'Hangzhou',pos:[120.15,30.27]},
-    {name:'Guangzhou',pos:[113.26,23.13]},{name:"Xi'an",pos:[108.94,34.34]}
+    { name:'Shanghai',  pos:[121.47,31.23], ds:'上海市', photo:'img/stamp/shanghai-dusk.png', lit:true,  date:'10.16', hero:true },
+    { name:'Beijing',   pos:[116.40,39.90], ds:'北京市', photo:'img/stamp/beijing.jpg',  lit:true,  date:'10.14' },
+    { name:'Chengdu',   pos:[104.07,30.57], ds:'成都市', photo:'img/stamp/chengdu.jpg',  lit:true,  date:'10.11' },
+    { name:'Hangzhou',  pos:[120.15,30.27], photo:'img/stamp/hangzhou.jpg',  lit:false },
+    { name:'Guangzhou', pos:[113.26,23.13], photo:'img/stamp/guangzhou.jpg', lit:false },
+    { name:"Xi'an",     pos:[108.94,34.34], photo:'img/stamp/xian.jpg',      lit:false }
   ];
   function loadAMapForAtlas() {
     if (window.AMap) return Promise.resolve(window.AMap);
@@ -192,26 +202,28 @@
   function initAtlas() {
     const box = screens['city-passport'] && screens['city-passport'].querySelector('#fs-atlas-map');
     if (!box) return;
-    const lit = Boolean(stamp());
     loadAMapForAtlas().then(A => {
       if (current() !== 'city-passport' || !box.isConnected) return;
       try { if (atlasMap) { atlasMap.destroy(); atlasMap = null; } } catch (_) {}
-      atlasMap = new A.Map(box, { lang:'en', mapStyle:'amap://styles/whitesmoke', zoom:4.2,
-        center:[114,29], viewMode:'2D', features:['bg','road','building'], showLabel:true });
-      if (lit) {
+      atlasMap = new A.Map(box, { lang:'en', mapStyle:'amap://styles/whitesmoke', zoom:4.1,
+        center:[113,30], viewMode:'2D', features:['bg','road','building'], showLabel:true });
+      const anyLitWithDs = ATLAS_CITIES.some(c => c.lit && c.ds);
+      if (anyLitWithDs) {
         A.plugin('AMap.DistrictSearch', function () {
-          new A.DistrictSearch({ subdistrict:0, extensions:'all', level:'city' }).search('上海市', function (st, res) {
-            if (st === 'complete' && res.districtList && res.districtList[0]) {
-              (res.districtList[0].boundaries || []).forEach(function (p) {
-                new A.Polygon({ path:p, map:atlasMap, strokeColor:'#2C61FE', strokeWeight:2, fillColor:'#2C61FE', fillOpacity:0.35, zIndex:20 });
-              });
-            }
+          ATLAS_CITIES.filter(c => c.lit && c.ds).forEach(function (c) {
+            new A.DistrictSearch({ subdistrict:0, extensions:'all', level:'city' }).search(c.ds, function (st, res) {
+              if (current() !== 'city-passport' || !atlasMap) return;
+              if (st === 'complete' && res.districtList && res.districtList[0]) {
+                (res.districtList[0].boundaries || []).forEach(function (p) {
+                  new A.Polygon({ path:p, map:atlasMap, strokeColor:'#2C61FE', strokeWeight:2, fillColor:'#2C61FE', fillOpacity:0.3, zIndex:20 });
+                });
+              }
+            });
           });
         });
       }
       ATLAS_CITIES.forEach(function (c) {
-        const on = c.hero && lit;
-        if (on) {
+        if (c.lit) {
           new A.Marker({ position:c.pos, anchor:'center', zIndex:120, map:atlasMap,
             content:'<div class="fs-mk-lit"><span class="fs-mk-halo"></span><span class="fs-mk-dot"></span></div>',
             label:{ content:'<div class="fs-mk-label lit">'+c.name+'</div>', direction:'top' } });
