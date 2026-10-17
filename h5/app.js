@@ -725,6 +725,13 @@
       const tb = document.querySelector('.screen .pin [data-pencil-name="Tab Bar"]') || document.querySelector('[data-pencil-name="Tab Bar"]');
       if (!tb) return;
       const pin = el('div', 'flex:none'); pin.className = 'pin'; const c = tb.cloneNode(true); pin.appendChild(c); cs.appendChild(pin);
+      // 克隆来的 Tab Bar 原本是首页那份，Home 仍高亮；先把每个 tab 复位成未选中灰，再单独点亮 Community，避免 Home+Community 一起亮
+      const INACT = '#8A8F99';
+      ['Tab Home', 'Tab Messages', 'Tab Community', 'Tab My Trips', 'Tab Sign In'].forEach(nm => {
+        const t = c.querySelector(`[data-pencil-name="${nm}"]`); if (!t) return;
+        t.querySelectorAll('svg').forEach(s => s.setAttribute('stroke', INACT));
+        const l = t.querySelector('[data-pencil-name="Tab Label"]'); if (l) l.style.color = INACT;
+      });
       const cc = c.querySelector('[data-pencil-name="Tab Community"]');
       if (cc) { cc.querySelectorAll('svg').forEach(s => s.setAttribute('stroke', BLUE)); const l = cc.querySelector('[data-pencil-name="Tab Label"]'); if (l) l.style.color = BLUE; }
       [['Tab Home', 'home'], ['Tab My Trips', 'trips']].forEach(([nm, rt]) => { const t = c.querySelector(`[data-pencil-name="${nm}"]`); if (t) { t.style.cursor = 'pointer'; t.onclick = () => show(rt); } });
