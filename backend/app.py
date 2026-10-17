@@ -5,7 +5,7 @@
 """
 import os, re
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form
+from fastapi import FastAPI, HTTPException, Query, Body, UploadFile, File, Form, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -13,7 +13,7 @@ from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel
 
 from kb import KnowledgeBase
-from mock import MockTrip
+from mock import MockTrip, TripStore
 from rules import PAY_METHODS
 from ctrip_mcp import (query_content as ctrip_query_content, query_train as ctrip_query_train,
                        query_hotel as ctrip_query_hotel, query_car_rental as ctrip_query_car_rental,
@@ -28,7 +28,14 @@ app.add_middleware(CORSMiddleware,
                    allow_methods=['*'], allow_headers=['*'])
 
 kb = KnowledgeBase()
-trip = MockTrip()
+trip = MockTrip()                 # 没带访问者 ID 的请求（旧前端、测试台、脚本）共用这一份
+trips = TripStore(default=trip)   # 带 X-LC-Visitor 的请求各用一份，评委扫码 / 多台设备互不影响
+
+
+def visitor_trip(x_lc_visitor: Optional[str] = Header(None)) -> MockTrip:
+    return trips.get(x_lc_visitor)
+
+
 _H5 = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'h5'))
 if os.path.isdir(_H5):
     app.mount('/app', StaticFiles(directory=_H5, html=True), name='h5')
@@ -125,37 +132,37 @@ def kb_reload():
 
 # ---------------- C 模拟携程数据 ----------------
 @app.get('/mock/trip')
-def mock_trip():
-    return trip.get_trip()
+def mock_trip(t: MockTrip = Depends(visitor_trip)):
+    return t.get_trip()
 
 
 @app.get('/mock/flight')
-def mock_flight():
-    return trip.get_flight()
+def mock_flight(t: MockTrip = Depends(visitor_trip)):
+    return t.get_flight()
 
 
 @app.post('/mock/flight/depart')
-def mock_depart():
-    return trip.depart()
+def mock_depart(t: MockTrip = Depends(visitor_trip)):
+    return t.depart()
 
 
 @app.post('/mock/flight/land')
-def mock_land():
-    return trip.land()
+def mock_land(t: MockTrip = Depends(visitor_trip)):
+    return t.land()
 
 
 @app.post('/mock/reset')
-def mock_reset():
-    trip.reset()
+def mock_reset(t: MockTrip = Depends(visitor_trip)):
+    t.reset()
     return {'ok': True}
 
 
 @app.post('/mock/pay-test')
-def mock_pay_test(fail: bool = False, method: str = 'alipay', donate: bool = False):
+def mock_pay_test(fail: bool = False, method: str = 'alipay', donate: bool = False, t: MockTrip = Depends(visitor_trip)):
     """donate=true：¥1 测试款不退回，捐给中国青少年发展基金会（CYDF）"""
     if method not in PAY_METHODS:
         raise HTTPException(400, 'method must be %s' % ' | '.join(PAY_METHODS))
-    return trip.pay_test(fail=fail, method=method, donate=donate)
+    return t.pay_test(fail=fail, method=method, donate=donate)
 
 
 class Consent(BaseModel):
@@ -166,26 +173,26 @@ class Consent(BaseModel):
 
 
 @app.get('/mock/consent')
-def mock_consent_get():
-    return {'consent': trip.consent}
+def mock_consent_get(t: MockTrip = Depends(visitor_trip)):
+    return {'consent': t.consent}
 
 
 @app.post('/mock/consent')
-def mock_consent(c: Consent):
+def mock_consent(c: Consent, t: MockTrip = Depends(visitor_trip)):
     """行前检查首次进入的隐私授权页：逐项授权的结果"""
-    return {'consent': trip.set_consent(c.dict()), 'preflight': rules.preflight(_trip_with_done(), trip.done_items)}
+    return {'consent': t.set_consent(c.dict()), 'preflight': rules.preflight(_trip_with_done(t), t.done_items)}
 
 
 @app.post('/mock/event')
-def mock_event(event: str = Body(..., embed=True)):
+def mock_event(event: str = Body(..., embed=True), t: MockTrip = Depends(visitor_trip)):
     if event not in ('online', 'in_car', 'arrived'):
         raise HTTPException(400, 'event must be online | in_car | arrived')
-    return trip.mark(event)
+    return t.mark(event)
 
 
 @app.get('/mock/timeline')
-def mock_timeline():
-    return trip.timeline()
+def mock_timeline(t: MockTrip = Depends(visitor_trip)):
+    return t.timeline()
 
 
 # ---------------- E 携程营销 MCP（真实数据，Token 走环境变量 CTRIP_MCP_TOKEN） ----------------
@@ -301,9 +308,9 @@ async def stuck_classify(image: UploadFile | None = File(None), text: str = Form
 
 
 # ---------------- D 规则引擎 ----------------
-def _trip_with_done():
-    t = trip.get_trip()
-    d = trip.done_items
+def _trip_with_done(mt: MockTrip):
+    t = mt.get_trip()
+    d = mt.done_items
     if 'transfer' in d: t['transfer_booked'] = True
     if 'car' in d: t['car_rental_booked'] = True
     if 'esim' in d: t['esim'] = {**t.get('esim', {}), 'bought': True}
@@ -313,8 +320,8 @@ def _trip_with_done():
 
 
 @app.get('/rules/preflight')
-def rules_preflight():
-    return rules.preflight(_trip_with_done(), trip.done_items)
+def rules_preflight(t: MockTrip = Depends(visitor_trip)):
+    return rules.preflight(_trip_with_done(t), t.done_items)
 
 
 class DoneItem(BaseModel):
@@ -322,23 +329,23 @@ class DoneItem(BaseModel):
 
 
 @app.post('/rules/preflight/done')
-def rules_preflight_done(d: DoneItem):
+def rules_preflight_done(d: DoneItem, t: MockTrip = Depends(visitor_trip)):
     if d.item not in ('esim', 'alipay', 'tenpaygo', 'transfer', 'car', 'permissions', 'pack'):
         raise HTTPException(400, 'unknown item %s' % d.item)
-    trip.mark_done(d.item)
-    return rules.preflight(_trip_with_done(), trip.done_items)
+    t.mark_done(d.item)
+    return rules.preflight(_trip_with_done(t), t.done_items)
 
 
 @app.get('/rules/transport')
 def rules_transport(landed_at: Optional[str] = None, bags: Optional[int] = None, adults: Optional[int] = None,
-                    airport: str = 'PVG', weather: str = 'clear'):
+                    airport: str = 'PVG', weather: str = 'clear', mt: MockTrip = Depends(visitor_trip)):
     if landed_at is not None and not re.fullmatch(r'([01]\d|2[0-3]):[0-5]\d', landed_at):
         raise HTTPException(400, 'landed_at must be HH:MM')
-    t = _trip_with_done()
+    t = _trip_with_done(mt)
     if bags is not None:
         t['flight']['checked_bags'] = bags
     if adults is not None:
         t['flight']['adults'] = adults
-    if landed_at is None and trip.landed_at:
-        landed_at = trip.landed_at[11:16]
-    return rules.transport(t, landed_at=landed_at, airport=airport, weather=weather, paid=rules.verified_methods(t, trip.done_items))
+    if landed_at is None and mt.landed_at:
+        landed_at = mt.landed_at[11:16]
+    return rules.transport(t, landed_at=landed_at, airport=airport, weather=weather, paid=rules.verified_methods(t, mt.done_items))
