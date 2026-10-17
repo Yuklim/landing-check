@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "version": "2026.10.16.3",
-  "revision": "acafc2d6349240ba2f56",
+  "revision": "523672318b916ce5a29b",
   "assets": [
     {
       "path": "app.js",
@@ -160,13 +160,18 @@
     },
     {
       "path": "index.html",
-      "sha256": "f9390c44cd1a0f3fef4a4348bcde24e2d494f1f9e04d488b7438861184a0055a",
-      "bytes": 1175949
+      "sha256": "ca6668a03ee02190291f7e965fbaa09cf1e0ec0dc1800cacc27f62c0b74188a3",
+      "bytes": 1175983
     },
     {
       "path": "manifest.json",
       "sha256": "ea9da57f06ee234e4a675d4327bee61da6f59951d010c873e2153492ca4a8dc6",
       "bytes": 400
+    },
+    {
+      "path": "motion.js",
+      "sha256": "c13f03fd043271166358f9a087780fc5901819150151d48b4753713ecf012076",
+      "bytes": 11802
     },
     {
       "path": "offline-db.js",
