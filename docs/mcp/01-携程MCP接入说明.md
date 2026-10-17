@@ -52,8 +52,8 @@ live.enrich(行程)  按 航班 → 酒店 → 门票 → 租车 → 火车 的�
 - **入园凭证要从文本里解析。** 门票能不能凭护照入园，只能从 `descDetail` 的「凭「身份证」直接验证使用」里取，规则见 `live.classify_product`。
 - **火车余票 `TicketLeft=99`** 我们理解为「充足」，界面写「plenty of seats」，这是推测，服务方没有说明。
 - **没有接送机和 eSIM 工具**，行前检查里这两项仍是模拟。
-- **频控是每个 Token 每分钟 10 次。** 2026-10-16 实测：固定 60 秒窗口，查询无结果的调用也算次数，被拒的不算；被拒后要等到下一个窗口才恢复。演示行程一次完整刷新是 5 次调用（航班、酒店、故宫门票、租车、火车），一分钟内刷两次就用满额度，第三次会被拒。
-- **`query_content` 不能翻页。** `size` 最大 50，传 51 以上直接返回「查询无结果」。只传 `city` 或只传 `keyword` 也是无结果，必须按工具说明的组合传：`query`，或 `city`/`region` 加 `keyword`/`scenarios`。
+- **频控是每个 Token 每分钟 10 次。** 2026-10-16 实测：固定 60 秒窗口，查询无结果的调用也算次数，被拒的不算；被拒后要等到下一个窗口才恢复。演示行程一次完整刷新是 6 次调用（航班、酒店、故宫门票、租车、火车、笔记），一分钟内连刷两次就会碰到频控。采集脚本和后端共用这个 Token，采集时开着后端刷新会互相挤占。
+- **`query_content` 不能翻页。** `size` 最大 50，传 51 以上直接返回「查询无结果」。只传 `city` 或只传 `keyword` 也是无结果，必须按工具说明的组合传：`query`，或 `city`/`region` 加 `keyword`/`scenarios`。笔记全量要靠多组参数扫，采集脚本见 `demand-research/tools/collect_ctrip_notes.py`。
 - **笔记正文里有 U+2028 字符。** 解析 SSE 时只能按 `\n` 切行，用 `splitlines()` 会把 JSON 切断（`tripmcp.call` 已修，有测试）。
 - **Token 处理。** Token 写在 `backend/.env`（已被 gitignore），只有后端读，不进前端，也不进快照；`/live/status` 只返回「有没有 Token」。Render 上要在环境变量里加 `TRIP_MCP_TOKEN`；不加也能跑，用仓库里的快照。
 - **不要把 `MCP使用文档.pdf` 提交进公开仓库**，文件里带有提供方的个人水印。
@@ -81,7 +81,7 @@ python backend/tools/refresh_live_snapshot.py
 
 ## 测试
 
-`python -m pytest -q backend/tests`：111 个通过。设 `E2E=1` 时 128 个通过，跳过 1 个（真实模型测试需要 DeepSeek 密钥）。
+`python -m pytest -q backend/tests`：114 个通过。设 `E2E=1` 时 137 个通过，跳过 1 个（真实模型测试需要 DeepSeek 密钥）。
 
 - `test_live.py`（32 个）用 `tests/fixtures/mcp/` 里存下的真实响应，不联网。覆盖：
   - 5 个归一化函数；

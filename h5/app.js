@@ -1,5 +1,5 @@
 /* Landing Check H5 · 后端接入层
- * 接口地址：?api=https://xxx  >  localStorage.lc_api  >  非 github.io 时默认本机 8000  >  空 = 静态模式
+ * 接口地址：?api=https://xxx > /app 使用同源 > GitHub Pages 使用 LC_API（默认静态）> 本机 8000
  * 接口失败时页面保持设计稿里的静态内容，只弹一条提示。
  */
 (function () {
@@ -11,10 +11,10 @@
           : location.hostname.endsWith('github.io') ? (window.LC_API || '')
           : 'http://127.0.0.1:8000';
   API = API.replace(/\/$/, '');
-  const S0 = () => ({ entry: null, lastShot: null, night: false, payReturn: null });
+  const S0 = () => ({ entry: null, lastShot: null, night: false, payReturn: null, paying: false, geo: 'auto', profile: 'auto' });
   const S = S0();
   const el = (tag, style, text) => { const n = document.createElement(tag); if (style) n.style.cssText = style; if (text != null) n.textContent = text; return n; };
-  const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+  const withTimeout = (p, ms) => { let timer; return Promise.race([p, new Promise((_, rej) => { timer = setTimeout(() => rej(new Error('timeout')), ms); })]).finally(() => clearTimeout(timer)); };
   const $$ = (route, name) => document.querySelector(`.screen[data-route="${route}"] [data-pencil-name="${name}"]`);
   const $all = (route, name) => [...document.querySelectorAll(`.screen[data-route="${route}"] [data-pencil-name="${name}"]`)];
   const txt = (el, v) => { if (el && v != null) el.textContent = v; };
@@ -245,11 +245,14 @@
       <div data-pay="" style="text-align:center;padding:16px 0 0;font:600 14px Inter,system-ui,sans-serif;color:${MUTED};cursor:pointer">Not now</div>
     </div>`;
   (document.getElementById('phone') || document.body).appendChild(chooser);
+  let closeChooser = null;
   function choosePay(title) {
+    if (closeChooser) closeChooser(null);
     return new Promise(res => {
       txt(chooser.querySelector('[data-role="title"]'), title || 'Verify payment first');
       chooser.style.display = 'flex';
-      chooser.onclick = ev => { const b = ev.target.closest('[data-pay]'); if (!b && ev.target !== chooser) return; chooser.style.display = 'none'; res(b ? (b.dataset.pay || null) : null); };
+      closeChooser = choice => { chooser.style.display = 'none'; chooser.onclick = null; closeChooser = null; res(choice); };
+      chooser.onclick = ev => { const b = ev.target.closest('[data-pay]'); if (!b && ev.target !== chooser) return; closeChooser(b ? (b.dataset.pay || null) : null); };
     });
   }
   const PICK_TITLE = 'Which app will you pay with?';
@@ -268,6 +271,12 @@
     loadTutorials().then(list => list.forEach(t => { const b = document.createElement('button'); b.textContent = '📖 ' + t.title; b.onclick = () => openTutorial(t.id); menuList.appendChild(b); }));
   }
 
+  // Browser history and the visible screen must stay in sync in both modes.
+  window.addEventListener('hashchange', () => {
+    if (closeChooser) closeChooser(null);
+    const route = location.hash.slice(1) || 'home';
+    if (document.querySelector('.screen.on')?.dataset.route !== route) show(route, false);
+  });
   if (!API) { status('静态模式'); window.lcHandle = (act) => staticHandle(act); window.lcOnShow = () => {}; return; }
   get('/health').then(() => status('后端已连接 · ' + API.replace(/^https?:\/\//, ''), 'rgba(27,166,114,.85)')).catch(() => status('后端不可达，静态模式', 'rgba(232,137,12,.9)'));
 
@@ -470,10 +479,12 @@
 
   // ---------- 支付验证（文案切换见前面"支付方式"一节） ----------
   async function pay(method) {
+    if (S.paying) return;
+    S.paying = true;
     method = PAY_NAME[method] ? method : 'alipay';
     toast(`Charging ¥1 via ${PAY_NAME[method]}…`);
     try {
-      const r = await post('/mock/pay-test?method=' + method);
+      const r = await withTimeout(post('/mock/pay-test?method=' + method), 15000);
       if (r.status === 'verified') {
         renderPayOk(method, r); show('payment'); renderPreflight();
         if (S.payReturn) { const to = S.payReturn; S.payReturn = null; const btn = $$('payment', 'Done Button'); if (btn) { btn.dataset.act = 'go:' + to; txt($$('payment', 'Done Label'), 'Continue to step 3 · Get to your hotel'); } }
@@ -482,7 +493,7 @@
       // 请求没发出去：显示本次方式的"连不上"，不能留着上一次（可能是另一种方式的成功页）
       toast('后端不可达');
       renderPayFail(method, { error_code: 'NO_CONNECTION', hint: 'We could not reach Trip.com. Check your connection and try again.' }, false); show('payment');
-    }
+    } finally { S.paying = false; }
   }
   async function otherVerified(method) {
     try { const pf = await get('/rules/preflight'); return !!(pf.payment && pf.payment.verified.includes(OTHER[method])); } catch (e) { return false; }
@@ -512,13 +523,15 @@
 
   // ---------- 我卡住了 ----------
   const picker = document.createElement('input'); picker.type = 'file'; picker.accept = 'image/*'; picker.hidden = true; document.body.appendChild(picker);
+  let recognitionRun = 0, shotUrl = null;
   function stuckPick() { picker.value = ''; picker.click(); }
   picker.onchange = async () => {
     const f = picker.files[0]; if (!f) return;
+    const run = ++recognitionRun;
     S.lastShot = f; show('stuck'); renderStuckLoading();
     const fd = new FormData(); fd.append('image', f); fd.append('lang', 'en');
-    try { renderStuck(await withTimeout(post('/stuck/classify', fd, true), 15000)); }
-    catch (e) { toast('Recognition unavailable, showing offline guidance'); renderStuck({ decision: 'unknown', mode: 'offline', scenario: 'unknown', advice: null, confidence: 0 }); }
+    try { const result = await withTimeout(post('/stuck/classify', fd, true), 15000); if (run === recognitionRun) renderStuck(result); }
+    catch (e) { if (run !== recognitionRun) return; toast('Recognition unavailable, showing offline guidance'); renderStuck({ decision: 'unknown', mode: 'offline', scenario: 'unknown', advice: null, confidence: 0 }); }
   };
   // 一步文字拆成标题 + 正文：按句末的 . : ; 切（后面跟空格或结尾，避免切到 Trip.com、0.05）
   function splitStep(t) {
@@ -538,8 +551,11 @@
     return rows;
   }
   function renderStuckLoading() {
+    resetStuckHelp();
     txt($$('stuck', 'Rec Label'), 'ANALYSING…'); txt($$('stuck', 'Shot Title'), 'Reading your screenshot'); txt($$('stuck', 'Shot Why'), 'Usually takes 1–2 seconds.');
-    const img = $$('stuck', 'Thumb'); if (img && S.lastShot) { img.style.backgroundImage = `url(${URL.createObjectURL(S.lastShot)})`; img.style.backgroundSize = 'cover'; [...img.children].forEach(c => c.style.visibility = 'hidden'); }
+    txt($$('stuck', 'Steps Title'), 'Looking for guidance…'); txt($$('stuck', 'Src Text'), '');
+    stepRows().forEach(row => { row.style.display = 'none'; row.onclick = null; row.style.cursor = ''; });
+    const img = $$('stuck', 'Thumb'); if (img && S.lastShot) { if (shotUrl) URL.revokeObjectURL(shotUrl); shotUrl = URL.createObjectURL(S.lastShot); img.style.backgroundImage = `url(${shotUrl})`; img.style.backgroundSize = 'cover'; [...img.children].forEach(c => c.style.visibility = 'hidden'); }
   }
   // 转人工卡片：导出稿里两行都是 nowrap 且父容器没 min-width，长文字会溢出；运行时改成可换行
   const SUP = {};
@@ -549,28 +565,34 @@
     txt(t, SUP.title);
     txt(sub, fallback ? fallback + ' · Or chat with Trip.com support in English, 24/7, with this screenshot attached.' : SUP.sub);
   }
+  function resetStuckHelp() {
+    S.entry = null;
+    const title = $$('stuck', 'Steps Title'); if (title) { title.onclick = null; title.style.cursor = ''; }
+    supCard();
+  }
   function fillEntry(e) {
     S.entry = e.id;
     txt($$('stuck', 'Rec Label'), 'RECOGNIZED · ' + (e.scenario || '').toUpperCase()); txt($$('stuck', 'Shot Title'), e.title); txt($$('stuck', 'Shot Why'), e.why);
     const stT = $$('stuck', 'Steps Title'); txt(stT, 'Do this now'); if (stT) { stT.style.cursor = ''; stT.onclick = null; window.lcHasTutorial(e.id).then(has => { if (!has || S.entry !== e.id) return; txt(stT, 'Do this now · See it step by step ›'); stT.style.cursor = 'pointer'; stT.onclick = () => window.lcTutorial(e.id); }); }
-    stepRows().forEach((row, i) => { row.style.display = e.steps[i] ? '' : 'none'; if (e.steps[i]) setStepRow(row, e.steps[i]); row.onclick = null; });
+    stepRows().forEach((row, i) => { row.style.display = e.steps[i] ? '' : 'none'; if (e.steps[i]) setStepRow(row, e.steps[i]); row.onclick = null; row.style.cursor = ''; });
     supCard(e.fallback);
     txt($$('stuck', 'Src Text'), `Steps from ${e.sources[0].name.split('·')[0].trim()} · verified ${e.verified_at}`);
   }
   function renderStuck(d) {
+    resetStuckHelp();
     if (d.decision === 'answer') { fillEntry(d.entry); toast(`${d.mode === 'model' ? 'Model' : 'Rules'} · ${d.confidence} · ${d.latency_ms} ms`); return; }
     if (d.decision === 'ask') {
       S.entry = null;
       txt($$('stuck', 'Rec Label'), 'NOT SURE · ' + (d.scenario || '').toUpperCase()); txt($$('stuck', 'Shot Title'), 'Which of these is it?'); txt($$('stuck', 'Shot Why'), 'The screenshot could mean a few things. Tap the one that matches.');
       txt($$('stuck', 'Steps Title'), 'Tap one');
-      stepRows().forEach((row, i) => { const c = d.candidates[i]; row.style.display = c ? '' : 'none'; if (!c) return; txt(row.querySelector('[data-pencil-name="Step Title"]'), c.title); const cd = row.querySelector('[data-pencil-name="Step Desc"]'); if (cd) { cd.textContent = `Confidence ${c.confidence}`; cd.style.display = ''; } row.style.cursor = 'pointer'; row.onclick = async () => fillEntry(await get(`/kb/entry/${c.entry_id}?lang=en`)); });
+      stepRows().forEach((row, i) => { const c = d.candidates[i]; row.style.display = c ? '' : 'none'; if (!c) return; txt(row.querySelector('[data-pencil-name="Step Title"]'), c.title); const cd = row.querySelector('[data-pencil-name="Step Desc"]'); if (cd) { cd.textContent = `Confidence ${c.confidence}`; cd.style.display = ''; } row.style.cursor = 'pointer'; row.onclick = async () => { const run = ++recognitionRun; try { const entry = await get(`/kb/entry/${c.entry_id}?lang=en`); if (run === recognitionRun) fillEntry(entry); } catch (e) { if (run === recognitionRun) toast('Could not load this guide. Check your connection and tap again.'); } }; });
       txt($$('stuck', 'Src Text'), `Confidence ${d.confidence} · ${d.mode}`); return;
     }
     S.entry = null;
     txt($$('stuck', 'Rec Label'), 'NOT COVERED YET'); txt($$('stuck', 'Shot Title'), "We don't have this one yet"); txt($$('stuck', 'Shot Why'), d.advice ? 'AI suggestion, not verified by us:' : 'Try the support chat below.');
     txt($$('stuck', 'Steps Title'), d.advice ? 'AI suggestion · unverified' : 'What you can do');
     const lines = d.advice ? d.advice.split(/(?<=[.!?])\s+/).slice(0, 3) : ['Show the screen to a staff member nearby.', 'Open the app\'s English support if it has one.', 'Chat with Trip.com support below.'];
-    stepRows().forEach((row, i) => { row.style.display = lines[i] ? '' : 'none'; if (lines[i]) setStepRow(row, lines[i]); row.onclick = null; });
+    stepRows().forEach((row, i) => { row.style.display = lines[i] ? '' : 'none'; if (lines[i]) setStepRow(row, lines[i]); row.onclick = null; row.style.cursor = ''; });
     txt($$('stuck', 'Src Text'), 'Not from the knowledge base · ' + d.mode);
   }
   async function solved() { if (S.entry) { try { await post('/kb/feedback', { entry_id: S.entry, solved: true }); } catch (e) {} } S.entry = null; toast('Thanks, recorded'); back(); }
@@ -742,6 +764,7 @@
     txt($$('trips', 'LC Sub'), open === 0 ? 'Everything is ready. Tap to see your route to the hotel.' : `${open} of 3 things still to sort out before you leave the airport.`);
   }
   window.lcOnShow = route => {
+    updateFab(route);
     if (route === 'trips') { renderTripsCard(); renderTripsLive(); }
     if (route === 'driver') renderDriver();
     if (route === 'car') renderCar();
@@ -751,6 +774,79 @@
     if (route === 'done' || route === 'share') renderDone();
     if (route === 'online' || route === 'wifi' || route === 'step3') post('/mock/event', { event: 'online' }).then(() => { if (route === 'step3') renderSteps('step3'); if (route === 'wifi') renderSteps('wifi'); }).catch(() => {});
   };
+
+  // ---------- 推荐引擎（前链路 + 后链路）：地理 × 行程 × 画像，带归因下单链接 ----------
+  const GEO_LABEL = { abroad: '境外·行前', in_china: '境内·落地后' };
+  const PROF_LABEL = { auto: '自动', family: '家庭', business: '商务', budget: '预算' };
+  const recoSheet = el('div', 'position:absolute;inset:0;z-index:80;display:none;flex-direction:column;justify-content:flex-end;background:rgba(18,24,38,.45)');
+  recoSheet.setAttribute('data-pencil-name', 'Reco Sheet');
+  (document.getElementById('phone') || document.body).appendChild(recoSheet);
+  const closeReco = () => { recoSheet.style.display = 'none'; };
+  recoSheet.addEventListener('click', ev => { if (ev.target === recoSheet) closeReco(); });
+  window.addEventListener('hashchange', closeReco);
+  const fab = el('div', `position:absolute;right:14px;bottom:88px;z-index:60;display:none;align-items:center;height:40px;padding:0 16px;border-radius:20px;background:${BLUE};color:#fff;font:700 13px ${F};box-shadow:0 6px 18px rgba(44,97,254,.4);cursor:pointer`, '✨ 为你推荐');
+  fab.setAttribute('data-pencil-name', 'Reco Fab');
+  (document.getElementById('phone') || document.body).appendChild(fab);
+  fab.onclick = () => openReco();
+  const RECO_ON = { preflight: 1, home: 1, step3: 1, done: 1, trips: 1 };
+  let recoData = null;
+  async function fetchReco() {
+    const q = new URLSearchParams();
+    if (S.geo && S.geo !== 'auto') q.set('geo', S.geo);
+    if (S.profile && S.profile !== 'auto') q.set('profile', S.profile);
+    if (S.night) q.set('night', '1');
+    try { recoData = await get('/recommend?' + q.toString()); } catch (e) { recoData = null; }
+    return recoData;
+  }
+  function updateFab(route) {
+    if (!RECO_ON[route]) { fab.style.display = 'none'; return; }
+    fab.style.display = 'flex';
+    fetchReco().then(d => { fab.textContent = '✨ 为你推荐' + (d && d.cards ? ' · ' + d.cards.length : ''); });
+  }
+  const chip = (label, on, fn) => { const c = el('div', `padding:5px 11px;border-radius:14px;font:600 12px ${F};cursor:pointer;border:1px solid ${on ? BLUE : LINE};background:${on ? BLUE : '#fff'};color:${on ? '#fff' : MUTED}`, label); c.onclick = fn; return c; };
+  async function openReco() { recoSheet.style.display = 'flex'; renderReco(await fetchReco()); }
+  function renderReco(d) {
+    const box = el('div', `background:#fff;border-radius:16px 16px 0 0;padding:18px 18px 24px;box-sizing:border-box;max-height:88%;overflow-y:auto;font-family:${F}`);
+    box.append(el('div', `font:700 17px/1.3 ${F};color:${INK}`, '✨ 为你推荐 · For you now'));
+    if (!d || !d.cards) { box.append(el('div', `font:400 13px ${F};color:${MUTED};margin-top:10px`, '后端不可达，暂无推荐。')); recoSheet.replaceChildren(box); return; }
+    const srcLabel = d.geo_source === 'override' ? '手动' : d.geo_source === 'ip' ? '按IP' : '默认';
+    box.append(el('div', `font:400 11px/1.5 ${F};color:${MUTED};margin:6px 0 10px`,
+      `按 地理 × 行程 × 画像 排序 · 链接带归因参数 · 地理=${GEO_LABEL[d.geo_state]}（${srcLabel}）· 画像=${PROF_LABEL[d.profile] || d.profile}${d.client_ip ? ' · IP=' + d.client_ip : ''}`));
+    const geoRow = el('div', 'display:flex;gap:7px;margin-bottom:7px;flex-wrap:wrap;align-items:center');
+    geoRow.append(el('div', `font:600 12px ${F};color:${INK};margin-right:2px`, '地理'));
+    geoRow.append(chip('境外·行前', d.geo_state === 'abroad', () => { S.geo = 'abroad'; openReco(); }));
+    geoRow.append(chip('境内·落地后', d.geo_state === 'in_china', () => { S.geo = 'in_china'; openReco(); }));
+    box.append(geoRow);
+    const pRow = el('div', 'display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap;align-items:center');
+    pRow.append(el('div', `font:600 12px ${F};color:${INK};margin-right:2px`, '画像'));
+    ['family', 'business', 'budget'].forEach(p => pRow.append(chip(PROF_LABEL[p], d.profile === p, () => { S.profile = p; openReco(); })));
+    box.append(pRow);
+    d.cards.forEach(c => {
+      const card = el('div', `display:flex;gap:11px;padding:13px 0;border-top:1px solid ${LINE}`);
+      card.append(el('div', 'font-size:22px;line-height:1.1;flex:none', c.icon));
+      const mid = el('div', 'flex:1;min-width:0');
+      const head = el('div', 'display:flex;align-items:center;gap:7px;flex-wrap:wrap');
+      head.append(el('div', `font:700 15px ${F};color:${INK}`, c.title));
+      const front = c.chain === '前链路';
+      head.append(el('div', `font:700 10px ${F};color:${front ? BLUE : GREEN};background:${front ? '#EEF3FF' : '#E7F6EF'};border-radius:4px;padding:2px 6px`, c.chain));
+      if (c.price) head.append(el('div', `font:700 13px ${F};color:${INK}`, c.price));
+      mid.append(head);
+      mid.append(el('div', `font:400 12px/1.45 ${F};color:${MUTED};margin-top:3px`, c.reason));
+      if (c.link && c.routed_intl) mid.append(el('div', `font:400 11px/1.4 ${F};color:#B25E00;margin-top:3px`, '外国用户将路由到 trip.com 国际站结账'));
+      const btn = el('div', `margin-top:8px;display:inline-block;height:34px;border-radius:17px;background:${BLUE};color:#fff;font:600 13px/34px ${F};padding:0 16px;cursor:pointer`, c.cta + (c.kind === 'link' ? ' ›' : ''));
+      btn.onclick = () => {
+        if (c.kind === 'action' && c.action === 'verify_payment') { closeReco(); S.payReturn = null; show('payment'); }
+        else if (c.link) { toast('已记录归因点击 · ' + c.slot); window.open(c.link, '_blank', 'noopener'); }
+      };
+      mid.append(btn);
+      card.append(mid);
+      box.append(card);
+    });
+    const x = el('div', `text-align:center;padding:14px 0 0;font:600 14px ${F};color:${MUTED};cursor:pointer`, 'Close');
+    x.onclick = closeReco;
+    box.append(x);
+    recoSheet.replaceChildren(box);
+  }
 
   // ---------- 演示控制：加进右上角菜单 ----------
   const list = document.getElementById('list');
@@ -768,6 +864,10 @@
     const failSim = m => async () => { try { const r = await post('/mock/pay-test?fail=1&method=' + m); renderPayFail(m, r, await otherVerified(m)); show('payment'); } catch (e) { toast('后端不可达'); } };
     mk('💳 模拟支付失败（支付宝）', failSim('alipay'));
     mk('💳 模拟支付失败（TenPayGo）', failSim('tenpaygo'));
+    const curRoute = () => { const c = document.querySelector('.screen.on'); return c ? c.dataset.route : ''; };
+    const gb = mk('📍 推荐地理：自动', () => { S.geo = S.geo === 'abroad' ? 'in_china' : S.geo === 'in_china' ? 'auto' : 'abroad'; gb.textContent = '📍 推荐地理：' + (S.geo === 'auto' ? '自动' : GEO_LABEL[S.geo]); updateFab(curRoute()); toast('推荐地理：' + (S.geo === 'auto' ? '自动（按 IP / 默认）' : GEO_LABEL[S.geo])); });
+    const pb = mk('👤 推荐画像：自动', () => { const seq = ['auto', 'family', 'business', 'budget']; S.profile = seq[(seq.indexOf(S.profile) + 1) % seq.length]; pb.textContent = '👤 推荐画像：' + PROF_LABEL[S.profile]; updateFab(curRoute()); toast('推荐画像：' + PROF_LABEL[S.profile]); });
+    mk('✨ 查看推荐', () => openReco());
   }
   const stuckQ = qs.get('stuck'); if (stuckQ) get(`/kb/entry/${stuckQ}?lang=en`).then(e => { fillEntry(e); show('stuck'); }).catch(() => toast('No such entry'));
   snapStepStyles('step3'); captureIcons(); snapPay();

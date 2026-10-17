@@ -107,6 +107,20 @@ def test_ticket_summary_counts_passport_options():
     assert t['english_guided_from'] and t['hours_text_zh'] == HOURS
 
 
+def test_content_notes_normalized_and_poi_tags_stripped():
+    c = live.n_content(trip(), raw('query_content'))
+    assert c['city_zh'] == '上海' and c['count'] == len(raw('query_content')) and len(c['notes']) == c['count']
+    n = c['notes'][0]
+    assert n['title'] and n['author'] and n['link'] and isinstance(n['likes'], int)
+    assert '<poi' not in n['summary'] and len(n['summary']) <= 140          # 正文里的 <poi> 标签被剥掉，摘要有长度上限
+    assert all('id' in p and p['name'] for p in n['pois'])
+
+
+def test_content_empty_raises():
+    with pytest.raises(tripmcp.McpError):
+        live.n_content(trip(), [])
+
+
 def test_car_groups_use_typical_price_and_flag_promos():
     c = live.n_car(trip(), raw('car_rental'))
     typ = [g['typical_price'] for g in c['groups']]
@@ -185,7 +199,8 @@ def test_enrich_keeps_trip_dates_and_uses_real_times(on, store):
     assert t['hotel']['address_zh'] == '静安区常德路1号' and t['hotel']['distance_basis'] == 'straight line'
     assert t['tickets'][0]['rules']['hours']['last_entry'] == '16:00'
     assert t['car_offer']['pickup_time'] == '2026-10-12 19:00'            # 按真实落地时间 17:25 推
-    assert t['next_leg']['trains'] and set(t['live']) == {'flight', 'hotel', 'tickets', 'car', 'train'}
+    assert t['next_leg']['trains'] and set(t['live']) == {'flight', 'hotel', 'tickets', 'car', 'train', 'content'}
+    assert t['content']['city_zh'] == '上海' and t['content']['notes'][0]['title']
 
 
 def test_enrich_is_a_noop_when_disabled(monkeypatch, store):

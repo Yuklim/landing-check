@@ -92,6 +92,31 @@ def test_primary_is_the_first_method_verified():
     assert r['payment']['primary'] == 'tenpaygo' and r['payment']['verified_at'] == '2026-10-10 08:00:00'
 
 
+def test_same_second_payments_keep_the_first_verified_method(monkeypatch):
+    from app import trip
+    monkeypatch.setattr(trip, 'now', lambda: '2026-10-10 10:00:00')
+    c.post('/mock/pay-test?method=tenpaygo')
+    c.post('/mock/pay-test?method=alipay')
+    assert c.get('/rules/preflight').json()['payment']['primary'] == 'tenpaygo'
+    assert c.get('/mock/trip').json()['payment']['method'] == 'tenpaygo'
+
+
+def test_repeat_verification_reuses_the_existing_transaction():
+    first = c.post('/mock/pay-test?method=tenpaygo').json()
+    repeated = c.post('/mock/pay-test?method=tenpaygo').json()
+    assert repeated == first
+    assert len([event for event in c.get('/mock/timeline').json() if event['event'] == 'payment']) == 1
+
+
+def test_concurrent_verification_creates_one_transaction():
+    from concurrent.futures import ThreadPoolExecutor
+    instance = mock.MockTrip()
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        results = list(pool.map(lambda _: instance.pay_test(method='tenpaygo', delay=0.02), range(2)))
+    assert results[0] == results[1]
+    assert len(instance.timeline()) == 1
+
+
 def test_ready_for_shanghai_with_tenpaygo_only():
     r = rules.preflight(with_payments(['tenpaygo'], esim={'bought': True}), today=D)
     assert r['pct'] == 100 and r['summary'] == "You're ready for Shanghai · 6 of 6 ready"
