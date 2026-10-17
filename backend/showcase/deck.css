@@ -213,17 +213,17 @@ html[lang="en"] .zh{display:none !important}
 .wc-legend i{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
 .wc-note{font-size:12.5px;color:#8a93a3;white-space:nowrap}
 
-/* ---------- philosophy (dark) ---------- */
+/* ---------- philosophy ---------- */
 .phil-top{text-align:center;max-width:1100px;margin:0 auto}
-.phil-top .en-lead{font-size:20px;letter-spacing:.06em;color:#8fb0ff;font-weight:600;margin-bottom:14px}
+.phil-top .en-lead{font-family:var(--mono);font-size:18px;letter-spacing:.08em;color:var(--blue);font-weight:600;margin-bottom:14px}
 .phil-title{font-size:72px;line-height:1.14;letter-spacing:-2px;font-weight:800}
 .phil-cols{display:grid;grid-template-columns:1fr 1fr;gap:34px;margin-top:48px}
-.phil-card{border:1px solid #ffffff22;border-radius:16px;padding:30px 30px;background:#ffffff0a}
-.phil-card .pc-k{font-family:var(--mono);font-size:14px;letter-spacing:.1em;color:#8fb0ff}
-.phil-card h3{font-size:30px;margin-top:12px;font-weight:750;letter-spacing:-.5px}
-.phil-card .claim{font-size:19px;color:#cfe0ff;font-weight:650;margin-top:12px}
-.phil-card p{font-size:16px;color:#aebce0;line-height:1.75;margin-top:10px}
-.phil-foot{text-align:center;font-size:24px;font-weight:700;color:#cfe0ff;margin-top:44px;letter-spacing:-.3px}
+.phil-card{border:1px solid var(--line);border-radius:16px;padding:30px 30px;background:#fff;box-shadow:0 10px 28px #1a2b550d}
+.phil-card .pc-k{font-family:var(--mono);font-size:13px;letter-spacing:.1em;color:var(--blue)}
+.phil-card h3{font-size:30px;margin-top:10px;font-weight:750;letter-spacing:-.5px}
+.phil-card .claim{font-size:18px;color:#1a3fb0;font-weight:650;margin-top:10px}
+.phil-card p{font-size:16px;color:var(--muted);line-height:1.75;margin-top:10px}
+.phil-foot{text-align:center;font-size:24px;font-weight:700;color:var(--ink);margin-top:44px;letter-spacing:-.3px}
 
 /* ---------- validation ---------- */
 .val-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:16px}
@@ -611,12 +611,12 @@ html[lang="en"] .zh{display:none !important}
 .gl-loop b{color:var(--blue);font-weight:800}
 
 /* P13 philosophy: closes 平台价值 */
-.phil-title .hl{color:#8fb0ff}
-.phil-sub{font-size:19px;color:#b9c6e6;line-height:1.7;margin:16px auto 0;max-width:920px}
+.phil-title .hl{color:var(--blue)}
+.phil-sub{font-size:19px;color:var(--muted);line-height:1.7;margin:16px auto 0;max-width:920px}
 .phil-cols.three{grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px}
 .phil-cols.three .phil-card{text-align:left;padding:26px 26px 28px}
 .phil-cols.three .phil-card h3{font-size:27px;margin-top:8px}
-.phil-ico{width:46px;height:46px;border-radius:12px;background:#ffffff14;border:1px solid #ffffff22;color:#8fb0ff;display:grid;place-items:center;margin-bottom:16px}
+.phil-ico{width:46px;height:46px;border-radius:12px;background:#eef3ff;border:1px solid #dde7ff;color:var(--blue);display:grid;place-items:center;margin-bottom:16px}
 .phil-ico svg{width:24px;height:24px}
 #philosophy .phil-foot{margin-top:38px}
-.phil-share{display:block;font-family:var(--mono);font-size:15px;font-weight:500;letter-spacing:.04em;color:#8fb0ff;margin-top:10px}
+.phil-share{display:block;font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.04em;color:var(--blue);margin-top:10px}
