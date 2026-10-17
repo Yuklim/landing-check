@@ -72,7 +72,7 @@ async function download(send) {
       seen.add(url.href);
       return { ...asset, url: url.href };
     });
-    for (const required of ['index.html', 'app.js', 'offline.js', 'offline-db.js', 'offline.css', 'data/offline-pvg-t2.json', 'stamp.js', 'stamp-renderer.js', 'stamp.css', 'data/first-stamp.json', 'img/stamp/shanghai-dusk.jpg', 'img/stamp/discover-qr.png', 'fonts/cormorant-garamond.ttf']) {
+    for (const required of ['index.html', 'app.js', 'offline.js', 'offline-db.js', 'offline.css', 'data/offline-pvg-t2.json', 'stamp.js', 'stamp-renderer.js', 'stamp.css', 'data/first-stamp.json', 'img/stamp/shanghai-dusk.jpg', 'img/stamp/discover-qr.png', 'fonts/cormorant-garamond.woff2']) {
       if (!seen.has(new URL(required, BASE).href)) throw new Error('Missing required offline asset: ' + required);
     }
     staging = PREFIX + 'pack-' + manifest.revision + '-' + crypto.randomUUID();
