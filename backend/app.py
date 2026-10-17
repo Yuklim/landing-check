@@ -15,7 +15,9 @@ from pydantic import BaseModel
 from kb import KnowledgeBase
 from mock import MockTrip
 from rules import PAY_METHODS
-from ctrip_mcp import query_content as ctrip_query_content, query_train as ctrip_query_train, CtripMCPError
+from ctrip_mcp import (query_content as ctrip_query_content, query_train as ctrip_query_train,
+                       query_hotel as ctrip_query_hotel, query_car_rental as ctrip_query_car_rental,
+                       CtripMCPError)
 import stuck
 import rules
 
@@ -209,6 +211,71 @@ def content_trains(fromCity: str, toCity: str, departDate: str, size: int = 20):
         return ctrip_query_train(fromCity, toCity, departDate, size=min(max(size, 1), 40))
     except CtripMCPError as e:
         return {'items': [], 'note': str(e)}
+
+
+@app.get('/content/hotels')
+def content_hotels(city: str = '', keyword: str = '', hotelName: str = '', landmark: str = '',
+                   tags: str = '', stars: str = '', checkIn: str = '', checkOut: str = '',
+                   sortType: str = '1', size: int = 10):
+    """酒店列表：代理官方 query_hotel，归一化成卡片。常用 city=上海。"""
+    for d in (checkIn, checkOut):
+        if d and not re.fullmatch(r'\d{4}-\d{2}-\d{2}', d):
+            raise HTTPException(400, 'checkIn/checkOut must be yyyy-MM-dd')
+    try:
+        return ctrip_query_hotel(city=city, keyword=keyword, hotel_name=hotelName,
+                                 landmark=landmark, tags=tags, stars=stars,
+                                 check_in=checkIn, check_out=checkOut, sort_type=sortType,
+                                 size=min(max(size, 1), 30))
+    except CtripMCPError as e:
+        return {'items': [], 'note': str(e)}
+
+
+@app.get('/content/cars')
+def content_cars(pickUpCity: str, returnCity: str = '', vehicleGroupIds: str = '',
+                 pickUpTime: str = '', returnTime: str = '', size: int = 12):
+    """租车列表：代理官方 car_rental，归一化成车辆列表。pickUpCity=取车城市(如 上海)。"""
+    try:
+        return ctrip_query_car_rental(pickUpCity, return_city=returnCity,
+                                      vehicle_group_ids=vehicleGroupIds,
+                                      pick_up_time=pickUpTime, return_time=returnTime,
+                                      size=min(max(size, 1), 30))
+    except CtripMCPError as e:
+        return {'items': [], 'note': str(e)}
+
+
+# 预热：把 demo 常用的查询先打一遍灌进缓存，现场点开就秒出（租车冷启动≈10s，务必先热）。
+_WARM_JOBS = [
+    ('community', lambda: ctrip_query_content(query='上海外滩', size=10)),
+    ('hotels', lambda: ctrip_query_hotel(city='上海', sort_type='1', size=10)),
+    ('cars', lambda: ctrip_query_car_rental('上海', size=12)),
+]
+
+
+def _warm(fn):
+    try:
+        r = fn()
+        return len((r or {}).get('items', []))
+    except Exception:
+        return -1
+
+
+@app.get('/content/warmup')
+def content_warmup():
+    """演示前手动预热：curl 一下，返回每项命中的条数与耗时。"""
+    import time as _t
+    out = {}
+    for name, fn in _WARM_JOBS:
+        t0 = _t.time()
+        n = _warm(fn)
+        out[name] = {'items': n, 'ms': round((_t.time() - t0) * 1000)}
+    return {'warmed': out}
+
+
+@app.on_event('startup')
+def _warm_on_startup():
+    """后端一启动就在后台线程预热（不阻塞启动）；没设 token 时各项静默失败，无副作用。"""
+    import threading
+    threading.Thread(target=lambda: [_warm(fn) for _, fn in _WARM_JOBS], daemon=True).start()
 
 
 # ---------------- B 识别 ----------------
