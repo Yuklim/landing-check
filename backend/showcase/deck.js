@@ -136,7 +136,7 @@
     } else gsap.set(items, { autoAlpha: 1, y: 0 });
     var fn = INTRO[sl.id]; if (fn) fn(sl);
   }
-  function playEnter(i, dir) { resetFrags(i, dir < 0); playIntro(i); if (onDemo(i)) demo.show(dir < 0 ? demo.count - 1 : 0); }
+  function playEnter(i, dir) { if (onStamp(i)) stampFx.reset(); resetFrags(i, dir < 0); playIntro(i); if (onDemo(i)) demo.show(dir < 0 ? demo.count - 1 : 0); }
 
   // ---------- 03 落地体验（demo03/section.js）：页内先切五个功能，走完再翻页 ----------
   var demo = null, demoSlide = document.getElementById("demo");
@@ -148,6 +148,78 @@
   }
   function onDemo(i) { return demo && slides[i] === demoSlide; }
 
+  // ---------- 理念页「值得分享」：票根文字放大到正中 → 变成票根 → 纸飞机滑出到下一页 ----------
+  var stampFx = (function () {
+    var sl = document.getElementById("philosophy"), layer = stage.querySelector(".stamp-fx");
+    var src = sl && sl.querySelector(".phil-stamp");
+    if (!sl || !layer || !src) return null;
+    var veil = layer.querySelector(".sfx-veil"), word = layer.querySelector(".sfx-word"), card = layer.querySelector(".sfx-card");
+    var step = 0, tl = null;   // 0 正常页 · 1 票根展示中 · 2 正在飞出
+    var html = document.documentElement;
+    function editing() { return html.classList.contains("deck-editing") || html.classList.contains("deck-edit-session"); }
+    function reset() {
+      if (tl) tl.kill(); tl = null; step = 0;
+      gsap.set(layer, { autoAlpha: 0 });
+      gsap.set(veil, { autoAlpha: 0 });
+      gsap.set(word, { autoAlpha: 0, xPercent: -50, yPercent: -50, x: 0, y: 0, scale: 1, filter: "blur(0px)" });
+      gsap.set(card, { autoAlpha: 0, x: 0, y: 0, scale: 1, rotation: 0, rotationY: 0, transformPerspective: 900 });
+      gsap.set(src, { autoAlpha: 1 });
+    }
+    function origin() {   // 卡片里那行字的中心，换算成相对 stage 中心的偏移（stage 坐标，已除去缩放）
+      var s = stage.getBoundingClientRect(), k = s.width / 1440, r = src.getBoundingClientRect();
+      return {
+        x: (r.left + r.width / 2 - s.left) / k - 720,
+        y: (r.top + r.height / 2 - s.top) / k - 405,
+        sc: parseFloat(getComputedStyle(src).fontSize) / parseFloat(getComputedStyle(word).fontSize)
+      };
+    }
+    function show() {
+      step = 1;
+      if (tl) tl.kill();
+      gsap.set(layer, { autoAlpha: 1 });
+      if (reduce) { tl = gsap.timeline().set(src, { autoAlpha: 0 }).to(veil, { autoAlpha: 1, duration: .3 }, 0).to(card, { autoAlpha: 1, rotation: -2.5, duration: .4 }, 0); return; }
+      var o = origin();
+      tl = gsap.timeline()
+        .set(src, { autoAlpha: 0 }, 0)
+        .fromTo(veil, { autoAlpha: 0 }, { autoAlpha: 1, duration: .55, ease: "power1.out" }, 0)
+        .fromTo(word, { autoAlpha: 1, x: o.x, y: o.y, scale: o.sc }, { x: 0, y: 0, scale: 1, duration: .85, ease: EASE }, 0)
+        .to(word, { scale: 1.06, duration: .25, ease: "sine.out" }, ">-0.05")
+        .to(word, { autoAlpha: 0, scale: .72, filter: "blur(8px)", duration: .4, ease: "power2.in" }, ">")
+        .fromTo(card, { autoAlpha: 0, scale: .28, rotation: -9, y: 16 }, { autoAlpha: 1, scale: 1, rotation: -2.5, y: 0, duration: .8, ease: "back.out(1.3)" }, "<0.12");
+    }
+    function hide() {   // ← 收回到正常页面
+      step = 0;
+      if (tl) tl.kill();
+      tl = gsap.timeline({ onComplete: reset })
+        .to(word, { autoAlpha: 0, duration: .2 }, 0)
+        .to(card, { autoAlpha: 0, scale: .55, rotation: -8, duration: .38, ease: "power2.in" }, 0)
+        .to(veil, { autoAlpha: 0, duration: .4 }, .12)
+        .fromTo(src, { autoAlpha: 0 }, { autoAlpha: 1, duration: .3 }, .25);
+    }
+    function fly() {    // 纸飞机：先往回一收，再向右上倾斜滑出；途中翻到下一页
+      step = 2;
+      if (tl) tl.kill();
+      var nextIdx = slides.indexOf(sl) + 1;
+      gsap.set(word, { autoAlpha: 0 });
+      if (reduce) { reset(); goto(nextIdx, 1); return; }
+      gsap.set(card, { autoAlpha: 1 });
+      tl = gsap.timeline({ onComplete: reset })
+        .to(card, { rotation: -7, x: -28, y: 14, scale: .97, duration: .24, ease: "power1.out" }, 0)
+        .to(card, { x: 1180, y: -310, rotation: 16, rotationY: -30, scale: .42, duration: .9, ease: "power2.in" }, .22)
+        .to(card, { autoAlpha: 0, duration: .25 }, .9)
+        .to(veil, { autoAlpha: 0, duration: .45 }, .3)
+        .add(function () { goto(nextIdx, 1); }, .42);
+    }
+    reset();
+    return {
+      slide: sl, reset: reset,
+      flying: function () { return step === 2; },
+      next: function () { if (editing() && step === 0) return false; if (step === 0) show(); else if (step === 1) fly(); return true; },
+      prev: function () { if (step === 1) { hide(); return true; } return step === 2; }
+    };
+  })();
+  function onStamp(i) { return stampFx && slides[i] === stampFx.slide; }
+
   // ---------- navigation ----------
   function goto(n, dir) {
     if (busy || n < 0 || n >= N || n === cur) return;
@@ -155,6 +227,7 @@
     busy = true;
     var from = slides[cur], to = slides[n];
     if (onDemo(cur)) demo.stop();
+    if (onStamp(cur) && !stampFx.flying()) stampFx.reset();   // 圆点/Home/End 离开时收起票根
     gsap.set(to, { autoAlpha: 1, scale: 1, xPercent: 100 * dir });
     if (!reduce) gsap.set(to.querySelectorAll("[data-a]"), { autoAlpha: 0, y: 28 });  // 预隐入场内容，避免滑入途中先显示、到 0.3s 又被 playIntro 重置造成的闪烁
     var tl = gsap.timeline({ onComplete: function () { gsap.set(from, { autoAlpha: 0 }); busy = false; } });
@@ -170,6 +243,7 @@
   function next() {
     if (busy) return;
     if (onDemo(cur) && demo.next()) return;
+    if (onStamp(cur) && stampFx.next()) return;
     var fs = frags(cur);
     if (frag < fs.length) { gsap.to(fs[frag], { autoAlpha: 1, y: 0, duration: .5, ease: EASE, onUpdate: function () { onFrag(cur); } }); frag++; }
     else goto(cur + 1, 1);
@@ -177,6 +251,7 @@
   function prev() {
     if (busy) return;
     if (onDemo(cur) && demo.prev()) return;
+    if (onStamp(cur) && stampFx.prev()) return;
     if (frag > 0) { frag--; gsap.to(frags(cur)[frag], { autoAlpha: 0, y: 16, duration: .35, ease: "power2.in", onUpdate: function () { onFrag(cur); } }); }
     else goto(cur - 1, -1);
   }
