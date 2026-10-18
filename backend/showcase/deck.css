@@ -729,11 +729,8 @@ html[lang="en"] .zh{display:none !important}
 .phil-ico svg{width:24px;height:24px}
 #philosophy .phil-foot{margin-top:38px}
 .phil-share{display:block;font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:.04em;color:var(--blue);margin-top:10px}
-/* P12「以用户为中心」：蓝色加粗 + 两道蜡笔手绘波浪线 */
+/* P12「以用户为中心」：蓝色加粗 + 蜡笔波浪线（.cu） */
 .phil-ul{position:relative;display:inline-block;color:var(--blue);font-weight:800;white-space:nowrap;margin:0 1px}
-.phil-ul .crayon{position:absolute;left:-5%;width:110%;bottom:-12px;height:15px;overflow:visible;color:#2454ed;stroke-width:3;opacity:.82}
-.phil-ul .crayon path{vector-effect:non-scaling-stroke}
-.phil-ul .crayon path+path{opacity:.6;stroke-width:2.4}
 /* P12 收束句高亮 */
 #philosophy .pf-line{font-size:27px;font-weight:800;letter-spacing:-.4px}
 #philosophy .pf-line em{font-style:normal;color:var(--blue);background:linear-gradient(transparent 58%,#cfdcff 58%);padding:0 4px}
@@ -755,3 +752,11 @@ html[lang="en"] .zh{display:none !important}
 
 /* English chapter keyword (P10–P12): large, top-right, left of the QR dock */
 .slide > .en-key{position:absolute;right:168px;top:34px;z-index:1;font-family:var(--font);font-size:64px;line-height:1.1;font-weight:850;font-style:italic;letter-spacing:-1.5px;padding-right:6px;color:transparent;background:linear-gradient(100deg,#2454ed66,#2454ed1f);-webkit-background-clip:text;background-clip:text;pointer-events:none;user-select:none}
+
+/* 蜡笔手绘波浪下划线（全 deck 复用）：.cu 包住要强调的词，线条来自 body 顶部的 #crayonWave；
+   尺寸随字号缩放，大字号用 --cu-b / --cu-h / --cu-w 调；deck.js 进页时从左往右「画出来」 */
+.crayon-defs{position:absolute;width:0;height:0;overflow:hidden}
+.cu{position:relative;display:inline-block;white-space:nowrap}
+.cu > .crayon{position:absolute;left:-4%;width:108%;bottom:var(--cu-b,-.56em);height:var(--cu-h,.7em);overflow:visible;color:var(--blue);stroke-width:var(--cu-w,3px);opacity:.82;pointer-events:none}
+.sol-tagline .cu{--cu-b:-.44em;--cu-h:.44em;--cu-w:3.6px}
+.s-title .cu{--cu-b:-.3em;--cu-h:.36em;--cu-w:4px}

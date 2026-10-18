@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="demo03/section.css">
 </head>
 <body>
+  <!-- 蜡笔手绘波浪下划线：滤镜与线条只定义一次，各处用 <span class="cu">词<svg class="crayon">…<use href="#crayonWave"/></svg></span> -->
+  <svg class="crayon-defs" aria-hidden="true" focusable="false"><defs><filter id="crayonRough" x="-5%" y="-60%" width="110%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/></filter><g id="crayonWave" filter="url(#crayonRough)"><path vector-effect="non-scaling-stroke" d="M3 7c14-5 26 4 40 0s27-5 41 0 27 4 41-1 27-4 40 1 18 2 32-1"/><path vector-effect="non-scaling-stroke" opacity=".6" d="M7 16c13-4 25 3 38-1s26-4 40 1 27 3 40-1 26-3 39 1 16 1 30-2"/></g></defs></svg>
   <div class="deck-progress"></div>
 
   <div class="deck-root">
@@ -76,7 +78,7 @@
           <div class="pn-row" data-a><div class="pn-pain"><b>现场选择难</b>：联网、支付、交通相互关联，不知道先做什么。</div><div class="pn-arrow">→</div><div class="pn-need">落地后，明确下一步。</div></div>
           <div class="pn-row" data-a><div class="pn-pain"><b>遇阻难继续</b>：看不懂提示，常规方法失败后还要重新找答案。</div><div class="pn-arrow">→</div><div class="pn-need">卡住时，有指引和备用办法。</div></div>
         </div>
-        <div class="moment-q" data-a>核心判断：<span class="hl">下一步，该怎么做？</span></div>
+        <div class="moment-q" data-a>核心判断：<span class="hl cu">下一步，该怎么做？<svg class="crayon" viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true"><use href="#crayonWave"/></svg></span></div>
       </section>
 
       <!-- 01 COVER + QR -->
@@ -106,7 +108,7 @@
         <div class="s-kicker" data-a>02 / 产品方案 OUR SOLUTION</div>
         <div class="sol2">
           <div class="sol2-left">
-            <div class="sol-tagline" data-a>在正确的时刻，<br><span class="hl">给出正确的下一步。</span></div>
+            <div class="sol-tagline" data-a>在正确的时刻，<br><span class="hl cu">给出正确的下一步<svg class="crayon" viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true"><use href="#crayonWave"/></svg></span><span class="hl">。</span></div>
             <div class="sol-en" data-a>One Moment. One Next Step.</div>
             <p class="sol-def" data-a>面向 Trip.com 来华自由行游客的<b>入境游</b>落地助手，聚焦<b>落地后的「第一小时」</b>。不是再给你一堆建议，而是把<b>联网-支付-交通</b>拆成可逐步完成的任务，带你一步步做完。</p>
             <div class="vs" data-a>
@@ -349,7 +351,7 @@
           <div class="phil-top">
             <div class="en-lead" data-a>User First. Beyond Booking.</div>
             <h2 class="phil-title" data-a>用户优先，<span class="hl">不止预订</span></h2>
-            <p class="phil-sub" data-a>先把游客最难的第一小时走顺，再谈服务与转化——这正是携程<b class="phil-ul">以用户为中心<svg class="crayon" viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true"><defs><filter id="crayonRough" x="-5%" y="-60%" width="110%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.6"/></filter></defs><g filter="url(#crayonRough)"><path d="M3 7c14-5 26 4 40 0s27-5 41 0 27 4 41-1 27-4 40 1 18 2 32-1"/><path d="M7 16c13-4 25 3 38-1s26-4 40 1 27 3 40-1 26-3 39 1 16 1 30-2"/></g></svg></b>的理念。</p>
+            <p class="phil-sub" data-a>先把游客最难的第一小时走顺，再谈服务与转化——这正是携程<b class="phil-ul cu">以用户为中心<svg class="crayon" viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true"><use href="#crayonWave"/></svg></b>的理念。</p>
           </div>
           <div class="phil-cols three">
             <div class="phil-card" data-a>
@@ -380,7 +382,7 @@
       <!-- 13 验证反思: 做到了什么 vs 还没验证什么 -->
       <section class="slide" id="reflect" data-chapter>
         <div class="s-kicker" data-a>06 / 验证反思 VALIDATION &amp; REFLECTION</div>
-        <h2 class="s-title" data-a>功能能够运行，<span class="hl">不等于用户的问题已经得到解决。</span></h2>
+        <h2 class="s-title" data-a>功能能够运行，<span class="hl">不等于<span class="cu">用户的问题已经得到解决<svg class="crayon" viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true"><use href="#crayonWave"/></svg></span>。</span></h2>
         <div class="refl">
           <div class="refl-done">
             <div class="refl-item" data-a>
@@ -488,7 +490,7 @@
           <div>
             <h2 class="s-title" data-a>从单点工具，<span class="hl">到生态化方案</span></h2>
             <p class="s-sub" data-a style="margin-top:8px">从“解决一个问题”，到“连接 Trip.com 生态”。</p>
-            <div class="evo-claim" data-a>在导师交流和持续推演中，把工具型想法迭代成了<span class="hl">一个更完整的产品方向</span>。</div>
+            <div class="evo-claim" data-a>在导师交流和持续推演中，把工具型想法迭代成了<span class="hl cu">一个更完整的产品方向<svg class="crayon" viewBox="0 0 200 22" preserveAspectRatio="none" aria-hidden="true"><use href="#crayonWave"/></svg></span>。</div>
           </div>
           <figure class="mentor-photo" data-a><img src="assets/closing/mentor-1v1.webp" alt="比赛现场：团队与导师 1v1 交流"><figcaption>导师 1v1 · 比赛现场</figcaption></figure>
         </div>

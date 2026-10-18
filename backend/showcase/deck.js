@@ -134,6 +134,8 @@
       gsap.killTweensOf(items);
       gsap.fromTo(items, { y: 28, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .62, stagger: .07, ease: EASE, delay: .06 });
     } else gsap.set(items, { autoAlpha: 1, y: 0 });
+    var waves = sl.querySelectorAll(".cu > .crayon");   // 蜡笔波浪线：从左往右画出来
+    if (waves.length && !reduce) gsap.fromTo(waves, { clipPath: "inset(-60% 100% -60% -6%)" }, { clipPath: "inset(-60% 0% -60% -6%)", duration: .9, ease: "power2.inOut", delay: .7, stagger: .12, clearProps: "clipPath" });
     var fn = INTRO[sl.id]; if (fn) fn(sl);
   }
   function playEnter(i, dir) { if (onStamp(i)) stampFx.reset(); resetFrags(i, dir < 0); playIntro(i); if (onDemo(i)) demo.show(dir < 0 ? demo.count - 1 : 0); }
