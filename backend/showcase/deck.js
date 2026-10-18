@@ -148,10 +148,10 @@
   }
   function onDemo(i) { return demo && slides[i] === demoSlide; }
 
-  // ---------- 理念页「值得分享」：票根文字放大到正中 → 变成票根 → 纸飞机滑出到下一页 ----------
+  // ---------- 用户增长页「分享获客」：票根文字放大到正中 → 变成票根 → 纸飞机滑出到下一页 ----------
+  // 起点是带 .sfx-src 的那行字，挪到别的页只需移动这个 class
   var stampFx = (function () {
-    var sl = document.getElementById("philosophy"), layer = stage.querySelector(".stamp-fx");
-    var src = sl && sl.querySelector(".phil-stamp");
+    var src = stage.querySelector(".slide .sfx-src"), sl = src && src.closest(".slide"), layer = stage.querySelector(".stamp-fx");
     if (!sl || !layer || !src) return null;
     var veil = layer.querySelector(".sfx-veil"), word = layer.querySelector(".sfx-word"), card = layer.querySelector(".sfx-card");
     var step = 0, tl = null;   // 0 正常页 · 1 票根展示中 · 2 正在飞出
